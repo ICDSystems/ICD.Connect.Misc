@@ -1,0 +1,128 @@
+using System.Collections.Generic;
+using ICD.Common.Attributes.Properties;
+using ICD.Common.Properties;
+using ICD.Common.Utils.Xml;
+using ICD.Connect.Settings;
+using ICD.Connect.Settings.Attributes.Factories;
+using ICD.Connect.Settings.Core;
+
+namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
+{
+	/// <summary>
+	/// Settings for the IrPortAdapter.
+	/// </summary>
+	public sealed class IrPortAdapterSettings : AbstractPortSettings
+	{
+		private const string FACTORY_NAME = "IrPort";
+
+		private const ushort DEFAULT_PULSE_TIME = 100;
+		private const ushort DEFAULT_BETWEEN_TIME = 750;
+
+		private const string PARENT_DEVICE_ELEMENT = "Device";
+		private const string ADDRESS_ELEMENT = "Address";
+		private const string DRIVER_ELEMENT = "Driver";
+		private const string PULSETIME_ELEMENT = "PulseTime";
+		private const string BETWEENTIME_ELEMENT = "BetweenTime";
+
+		private int m_Address = 1;
+		private ushort m_PulseTime = DEFAULT_PULSE_TIME;
+		private ushort m_BetweenTime = DEFAULT_BETWEEN_TIME;
+
+		#region Properties
+
+		[SettingsProperty(SettingsProperty.ePropertyType.DeviceId)]
+		public int? Device { get; set; }
+
+		public int Address { get { return m_Address; } set { m_Address = value; } }
+		public string Driver { get; set; }
+		public ushort PulseTime { get { return m_PulseTime; } set { m_PulseTime = value; } }
+		public ushort BetweenTime { get { return m_BetweenTime; } set { m_BetweenTime = value; } }
+
+		/// <summary>
+		/// Gets the originator factory name.
+		/// </summary>
+		public override string FactoryName { get { return FACTORY_NAME; } }
+
+		#endregion
+
+		#region Method
+
+		/// <summary>
+		/// Writes property elements to xml.
+		/// </summary>
+		/// <param name="writer"></param>
+		protected override void WriteElements(IcdXmlTextWriter writer)
+		{
+			base.WriteElements(writer);
+
+			if (Device != null)
+				writer.WriteElementString(PARENT_DEVICE_ELEMENT, IcdXmlConvert.ToString((int)Device));
+
+			writer.WriteElementString(ADDRESS_ELEMENT, IcdXmlConvert.ToString(Address));
+
+			if (!string.IsNullOrEmpty(Driver))
+				writer.WriteElementString(DRIVER_ELEMENT, Driver);
+
+			writer.WriteElementString(PULSETIME_ELEMENT, IcdXmlConvert.ToString(PulseTime));
+			writer.WriteElementString(BETWEENTIME_ELEMENT, IcdXmlConvert.ToString(BetweenTime));
+		}
+
+		/// <summary>
+		/// Creates a new originator instance from the settings.
+		/// </summary>
+		/// <param name="factory"></param>
+		/// <returns></returns>
+		public override IOriginator ToOriginator(IDeviceFactory factory)
+		{
+			IrPortAdapter output = new IrPortAdapter();
+			output.ApplySettings(this, factory);
+
+			return output;
+		}
+
+		/// <summary>
+		/// Returns the collection of ids that the settings will depend on.
+		/// For example, to instantiate an IR Port from settings, the device the physical port
+		/// belongs to will need to be instantiated first.
+		/// </summary>
+		/// <returns></returns>
+		public override IEnumerable<int> GetDeviceDependencies()
+		{
+			if (Device != null)
+				yield return (int)Device;
+		}
+
+		/// <summary>
+		/// Loads the settings from XML.
+		/// </summary>
+		/// <param name="xml"></param>
+		/// <returns></returns>
+		[PublicAPI, XmlPortSettingsFactoryMethod(FACTORY_NAME)]
+		public static IrPortAdapterSettings FromXml(string xml)
+		{
+			int? device = XmlUtils.TryReadChildElementContentAsInt(xml, PARENT_DEVICE_ELEMENT);
+			int address = XmlUtils.ReadChildElementContentAsInt(xml, ADDRESS_ELEMENT);
+			string driver = XmlUtils.ReadChildElementContentAsString(xml, DRIVER_ELEMENT);
+			ushort? pulseTime = (ushort?)XmlUtils.TryReadChildElementContentAsInt(xml, PULSETIME_ELEMENT);
+			ushort? betweenTime = (ushort?)XmlUtils.TryReadChildElementContentAsInt(xml, BETWEENTIME_ELEMENT);
+
+			IrPortAdapterSettings output = new IrPortAdapterSettings
+			{
+				Device = device,
+				Address = address,
+				Driver = driver
+			};
+
+			if (pulseTime != null)
+				output.PulseTime = (ushort)pulseTime;
+
+			if (betweenTime != null)
+				output.BetweenTime = (ushort)betweenTime;
+
+			ParseXml(output, xml);
+			return output;
+		}
+
+		#endregion
+	}
+}
