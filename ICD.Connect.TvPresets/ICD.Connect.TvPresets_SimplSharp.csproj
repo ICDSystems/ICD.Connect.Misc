@@ -75,7 +75,7 @@
     <None Include="Properties\ControlSystem.cfg" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ICD.Common\ICD.Common_SimplSharp.csproj">
+    <ProjectReference Include="..\..\ICD.Common.Utils\ICD.Common.Utils\ICD.Common.Utils_SimplSharp.csproj">
       <Project>{CB4055C6-D59E-479E-9C56-2C92335A7D9A}</Project>
       <Name>ICD.SimplSharp.Common</Name>
     </ProjectReference>

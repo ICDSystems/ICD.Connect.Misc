@@ -77,27 +77,27 @@
     <None Include="Properties\ControlSystem.cfg" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ICD.Connect.API\ICD.Connect.API_SimplSharp.csproj">
+    <ProjectReference Include="..\..\ICD.Connect.API\ICD.Connect.API\ICD.Connect.API_SimplSharp.csproj">
       <Project>{727F5820-5A61-440D-8899-E454FE8238D7}</Project>
       <Name>ICD.Connect.API</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ICD.Common\ICD.Common_SimplSharp.csproj">
+    <ProjectReference Include="..\..\ICD.Common.Utils\ICD.Common.Utils\ICD.Common.Utils_SimplSharp.csproj">
       <Project>{CB4055C6-D59E-479E-9C56-2C92335A7D9A}</Project>
       <Name>ICD.SimplSharp.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ICD.Connect.Devices\ICD.Connect.Devices_SimplSharp.csproj">
+    <ProjectReference Include="..\..\ICD.Connect.Devices\ICD.Connect.Devices\ICD.Connect.Devices_SimplSharp.csproj">
       <Project>{FD46A717-5836-4B73-ADD0-2706639DA8ED}</Project>
       <Name>ICD.Connect.Devices</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ICD.Connect.Protocol.Network\ICD.Connect.Protocol.Network_SimplSharp.csproj">
+    <ProjectReference Include="..\..\ICD.Connect.Protocol\ICD.Connect.Protocol.Network\ICD.Connect.Protocol.Network_SimplSharp.csproj">
       <Project>{5ED52F05-EA6C-4FC5-8AA0-9B9727F6AECD}</Project>
       <Name>ICD.Connect.Protocol.Network</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ICD.Connect.Protocol\ICD.Connect.Protocol_SimplSharp.csproj">
+    <ProjectReference Include="..\..\ICD.Connect.Protocol\ICD.Connect.Protocol\ICD.Connect.Protocol_SimplSharp.csproj">
       <Project>{2E4E01B8-D4EA-4FB1-9FCE-0A0DC8D83C8A}</Project>
       <Name>ICD.Connect.Protocol</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ICD.Connect.Settings\ICD.Connect.Settings_SimplSharp.csproj">
+    <ProjectReference Include="..\..\ICD.Connect.Settings\ICD.Connect.Settings\ICD.Connect.Settings_SimplSharp.csproj">
       <Project>{5B84EB3C-1C3A-4C4D-98C2-69F67CF51D5A}</Project>
       <Name>ICD.Connect.Settings</Name>
     </ProjectReference>
