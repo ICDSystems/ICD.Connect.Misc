@@ -1,7 +1,5 @@
 ﻿using System.Reflection;
-using ICD.Common.Attributes;
 
-[assembly: KrangPlugin]
 [assembly: AssemblyTitle("ICD.SimplSharp.MiddleAtlantic")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("ICD.SimplSharp.MiddleAtlantic")]

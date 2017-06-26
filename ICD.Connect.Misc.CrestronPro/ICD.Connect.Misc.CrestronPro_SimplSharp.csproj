@@ -112,6 +112,7 @@
     <Compile Include="Devices\DinIo8AdapterSettings.cs" />
     <Compile Include="Devices\IPortParent.cs" />
     <Compile Include="Devices\IDmParent.cs" />
+    <Compile Include="KrangPlugin.cs" />
     <Compile Include="Ports\ComPort\ComPortAdapter.cs" />
     <Compile Include="Ports\ComPort\ComPortAdapterSettings.cs" />
     <Compile Include="Ports\IoPort\IoPortAdapter.cs" />
