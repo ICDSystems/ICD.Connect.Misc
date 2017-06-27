@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using ICD.Common.Attributes.Properties;
 using ICD.Common.Properties;
@@ -43,6 +44,11 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		/// </summary>
 		public override string FactoryName { get { return FACTORY_NAME; } }
 
+		/// <summary>
+		/// Gets the type of the originator for this settings instance.
+		/// </summary>
+		public override Type OriginatorType { get { return typeof(IrPortAdapter); } }
+
 		#endregion
 
 		#region Method
@@ -65,19 +71,6 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 
 			writer.WriteElementString(PULSETIME_ELEMENT, IcdXmlConvert.ToString(PulseTime));
 			writer.WriteElementString(BETWEENTIME_ELEMENT, IcdXmlConvert.ToString(BetweenTime));
-		}
-
-		/// <summary>
-		/// Creates a new originator instance from the settings.
-		/// </summary>
-		/// <param name="factory"></param>
-		/// <returns></returns>
-		public override IOriginator ToOriginator(IDeviceFactory factory)
-		{
-			IrPortAdapter output = new IrPortAdapter();
-			output.ApplySettings(this, factory);
-
-			return output;
 		}
 
 		/// <summary>

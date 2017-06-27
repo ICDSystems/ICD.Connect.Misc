@@ -1,4 +1,5 @@
-﻿using ICD.Common.Attributes.Properties;
+﻿using System;
+using ICD.Common.Attributes.Properties;
 using ICD.Common.Properties;
 using ICD.Common.Utils;
 using ICD.Common.Utils.Xml;
@@ -23,6 +24,11 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 		public override string FactoryName { get { return FACTORY_NAME; } }
 
 		/// <summary>
+		/// Gets the type of the originator for this settings instance.
+		/// </summary>
+		public override Type OriginatorType { get { return typeof(DinIo8Adapter); } }
+
+		/// <summary>
 		/// Writes property elements to xml.
 		/// </summary>
 		/// <param name="writer"></param>
@@ -31,18 +37,6 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 			base.WriteElements(writer);
 
 			writer.WriteElementString(IPID_ELEMENT, StringUtils.ToIpIdString(Ipid));
-		}
-
-		/// <summary>
-		/// Creates a new originator instance from the settings.
-		/// </summary>
-		/// <param name="factory"></param>
-		/// <returns></returns>
-		public override IOriginator ToOriginator(IDeviceFactory factory)
-		{
-			DinIo8Adapter output = new DinIo8Adapter();
-			output.ApplySettings(this, factory);
-			return output;
 		}
 
 		/// <summary>

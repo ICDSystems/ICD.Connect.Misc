@@ -1,3 +1,4 @@
+using System;
 using ICD.Common.Properties;
 using ICD.Connect.Settings;
 using ICD.Connect.Settings.Attributes.Factories;
@@ -15,16 +16,9 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 		public override string FactoryName { get { return FACTORY_NAME; } }
 
 		/// <summary>
-		/// Creates a new originator instance from the settings.
+		/// Gets the type of the originator for this settings instance.
 		/// </summary>
-		/// <param name="factory"></param>
-		/// <returns></returns>
-		public override IOriginator ToOriginator(IDeviceFactory factory)
-		{
-			C3Ry16Adapter output = new C3Ry16Adapter();
-			output.ApplySettings(this, factory);
-			return output;
-		}
+		public override Type OriginatorType { get { return typeof(C3Ry16Adapter); } }
 
 		/// <summary>
 		/// Loads the settings from XML.

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ICD.Common.Attributes.Properties;
 using ICD.Common.Properties;
 using ICD.Common.Utils.Xml;
@@ -34,6 +35,11 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 		/// </summary>
 		public override string FactoryName { get { return FACTORY_NAME; } }
 
+		/// <summary>
+		/// Gets the type of the originator for this settings instance.
+		/// </summary>
+		public override Type OriginatorType { get { return typeof(IoPortAdapter); } }
+
 		#endregion
 
 		#region Methods
@@ -50,18 +56,6 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 				writer.WriteElementString(PARENT_DEVICE_ELEMENT, IcdXmlConvert.ToString((int)Device));
 			writer.WriteElementString(ADDRESS_ELEMENT, IcdXmlConvert.ToString(Address));
 			writer.WriteElementString(CONFIGURATION_ELEMENT, Configuration.ToString());
-		}
-
-		/// <summary>
-		/// Creates a new originator instance from the settings.
-		/// </summary>
-		/// <param name="factory"></param>
-		/// <returns></returns>
-		public override IOriginator ToOriginator(IDeviceFactory factory)
-		{
-			IoPortAdapter output = new IoPortAdapter();
-			output.ApplySettings(this, factory);
-			return output;
 		}
 
 		/// <summary>
