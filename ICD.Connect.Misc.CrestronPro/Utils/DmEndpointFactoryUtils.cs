@@ -3,7 +3,6 @@ using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.DM;
 using ICD.Common.Services;
 using ICD.Common.Services.Logging;
-using ICD.Connect.Devices;
 using ICD.Connect.Devices.Extensions;
 using ICD.Connect.Misc.CrestronPro.Devices;
 using ICD.Connect.Settings.Core;

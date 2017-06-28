@@ -2,7 +2,6 @@
 using Crestron.SimplSharpPro;
 using ICD.Common.Properties;
 using ICD.Common.Services.Logging;
-using ICD.Connect.Devices;
 using ICD.Connect.Devices.Extensions;
 using ICD.Connect.Misc.CrestronPro.Devices;
 using ICD.Connect.Protocol.Ports.RelayPort;
