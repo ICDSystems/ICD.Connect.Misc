@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using Crestron.SimplSharpPro;
-using ICD.Connect.API.Commands;
-using ICD.Connect.API.Nodes;
 using ICD.Common.Properties;
 using ICD.Common.Services.Logging;
 using ICD.Common.Utils;
 using ICD.Common.Utils.Extensions;
+using ICD.Connect.API.Commands;
+using ICD.Connect.API.Nodes;
 using ICD.Connect.Devices.Extensions;
 using ICD.Connect.Misc.CrestronPro.Devices;
 using ICD.Connect.Protocol.Ports;

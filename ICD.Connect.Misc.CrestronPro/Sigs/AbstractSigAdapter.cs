@@ -1,7 +1,6 @@
 ﻿using System;
 using ICD.Common.Properties;
 using ICD.Connect.Protocol.Sigs;
-using eSigType = ICD.Connect.Protocol.Sigs.eSigType;
 using Sig = Crestron.SimplSharpPro.Sig;
 
 namespace ICD.Connect.Misc.CrestronPro.Sigs
