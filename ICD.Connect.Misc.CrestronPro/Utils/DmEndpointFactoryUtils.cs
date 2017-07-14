@@ -122,8 +122,8 @@ namespace ICD.Connect.Misc.CrestronPro.Utils
 					}
 					else
 					{
-						DMOutput input = provider.GetDmOutput((int)dmAddress);
-						return ipid == null ? instantiate3(input) : instantiate2((byte)ipid, input);
+						DMOutput output = provider.GetDmOutput((int)dmAddress);
+						return ipid == null ? instantiate3(output) : instantiate2((byte)ipid, output);
 					}
 				}
 			}
