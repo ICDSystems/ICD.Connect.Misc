@@ -217,7 +217,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 		/// <returns></returns>
 		protected override bool GetIsOnlineStatus()
 		{
-			return m_Port != null && m_Port.IsOnline;
+			return m_Port != null;
 		}
 
 		#endregion
