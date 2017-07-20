@@ -77,10 +77,11 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 		[PublicAPI, XmlPortSettingsFactoryMethod(FACTORY_NAME)]
 		public static IoPortAdapterSettings FromXml(string xml)
 		{
-			int? device = XmlUtils.TryReadChildElementContentAsInt(xml, PARENT_DEVICE_ELEMENT);
-			int address = XmlUtils.ReadChildElementContentAsInt(xml, ADDRESS_ELEMENT);
-			eIoPortConfiguration configuration =
-				XmlUtils.ReadChildElementContentAsEnum<eIoPortConfiguration>(xml, CONFIGURATION_ELEMENT, true);
+			int device = XmlUtils.TryReadChildElementContentAsInt(xml, PARENT_DEVICE_ELEMENT) ?? 0;
+			int address = XmlUtils.TryReadChildElementContentAsInt(xml, ADDRESS_ELEMENT) ?? 0;
+
+			eIoPortConfiguration configuration;
+			XmlUtils.TryReadChildElementContentAsEnum(xml, CONFIGURATION_ELEMENT, true, out configuration);
 
 			IoPortAdapterSettings output = new IoPortAdapterSettings
 			{
