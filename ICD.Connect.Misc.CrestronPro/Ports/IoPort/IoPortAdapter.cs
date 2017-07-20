@@ -80,7 +80,14 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 		/// <param name="digitalOut"></param>
 		public override void SetDigitalOut(bool digitalOut)
 		{
-			m_Port.DigitalOut = digitalOut;
+			try
+			{
+				m_Port.DigitalOut = digitalOut;
+			}
+			catch (InvalidOperationException e)
+			{
+				Logger.AddEntry(eSeverity.Error, "{0} failed to set green led state - {1}", this, e.Message);
+			}
 		}
 
 		#endregion
