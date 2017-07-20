@@ -118,7 +118,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 		{
 			base.CopySettingsFinal(settings);
 
-			settings.Ipid = m_PortsDevice == null ? (byte)0 : (byte)m_PortsDevice.ID;
+			settings.CresnetId = m_PortsDevice == null ? (byte)0 : (byte)m_PortsDevice.ID;
 		}
 
 		/// <summary>
@@ -140,7 +140,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 		{
 			base.ApplySettingsFinal(settings, factory);
 
-			DinIo8 device = new DinIo8(settings.Ipid, ProgramInfo.ControlSystem);
+			DinIo8 device = new DinIo8(settings.CresnetId, ProgramInfo.ControlSystem);
 			SetPortsDevice(device);
 		}
 

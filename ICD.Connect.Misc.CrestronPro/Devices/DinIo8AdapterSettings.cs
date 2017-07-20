@@ -12,10 +12,10 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 	{
 		private const string FACTORY_NAME = "DinIo8";
 
-		private const string IPID_ELEMENT = "IPID";
+		private const string CRESNET_ID_ELEMENT = "CresnetID";
 
 		[SettingsProperty(SettingsProperty.ePropertyType.Ipid)]
-		public byte Ipid { get; set; }
+		public byte CresnetId { get; set; }
 
 		/// <summary>
 		/// Gets the originator factory name.
@@ -35,7 +35,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 		{
 			base.WriteElements(writer);
 
-			writer.WriteElementString(IPID_ELEMENT, StringUtils.ToIpIdString(Ipid));
+			writer.WriteElementString(CRESNET_ID_ELEMENT, StringUtils.ToIpIdString(CresnetId));
 		}
 
 		/// <summary>
@@ -46,11 +46,11 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 		[PublicAPI, XmlDeviceSettingsFactoryMethod(FACTORY_NAME)]
 		public static DinIo8AdapterSettings FromXml(string xml)
 		{
-			byte ipid = XmlUtils.ReadChildElementContentAsByte(xml, IPID_ELEMENT);
+			byte cresnetId = XmlUtils.ReadChildElementContentAsByte(xml, CRESNET_ID_ELEMENT);
 
 			DinIo8AdapterSettings output = new DinIo8AdapterSettings
 			{
-				Ipid = ipid
+				CresnetId = cresnetId
 			};
 
 			ParseXml(output, xml);
