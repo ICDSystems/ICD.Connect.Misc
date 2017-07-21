@@ -1,7 +1,7 @@
-﻿using ICD.Common.Attributes.Properties;
-using ICD.Common.Utils;
+﻿using ICD.Common.Utils;
 using ICD.Common.Utils.Xml;
 using ICD.Connect.Settings;
+using ICD.Connect.Settings.Attributes;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 {

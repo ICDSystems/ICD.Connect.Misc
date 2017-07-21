@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using ICD.Common.Attributes.Properties;
 using ICD.Common.Properties;
 using ICD.Common.Utils.Xml;
 using ICD.Connect.Settings;
+using ICD.Connect.Settings.Attributes;
 using ICD.Connect.Settings.Attributes.Factories;
 
 namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
