@@ -70,8 +70,16 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 		/// </summary>
 		public override void SetConfiguration(eIoPortConfiguration configuration)
 		{
-			eVersiportConfiguration config = s_ConfigMap[configuration];
-			m_Port.SetVersiportConfiguration(config);
+		    try
+		    {
+		        eVersiportConfiguration config = s_ConfigMap[configuration];
+		        m_Port.SetVersiportConfiguration(config);
+		    }
+		    catch (InvalidOperationException ex)
+		    {
+		        Logger.AddEntry(eSeverity.Error, "Failed to establish configuration {0} - {1}", configuration, ex.Message);
+		    }
+
 		}
 
 		/// <summary>
