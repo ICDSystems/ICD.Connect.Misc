@@ -1,23 +1,33 @@
 ﻿using System.Collections.Generic;
+#if SIMPLSHARP
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.GeneralIO;
+#endif
 using ICD.Common.Services.Logging;
 using ICD.Connect.Devices;
 using ICD.Connect.Settings.Core;
+using System;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices
 {
-	public sealed class DinIo8Adapter : AbstractDevice<DinIo8AdapterSettings>, IPortParent
-	{
-		private DinIo8 m_PortsDevice;
+#if SIMPLSHARP
+    public sealed class DinIo8Adapter : AbstractDevice<DinIo8AdapterSettings>, IPortParent
+#else
+    public sealed class DinIo8Adapter : AbstractDevice<DinIo8AdapterSettings>
+#endif
+    {
+#if SIMPLSHARP
+        private DinIo8 m_PortsDevice;
+#endif
 
-		#region Methods
+#region Methods
 
-		/// <summary>
-		/// Sets the wrapped device.
-		/// </summary>
-		/// <param name="device"></param>
-		public void SetPortsDevice(DinIo8 device)
+#if SIMPLSHARP
+        /// <summary>
+        /// Sets the wrapped device.
+        /// </summary>
+        /// <param name="device"></param>
+        public void SetPortsDevice(DinIo8 device)
 		{
 			Unsubscribe(m_PortsDevice);
 
@@ -49,6 +59,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 			Subscribe(m_PortsDevice);
 			UpdateCachedOnlineStatus();
 		}
+#endif
 
 		/// <summary>
 		/// Gets the current online status of the device.
@@ -56,15 +67,20 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 		/// <returns></returns>
 		protected override bool GetIsOnlineStatus()
 		{
-			return m_PortsDevice != null && m_PortsDevice.IsOnline;
-		}
+#if SIMPLSHARP
+            return m_PortsDevice != null && m_PortsDevice.IsOnline;
+#else
+            return false;
+#endif
+        }
 
-		/// <summary>
-		/// Gets the port at the given address.
-		/// </summary>
-		/// <param name="address"></param>
-		/// <returns></returns>
-		public ComPort GetComPort(int address)
+#if SIMPLSHARP
+        /// <summary>
+        /// Gets the port at the given address.
+        /// </summary>
+        /// <param name="address"></param>
+        /// <returns></returns>
+        public ComPort GetComPort(int address)
 		{
 			string message = string.Format("{0} has no {1} with address {2}", this, typeof(ComPort).Name, address);
 			throw new KeyNotFoundException(message);
@@ -105,10 +121,11 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 			string message = string.Format("{0} has no {1} with address {2}", this, typeof(Versiport).Name, address);
 			throw new KeyNotFoundException(message);
 		}
+#endif
 
-		#endregion
+#endregion
 
-		#region Settings
+#region Settings
 
 		/// <summary>
 		/// Override to apply properties to the settings instance.
@@ -118,8 +135,12 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 		{
 			base.CopySettingsFinal(settings);
 
-			settings.CresnetId = m_PortsDevice == null ? (byte)0 : (byte)m_PortsDevice.ID;
-		}
+#if SIMPLSHARP
+            settings.CresnetId = m_PortsDevice == null ? (byte)0 : (byte)m_PortsDevice.ID;
+#else
+            settings.CresnetId = 0;
+#endif
+        }
 
 		/// <summary>
 		/// Override to clear the instance settings.
@@ -128,7 +149,9 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 		{
 			base.ClearSettingsFinal();
 
-			SetPortsDevice(null);
+#if SIMPLSHARP
+            SetPortsDevice(null);
+#endif
 		}
 
 		/// <summary>
@@ -140,19 +163,24 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 		{
 			base.ApplySettingsFinal(settings, factory);
 
-			DinIo8 device = new DinIo8(settings.CresnetId, ProgramInfo.ControlSystem);
+#if SIMPLSHARP
+            DinIo8 device = new DinIo8(settings.CresnetId, ProgramInfo.ControlSystem);
 			SetPortsDevice(device);
-		}
+#else
+            throw new NotImplementedException();
+#endif
+        }
 
-		#endregion
+        #endregion
 
-		#region Device Callbacks
+#region Device Callbacks
 
-		/// <summary>
-		/// Subscribe to the device events.
-		/// </summary>
-		/// <param name="portsDevice"></param>
-		private void Subscribe(DinIo8 portsDevice)
+#if SIMPLSHARP
+        /// <summary>
+        /// Subscribe to the device events.
+        /// </summary>
+        /// <param name="portsDevice"></param>
+        private void Subscribe(DinIo8 portsDevice)
 		{
 			if (portsDevice == null)
 				return;
@@ -181,7 +209,8 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 		{
 			UpdateCachedOnlineStatus();
 		}
+#endif
 
-		#endregion
+#endregion
 	}
 }

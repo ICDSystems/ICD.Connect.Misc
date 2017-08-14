@@ -1,4 +1,5 @@
-﻿using Crestron.SimplSharpPro.DM;
+﻿#if SIMPLSHARP
+using Crestron.SimplSharpPro.DM;
 using ICD.Common.Properties;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices
@@ -26,3 +27,4 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 		DMOutput GetDmOutput(int address);
 	}
 }
+#endif

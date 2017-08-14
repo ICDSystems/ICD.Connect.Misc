@@ -1,10 +1,13 @@
+#if SIMPLSHARP
 using System.Collections.Generic;
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.ThreeSeriesCards;
+#endif
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 {
-	public abstract class AbstractC3RyAdapter<TCard, TSettings> : AbstractCardAdapter<TCard, TSettings>
+#if SIMPLSHARP
+    public abstract class AbstractC3RyAdapter<TCard, TSettings> : AbstractCardAdapter<TCard, TSettings>
 		where TCard : C3ry
 		where TSettings : AbstractC3RyAdapterSettings, new()
 	{
@@ -22,4 +25,10 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 			throw new KeyNotFoundException(message);
 		}
 	}
+#else
+    public abstract class AbstractC3RyAdapter<TSettings> : AbstractCardAdapter<TSettings>
+        where TSettings : AbstractC3RyAdapterSettings, new()
+    {
+    }
+#endif
 }

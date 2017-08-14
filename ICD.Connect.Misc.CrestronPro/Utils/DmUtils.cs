@@ -1,4 +1,5 @@
-﻿using Crestron.SimplSharpPro.DM;
+﻿#if SIMPLSHARP
+using Crestron.SimplSharpPro.DM;
 using ICD.Connect.Routing.Connections;
 
 namespace ICD.Connect.Misc.CrestronPro.Utils
@@ -32,3 +33,4 @@ namespace ICD.Connect.Misc.CrestronPro.Utils
 		}
 	}
 }
+#endif

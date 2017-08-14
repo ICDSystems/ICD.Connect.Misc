@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
+#if SIMPLSHARP
 using Crestron.SimplSharp;
+#endif
 using ICD.Common.Properties;
 using ICD.Common.Services;
 using ICD.Common.Services.Logging;
 using ICD.Common.Utils;
 using ICD.Common.Utils.IO;
-
-#if SIMPLSHARP
-
-#endif
 
 namespace ICD.Connect.TvPresets.SPlusInterfaces
 {
@@ -47,9 +45,11 @@ namespace ICD.Connect.TvPresets.SPlusInterfaces
 
 		private static readonly SafeCriticalSection s_PresetsLoadCriticalSection = new SafeCriticalSection();
 
-		private static readonly CEvent s_PresetsLoadedEvent = new CEvent(false, false);
+#if SIMPLSHARP
+        private static readonly CEvent s_PresetsLoadedEvent = new CEvent(false, false);
+#endif
 
-		#endregion
+#endregion
 
 		/// <summary>
 		/// Gets the directory where xml tv presets documents are located.
@@ -62,15 +62,15 @@ namespace ICD.Connect.TvPresets.SPlusInterfaces
 			get { return GetOrLoadPresets(); }
 		}
 
-		#region Events
+#region Events
 
 		public static event EventHandler OnPresetsLoaded;
 
 
-		#endregion
+#endregion
 
 
-		#region Methods
+#region Methods
 
 
 		private static XmlTvPresets GetOrLoadPresets()
@@ -88,7 +88,9 @@ namespace ICD.Connect.TvPresets.SPlusInterfaces
 				case PresetLoadState.Loaded:
 					return s_Presets;
 				case PresetLoadState.Loading:
-					s_PresetsLoadedEvent.Wait();
+#if SIMPLSHARP
+                    s_PresetsLoadedEvent.Wait();
+#endif
 					return s_Presets;
 				case PresetLoadState.LoadError:
 					return s_Presets;
@@ -126,8 +128,9 @@ namespace ICD.Connect.TvPresets.SPlusInterfaces
 		[PublicAPI]
 		public static void LoadPresets(string xmlPath)
 		{
-
+#if SIMPLSHARP
 			s_PresetsLoadedEvent.Reset();
+#endif
 
 			s_PresetsLoadCriticalSection.Enter();
 			s_PresetLoadState = PresetLoadState.Loading;
@@ -152,10 +155,13 @@ namespace ICD.Connect.TvPresets.SPlusInterfaces
 			s_PresetLoadState = error ? PresetLoadState.LoadError : PresetLoadState.Loaded;
 			s_PresetsLoadCriticalSection.Leave();
 
+#if SIMPLSHARP
 			s_PresetsLoadedEvent.Set();
-			PresetsLoaded();
+#endif
+
+            PresetsLoaded();
 		}
 
-		#endregion
+#endregion
 	}
 }

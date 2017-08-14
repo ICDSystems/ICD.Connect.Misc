@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+#if SIMPLSHARP
 using Crestron.SimplSharp.CrestronIO;
 using Crestron.SimplSharpPro;
+#endif
 using ICD.Common.Properties;
 using ICD.Common.Services.Logging;
 using ICD.Common.Utils;
@@ -19,7 +21,9 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 	/// </summary>
 	public sealed class IrPortAdapter : AbstractIrPort<IrPortAdapterSettings>
 	{
-		private IROutputPort m_Port;
+#if SIMPLSHARP
+        private IROutputPort m_Port;
+#endif
 		private readonly Queue<IrPulse> m_Queue;
 		private readonly SafeTimer m_PulseTimer;
 
@@ -28,7 +32,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		private int m_Address;
 		private string m_Driver;
 
-		#region Properties
+#region Properties
 
 		/// <summary>
 		/// Gets/sets the default pulse time in milliseconds for a PressAndRelease.
@@ -40,9 +44,9 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		/// </summary>
 		public override ushort BetweenTime { get; set; }
 
-		#endregion
+#endregion
 
-		#region Constructor
+#region Constructor
 
 		/// <summary>
 		/// Constructor.
@@ -54,9 +58,9 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 			m_PulseTimer = SafeTimer.Stopped(TimerCallbackMethod);
 		}
 
-		#endregion
+#endregion
 
-		#region Methods
+#region Methods
 
 		/// <summary>
 		/// Release resources.
@@ -65,18 +69,21 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		{
 			m_PulseTimer.Dispose();
 
-			// Unregister.
-			SetIrPort(null, 0);
+#if SIMPLSHARP
+            // Unregister.
+            SetIrPort(null, 0);
+#endif
 
 			base.DisposeFinal(disposing);
 		}
 
-		/// <summary>
-		/// Sets the wrapped port instance.
-		/// </summary>
-		/// <param name="port"></param>
-		/// <param name="address"></param>
-		[PublicAPI]
+#if SIMPLSHARP
+        /// <summary>
+        /// Sets the wrapped port instance.
+        /// </summary>
+        /// <param name="port"></param>
+        /// <param name="address"></param>
+        [PublicAPI]
 		public void SetIrPort(IROutputPort port, int address)
 		{
 			m_Address = address;
@@ -94,6 +101,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 
 			UpdateCachedOnlineStatus();
 		}
+#endif
 
 		/// <summary>
 		/// Loads the driver from the given path.
@@ -101,7 +109,8 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		/// <param name="path"></param>
 		public override void LoadDriver(string path)
 		{
-			m_Driver = path;
+#if SIMPLSHARP
+            m_Driver = path;
 
 			if (m_Port == null)
 			{
@@ -119,7 +128,10 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 			{
 				Logger.AddEntry(eSeverity.Error, "IR Driver does not exist: {0}", fullPath);
 			}
-		}
+#else
+            throw new NotImplementedException();
+#endif
+        }
 
 		/// <summary>
 		/// Begin sending the command.
@@ -127,11 +139,15 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		/// <param name="command"></param>
 		public override void Press(string command)
 		{
-			Clear();
+#if SIMPLSHARP
+            Clear();
 
 			PrintTx(command);
 			m_Port.Press(command);
-		}
+#else
+            throw new NotImplementedException();
+#endif
+        }
 
 		/// <summary>
 		/// Stop sending the current command.
@@ -175,9 +191,9 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 				SendNext();
 		}
 
-		#endregion
+#endregion
 
-		#region Settings
+#region Settings
 
 		/// <summary>
 		/// Override to apply properties to the settings instance.
@@ -205,7 +221,10 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 			m_Driver = null;
 			PulseTime = 0;
 			BetweenTime = 0;
-			SetIrPort(null, 0);
+
+#if SIMPLSHARP
+            SetIrPort(null, 0);
+#endif
 		}
 
 		/// <summary>
@@ -222,7 +241,8 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 			PulseTime = settings.PulseTime;
 			BetweenTime = settings.BetweenTime;
 
-			IROutputPort port = null;
+#if SIMPLSHARP
+            IROutputPort port = null;
 			IPortParent provider = null;
 
 			// ReSharper disable SuspiciousTypeConversion.Global
@@ -250,11 +270,14 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 
 			SetIrPort(port, settings.Address);
 			LoadDriver(settings.Driver);
-		}
+#else
+            throw new NotImplementedException();
+#endif
+        }
 
-		#endregion
+#endregion
 
-		#region Private Methods
+#region Private Methods
 
 		/// <summary>
 		/// Gets the current online status of the device.
@@ -262,48 +285,64 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		/// <returns></returns>
 		protected override bool GetIsOnlineStatus()
 		{
-			return m_Port != null;
-		}
+#if SIMPLSHARP
+            return m_Port != null;
+#else
+            return false;
+#endif
+        }
 
 		/// <summary>
 		/// Releases the current command and clears the queued commands.
 		/// </summary>
 		private void Clear()
 		{
-			if (m_Port != null)
+#if SIMPLSHARP
+            if (m_Port != null)
 				m_Port.Release();
 
 			m_PulseTimer.Stop();
 			m_Queue.Clear();
-		}
+#else
+            throw new NotImplementedException();
+#endif
+        }
 
 		/// <summary>
 		/// Sends the next pulse in the queue.
 		/// </summary>
 		private void SendNext()
 		{
-			IrPulse pulse = m_Queue.Peek();
+#if SIMPLSHARP
+            IrPulse pulse = m_Queue.Peek();
 
 			PrintTx(pulse.Command);
 			m_Port.PressAndRelease(pulse.Command, pulse.PulseTime);
 			m_PulseTimer.Reset(pulse.Duration);
-		}
+#else
+            throw new NotImplementedException();
+#endif
+        }
 
 		/// <summary>
 		/// Called when the pulse timer elapses.
 		/// </summary>
 		private void TimerCallbackMethod()
 		{
-			m_Port.Release();
+#if SIMPLSHARP
+            m_Port.Release();
 			m_Queue.Dequeue();
 
 			if (m_Queue.Count > 0)
 				SendNext();
-		}
+#else
+            throw new NotImplementedException();
+#endif
+        }
 
-		#endregion
+#endregion
 
-		#region Console
+#region Console
 
 		/// <summary>
 		/// Calls the delegate for each console status item.
@@ -316,6 +355,6 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 			addRow("Driver", m_Driver);
 		}
 
-		#endregion
+#endregion
 	}
 }

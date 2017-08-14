@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
+#if SIMPLSHARP
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.ThreeSeriesCards;
+#endif
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 {
+#if SIMPLSHARP
 	public sealed class C3Ir8Adapter : AbstractCardAdapter<C3ir8, C3Ir8AdapterSettings>
 	{
 		/// <summary>
@@ -41,4 +44,9 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 			return new C3ir8(ipid, cardFrame);
 		}
 	}
+#else
+    public sealed class C3Ir8Adapter : AbstractCardAdapter<C3Ir8AdapterSettings>
+    {
+    }
+#endif
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if SIMPLSHARP
+using System;
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.DM;
 using ICD.Common.Services;
@@ -132,3 +133,4 @@ namespace ICD.Connect.Misc.CrestronPro.Utils
 		}
 	}
 }
+#endif

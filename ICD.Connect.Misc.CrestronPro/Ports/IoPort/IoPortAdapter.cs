@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+#if SIMPLSHARP
 using Crestron.SimplSharpPro;
+#endif
 using ICD.Common.Properties;
 using ICD.Common.Services.Logging;
 using ICD.Common.Utils.Extensions;
@@ -14,7 +16,8 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 {
 	public sealed class IoPortAdapter : AbstractIoPort<IoPortAdapterSettings>
 	{
-		private static readonly Dictionary<eIoPortConfiguration, eVersiportConfiguration> s_ConfigMap =
+#if SIMPLSHARP
+        private static readonly Dictionary<eIoPortConfiguration, eVersiportConfiguration> s_ConfigMap =
 			new Dictionary<eIoPortConfiguration, eVersiportConfiguration>
 			{
 				{eIoPortConfiguration.None, eVersiportConfiguration.NotSet},
@@ -24,30 +27,34 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 			};
 
 		private Versiport m_Port;
+#endif
 
 		// Used with settings
 		private int? m_Device;
 		private int m_Address;
 
-		#region Methods
+#region Methods
 
 		/// <summary>
 		/// Release resources.
 		/// </summary>
 		protected override void DisposeFinal(bool disposing)
 		{
-			// Unregister.
-			SetIoPort(null, 0);
+#if SIMPLSHARP
+            // Unregister.
+            SetIoPort(null, 0);
+#endif
 
 			base.DisposeFinal(disposing);
 		}
 
-		/// <summary>
-		/// Sets the wrapped port instance.
-		/// </summary>
-		/// <param name="port"></param>
-		/// <param name="address"></param>
-		[PublicAPI]
+#if SIMPLSHARP
+        /// <summary>
+        /// Sets the wrapped port instance.
+        /// </summary>
+        /// <param name="port"></param>
+        /// <param name="address"></param>
+        [PublicAPI]
 		public void SetIoPort(Versiport port, int address)
 		{
 			m_Address = address;
@@ -64,13 +71,15 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 
 			UpdateCachedOnlineStatus();
 		}
+#endif
 
 		/// <summary>
 		/// Sets the configuration mode.
 		/// </summary>
 		public override void SetConfiguration(eIoPortConfiguration configuration)
 		{
-		    try
+#if SIMPLSHARP
+            try
 		    {
 		        eVersiportConfiguration config = s_ConfigMap[configuration];
 		        m_Port.SetVersiportConfiguration(config);
@@ -79,8 +88,10 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 		    {
 		        Logger.AddEntry(eSeverity.Error, "Failed to establish configuration {0} - {1}", configuration, ex.Message);
 		    }
-
-		}
+#else
+            throw new NotImplementedException();
+#endif
+        }
 
 		/// <summary>
 		/// Sets the digital output state.
@@ -88,7 +99,8 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 		/// <param name="digitalOut"></param>
 		public override void SetDigitalOut(bool digitalOut)
 		{
-			try
+#if SIMPLSHARP
+            try
 			{
 				m_Port.DigitalOut = digitalOut;
 			}
@@ -96,17 +108,21 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 			{
 				Logger.AddEntry(eSeverity.Error, "{0} failed to set green led state - {1}", this, e.Message);
 			}
-		}
+#else
+            throw new NotImplementedException();
+#endif
+        }
 
-		#endregion
+        #endregion
 
-		#region Port Callbacks
+#region Port Callbacks
 
-		/// <summary>
-		/// Subscribe to the port events.
-		/// </summary>
-		/// <param name="port"></param>
-		private void Subscribe(Versiport port)
+#if SIMPLSHARP
+        /// <summary>
+        /// Subscribe to the port events.
+        /// </summary>
+        /// <param name="port"></param>
+        private void Subscribe(Versiport port)
 		{
 			if (port == null)
 				return;
@@ -152,10 +168,11 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 					break;
 			}
 		}
+#endif
 
-		#endregion
+#endregion
 
-		#region Settings
+#region Settings
 
 		/// <summary>
 		/// Override to apply properties to the settings instance.
@@ -177,7 +194,9 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 		{
 			base.ClearSettingsFinal();
 
-			SetIoPort(null, 0);
+#if SIMPLSHARP
+            SetIoPort(null, 0);
+#endif
 			Configuration = eIoPortConfiguration.None;
 		}
 
@@ -190,7 +209,8 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 		{
 			base.ApplySettingsFinal(settings, factory);
 
-			m_Device = settings.Device;
+#if SIMPLSHARP
+            m_Device = settings.Device;
 
 			Versiport port = null;
 			IPortParent provider = null;
@@ -220,11 +240,14 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 
 			SetIoPort(port, settings.Address);
 			SetConfiguration(settings.Configuration);
-		}
+#else
+            throw new NotImplementedException();
+#endif
+        }
 
-		#endregion
+#endregion
 
-		#region Private Methods
+#region Private Methods
 
 		/// <summary>
 		/// Gets the current online status of the device.
@@ -232,9 +255,13 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 		/// <returns></returns>
 		protected override bool GetIsOnlineStatus()
 		{
-			return m_Port != null;
-		}
+#if SIMPLSHARP
+            return m_Port != null;
+#else
+            return false;
+#endif
+        }
 
-		#endregion
+#endregion
 	}
 }

@@ -1,25 +1,31 @@
-﻿using Crestron.SimplSharpPro;
+﻿#if SIMPLSHARP
+using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.ThreeSeriesCards;
+#endif
 using ICD.Common.Services.Logging;
 using ICD.Connect.Devices;
 using ICD.Connect.Settings.Core;
+using System;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.CardFrames
 {
 	public sealed class CenCi33Adapter : AbstractDevice<CenCi33AdapterSettings>
 	{
-		/// <summary>
-		/// Gets the wrapped CardCage.
-		/// </summary>
+#if SIMPLSHARP
+        /// <summary>
+        /// Gets the wrapped CardCage.
+        /// </summary>
 		public CenCi33 CardFrame { get; private set; }
+#endif
 
-		#region Methods
+#region Methods
 
-		/// <summary>
-		/// Sets the wrapped device.
-		/// </summary>
-		/// <param name="device"></param>
-		public void SetCardCage(CenCi33 device)
+#if SIMPLSHARP
+        /// <summary>
+        /// Sets the wrapped device.
+        /// </summary>
+        /// <param name="device"></param>
+        public void SetCardCage(CenCi33 device)
 		{
 			Unsubscribe(CardFrame);
 
@@ -51,6 +57,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CardFrames
 			Subscribe(CardFrame);
 			UpdateCachedOnlineStatus();
 		}
+#endif
 
 		/// <summary>
 		/// Gets the current online status of the device.
@@ -58,12 +65,16 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CardFrames
 		/// <returns></returns>
 		protected override bool GetIsOnlineStatus()
 		{
+#if SIMPLSHARP
 			return CardFrame != null && CardFrame.IsOnline;
-		}
+#else
+            return false;
+#endif
+        }
 
-		#endregion
+#endregion
 
-		#region Settings
+#region Settings
 
 		/// <summary>
 		/// Override to apply properties to the settings instance.
@@ -73,8 +84,12 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CardFrames
 		{
 			base.CopySettingsFinal(settings);
 
+#if SIMPLSHARP
 			settings.Ipid = CardFrame == null ? (byte)0 : (byte)CardFrame.ID;
-		}
+#else
+            settings.Ipid = 0;
+#endif
+        }
 
 		/// <summary>
 		/// Override to clear the instance settings.
@@ -83,7 +98,9 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CardFrames
 		{
 			base.ClearSettingsFinal();
 
+#if SIMPLSHARP
 			SetCardCage(null);
+#endif
 		}
 
 		/// <summary>
@@ -95,14 +112,19 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CardFrames
 		{
 			base.ApplySettingsFinal(settings, factory);
 
+#if SIMPLSHARP
 			CenCi33 device = new CenCi33(settings.Ipid, ProgramInfo.ControlSystem);
 			SetCardCage(device);
-		}
+#else
+            throw new NotImplementedException();
+#endif
+        }
 
-		#endregion
+#endregion
 
-		#region Device Callbacks
+#region Device Callbacks
 
+#if SIMPLSHARP
 		/// <summary>
 		/// Subscribe to the device events.
 		/// </summary>
@@ -136,7 +158,8 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CardFrames
 		{
 			UpdateCachedOnlineStatus();
 		}
+#endif
 
-		#endregion
+#endregion
 	}
 }

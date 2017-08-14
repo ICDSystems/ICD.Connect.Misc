@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+#if SIMPLSHARP
 using Crestron.SimplSharpPro;
+#endif
 using ICD.Common.Properties;
 using ICD.Common.Services.Logging;
 using ICD.Common.Utils;
@@ -22,7 +24,9 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 	/// </summary>
 	public sealed class ComPortAdapter : AbstractSerialPort<ComPortAdapterSettings>, IComPort
 	{
-		private Crestron.SimplSharpPro.ComPort m_Port;
+#if SIMPLSHARP
+        private Crestron.SimplSharpPro.ComPort m_Port;
+#endif
 
 		// Used with settings
 		private int? m_Device;
@@ -33,7 +37,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 		/// </summary>
 		public override bool IsConnected { get { return true; } protected set { } }
 
-		#region Methods
+#region Methods
 
 		/// <summary>
 		/// Release resources.
@@ -42,16 +46,19 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 		{
 			base.DisposeFinal(disposing);
 
-			// Unsbscribe and unregister
-			SetComPort(null, 0);
+#if SIMPLSHARP
+            // Unsbscribe and unregister
+            SetComPort(null, 0);
+#endif
 		}
 
-		/// <summary>
-		/// Sets the com port.
-		/// </summary>
-		/// <param name="port"></param>
-		/// <param name="address"></param>
-		[PublicAPI]
+#if SIMPLSHARP
+        /// <summary>
+        /// Sets the com port.
+        /// </summary>
+        /// <param name="port"></param>
+        /// <param name="address"></param>
+        [PublicAPI]
 		public void SetComPort(Crestron.SimplSharpPro.ComPort port, int address)
 		{
 			m_Address = address;
@@ -72,6 +79,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 
 			UpdateCachedOnlineStatus();
 		}
+#endif
 
 		public override void Connect()
 		{
@@ -94,7 +102,8 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 
 		protected override bool SendFinal(string data)
 		{
-			if (m_Port == null)
+#if SIMPLSHARP
+            if (m_Port == null)
 			{
 				string message = string.Format("{0} internal port is null", this);
 				throw new InvalidOperationException(message);
@@ -104,20 +113,24 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 			m_Port.Send(data);
 
 			return true;
-		}
+#else
+            throw new NotImplementedException();
+#endif
+        }
 
-		#endregion
+        #endregion
 
-		#region ComSpec
+#region ComSpec
 
-		[PublicAPI]
+        [PublicAPI]
 		public int SetComPortSpec(eComBaudRates baudRate, eComDataBits numberOfDataBits,
 		                          eComParityType parityType,
 		                          eComStopBits numberOfStopBits, eComProtocolType protocolType,
 		                          eComHardwareHandshakeType hardwareHandShake,
 		                          eComSoftwareHandshakeType softwareHandshake, bool reportCtsChanges)
 		{
-			SetBaudRate(baudRate);
+#if SIMPLSHARP
+            SetBaudRate(baudRate);
 			SetDataBits(numberOfDataBits);
 			SetParityType(parityType);
 			SetStopBits(numberOfStopBits);
@@ -127,8 +140,12 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 
 			// Only care about the final value
 			return SetReportCtsChanges(reportCtsChanges);
-		}
+#else
+            throw new NotImplementedException();
+#endif
+        }
 
+#if SIMPLSHARP
 		[PublicAPI]
 		public int SetBaudRate(eComBaudRates baudRate)
 		{
@@ -305,19 +322,24 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 			                             m_Port.SwHandShake,
 			                             reportCtsChanges);
 		}
+#endif
 
-		#endregion
+#endregion
 
-		#region Private Methods
+#region Private Methods
 
-		/// <summary>
-		/// Gets the current online status of the device.
-		/// </summary>
-		/// <returns></returns>
-		protected override bool GetIsOnlineStatus()
+        /// <summary>
+        /// Gets the current online status of the device.
+        /// </summary>
+        /// <returns></returns>
+        protected override bool GetIsOnlineStatus()
 		{
-			return m_Port != null;
-		}
+#if SIMPLSHARP
+            return m_Port != null;
+#else
+            return false;
+#endif
+        }
 
 		/// <summary>
 		/// Parses the input enum to the destination type.
@@ -330,14 +352,15 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 			return EnumUtils.Parse<T>(enumValue.ToString(), true);
 		}
 
-		#endregion
+#endregion
 
-		#region Port Callbacks
+#region Port Callbacks
 
-		/// <summary>
-		/// Subscribe to the port events.
-		/// </summary>
-		private void Subscribe(Crestron.SimplSharpPro.ComPort port)
+#if SIMPLSHARP
+        /// <summary>
+        /// Subscribe to the port events.
+        /// </summary>
+        private void Subscribe(Crestron.SimplSharpPro.ComPort port)
 		{
 			if (port == null)
 				return;
@@ -367,10 +390,11 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 			PrintRx(args.SerialData);
 			Receive(args.SerialData);
 		}
+#endif
 
-		#endregion
+#endregion
 
-		#region Settings
+#region Settings
 
 		/// <summary>
 		/// Override to apply properties to the settings instance.
@@ -392,7 +416,10 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 			base.ClearSettingsFinal();
 
 			m_Device = 0;
-			SetComPort(null, 0);
+
+#if SIMPLSHARP
+            SetComPort(null, 0);
+#endif
 		}
 
 		/// <summary>
@@ -404,7 +431,8 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 		{
 			base.ApplySettingsFinal(settings, factory);
 
-			m_Device = settings.Device;
+#if SIMPLSHARP
+            m_Device = settings.Device;
 
 			Crestron.SimplSharpPro.ComPort port = null;
 			IPortParent provider = null;
@@ -431,17 +459,21 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 				Logger.AddEntry(eSeverity.Error, "No Com Port at {0} address {1}", m_Device, settings.Address);
 
 			SetComPort(port, settings.Address);
-		}
+#else
+            throw new NotImplementedException();
+#endif
+        }
 
-		#endregion
+        #endregion
 
-		#region Console Commands
+#region Console Commands
 
-		/// <summary>
-		/// Calls the delegate for each console status item.
-		/// </summary>
-		/// <param name="addRow"></param>
-		public override void BuildConsoleStatus(AddStatusRowDelegate addRow)
+#if SIMPLSHARP
+        /// <summary>
+        /// Calls the delegate for each console status item.
+        /// </summary>
+        /// <param name="addRow"></param>
+        public override void BuildConsoleStatus(AddStatusRowDelegate addRow)
 		{
 			base.BuildConsoleStatus(addRow);
 
@@ -507,7 +539,8 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 		{
 			return base.GetConsoleCommands();
 		}
+#endif
 
-		#endregion
+#endregion
 	}
 }

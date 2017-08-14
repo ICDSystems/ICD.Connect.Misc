@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
+#if SIMPLSHARP
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.ThreeSeriesCards;
+#endif
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 {
-	public sealed class C3Io16Adapter : AbstractCardAdapter<C3io16, C3Io16AdapterSettings>
+#if SIMPLSHARP
+    public sealed class C3Io16Adapter : AbstractCardAdapter<C3io16, C3Io16AdapterSettings>
 	{
 		/// <summary>
 		/// Gets the port at the given address.
@@ -38,4 +41,9 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 			return new C3io16(ipid, cardFrame);
 		}
 	}
+#else
+    public sealed class C3Io16Adapter : AbstractCardAdapter<C3Io16AdapterSettings>
+    {
+    }
+#endif
 }

@@ -1,4 +1,5 @@
-﻿using Crestron.SimplSharpPro;
+﻿#if SIMPLSHARP
+using Crestron.SimplSharpPro;
 using ICD.Common.Properties;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices
@@ -42,3 +43,4 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 		Versiport GetIoPort(int address);
 	}
 }
+#endif

@@ -1,8 +1,11 @@
-﻿using Crestron.SimplSharpPro.ThreeSeriesCards;
+﻿#if SIMPLSHARP
+using Crestron.SimplSharpPro.ThreeSeriesCards;
+#endif
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 {
-	public sealed class C3Ry8Adapter : AbstractC3RyAdapter<C3ry8, C3Ry8AdapterSettings>
+#if SIMPLSHARP
+    public sealed class C3Ry8Adapter : AbstractC3RyAdapter<C3ry8, C3Ry8AdapterSettings>
 	{
 		/// <summary>
 		/// Instantiates the card for the given card frame parent.
@@ -25,4 +28,9 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 			return new C3ry8(ipid, cardFrame);
 		}
 	}
+#else
+    public sealed class C3Ry8Adapter : AbstractC3RyAdapter<C3Ry8AdapterSettings>
+    {
+    }
+#endif
 }

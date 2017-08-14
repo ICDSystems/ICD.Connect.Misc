@@ -1,4 +1,5 @@
-﻿using Crestron.SimplSharpPro;
+﻿#if SIMPLSHARP
+using Crestron.SimplSharpPro;
 using ICD.Connect.Protocol.Sigs;
 
 namespace ICD.Connect.Misc.CrestronPro.Sigs
@@ -138,3 +139,4 @@ namespace ICD.Connect.Misc.CrestronPro.Sigs
 		}
 	}
 }
+#endif

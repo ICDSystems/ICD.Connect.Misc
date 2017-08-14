@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if SIMPLSHARP
+using System;
 using Crestron.SimplSharp;
 using ICD.Common.Properties;
 
@@ -7,14 +8,14 @@ namespace ICD.Connect.TvPresets.SPlusInterfaces
 	public sealed class SPlusTvPresetsInterface
 	{
 
-		#region Delegates
+#region Delegates
 
 		public delegate void StationCountDelegate(ushort count);
 
 		public delegate void StationParsedDelegate(ushort index, SimplSharpString channel, SimplSharpString name,
 												   SimplSharpString image, SimplSharpString url);
 
-		#endregion
+#endregion
 
 		/// <summary>
 		/// Called once before we start calling the StationParsedCallback to notify the number of parsed stations.
@@ -58,3 +59,4 @@ namespace ICD.Connect.TvPresets.SPlusInterfaces
 		}
 	}
 }
+#endif

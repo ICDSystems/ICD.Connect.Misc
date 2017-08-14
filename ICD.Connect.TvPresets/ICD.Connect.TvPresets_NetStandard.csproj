@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>netstandard1.6</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>TRACE;DEBUG;STANDARD</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="SIMPLSharpLogs\**" />
+    <EmbeddedResource Remove="SIMPLSharpLogs\**" />
+    <None Remove="SIMPLSharpLogs\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="ObfuscationSettings.cs" />
+    <Compile Remove="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove=".gitignore" />
+    <None Remove="ICD.Connect.projectinfo" />
+    <None Remove="ICD.SimplSharp.projectinfo" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\ICD.Common.Utils\ICD.Common.Utils\ICD.Common.Utils_NetStandard.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,36 +1,46 @@
 ﻿using System.Collections.Generic;
+#if SIMPLSHARP
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.ThreeSeriesCards;
 using Crestron.SimplSharpProInternal;
+#endif
 using ICD.Common.Properties;
 using ICD.Common.Services.Logging;
 using ICD.Connect.Devices;
 using ICD.Connect.Devices.Extensions;
 using ICD.Connect.Misc.CrestronPro.Devices.CardFrames;
 using ICD.Connect.Settings.Core;
+using System;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 {
-	public abstract class AbstractCardAdapter<TCard, TSettings> : AbstractDevice<TSettings>, IPortParent
+#if SIMPLSHARP
+    public abstract class AbstractCardAdapter<TCard, TSettings> : AbstractDevice<TSettings>, IPortParent
 		where TCard : C3Card
-		where TSettings : AbstractCardAdapterSettings, new()
+#else
+    public abstract class AbstractCardAdapter<TSettings> : AbstractDevice<TSettings>
+#endif
+        where TSettings : AbstractCardAdapterSettings, new()
 	{
 		// Used with settings.
 		private int? m_ParentId;
 
-		/// <summary>
-		/// Gets the wrapped card.
-		/// </summary>
-		public TCard Card { get; private set; }
+#if SIMPLSHARP
+        /// <summary>
+        /// Gets the wrapped card.
+        /// </summary>
+        public TCard Card { get; private set; }
+#endif
 
-		#region Methods
+#region Methods
 
-		/// <summary>
-		/// Sets the wrapped card device.
-		/// </summary>
-		/// <param name="card"></param>
-		/// <param name="parentId"></param>
-		public void SetCard(TCard card, int? parentId)
+#if SIMPLSHARP
+        /// <summary>
+        /// Sets the wrapped card device.
+        /// </summary>
+        /// <param name="card"></param>
+        /// <param name="parentId"></param>
+        public void SetCard(TCard card, int? parentId)
 		{
 			m_ParentId = parentId;
 
@@ -108,22 +118,27 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 			string message = string.Format("{0} has no {1} with address {2}", this, typeof(Versiport).Name, address);
 			throw new KeyNotFoundException(message);
 		}
+#endif
 
-		#endregion
+#endregion
 
-		#region Settings
+#region Settings
 
-		/// <summary>
-		/// Override to apply properties to the settings instance.
-		/// </summary>
-		/// <param name="settings"></param>
-		protected override void CopySettingsFinal(TSettings settings)
+        /// <summary>
+        /// Override to apply properties to the settings instance.
+        /// </summary>
+        /// <param name="settings"></param>
+        protected override void CopySettingsFinal(TSettings settings)
 		{
 			base.CopySettingsFinal(settings);
 
-			settings.Ipid = Card == null ? (byte?)null : (byte)Card.ID;
-			settings.CardFrame = m_ParentId;
-		}
+#if SIMPLSHARP
+            settings.Ipid = Card == null ? (byte?)null : (byte)Card.ID;
+#else
+            settings.Ipid = 0;
+#endif
+            settings.CardFrame = m_ParentId;
+        }
 
 		/// <summary>
 		/// Override to clear the instance settings.
@@ -132,7 +147,9 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 		{
 			base.ClearSettingsFinal();
 
-			SetCard(null, null);
+#if SIMPLSHARP
+            SetCard(null, null);
+#endif
 		}
 
 		/// <summary>
@@ -144,6 +161,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 		{
 			base.ApplySettingsFinal(settings, factory);
 
+#if SIMPLSHARP
 			if (!settings.CardFrame.HasValue)
 			{
 				Logger.AddEntry(eSeverity.Error, "Unable to instantiate {0} - No CardFrame DeviceId specified.", typeof(TCard).Name);
@@ -152,16 +170,20 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 
 			TCard card = InstantiateCard(settings.Ipid, settings.CardFrame.Value, factory);
 			SetCard(card, settings.CardFrame);
-		}
+#else
+            throw new NotImplementedException();
+#endif
+        }
 
-		/// <summary>
-		/// Instantiates the internal card based on provided parameters
-		/// </summary>
-		/// <param name="ipid"></param>
-		/// <param name="cardFrameId"></param>
-		/// <param name="factory"></param>
-		/// <returns></returns>
-		[CanBeNull]
+#if SIMPLSHARP
+        /// <summary>
+        /// Instantiates the internal card based on provided parameters
+        /// </summary>
+        /// <param name="ipid"></param>
+        /// <param name="cardFrameId"></param>
+        /// <param name="factory"></param>
+        /// <returns></returns>
+        [CanBeNull]
 		private TCard InstantiateCard(byte? ipid, int cardFrameId, IDeviceFactory factory)
 		{
 			IDevice cardFrame = factory.GetDeviceById(cardFrameId);
@@ -199,16 +221,18 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 		/// <param name="cardFrame"></param>
 		/// <returns></returns>
 		protected abstract TCard InstantiateCard(byte ipid, CenCi33 cardFrame);
+#endif
 
-		#endregion
+        #endregion
 
-		#region Card Callbacks
+        #region Card Callbacks
 
-		/// <summary>
-		/// Subscribe to the card events.
-		/// </summary>
-		/// <param name="card"></param>
-		private void Subscribe(TCard card)
+#if SIMPLSHARP
+        /// <summary>
+        /// Subscribe to the card events.
+        /// </summary>
+        /// <param name="card"></param>
+        private void Subscribe(TCard card)
 		{
 			if (card == null)
 				return;
@@ -237,16 +261,21 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 		{
 			UpdateCachedOnlineStatus();
 		}
+#endif
 
-		/// <summary>
-		/// Gets the current online status of the device.
-		/// </summary>
-		/// <returns></returns>
-		protected override bool GetIsOnlineStatus()
+        /// <summary>
+        /// Gets the current online status of the device.
+        /// </summary>
+        /// <returns></returns>
+        protected override bool GetIsOnlineStatus()
 		{
-			return Card != null && Card.IsOnline;
-		}
+#if SIMPLSHARP
+            return Card != null && Card.IsOnline;
+#else
+            return false;
+#endif
+        }
 
-		#endregion
+#endregion
 	}
 }
