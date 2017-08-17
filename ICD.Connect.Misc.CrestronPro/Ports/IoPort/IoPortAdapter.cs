@@ -114,6 +114,9 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 		/// </summary>
 		public override void SetConfiguration(eIoPortConfiguration configuration)
 		{
+			if (configuration == eIoPortConfiguration.None)
+				throw new InvalidOperationException(string.Format("Unable to set configuration to {0}", configuration));
+
 #if SIMPLSHARP
             try
 		    {
@@ -276,7 +279,9 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 				Logger.AddEntry(eSeverity.Error, "No IO Port at device {0} address {1}", m_Device, settings.Address);
 
 			SetIoPort(port, settings.Address);
-			SetConfiguration(settings.Configuration);
+
+			if (settings.Configuration != eIoPortConfiguration.None)
+				SetConfiguration(settings.Configuration);
 #else
             throw new NotImplementedException();
 #endif
