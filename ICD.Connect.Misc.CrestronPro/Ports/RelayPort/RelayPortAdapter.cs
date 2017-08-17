@@ -1,4 +1,5 @@
 ﻿using System;
+using ICD.Connect.Misc.CrestronPro.Utils.Extensions;
 #if SIMPLSHARP
 using Crestron.SimplSharpPro;
 #endif
@@ -48,16 +49,51 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 			m_Address = address;
 
 			Unsubscribe(m_Port);
-			if (m_Port != null && m_Port.Registered)
-				m_Port.UnRegister();
+			Unregister(m_Port);
 
 			m_Port = port;
 
 			Subscribe(m_Port);
-			if (m_Port != null)
-				m_Port.Register();
+			Register(m_Port);
 
 			UpdateCachedOnlineStatus();
+		}
+
+		/// <summary>
+		/// Unregisters the given port.
+		/// </summary>
+		/// <param name="port"></param>
+		private void Unregister(Relay port)
+		{
+			if (port == null || !port.Registered)
+				return;
+
+			port.UnRegister();
+		}
+
+		/// <summary>
+		/// Registers the port and then re-registers the parent.
+		/// </summary>
+		/// <param name="port"></param>
+		private void Register(Relay port)
+		{
+			if (port == null || port.Registered)
+				return;
+
+			eDeviceRegistrationUnRegistrationResponse result = port.Register();
+			if (result != eDeviceRegistrationUnRegistrationResponse.Success)
+			{
+				Logger.AddEntry(eSeverity.Error, "Unable to register {0} - {1}", port.GetType().Name, result);
+				return;
+			}
+
+			GenericDevice parent = port.Parent as GenericDevice;
+			if (parent == null)
+				return;
+
+			eDeviceRegistrationUnRegistrationResponse parentResult = parent.ReRegister();
+			if (parentResult != eDeviceRegistrationUnRegistrationResponse.Success)
+				Logger.AddEntry(eSeverity.Error, "Unable to register parent {0} - {1}", parent.GetType().Name, parentResult);
 		}
 #endif
 

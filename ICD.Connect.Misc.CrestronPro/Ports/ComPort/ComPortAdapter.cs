@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ICD.Connect.Misc.CrestronPro.Utils.Extensions;
 #if SIMPLSHARP
 using Crestron.SimplSharpPro;
 #endif
@@ -62,22 +63,53 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 		public void SetComPort(Crestron.SimplSharpPro.ComPort port, int address)
 		{
 			m_Address = address;
-			Unsubscribe(m_Port);
 
-			if (m_Port != null && m_Port.Registered)
-				m_Port.UnRegister();
+			Unsubscribe(m_Port);
+			Unregister(m_Port);
 
 			m_Port = port;
-			if (m_Port != null && !m_Port.Registered)
-			{
-				eDeviceRegistrationUnRegistrationResponse result = m_Port.Register();
-				if (result != eDeviceRegistrationUnRegistrationResponse.Success)
-					Logger.AddEntry(eSeverity.Error, "Unable to register {0} - {1}", m_Port.GetType().Name, result);
-			}
 
+			Register(m_Port);
 			Subscribe(m_Port);
 
 			UpdateCachedOnlineStatus();
+		}
+
+		/// <summary>
+		/// Unregisters the given port.
+		/// </summary>
+		/// <param name="port"></param>
+		private void Unregister(Crestron.SimplSharpPro.ComPort port)
+		{
+			if (port == null || !port.Registered)
+				return;
+
+			port.UnRegister();
+		}
+
+		/// <summary>
+		/// Registers the port and then re-registers the parent.
+		/// </summary>
+		/// <param name="port"></param>
+		private void Register(Crestron.SimplSharpPro.ComPort port)
+		{
+			if (port == null || port.Registered)
+				return;
+
+			eDeviceRegistrationUnRegistrationResponse result = port.Register();
+			if (result != eDeviceRegistrationUnRegistrationResponse.Success)
+			{
+				Logger.AddEntry(eSeverity.Error, "Unable to register {0} - {1}", port.GetType().Name, result);
+				return;
+			}
+
+			GenericDevice parent = port.Parent as GenericDevice;
+			if (parent == null)
+				return;
+
+			eDeviceRegistrationUnRegistrationResponse parentResult = parent.ReRegister();
+			if (parentResult != eDeviceRegistrationUnRegistrationResponse.Success)
+				Logger.AddEntry(eSeverity.Error, "Unable to register parent {0} - {1}", parent.GetType().Name, parentResult);
 		}
 #endif
 
@@ -308,10 +340,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 		public int SetReportCtsChanges(bool reportCtsChanges)
 		{
 			if (m_Port == null)
-			{
-				string message = string.Format("{0} internal port is null", this);
-				throw new InvalidOperationException(message);
-			}
+				throw new InvalidOperationException(string.Format("{0} internal port is null", this));
 
 			return m_Port.SetComPortSpec(m_Port.BaudRate,
 			                             m_Port.DataBits,

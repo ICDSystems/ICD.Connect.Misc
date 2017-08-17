@@ -133,6 +133,7 @@
     <Compile Include="Utils\DmEndpointFactoryUtils.cs" />
     <Compile Include="Utils\DmUtils.cs" />
     <Compile Include="Utils\Extensions\DmOutputExtensions.cs" />
+    <Compile Include="Utils\Extensions\GenericDeviceExtensions.cs" />
     <None Include="Properties\ControlSystem.cfg" />
   </ItemGroup>
   <ItemGroup>

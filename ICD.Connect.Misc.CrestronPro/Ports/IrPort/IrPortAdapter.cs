@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ICD.Connect.Misc.CrestronPro.Utils.Extensions;
 #if SIMPLSHARP
 using Crestron.SimplSharp.CrestronIO;
 using Crestron.SimplSharpPro;
@@ -88,18 +89,43 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		{
 			m_Address = address;
 
-			if (m_Port != null && m_Port.Registered)
-				m_Port.UnRegister();
-
+			Unregister(m_Port);
 			Clear();
 
 			m_Port = port;
-
-			// Obsolete?
-			//if (m_Port != null)
-			//	m_Port.Register();
+			Register(m_Port);
 
 			UpdateCachedOnlineStatus();
+		}
+
+		/// <summary>
+		/// Unregisters the given port.
+		/// </summary>
+		/// <param name="port"></param>
+		private void Unregister(IROutputPort port)
+		{
+			if (port == null || !port.Registered)
+				return;
+
+			port.UnRegister();
+		}
+
+		/// <summary>
+		/// Re-registers the parent.
+		/// </summary>
+		/// <param name="port"></param>
+		private void Register(IROutputPort port)
+		{
+			if (port == null || port.Registered)
+				return;
+
+			GenericDevice parent = port.Parent as GenericDevice;
+			if (parent == null)
+				return;
+
+			eDeviceRegistrationUnRegistrationResponse parentResult = parent.ReRegister();
+			if (parentResult != eDeviceRegistrationUnRegistrationResponse.Success)
+				Logger.AddEntry(eSeverity.Error, "Unable to register parent {0} - {1}", parent.GetType().Name, parentResult);
 		}
 #endif
 
