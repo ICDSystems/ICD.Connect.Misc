@@ -139,6 +139,12 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 		/// <param name="digitalOut"></param>
 		public override void SetDigitalOut(bool digitalOut)
 		{
+			if (m_Port.VersiportConfiguration != eVersiportConfiguration.DigitalOutput)
+			{
+				Logger.AddEntry(eSeverity.Error, "{0} failed to set digital out - not configured as a digital output", this);
+				return;
+			}
+
 #if SIMPLSHARP
             try
 			{
@@ -146,7 +152,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 			}
 			catch (InvalidOperationException e)
 			{
-				Logger.AddEntry(eSeverity.Error, "{0} failed to set green led state - {1}", this, e.Message);
+				Logger.AddEntry(eSeverity.Error, "{0} failed to set digital out - {1}", this, e.Message);
 			}
 #else
             throw new NotImplementedException();
