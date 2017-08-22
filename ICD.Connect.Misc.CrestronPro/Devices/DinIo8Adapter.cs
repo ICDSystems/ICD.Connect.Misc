@@ -1,12 +1,14 @@
 ﻿using System.Collections.Generic;
+using ICD.Connect.Misc.CrestronPro.Utils;
 #if SIMPLSHARP
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.GeneralIO;
+#else
+using System;
 #endif
 using ICD.Common.Services.Logging;
 using ICD.Connect.Devices;
 using ICD.Connect.Settings.Core;
-using System;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices
 {
@@ -154,24 +156,31 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 #endif
 		}
 
-		/// <summary>
-		/// Override to apply settings to the instance.
-		/// </summary>
-		/// <param name="settings"></param>
-		/// <param name="factory"></param>
-		protected override void ApplySettingsFinal(DinIo8AdapterSettings settings, IDeviceFactory factory)
-		{
-			base.ApplySettingsFinal(settings, factory);
+	    /// <summary>
+	    /// Override to apply settings to the instance.
+	    /// </summary>
+	    /// <param name="settings"></param>
+	    /// <param name="factory"></param>
+	    protected override void ApplySettingsFinal(DinIo8AdapterSettings settings, IDeviceFactory factory)
+	    {
+		    base.ApplySettingsFinal(settings, factory);
+
+		    if (!CresnetUtils.IsValidId(settings.CresnetId))
+		    {
+			    Logger.AddEntry(eSeverity.Error, "{0} failed to instantiate {1} - CresnetId {2} is out of range",
+			                    GetType().Name, typeof(DinIo8).Name, settings.CresnetId);
+			    return;
+		    }
 
 #if SIMPLSHARP
-            DinIo8 device = new DinIo8(settings.CresnetId, ProgramInfo.ControlSystem);
-			SetPortsDevice(device);
+		    DinIo8 device = new DinIo8(settings.CresnetId, ProgramInfo.ControlSystem);
+		    SetPortsDevice(device);
 #else
             throw new NotImplementedException();
 #endif
-        }
+	    }
 
-        #endregion
+	    #endregion
 
 #region Device Callbacks
 
