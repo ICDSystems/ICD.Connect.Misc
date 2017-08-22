@@ -128,10 +128,12 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 		    {
 		        Logger.AddEntry(eSeverity.Error, "Failed to establish configuration {0} - {1}", configuration, ex.Message);
 		    }
+
+			Configuration = s_ConfigMap.GetKey(m_Port.VersiportConfiguration);
 #else
             throw new NotImplementedException();
 #endif
-        }
+		}
 
 		/// <summary>
 		/// Sets the digital output state.
