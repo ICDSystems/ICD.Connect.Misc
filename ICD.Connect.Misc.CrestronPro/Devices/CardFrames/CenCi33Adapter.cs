@@ -1,11 +1,12 @@
 ﻿#if SIMPLSHARP
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.ThreeSeriesCards;
+#else
+using System;
 #endif
 using ICD.Common.Services.Logging;
 using ICD.Connect.Devices;
 using ICD.Connect.Settings.Core;
-using System;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.CardFrames
 {
