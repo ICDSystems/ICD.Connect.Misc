@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using ICD.Common.Properties;
 using ICD.Common.Utils.Xml;
-using ICD.Connect.Settings;
+using ICD.Connect.Protocol;
 using ICD.Connect.Settings.Attributes;
 using ICD.Connect.Settings.Attributes.Factories;
 
