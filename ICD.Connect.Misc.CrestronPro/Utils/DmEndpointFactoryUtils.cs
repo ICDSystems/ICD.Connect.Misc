@@ -1,4 +1,5 @@
-﻿#if SIMPLSHARP
+﻿using ICD.Common.Properties;
+#if SIMPLSHARP
 using System;
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.DM;
@@ -15,6 +16,8 @@ namespace ICD.Connect.Misc.CrestronPro.Utils
 	/// </summary>
 	public static class DmEndpointFactoryUtils
 	{
+		private static ILoggerService Logger { get { return ServiceProvider.GetService<ILoggerService>(); } }
+
 		/// <summary>
 		/// Determines the best way to instantiate a DMEndpoint based on the available information.
 		/// Instantiates via parent DM Switch if specified, otherwise uses the ControlSystem.
@@ -28,6 +31,7 @@ namespace ICD.Connect.Misc.CrestronPro.Utils
 		/// <param name="instantiate2">Instantiate via DMInput with specified IPID</param>
 		/// <param name="instantiate3">Instantiate via DMInput</param>
 		/// <returns></returns>
+		[CanBeNull]
 		public static TEndpoint InstantiateEndpoint<TEndpoint>(byte? ipid, int? dmAddress, int? dmSwitchId,
 		                                                       IDeviceFactory factory,
 		                                                       Func<byte, CrestronControlSystem, TEndpoint> instantiate1,
@@ -37,10 +41,7 @@ namespace ICD.Connect.Misc.CrestronPro.Utils
 			if (dmSwitchId == null)
 			{
 				if (ipid == null)
-				{
-					ServiceProvider.TryGetService<ILoggerService>()
-					               .AddEntry(eSeverity.Error, "Failed to instantiate {0} - no IPID", typeof(TEndpoint).Name);
-				}
+					Logger.AddEntry(eSeverity.Error, "Failed to instantiate {0} - no IPID", typeof(TEndpoint).Name);
 				else
 					return instantiate1((byte)ipid, ProgramInfo.ControlSystem);
 			}
@@ -48,19 +49,15 @@ namespace ICD.Connect.Misc.CrestronPro.Utils
 			{
 				if (dmAddress == null)
 				{
-					ServiceProvider.TryGetService<ILoggerService>()
-					               .AddEntry(eSeverity.Error, "Failed to instantiate {0} - no DM input address", typeof(TEndpoint).Name);
+					Logger.AddEntry(eSeverity.Error, "Failed to instantiate {0} - no DM input address", typeof(TEndpoint).Name);
 				}
 				else
 				{
 					IDmParent provider = factory.GetDeviceById((int)dmSwitchId) as IDmParent;
 					if (provider == null)
 					{
-						ServiceProvider.TryGetService<ILoggerService>()
-						               .AddEntry(eSeverity.Error, "Failed to instantiate {0} - Device {1} is not a {2}",
-						                         typeof(TEndpoint).Name,
-						                         dmSwitchId,
-						                         typeof(IDmParent).Name);
+						Logger.AddEntry(eSeverity.Error, "Failed to instantiate {0} - Device {1} is not a {2}",
+						                typeof(TEndpoint).Name, dmSwitchId, typeof(IDmParent).Name);
 					}
 					else
 					{
@@ -86,6 +83,7 @@ namespace ICD.Connect.Misc.CrestronPro.Utils
 		/// <param name="instantiate2">Instantiate via DMOutput with specified IPID</param>
 		/// <param name="instantiate3">Instantiate via DMOutput</param>
 		/// <returns></returns>
+		[CanBeNull]
 		public static TEndpoint InstantiateEndpoint<TEndpoint>(byte? ipid, int? dmAddress, int? dmSwitchId,
 		                                                       IDeviceFactory factory,
 		                                                       Func<byte, CrestronControlSystem, TEndpoint> instantiate1,
@@ -95,10 +93,7 @@ namespace ICD.Connect.Misc.CrestronPro.Utils
 			if (dmSwitchId == null)
 			{
 				if (ipid == null)
-				{
-					ServiceProvider.TryGetService<ILoggerService>()
-					               .AddEntry(eSeverity.Error, "Failed to instantiate {0} - no IPID", typeof(TEndpoint).Name);
-				}
+					Logger.AddEntry(eSeverity.Error, "Failed to instantiate {0} - no IPID", typeof(TEndpoint).Name);
 				else
 					return instantiate1((byte)ipid, ProgramInfo.ControlSystem);
 			}
@@ -106,20 +101,15 @@ namespace ICD.Connect.Misc.CrestronPro.Utils
 			{
 				if (dmAddress == null)
 				{
-					ServiceProvider.TryGetService<ILoggerService>()
-					               .AddEntry(eSeverity.Error, "Failed to instantiate {0} - no DM output address",
-					                         typeof(TEndpoint).Name);
+					Logger.AddEntry(eSeverity.Error, "Failed to instantiate {0} - no DM output address", typeof(TEndpoint).Name);
 				}
 				else
 				{
 					IDmParent provider = factory.GetDeviceById((int)dmSwitchId) as IDmParent;
 					if (provider == null)
 					{
-						ServiceProvider.TryGetService<ILoggerService>()
-						               .AddEntry(eSeverity.Error, "Failed to instantiate {0} - Device {1} is not a {2}",
-						                         typeof(TEndpoint).Name,
-						                         dmSwitchId,
-						                         typeof(IDmParent).Name);
+						Logger.AddEntry(eSeverity.Error, "Failed to instantiate {0} - Device {1} is not a {2}",
+						                typeof(TEndpoint).Name, dmSwitchId, typeof(IDmParent).Name);
 					}
 					else
 					{
