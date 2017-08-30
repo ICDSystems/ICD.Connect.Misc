@@ -16,12 +16,12 @@ using ICD.Connect.Settings.Core;
 namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 {
 #if SIMPLSHARP
-    public abstract class AbstractCardAdapter<TCard, TSettings> : AbstractDevice<TSettings>, IPortParent
+    public abstract class AbstractC3CardAdapter<TCard, TSettings> : AbstractDevice<TSettings>, IPortParent
 		where TCard : C3Card
 #else
-    public abstract class AbstractCardAdapter<TSettings> : AbstractDevice<TSettings>
+    public abstract class AbstractC3CardAdapter<TSettings> : AbstractDevice<TSettings>
 #endif
-        where TSettings : AbstractCardAdapterSettings, new()
+        where TSettings : AbstractC3CardAdapterSettings, new()
 	{
 		// Used with settings.
 		private int? m_ParentId;

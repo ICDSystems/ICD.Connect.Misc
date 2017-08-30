@@ -4,7 +4,7 @@ using ICD.Connect.Settings.Attributes.Factories;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 {
-	public sealed class C3Com3AdapterSettings : AbstractCardAdapterSettings
+	public sealed class C3Com3AdapterSettings : AbstractC3CardAdapterSettings
 	{
 		private const string FACTORY_NAME = "C3Com3";
 

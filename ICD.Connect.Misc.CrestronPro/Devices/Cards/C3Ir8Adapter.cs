@@ -7,7 +7,7 @@ using Crestron.SimplSharpPro.ThreeSeriesCards;
 namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 {
 #if SIMPLSHARP
-	public sealed class C3Ir8Adapter : AbstractCardAdapter<C3ir8, C3Ir8AdapterSettings>
+	public sealed class C3Ir8Adapter : AbstractC3CardAdapter<C3ir8, C3Ir8AdapterSettings>
 	{
 		/// <summary>
 		/// Gets the port at the given address.
@@ -45,7 +45,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 		}
 	}
 #else
-    public sealed class C3Ir8Adapter : AbstractCardAdapter<C3Ir8AdapterSettings>
+    public sealed class C3Ir8Adapter : AbstractC3CardAdapter<C3Ir8AdapterSettings>
     {
     }
 #endif

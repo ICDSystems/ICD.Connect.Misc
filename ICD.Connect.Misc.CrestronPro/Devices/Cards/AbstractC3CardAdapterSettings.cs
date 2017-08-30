@@ -5,7 +5,7 @@ using ICD.Connect.Settings.Attributes;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 {
-	public abstract class AbstractCardAdapterSettings : AbstractDeviceSettings
+	public abstract class AbstractC3CardAdapterSettings : AbstractDeviceSettings
 	{
 		private const string IPID_ELEMENT = "IPID";
 		private const string CARD_FRAME_ELEMENT = "CardFrame";
@@ -31,7 +31,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 				writer.WriteElementString(CARD_FRAME_ELEMENT, IcdXmlConvert.ToString((int)CardFrame));
 		}
 
-		protected static void ParseXml(AbstractCardAdapterSettings instance, string xml)
+		protected static void ParseXml(AbstractC3CardAdapterSettings instance, string xml)
 		{
 			instance.Ipid = XmlUtils.TryReadChildElementContentAsByte(xml, IPID_ELEMENT);
 			instance.CardFrame = XmlUtils.TryReadChildElementContentAsInt(xml, CARD_FRAME_ELEMENT);

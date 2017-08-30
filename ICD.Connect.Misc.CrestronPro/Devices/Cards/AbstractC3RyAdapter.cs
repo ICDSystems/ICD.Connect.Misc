@@ -7,7 +7,7 @@ using Crestron.SimplSharpPro.ThreeSeriesCards;
 namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 {
 #if SIMPLSHARP
-    public abstract class AbstractC3RyAdapter<TCard, TSettings> : AbstractCardAdapter<TCard, TSettings>
+    public abstract class AbstractC3RyAdapter<TCard, TSettings> : AbstractC3CardAdapter<TCard, TSettings>
 		where TCard : C3ry
 		where TSettings : AbstractC3RyAdapterSettings, new()
 	{
@@ -26,7 +26,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 		}
 	}
 #else
-    public abstract class AbstractC3RyAdapter<TSettings> : AbstractCardAdapter<TSettings>
+    public abstract class AbstractC3RyAdapter<TSettings> : AbstractC3CardAdapter<TSettings>
         where TSettings : AbstractC3RyAdapterSettings, new()
     {
     }

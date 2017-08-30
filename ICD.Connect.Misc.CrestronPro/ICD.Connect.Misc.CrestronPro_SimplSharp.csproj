@@ -93,8 +93,8 @@
     <None Include="ObfuscationSettings.cs" />
     <Compile Include="Devices\Cards\AbstractC3RyAdapter.cs" />
     <Compile Include="Devices\Cards\AbstractC3RyAdapterSettings.cs" />
-    <Compile Include="Devices\Cards\AbstractCardAdapter.cs" />
-    <Compile Include="Devices\Cards\AbstractCardAdapterSettings.cs" />
+    <Compile Include="Devices\Cards\AbstractC3CardAdapter.cs" />
+    <Compile Include="Devices\Cards\AbstractC3CardAdapterSettings.cs" />
     <Compile Include="Devices\Cards\C3Com3Adapter.cs" />
     <Compile Include="Devices\Cards\C3Com3AdapterSettings.cs" />
     <Compile Include="Devices\Cards\C3Io16Adapter.cs" />
