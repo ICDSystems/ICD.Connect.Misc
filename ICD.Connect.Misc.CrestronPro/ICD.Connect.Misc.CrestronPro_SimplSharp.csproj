@@ -131,7 +131,6 @@
     <Compile Include="Sigs\SigAdapterFactory.cs" />
     <Compile Include="Sigs\SigAdapters.cs" />
     <Compile Include="Utils\CresnetUtils.cs" />
-    <Compile Include="Utils\DmEndpointFactoryUtils.cs" />
     <Compile Include="Utils\DmUtils.cs" />
     <Compile Include="Utils\Extensions\DmOutputExtensions.cs" />
     <Compile Include="Utils\Extensions\GenericDeviceExtensions.cs" />
