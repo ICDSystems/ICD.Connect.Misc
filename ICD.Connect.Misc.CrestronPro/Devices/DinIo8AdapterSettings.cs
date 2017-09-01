@@ -46,11 +46,9 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 		[PublicAPI, XmlDeviceSettingsFactoryMethod(FACTORY_NAME)]
 		public static DinIo8AdapterSettings FromXml(string xml)
 		{
-			byte cresnetId = XmlUtils.ReadChildElementContentAsByte(xml, CRESNET_ID_ELEMENT);
-
 			DinIo8AdapterSettings output = new DinIo8AdapterSettings
 			{
-				CresnetId = cresnetId
+				CresnetId =  XmlUtils.TryReadChildElementContentAsByte(xml, CRESNET_ID_ELEMENT) ?? 0
 			};
 
 			ParseXml(output, xml);
