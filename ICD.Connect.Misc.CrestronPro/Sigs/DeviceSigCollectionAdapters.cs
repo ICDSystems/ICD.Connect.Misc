@@ -11,22 +11,8 @@ namespace ICD.Connect.Misc.CrestronPro.Sigs
 		/// <summary>
 		/// Constructor.
 		/// </summary>
-		/// <param name="collection"></param>
-		public DeviceStringInputCollectionAdapter(DeviceStringInputCollection collection)
-			: base(collection, sig => new StringInputSigAdapter(sig))
-		{
-		}
-	}
-
-	public sealed class DeviceStringOutputCollectionAdapter :
-		AbstractSigCollectionAdapter<IStringOutputSig, StringOutputSig>, IDeviceStringOutputCollection
-	{
-		/// <summary>
-		/// Constructor.
-		/// </summary>
-		/// <param name="collection"></param>
-		public DeviceStringOutputCollectionAdapter(DeviceStringOutputCollection collection)
-			: base(collection, sig => new StringOutputSigAdapter(sig))
+		public DeviceStringInputCollectionAdapter()
+			: base(sig => new StringInputSigAdapter(sig))
 		{
 		}
 	}
@@ -37,22 +23,8 @@ namespace ICD.Connect.Misc.CrestronPro.Sigs
 		/// <summary>
 		/// Constructor.
 		/// </summary>
-		/// <param name="collection"></param>
-		public DeviceUShortInputCollectionAdapter(DeviceUShortInputCollection collection)
-			: base(collection, sig => new UShortInputSigAdapter(sig))
-		{
-		}
-	}
-
-	public sealed class DeviceUShortOutputCollectionAdapter :
-		AbstractSigCollectionAdapter<IUShortOutputSig, UShortOutputSig>, IDeviceUShortOutputCollection
-	{
-		/// <summary>
-		/// Constructor.
-		/// </summary>
-		/// <param name="collection"></param>
-		public DeviceUShortOutputCollectionAdapter(DeviceUShortOutputCollection collection)
-			: base(collection, sig => new UShortOutputSigAdapter(sig))
+		public DeviceUShortInputCollectionAdapter()
+			: base(sig => new UShortInputSigAdapter(sig))
 		{
 		}
 	}
@@ -63,22 +35,8 @@ namespace ICD.Connect.Misc.CrestronPro.Sigs
 		/// <summary>
 		/// Constructor.
 		/// </summary>
-		/// <param name="collection"></param>
-		public DeviceBooleanInputCollectionAdapter(DeviceBooleanInputCollection collection)
-			: base(collection, sig => new BoolInputSigAdapter(sig))
-		{
-		}
-	}
-
-	public sealed class DeviceBooleanOutputCollectionAdapter :
-		AbstractSigCollectionAdapter<IBoolOutputSig, BoolOutputSig>, IDeviceBooleanOutputCollection
-	{
-		/// <summary>
-		/// Constructor.
-		/// </summary>
-		/// <param name="collection"></param>
-		public DeviceBooleanOutputCollectionAdapter(DeviceBooleanOutputCollection collection)
-			: base(collection, sig => new BoolOutputSigAdapter(sig))
+		public DeviceBooleanInputCollectionAdapter()
+			: base(sig => new BoolInputSigAdapter(sig))
 		{
 		}
 	}

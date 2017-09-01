@@ -15,12 +15,11 @@ namespace ICD.Connect.Misc.CrestronPro.Sigs
 		where TAdapter : ISig
 		where T : Sig
 	{
-		private readonly SigCollectionBase<T> m_Collection;
 		private readonly Func<T, TAdapter> m_Factory;
 		private readonly Dictionary<uint, TAdapter> m_SigAdapterNumberCache;
 		private readonly SafeCriticalSection m_CacheSection;
 
-		#region Properties
+		private SigCollectionBase<T> m_Collection;
 
 		/// <summary>
 		/// Get the sig with the specified number.
@@ -33,6 +32,9 @@ namespace ICD.Connect.Misc.CrestronPro.Sigs
 			get
 			{
 				m_CacheSection.Enter();
+
+				if (m_Collection == null)
+					throw new InvalidOperationException("No collection assigned");
 
 				try
 				{
@@ -50,23 +52,47 @@ namespace ICD.Connect.Misc.CrestronPro.Sigs
 			}
 		}
 
-		#endregion
-
-		#region Constructors
-
 		/// <summary>
 		/// Constructor.
 		/// </summary>
-		protected AbstractSigCollectionAdapter(SigCollectionBase<T> collection, Func<T, TAdapter> factory)
+		protected AbstractSigCollectionAdapter(Func<T, TAdapter> factory)
 		{
-			m_Collection = collection;
 			m_Factory = factory;
 
 			m_SigAdapterNumberCache = new Dictionary<uint, TAdapter>();
 			m_CacheSection = new SafeCriticalSection();
 		}
 
-		#endregion
+		/// <summary>
+		/// Sets the wrapped collection.
+		/// </summary>
+		/// <param name="collection"></param>
+		public void SetCollection(SigCollectionBase<T> collection)
+		{
+			m_CacheSection.Enter();
+
+			try
+			{
+				if (collection == m_Collection)
+					return;
+
+				Clear();
+
+				m_Collection = collection;
+			}
+			finally
+			{
+				m_CacheSection.Leave();
+			}
+		}
+
+		/// <summary>
+		/// Clears the cache.
+		/// </summary>
+		private void Clear()
+		{
+			m_CacheSection.Execute(() => m_SigAdapterNumberCache.Clear());
+		}
 
 		/// <summary>
 		/// Doesn't really do a whole lot, since sigs are only instantiated by SigCollectionBase on request.
