@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using ICD.Connect.Misc.CrestronPro.Utils.Extensions;
 #if SIMPLSHARP
 using Crestron.SimplSharpPro;
+using ICD.Connect.Misc.CrestronPro.Utils.Extensions;
 #endif
 using ICD.Common.Properties;
 using ICD.Common.Services.Logging;
@@ -146,6 +146,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 		/// <param name="digitalOut"></param>
 		public override void SetDigitalOut(bool digitalOut)
 		{
+#if SIMPLSHARP
 			if (m_Port == null)
 			{
 				Logger.AddEntry(eSeverity.Error, "{0} failed to set digital out - no port assigned", this);
@@ -158,7 +159,6 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 				return;
 			}
 
-#if SIMPLSHARP
             try
 			{
 				m_Port.DigitalOut = digitalOut;

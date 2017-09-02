@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using ICD.Connect.Misc.CrestronPro.Utils.Extensions;
 #if SIMPLSHARP
 using Crestron.SimplSharp.CrestronIO;
 using Crestron.SimplSharpPro;
+using ICD.Connect.Misc.CrestronPro.Utils.Extensions;
 #endif
 using ICD.Common.Properties;
 using ICD.Common.Services.Logging;
