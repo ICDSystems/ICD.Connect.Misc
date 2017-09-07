@@ -165,6 +165,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 	    {
 		    base.ApplySettingsFinal(settings, factory);
 
+#if SIMPLSHARP
 		    if (!CresnetUtils.IsValidId(settings.CresnetId))
 		    {
 			    Logger.AddEntry(eSeverity.Error, "{0} failed to instantiate {1} - CresnetId {2} is out of range",
@@ -172,7 +173,6 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 			    return;
 		    }
 
-#if SIMPLSHARP
 		    DinIo8 device = new DinIo8(settings.CresnetId, ProgramInfo.ControlSystem);
 		    SetPortsDevice(device);
 #else

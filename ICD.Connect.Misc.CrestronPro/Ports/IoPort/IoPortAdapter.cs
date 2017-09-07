@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using ICD.Connect.Misc.CrestronPro.Utils.Extensions;
 #if SIMPLSHARP
 using Crestron.SimplSharpPro;
+using ICD.Connect.Misc.CrestronPro.Utils.Extensions;
 #endif
 using ICD.Common.Properties;
 using ICD.Common.Services.Logging;
@@ -69,6 +69,11 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 			Subscribe(m_Port);
 
 			UpdateCachedOnlineStatus();
+
+			DigitalIn = m_Port != null && m_Port.DigitalIn;
+			DigitalOut = m_Port != null && m_Port.DigitalOut;
+			AnalogIn = m_Port == null ? (ushort)0 : m_Port.AnalogIn;
+			Configuration = m_Port == null ? eIoPortConfiguration.None : s_ConfigMap.GetKey(m_Port.VersiportConfiguration);
 		}
 
 		/// <summary>
@@ -141,13 +146,19 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 		/// <param name="digitalOut"></param>
 		public override void SetDigitalOut(bool digitalOut)
 		{
+#if SIMPLSHARP
+			if (m_Port == null)
+			{
+				Logger.AddEntry(eSeverity.Error, "{0} failed to set digital out - no port assigned", this);
+				return;
+			}
+
 			if (m_Port.VersiportConfiguration != eVersiportConfiguration.DigitalOutput)
 			{
 				Logger.AddEntry(eSeverity.Error, "{0} failed to set digital out - not configured as a digital output", this);
 				return;
 			}
 
-#if SIMPLSHARP
             try
 			{
 				m_Port.DigitalOut = digitalOut;
@@ -245,7 +256,6 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 #if SIMPLSHARP
             SetIoPort(null, 0);
 #endif
-			Configuration = eIoPortConfiguration.None;
 		}
 
 		/// <summary>
