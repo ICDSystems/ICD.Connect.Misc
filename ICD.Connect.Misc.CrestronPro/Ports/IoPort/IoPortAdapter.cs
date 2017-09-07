@@ -70,10 +70,51 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 
 			UpdateCachedOnlineStatus();
 
-			DigitalIn = m_Port != null && m_Port.DigitalIn;
-			DigitalOut = m_Port != null && m_Port.DigitalOut;
-			AnalogIn = m_Port == null ? (ushort)0 : m_Port.AnalogIn;
-			Configuration = m_Port == null ? eIoPortConfiguration.None : s_ConfigMap.GetKey(m_Port.VersiportConfiguration);
+			DigitalIn = GetDigitalIn(m_Port);
+			DigitalOut = GetDigitalOut(m_Port);
+			AnalogIn = GetAnalogIn(m_Port);
+			Configuration = GetConfiguration(m_Port);
+		}
+
+		private static bool GetDigitalIn(Versiport port)
+		{
+			try
+			{
+				return port != null && port.DigitalIn;
+			}
+			catch (InvalidOperationException)
+			{
+				return false;
+			}
+		}
+
+		private static bool GetDigitalOut(Versiport port)
+		{
+			try
+			{
+				return port != null && port.DigitalOut;
+			}
+			catch (InvalidOperationException)
+			{
+				return false;
+			}
+		}
+
+		private static ushort GetAnalogIn(Versiport port)
+		{
+			try
+			{
+				return port == null ? (ushort)0 : port.AnalogIn;
+			}
+			catch (InvalidOperationException)
+			{
+				return (ushort)0;
+			}
+		}
+
+		private static eIoPortConfiguration GetConfiguration(Versiport port)
+		{
+			return port == null ? eIoPortConfiguration.None : s_ConfigMap.GetKey(port.VersiportConfiguration);
 		}
 
 		/// <summary>
@@ -134,7 +175,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 		        Logger.AddEntry(eSeverity.Error, "Failed to establish configuration {0} - {1}", configuration, ex.Message);
 		    }
 
-			Configuration = s_ConfigMap.GetKey(m_Port.VersiportConfiguration);
+			Configuration = GetConfiguration(m_Port);
 #else
             throw new NotImplementedException();
 #endif
@@ -211,19 +252,19 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 			switch (args.Event)
 			{
 				case eVersiportEvent.DigitalInChange:
-					DigitalIn = m_Port.DigitalIn;
+					DigitalIn = GetDigitalIn(m_Port);
 					break;
 
 				case eVersiportEvent.DigitalOutChange:
-					DigitalOut = m_Port.DigitalOut;
+					DigitalOut = GetDigitalOut(m_Port);
 					break;
 
 				case eVersiportEvent.AnalogInChange:
-					AnalogIn = m_Port.AnalogIn;
+					AnalogIn = GetAnalogIn(m_Port);
 					break;
 
 				case eVersiportEvent.VersiportConfigurationChange:
-					Configuration = s_ConfigMap.GetKey(m_Port.VersiportConfiguration);
+					Configuration = GetConfiguration(m_Port);
 					break;
 			}
 		}
