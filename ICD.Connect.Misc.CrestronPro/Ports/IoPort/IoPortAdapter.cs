@@ -168,6 +168,9 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
             try
 			{
 				m_Port.DigitalOut = digitalOut;
+
+				// Not all devices (e.g. DIN-IO8 give DigitalOut feedback, so lets cache it)
+				DigitalOut = digitalOut;
 			}
 			catch (InvalidOperationException e)
 			{
