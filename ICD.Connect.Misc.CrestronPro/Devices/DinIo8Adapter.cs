@@ -118,7 +118,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 		public Versiport GetIoPort(int address)
 		{
 			if (m_PortsDevice.VersiPorts.Contains((uint)address))
-				return m_PortsDevice.VersiPorts[1];
+				return m_PortsDevice.VersiPorts[(uint)address];
 
 			string message = string.Format("{0} has no {1} with address {2}", this, typeof(Versiport).Name, address);
 			throw new KeyNotFoundException(message);
