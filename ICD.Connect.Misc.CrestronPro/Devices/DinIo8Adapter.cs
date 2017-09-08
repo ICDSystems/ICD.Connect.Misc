@@ -29,7 +29,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
         /// Sets the wrapped device.
         /// </summary>
         /// <param name="device"></param>
-        public void SetPortsDevice(DinIo8 device)
+        public void SetDevice(DinIo8 device)
 		{
 			Unsubscribe(m_PortsDevice);
 
@@ -152,7 +152,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 			base.ClearSettingsFinal();
 
 #if SIMPLSHARP
-            SetPortsDevice(null);
+            SetDevice(null);
 #endif
 		}
 
@@ -174,7 +174,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 		    }
 
 		    DinIo8 device = new DinIo8(settings.CresnetId, ProgramInfo.ControlSystem);
-		    SetPortsDevice(device);
+		    SetDevice(device);
 #else
             throw new NotImplementedException();
 #endif
