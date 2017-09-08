@@ -41,12 +41,12 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 		/// </summary>
 		protected override void DisposeFinal(bool disposing)
 		{
+			base.DisposeFinal(disposing);
+
 #if SIMPLSHARP
             // Unregister.
             SetIoPort(null, 0);
 #endif
-
-			base.DisposeFinal(disposing);
 		}
 
 #if SIMPLSHARP
