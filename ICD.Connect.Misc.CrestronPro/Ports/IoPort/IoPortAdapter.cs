@@ -164,6 +164,12 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 				throw new InvalidOperationException(string.Format("Unable to set configuration to {0}", configuration));
 
 #if SIMPLSHARP
+			if (m_Port == null)
+			{
+				Logger.AddEntry(eSeverity.Error, "{0} failed to set configuration - no port assigned", this);
+				return;
+			}
+
             try
 		    {
 		        eVersiportConfiguration config = s_ConfigMap[configuration];
