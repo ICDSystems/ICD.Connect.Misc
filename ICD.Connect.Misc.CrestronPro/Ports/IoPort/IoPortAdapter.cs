@@ -185,6 +185,11 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 
 		#region Private Methods
 
+		/// <summary>
+		/// Gets digital in state for the given port.
+		/// </summary>
+		/// <param name="port"></param>
+		/// <returns>False if the port is null, or the port is not configured for digital in.</returns>
 		private static bool GetDigitalIn(Versiport port)
 		{
 			try
@@ -197,6 +202,11 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 			}
 		}
 
+		/// <summary>
+		/// Gets digital out state for the given port.
+		/// </summary>
+		/// <param name="port"></param>
+		/// <returns>False if the port is null, or the port is not configured for digital out.</returns>
 		private static bool GetDigitalOut(Versiport port)
 		{
 			try
@@ -209,6 +219,11 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 			}
 		}
 
+		/// <summary>
+		/// Gets analog in state for the given port.
+		/// </summary>
+		/// <param name="port"></param>
+		/// <returns>False if the port is null, or the port is not configured for analog in.</returns>
 		private static ushort GetAnalogIn(Versiport port)
 		{
 			try
@@ -221,6 +236,11 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 			}
 		}
 
+		/// <summary>
+		/// Gets the configuration for the given port.
+		/// </summary>
+		/// <param name="port"></param>
+		/// <returns>None if the port is null.</returns>
 		private static eIoPortConfiguration GetConfiguration(Versiport port)
 		{
 			return port == null ? eIoPortConfiguration.None : s_ConfigMap.GetKey(port.VersiportConfiguration);
