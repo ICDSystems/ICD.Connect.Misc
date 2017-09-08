@@ -76,47 +76,6 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 			Configuration = GetConfiguration(m_Port);
 		}
 
-		private static bool GetDigitalIn(Versiport port)
-		{
-			try
-			{
-				return port != null && port.DigitalIn;
-			}
-			catch (InvalidOperationException)
-			{
-				return false;
-			}
-		}
-
-		private static bool GetDigitalOut(Versiport port)
-		{
-			try
-			{
-				return port != null && port.DigitalOut;
-			}
-			catch (InvalidOperationException)
-			{
-				return false;
-			}
-		}
-
-		private static ushort GetAnalogIn(Versiport port)
-		{
-			try
-			{
-				return port == null ? (ushort)0 : port.AnalogIn;
-			}
-			catch (InvalidOperationException)
-			{
-				return (ushort)0;
-			}
-		}
-
-		private static eIoPortConfiguration GetConfiguration(Versiport port)
-		{
-			return port == null ? eIoPortConfiguration.None : s_ConfigMap.GetKey(port.VersiportConfiguration);
-		}
-
 		/// <summary>
 		/// Unregisters the given port.
 		/// </summary>
@@ -221,7 +180,52 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 
         #endregion
 
-#region Port Callbacks
+		#region Private Methods
+
+		private static bool GetDigitalIn(Versiport port)
+		{
+			try
+			{
+				return port != null && port.DigitalIn;
+			}
+			catch (InvalidOperationException)
+			{
+				return false;
+			}
+		}
+
+		private static bool GetDigitalOut(Versiport port)
+		{
+			try
+			{
+				return port != null && port.DigitalOut;
+			}
+			catch (InvalidOperationException)
+			{
+				return false;
+			}
+		}
+
+		private static ushort GetAnalogIn(Versiport port)
+		{
+			try
+			{
+				return port == null ? (ushort)0 : port.AnalogIn;
+			}
+			catch (InvalidOperationException)
+			{
+				return 0;
+			}
+		}
+
+		private static eIoPortConfiguration GetConfiguration(Versiport port)
+		{
+			return port == null ? eIoPortConfiguration.None : s_ConfigMap.GetKey(port.VersiportConfiguration);
+		}
+
+		#endregion
+
+		#region Port Callbacks
 
 #if SIMPLSHARP
         /// <summary>
