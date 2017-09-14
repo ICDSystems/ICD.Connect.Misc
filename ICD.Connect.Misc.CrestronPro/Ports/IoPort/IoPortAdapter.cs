@@ -1,14 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 #if SIMPLSHARP
 using Crestron.SimplSharpPro;
 using ICD.Connect.Misc.CrestronPro.Utils.Extensions;
-#endif
 using ICD.Common.Properties;
 using ICD.Common.Services.Logging;
 using ICD.Common.Utils.Extensions;
 using ICD.Connect.Devices.Extensions;
 using ICD.Connect.Misc.CrestronPro.Devices;
+using System.Collections.Generic;
+#endif
 using ICD.Connect.Protocol.Ports;
 using ICD.Connect.Protocol.Ports.IoPort;
 using ICD.Connect.Settings.Core;
@@ -34,7 +34,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 		private int? m_Device;
 		private int m_Address;
 
-#region Methods
+		#region Methods
 
 		/// <summary>
 		/// Release resources.
@@ -142,7 +142,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 
 			Configuration = GetConfiguration(m_Port);
 #else
-            throw new NotImplementedException();
+			throw new NotImplementedException();
 #endif
 		}
 
@@ -177,14 +177,15 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 				Logger.AddEntry(eSeverity.Error, "{0} failed to set digital out - {1}", this, e.Message);
 			}
 #else
-            throw new NotImplementedException();
+			throw new NotImplementedException();
 #endif
-        }
+		}
 
-        #endregion
+		#endregion
 
 		#region Private Methods
 
+#if SIMPLSHARP
 		/// <summary>
 		/// Gets digital in state for the given port.
 		/// </summary>
@@ -245,6 +246,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 		{
 			return port == null ? eIoPortConfiguration.None : s_ConfigMap.GetKey(port.VersiportConfiguration);
 		}
+#endif
 
 		#endregion
 
@@ -303,9 +305,9 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 		}
 #endif
 
-#endregion
+		#endregion
 
-#region Settings
+		#region Settings
 
 		/// <summary>
 		/// Override to apply properties to the settings instance.
@@ -375,13 +377,13 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 			if (settings.Configuration != eIoPortConfiguration.None)
 				SetConfiguration(settings.Configuration);
 #else
-            throw new NotImplementedException();
+			throw new NotImplementedException();
 #endif
-        }
+		}
 
-#endregion
+		#endregion
 
-#region Private Methods
+		#region Private Methods
 
 		/// <summary>
 		/// Gets the current online status of the device.
@@ -392,10 +394,10 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 #if SIMPLSHARP
             return m_Port != null;
 #else
-            return false;
+			return false;
 #endif
-        }
+		}
 
-#endregion
+		#endregion
 	}
 }
