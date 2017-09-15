@@ -1,5 +1,6 @@
 ﻿#if SIMPLSHARP
 using Crestron.SimplSharpPro.DM;
+#endif
 using ICD.Common.Properties;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices
@@ -10,6 +11,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 	[PublicAPI]
 	public interface IDmParent
 	{
+#if SIMPLSHARP
 		/// <summary>
 		/// Gets the DMInput at the given address.
 		/// </summary>
@@ -25,6 +27,6 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 		/// <returns></returns>
 		[PublicAPI]
 		DMOutput GetDmOutput(int address);
+#endif
 	}
 }
-#endif
