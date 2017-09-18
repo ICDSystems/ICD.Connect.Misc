@@ -1,6 +1,7 @@
 ﻿#if SIMPLSHARP
 using System;
 using Crestron.SimplSharpPro.DM;
+using ICD.Common.Properties;
 
 namespace ICD.Connect.Misc.CrestronPro.Utils.Extensions
 {
@@ -15,6 +16,7 @@ namespace ICD.Connect.Misc.CrestronPro.Utils.Extensions
 		/// </summary>
 		/// <param name="extends"></param>
 		/// <returns></returns>
+		[CanBeNull]
 		public static DMInput GetSafeAudioOutFeedback(this DMOutput extends)
 		{
 			try
@@ -32,6 +34,7 @@ namespace ICD.Connect.Misc.CrestronPro.Utils.Extensions
 		/// </summary>
 		/// <param name="extends"></param>
 		/// <returns></returns>
+		[CanBeNull]
 		public static DMInput GetSafeVideoOutFeedback(this DMOutput extends)
 		{
 			try
@@ -49,6 +52,7 @@ namespace ICD.Connect.Misc.CrestronPro.Utils.Extensions
 		/// </summary>
 		/// <param name="extends"></param>
 		/// <returns></returns>
+		[CanBeNull]
 		public static DMInputOutputBase GetSafeUsbRoutedToFeedback(this DMOutput extends)
 		{
 			try
