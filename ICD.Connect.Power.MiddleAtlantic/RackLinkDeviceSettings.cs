@@ -3,7 +3,6 @@ using ICD.Common.Properties;
 using ICD.Common.Utils.Xml;
 using ICD.Connect.Devices;
 using ICD.Connect.Settings.Attributes;
-using ICD.Connect.Settings.Attributes;
 
 namespace ICD.Connect.Power.MiddleAtlantic
 {

@@ -4,7 +4,6 @@ using ICD.Common.Properties;
 using ICD.Common.Utils.Xml;
 using ICD.Connect.Protocol;
 using ICD.Connect.Settings.Attributes;
-using ICD.Connect.Settings.Attributes;
 
 namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 {

@@ -5,7 +5,6 @@ using ICD.Common.Utils.Xml;
 using ICD.Connect.Protocol;
 using ICD.Connect.Protocol.Ports;
 using ICD.Connect.Settings.Attributes;
-using ICD.Connect.Settings.Attributes;
 
 namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 {
