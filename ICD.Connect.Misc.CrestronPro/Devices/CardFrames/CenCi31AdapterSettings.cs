@@ -4,7 +4,7 @@ using ICD.Common.Utils;
 using ICD.Common.Utils.Xml;
 using ICD.Connect.Devices;
 using ICD.Connect.Settings.Attributes;
-using ICD.Connect.Settings.Attributes.Factories;
+using ICD.Connect.Settings.Attributes;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.CardFrames
 {
@@ -43,7 +43,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CardFrames
 		/// </summary>
 		/// <param name="xml"></param>
 		/// <returns></returns>
-		[PublicAPI, XmlDeviceSettingsFactoryMethod(FACTORY_NAME)]
+		[PublicAPI, XmlFactoryMethod(FACTORY_NAME)]
 		public static CenCi31AdapterSettings FromXml(string xml)
 		{
 			byte ipid = XmlUtils.ReadChildElementContentAsByte(xml, IPID_ELEMENT);

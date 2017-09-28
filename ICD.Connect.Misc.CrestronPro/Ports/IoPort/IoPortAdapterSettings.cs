@@ -5,7 +5,7 @@ using ICD.Common.Utils.Xml;
 using ICD.Connect.Protocol;
 using ICD.Connect.Protocol.Ports;
 using ICD.Connect.Settings.Attributes;
-using ICD.Connect.Settings.Attributes.Factories;
+using ICD.Connect.Settings.Attributes;
 
 namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 {
@@ -74,7 +74,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 		/// </summary>
 		/// <param name="xml"></param>
 		/// <returns></returns>
-		[PublicAPI, XmlPortSettingsFactoryMethod(FACTORY_NAME)]
+		[PublicAPI, XmlFactoryMethod(FACTORY_NAME)]
 		public static IoPortAdapterSettings FromXml(string xml)
 		{
 			int device = XmlUtils.TryReadChildElementContentAsInt(xml, PARENT_DEVICE_ELEMENT) ?? 0;
