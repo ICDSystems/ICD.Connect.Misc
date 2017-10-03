@@ -1,8 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using ICD.Common.Utils;
 using ICD.Common.Utils.EventArguments;
 using ICD.Connect.API.Nodes;
 using ICD.Connect.Devices;
+using ICD.Connect.Misc.GlobalCache.FlexApi;
 using ICD.Connect.Protocol.Network.Tcp;
+using ICD.Connect.Protocol.SerialBuffers;
 using ICD.Connect.Settings.Core;
 
 namespace ICD.Connect.Misc.GlobalCache.Devices
@@ -12,6 +16,7 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 		private const ushort TCP_PORT = 4998;
 
 		private readonly AsyncTcpClient m_Client;
+		private readonly DelimiterSerialBuffer m_Buffer;
 
 		/// <summary>
 		/// Constructor.
@@ -25,6 +30,9 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 				DebugTx = true
 			};
 
+			m_Buffer = new DelimiterSerialBuffer(FlexData.NEWLINE);
+			
+			Subscribe(m_Buffer);
 			Subscribe(m_Client);
 		}
 
@@ -36,7 +44,9 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 		{
 			base.DisposeFinal(disposing);
 
+			Unsubscribe(m_Buffer);
 			Unsubscribe(m_Client);
+
 			m_Client.Dispose();
 		}
 
@@ -74,7 +84,7 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 		/// <param name="stringEventArgs"></param>
 		private void ClientOnOnSerialDataReceived(object sender, StringEventArgs stringEventArgs)
 		{
-			
+			m_Buffer.Enqueue(stringEventArgs.Data);
 		}
 
 		/// <summary>
@@ -85,6 +95,38 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 		private void ClientOnOnIsOnlineStateChanged(object sender, BoolEventArgs boolEventArgs)
 		{
 			UpdateCachedOnlineStatus();
+		}
+
+		#endregion
+
+		#region Buffer Callbacks
+
+		/// <summary>
+		/// Subsribe to the buffer events.
+		/// </summary>
+		/// <param name="buffer"></param>
+		private void Subscribe(DelimiterSerialBuffer buffer)
+		{
+			buffer.OnCompletedSerial += BufferOnOnCompletedSerial;
+		}
+
+		/// <summary>
+		/// Unsubscribe from the buffer events.
+		/// </summary>
+		/// <param name="buffer"></param>
+		private void Unsubscribe(DelimiterSerialBuffer buffer)
+		{
+			buffer.OnCompletedSerial -= BufferOnOnCompletedSerial;
+		}
+
+		/// <summary>
+		/// Called when we receive a complete message from the device.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="stringEventArgs"></param>
+		private void BufferOnOnCompletedSerial(object sender, StringEventArgs stringEventArgs)
+		{
+			IcdConsole.PrintLine(stringEventArgs.Data);
 		}
 
 		#endregion
