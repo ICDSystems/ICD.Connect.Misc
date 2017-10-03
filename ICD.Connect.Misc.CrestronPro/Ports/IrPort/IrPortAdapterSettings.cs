@@ -2,8 +2,7 @@ using System;
 using System.Collections.Generic;
 using ICD.Common.Properties;
 using ICD.Common.Utils.Xml;
-using ICD.Connect.Protocol;
-using ICD.Connect.Protocol.Ports;
+using ICD.Connect.Protocol.Ports.IrPort;
 using ICD.Connect.Settings.Attributes;
 
 namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
@@ -11,7 +10,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 	/// <summary>
 	/// Settings for the IrPortAdapter.
 	/// </summary>
-	public sealed class IrPortAdapterSettings : AbstractPortSettings
+	public sealed class IrPortAdapterSettings : AbstractIrPortSettings
 	{
 		private const string FACTORY_NAME = "IrPort";
 
