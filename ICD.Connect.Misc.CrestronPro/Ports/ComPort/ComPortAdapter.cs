@@ -23,7 +23,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 	/// <summary>
 	/// ComPortWrapper wraps a SimplSharpPro ComPort.
 	/// </summary>
-	public sealed class ComPortAdapter : AbstractSerialPort<ComPortAdapterSettings>, IComPort
+	public sealed class ComPortAdapter : AbstractComPort<ComPortAdapterSettings>, IComPort
 	{
 #if SIMPLSHARP
         private Crestron.SimplSharpPro.ComPort m_Port;
@@ -32,11 +32,6 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 		// Used with settings
 		private int? m_Device;
 		private int m_Address;
-
-		/// <summary>
-		/// Returns the connection state of the port.
-		/// </summary>
-		public override bool IsConnected { get { return true; } protected set { } }
 
 #region Methods
 
@@ -113,16 +108,6 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 		}
 #endif
 
-		public override void Connect()
-		{
-			IsConnected = true;
-		}
-
-		public override void Disconnect()
-		{
-			IsConnected = false;
-		}
-
 		/// <summary>
 		/// Returns the connection state of the port
 		/// </summary>
@@ -154,12 +139,10 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 
 #region ComSpec
 
-        [PublicAPI]
-		public int SetComPortSpec(eComBaudRates baudRate, eComDataBits numberOfDataBits,
-		                          eComParityType parityType,
-		                          eComStopBits numberOfStopBits, eComProtocolType protocolType,
-		                          eComHardwareHandshakeType hardwareHandShake,
-		                          eComSoftwareHandshakeType softwareHandshake, bool reportCtsChanges)
+		[PublicAPI]
+		public override int SetComPortSpec(eComBaudRates baudRate, eComDataBits numberOfDataBits, eComParityType parityType,
+										   eComStopBits numberOfStopBits, eComProtocolType protocolType, eComHardwareHandshakeType hardwareHandShake,
+										   eComSoftwareHandshakeType softwareHandshake, bool reportCtsChanges)
 		{
 #if SIMPLSHARP
             SetBaudRate(baudRate);
@@ -173,9 +156,9 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 			// Only care about the final value
 			return SetReportCtsChanges(reportCtsChanges);
 #else
-            throw new NotImplementedException();
+			throw new NotImplementedException();
 #endif
-        }
+		}
 
 #if SIMPLSHARP
 		[PublicAPI]
