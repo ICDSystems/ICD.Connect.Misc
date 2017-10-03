@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using ICD.Common.Properties;
 using ICD.Common.Utils.Xml;
-using ICD.Connect.Protocol;
+using ICD.Connect.Protocol.Ports.ComPort;
 using ICD.Connect.Settings.Attributes;
 
 namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
@@ -10,7 +10,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 	/// <summary>
 	/// Settings for the ComPortAdapter.
 	/// </summary>
-	public sealed class ComPortAdapterSettings : AbstractPortSettings
+	public sealed class ComPortAdapterSettings : AbstractComPortSettings
 	{
 		private const string FACTORY_NAME = "ComPort";
 
