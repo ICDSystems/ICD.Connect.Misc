@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using ICD.Common.Properties;
 using ICD.Common.Utils.Xml;
-using ICD.Connect.Protocol;
-using ICD.Connect.Protocol.Ports;
+using ICD.Connect.Protocol.Ports.IoPort;
 using ICD.Connect.Settings.Attributes;
 
 namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 {
-	public sealed class IoPortAdapterSettings : AbstractPortSettings
+	public sealed class IoPortAdapterSettings : AbstractIoPortSettings
 	{
 		private const string FACTORY_NAME = "IoPort";
 
