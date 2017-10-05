@@ -177,7 +177,19 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 			    return;
 		    }
 
-		    DinIo8 device = new DinIo8(settings.CresnetId, ProgramInfo.ControlSystem);
+		    DinIo8 device = null;
+
+		    try
+		    {
+				device = new DinIo8(settings.CresnetId, ProgramInfo.ControlSystem);
+		    }
+		    catch (ArgumentException e)
+		    {
+			    string message = string.Format("Failed to instantiate {0} with Cresnet ID {1} - {2}",
+			                                   typeof(DinIo8).Name, settings.CresnetId, e.Message);
+			    Logger.AddEntry(eSeverity.Error, e, message);
+		    }
+		    
 		    SetDevice(device);
 #else
             throw new NotImplementedException();
