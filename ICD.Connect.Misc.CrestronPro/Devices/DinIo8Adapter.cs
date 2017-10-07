@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ICD.Connect.Misc.CrestronPro.Utils;
 #if SIMPLSHARP
 using Crestron.SimplSharpPro;
@@ -117,6 +118,9 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 		/// <returns></returns>
 		public Versiport GetIoPort(int address)
 		{
+			if (m_PortsDevice == null)
+				throw new InvalidOperationException(string.Format("{0} has no internal device", this));
+
 			if (m_PortsDevice.VersiPorts.Contains((uint)address))
 				return m_PortsDevice.VersiPorts[(uint)address];
 
@@ -173,7 +177,19 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 			    return;
 		    }
 
-		    DinIo8 device = new DinIo8(settings.CresnetId, ProgramInfo.ControlSystem);
+		    DinIo8 device = null;
+
+		    try
+		    {
+				device = new DinIo8(settings.CresnetId, ProgramInfo.ControlSystem);
+		    }
+		    catch (ArgumentException e)
+		    {
+			    string message = string.Format("Failed to instantiate {0} with Cresnet ID {1} - {2}",
+			                                   typeof(DinIo8).Name, settings.CresnetId, e.Message);
+			    Logger.AddEntry(eSeverity.Error, e, message);
+		    }
+		    
 		    SetDevice(device);
 #else
             throw new NotImplementedException();
