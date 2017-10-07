@@ -51,6 +51,24 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 			m_Client.Dispose();
 		}
 
+		/// <summary>
+		/// Sends the command to the device.
+		/// </summary>
+		/// <param name="command"></param>
+		public void SendCommand(string command)
+		{
+			m_Client.Send(command);
+		}
+
+		/// <summary>
+		/// Sends the command to the device.
+		/// </summary>
+		/// <param name="command"></param>
+		public void SendCommand(FlexData command)
+		{
+			SendCommand(command.Serialize());
+		}
+
 		protected override bool GetIsOnlineStatus()
 		{
 			return m_Client != null && m_Client.IsOnline;

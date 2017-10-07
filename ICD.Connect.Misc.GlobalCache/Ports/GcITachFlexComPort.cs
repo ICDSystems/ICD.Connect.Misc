@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using ICD.Common.Utils.EventArguments;
 using ICD.Connect.Misc.GlobalCache.Devices;
+using ICD.Connect.Misc.GlobalCache.FlexApi;
 using ICD.Connect.Protocol.Network.Tcp;
 using ICD.Connect.Protocol.Ports;
 using ICD.Connect.Protocol.Ports.ComPort;
+using ICD.Connect.Protocol.Utils;
 using ICD.Connect.Settings.Core;
 
 namespace ICD.Connect.Misc.GlobalCache.Ports
@@ -11,6 +14,13 @@ namespace ICD.Connect.Misc.GlobalCache.Ports
     public sealed class GcITachFlexComPort : AbstractComPort<GcITachFlexComPortSettings>
 	{
 		private const ushort PORT = 4999;
+
+		private static readonly Dictionary<eComParityType, string> s_ParityStrings = new Dictionary<eComParityType, string>
+		{
+			{eComParityType.ComspecParityNone, "PARITY_NO"},
+			{eComParityType.ComspecParityEven, "PARITY_ODD"},
+			{eComParityType.ComspecParityOdd, "PARITY_EVEN"}
+		};
 
 		private readonly AsyncTcpClient m_Client;
 
@@ -68,14 +78,20 @@ namespace ICD.Connect.Misc.GlobalCache.Ports
 			m_Client.Disconnect();
 		}
 
-		public override int SetComPortSpec(eComBaudRates baudRate, eComDataBits numberOfDataBits, eComParityType parityType,
-										   eComStopBits numberOfStopBits, eComProtocolType protocolType, eComHardwareHandshakeType hardwareHandShake,
-										   eComSoftwareHandshakeType softwareHandshake, bool reportCtsChanges)
+		public override void SetComPortSpec(eComBaudRates baudRate, eComDataBits numberOfDataBits, eComParityType parityType,
+											eComStopBits numberOfStopBits, eComProtocolType protocolType, eComHardwareHandshakeType hardwareHandShake,
+											eComSoftwareHandshakeType softwareHandshake, bool reportCtsChanges)
 		{
 			if (m_Device == null)
 				throw new InvalidOperationException(string.Format("{0} unable to connect - device is null", this));
 
-			throw new System.NotImplementedException();
+			/*
+			int baud = ComSpecUtils.BaudRateToRate(baudRate);
+			//string flow = 
+			string parity = s_ParityStrings[parityType];
+
+			m_Device.SendCommand(new FlexData("set_SERIAL", 1, 1, baud, flow, parity));
+			*/
 		}
 
 		/// <summary>
@@ -113,6 +129,7 @@ namespace ICD.Connect.Misc.GlobalCache.Ports
 		private void Subscribe(AsyncTcpClient client)
 		{
 			client.OnIsOnlineStateChanged += ClientOnOnIsOnlineStateChanged;
+			client.OnConnectedStateChanged += ClientOnOnConnectedStateChanged;
 			client.OnSerialDataReceived += ClientOnOnSerialDataReceived;
 		}
 
@@ -123,6 +140,7 @@ namespace ICD.Connect.Misc.GlobalCache.Ports
 		private void Unsubscribe(AsyncTcpClient client)
 		{
 			client.OnIsOnlineStateChanged -= ClientOnOnIsOnlineStateChanged;
+			client.OnConnectedStateChanged -= ClientOnOnConnectedStateChanged;
 			client.OnSerialDataReceived -= ClientOnOnSerialDataReceived;
 		}
 
@@ -134,6 +152,16 @@ namespace ICD.Connect.Misc.GlobalCache.Ports
 		private void ClientOnOnSerialDataReceived(object sender, StringEventArgs stringEventArgs)
 		{
 			Receive(stringEventArgs.Data);
+		}
+
+		/// <summary>
+		/// Called when the TCP client connects/disconnects.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="boolEventArgs"></param>
+		private void ClientOnOnConnectedStateChanged(object sender, BoolEventArgs boolEventArgs)
+		{
+			UpdateIsConnectedState();
 		}
 
 		/// <summary>
