@@ -155,11 +155,11 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 #region ComSpec
 
         [PublicAPI]
-		public int SetComPortSpec(eComBaudRates baudRate, eComDataBits numberOfDataBits,
-		                          eComParityType parityType,
-		                          eComStopBits numberOfStopBits, eComProtocolType protocolType,
-		                          eComHardwareHandshakeType hardwareHandShake,
-		                          eComSoftwareHandshakeType softwareHandshake, bool reportCtsChanges)
+		public void SetComPortSpec(eComBaudRates baudRate, eComDataBits numberOfDataBits,
+		                           eComParityType parityType,
+		                           eComStopBits numberOfStopBits, eComProtocolType protocolType,
+		                           eComHardwareHandshakeType hardwareHandShake,
+		                           eComSoftwareHandshakeType softwareHandshake, bool reportCtsChanges)
 		{
 #if SIMPLSHARP
             SetBaudRate(baudRate);
@@ -169,9 +169,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 			SetProtocolType(protocolType);
 			SetHardwardHandshake(hardwareHandShake);
 			SetSoftwareHandshake(softwareHandshake);
-
-			// Only care about the final value
-			return SetReportCtsChanges(reportCtsChanges);
+			SetReportCtsChanges(reportCtsChanges);
 #else
             throw new NotImplementedException();
 #endif
@@ -179,7 +177,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 
 #if SIMPLSHARP
 		[PublicAPI]
-		public int SetBaudRate(eComBaudRates baudRate)
+		public void SetBaudRate(eComBaudRates baudRate)
 		{
 			if (m_Port == null)
 			{
@@ -190,7 +188,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 			// Cast to int since the numeric values are tied to real world values.
 			int proBaudRate = (int)baudRate;
 
-			return m_Port.SetComPortSpec((Crestron.SimplSharpPro.ComPort.eComBaudRates)proBaudRate,
+			m_Port.SetComPortSpec((Crestron.SimplSharpPro.ComPort.eComBaudRates)proBaudRate,
 			                             m_Port.DataBits,
 			                             m_Port.Parity,
 			                             m_Port.StopBits,
@@ -201,7 +199,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 		}
 
 		[PublicAPI]
-		public int SetDataBits(eComDataBits numberOfDataBits)
+		public void SetDataBits(eComDataBits numberOfDataBits)
 		{
 			if (m_Port == null)
 			{
@@ -212,7 +210,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 			// Cast to int since the numeric values are tied to real world values.
 			int proDataBits = (int)numberOfDataBits;
 
-			return m_Port.SetComPortSpec(m_Port.BaudRate,
+			m_Port.SetComPortSpec(m_Port.BaudRate,
 			                             (Crestron.SimplSharpPro.ComPort.eComDataBits)proDataBits,
 			                             m_Port.Parity,
 			                             m_Port.StopBits,
@@ -223,7 +221,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 		}
 
 		[PublicAPI]
-		public int SetParityType(eComParityType parityType)
+		public void SetParityType(eComParityType parityType)
 		{
 			if (m_Port == null)
 			{
@@ -235,7 +233,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 			Crestron.SimplSharpPro.ComPort.eComParityType proParityType =
 				ParseEnum<Crestron.SimplSharpPro.ComPort.eComParityType>(parityType);
 
-			return m_Port.SetComPortSpec(m_Port.BaudRate,
+			m_Port.SetComPortSpec(m_Port.BaudRate,
 			                             m_Port.DataBits,
 			                             proParityType,
 			                             m_Port.StopBits,
@@ -246,7 +244,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 		}
 
 		[PublicAPI]
-		public int SetStopBits(eComStopBits numberOfStopBits)
+		public void SetStopBits(eComStopBits numberOfStopBits)
 		{
 			if (m_Port == null)
 			{
@@ -257,7 +255,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 			// Cast to int since the numeric values are tied to real world values.
 			int proStopBits = (int)numberOfStopBits;
 
-			return m_Port.SetComPortSpec(m_Port.BaudRate,
+			m_Port.SetComPortSpec(m_Port.BaudRate,
 			                             m_Port.DataBits,
 			                             m_Port.Parity,
 			                             (Crestron.SimplSharpPro.ComPort.eComStopBits)proStopBits,
@@ -268,7 +266,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 		}
 
 		[PublicAPI]
-		public int SetProtocolType(eComProtocolType protocolType)
+		public void SetProtocolType(eComProtocolType protocolType)
 		{
 			if (m_Port == null)
 			{
@@ -280,7 +278,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 			Crestron.SimplSharpPro.ComPort.eComProtocolType proProtocolType =
 				ParseEnum<Crestron.SimplSharpPro.ComPort.eComProtocolType>(protocolType);
 
-			return m_Port.SetComPortSpec(m_Port.BaudRate,
+			m_Port.SetComPortSpec(m_Port.BaudRate,
 			                             m_Port.DataBits,
 			                             m_Port.Parity,
 			                             m_Port.StopBits,
@@ -291,7 +289,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 		}
 
 		[PublicAPI]
-		public int SetHardwardHandshake(eComHardwareHandshakeType hardwareHandShake)
+		public void SetHardwardHandshake(eComHardwareHandshakeType hardwareHandShake)
 		{
 			if (m_Port == null)
 			{
@@ -303,7 +301,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 			Crestron.SimplSharpPro.ComPort.eComHardwareHandshakeType proHardwareHandshake =
 				ParseEnum<Crestron.SimplSharpPro.ComPort.eComHardwareHandshakeType>(hardwareHandShake);
 
-			return m_Port.SetComPortSpec(m_Port.BaudRate,
+			m_Port.SetComPortSpec(m_Port.BaudRate,
 			                             m_Port.DataBits,
 			                             m_Port.Parity,
 			                             m_Port.StopBits,
@@ -314,7 +312,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 		}
 
 		[PublicAPI]
-		public int SetSoftwareHandshake(eComSoftwareHandshakeType softwareHandshake)
+		public void SetSoftwareHandshake(eComSoftwareHandshakeType softwareHandshake)
 		{
 			if (m_Port == null)
 			{
@@ -326,7 +324,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 			Crestron.SimplSharpPro.ComPort.eComSoftwareHandshakeType proSoftwareHandshake =
 				ParseEnum<Crestron.SimplSharpPro.ComPort.eComSoftwareHandshakeType>(softwareHandshake);
 
-			return m_Port.SetComPortSpec(m_Port.BaudRate,
+			m_Port.SetComPortSpec(m_Port.BaudRate,
 			                             m_Port.DataBits,
 			                             m_Port.Parity,
 			                             m_Port.StopBits,
@@ -337,12 +335,12 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 		}
 
 		[PublicAPI]
-		public int SetReportCtsChanges(bool reportCtsChanges)
+		public void SetReportCtsChanges(bool reportCtsChanges)
 		{
 			if (m_Port == null)
 				throw new InvalidOperationException(string.Format("{0} internal port is null", this));
 
-			return m_Port.SetComPortSpec(m_Port.BaudRate,
+			m_Port.SetComPortSpec(m_Port.BaudRate,
 			                             m_Port.DataBits,
 			                             m_Port.Parity,
 			                             m_Port.StopBits,
