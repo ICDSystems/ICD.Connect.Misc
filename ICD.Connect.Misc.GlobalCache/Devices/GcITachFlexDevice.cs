@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using ICD.Common.Utils;
 using ICD.Common.Utils.EventArguments;
 using ICD.Connect.API.Nodes;
@@ -17,6 +16,8 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 
 		private readonly AsyncTcpClient m_Client;
 		private readonly DelimiterSerialBuffer m_Buffer;
+
+		public string Address { get { return m_Client.Address; } }
 
 		/// <summary>
 		/// Constructor.
