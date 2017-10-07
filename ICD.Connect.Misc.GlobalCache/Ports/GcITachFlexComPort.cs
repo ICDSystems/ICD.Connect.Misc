@@ -8,7 +8,7 @@ using ICD.Connect.Settings.Core;
 
 namespace ICD.Connect.Misc.GlobalCache.Ports
 {
-    public sealed class GdITachFlexComPort : AbstractComPort<GdITachFlexComPortSettings>
+    public sealed class GcITachFlexComPort : AbstractComPort<GcITachFlexComPortSettings>
 	{
 		private const ushort PORT = 4999;
 
@@ -19,7 +19,7 @@ namespace ICD.Connect.Misc.GlobalCache.Ports
 		/// <summary>
 		/// Constructor.
 		/// </summary>
-		public GdITachFlexComPort()
+		public GcITachFlexComPort()
 		{
 			m_Client = new AsyncTcpClient();
 			Subscribe(m_Client);
@@ -157,14 +157,14 @@ namespace ICD.Connect.Misc.GlobalCache.Ports
 			SetDevice(null);
 		}
 
-		protected override void CopySettingsFinal(GdITachFlexComPortSettings settings)
+		protected override void CopySettingsFinal(GcITachFlexComPortSettings settings)
 		{
 			base.CopySettingsFinal(settings);
 
 			settings.Device = m_Device == null ? (int?)null : m_Device.Id;
 		}
 
-		protected override void ApplySettingsFinal(GdITachFlexComPortSettings settings, IDeviceFactory factory)
+		protected override void ApplySettingsFinal(GcITachFlexComPortSettings settings, IDeviceFactory factory)
 		{
 			base.ApplySettingsFinal(settings, factory);
 

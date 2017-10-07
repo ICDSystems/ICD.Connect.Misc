@@ -5,8 +5,9 @@ using ICD.Common.Utils.Xml;
 using ICD.Connect.Protocol.Ports.ComPort;
 using ICD.Connect.Settings.Attributes;
 
-namespace ICD.Connect.Misc.GlobalCache.Ports {
-	public sealed class GdITachFlexComPortSettings : AbstractComPortSettings
+namespace ICD.Connect.Misc.GlobalCache.Ports
+{
+	public sealed class GcITachFlexComPortSettings : AbstractComPortSettings
 	{
 		private const string FACTORY_NAME = "GcITachComPort";
 
@@ -25,7 +26,7 @@ namespace ICD.Connect.Misc.GlobalCache.Ports {
 		/// <summary>
 		/// Gets the type of the originator for this settings instance.
 		/// </summary>
-		public override Type OriginatorType { get { return typeof(GdITachFlexComPort); } }
+		public override Type OriginatorType { get { return typeof(GcITachFlexComPort); } }
 
 		#endregion
 
@@ -60,11 +61,11 @@ namespace ICD.Connect.Misc.GlobalCache.Ports {
 		/// <param name="xml"></param>
 		/// <returns></returns>
 		[PublicAPI, XmlFactoryMethod(FACTORY_NAME)]
-		public static GdITachFlexComPortSettings FromXml(string xml)
+		public static GcITachFlexComPortSettings FromXml(string xml)
 		{
 			int? device = XmlUtils.TryReadChildElementContentAsInt(xml, PARENT_DEVICE_ELEMENT);
 
-			GdITachFlexComPortSettings output = new GdITachFlexComPortSettings
+			GcITachFlexComPortSettings output = new GcITachFlexComPortSettings
 			{
 				Device = device
 			};
