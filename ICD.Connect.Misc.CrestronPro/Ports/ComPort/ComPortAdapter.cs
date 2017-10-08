@@ -139,12 +139,10 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 
 #region ComSpec
 
-        [PublicAPI]
-		public void SetComPortSpec(eComBaudRates baudRate, eComDataBits numberOfDataBits,
-		                           eComParityType parityType,
-		                           eComStopBits numberOfStopBits, eComProtocolType protocolType,
-		                           eComHardwareHandshakeType hardwareHandShake,
-		                           eComSoftwareHandshakeType softwareHandshake, bool reportCtsChanges)
+		[PublicAPI]
+		public override void SetComPortSpec(eComBaudRates baudRate, eComDataBits numberOfDataBits, eComParityType parityType,
+											eComStopBits numberOfStopBits, eComProtocolType protocolType, eComHardwareHandshakeType hardwareHandShake,
+											eComSoftwareHandshakeType softwareHandshake, bool reportCtsChanges)
 		{
 #if SIMPLSHARP
             SetBaudRate(baudRate);
