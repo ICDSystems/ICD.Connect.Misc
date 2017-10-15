@@ -5,6 +5,7 @@ using ICD.Connect.API.Nodes;
 using ICD.Connect.Devices;
 using ICD.Connect.Misc.GlobalCache.FlexApi;
 using ICD.Connect.Protocol.Network.Tcp;
+using ICD.Connect.Protocol.Network.WebPorts;
 using ICD.Connect.Protocol.SerialBuffers;
 using ICD.Connect.Settings.Core;
 
@@ -14,27 +15,30 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 	{
 		private const ushort TCP_PORT = 4998;
 
-		private readonly AsyncTcpClient m_Client;
-		private readonly DelimiterSerialBuffer m_Buffer;
+		private readonly AsyncTcpClient m_TcpClient;
+		private readonly DelimiterSerialBuffer m_TcpBuffer;
+		private readonly HttpPort m_HttpClient;
 
-		public string Address { get { return m_Client.Address; } }
+		public string Address { get { return m_TcpClient.Address; } }
 
 		/// <summary>
 		/// Constructor.
 		/// </summary>
 		public GcITachFlexDevice()
 		{
-			m_Client = new AsyncTcpClient
+			m_TcpClient = new AsyncTcpClient
 			{
 				Port = TCP_PORT,
 				DebugRx = true,
 				DebugTx = true
 			};
 
-			m_Buffer = new DelimiterSerialBuffer(FlexData.NEWLINE);
-			
-			Subscribe(m_Buffer);
-			Subscribe(m_Client);
+			m_TcpBuffer = new DelimiterSerialBuffer(FlexData.NEWLINE);
+
+			m_HttpClient = new HttpPort();
+
+			Subscribe(m_TcpBuffer);
+			Subscribe(m_TcpClient);
 		}
 
 		/// <summary>
@@ -45,10 +49,11 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 		{
 			base.DisposeFinal(disposing);
 
-			Unsubscribe(m_Buffer);
-			Unsubscribe(m_Client);
+			Unsubscribe(m_TcpBuffer);
+			Unsubscribe(m_TcpClient);
 
-			m_Client.Dispose();
+			m_TcpClient.Dispose();
+			m_HttpClient.Dispose();
 		}
 
 		/// <summary>
@@ -57,7 +62,7 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 		/// <param name="command"></param>
 		public void SendCommand(string command)
 		{
-			m_Client.Send(command);
+			m_TcpClient.Send(command);
 		}
 
 		/// <summary>
@@ -69,12 +74,34 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 			SendCommand(command.Serialize());
 		}
 
-		protected override bool GetIsOnlineStatus()
+		/// <summary>
+		/// Sends the data to the device.
+		/// </summary>
+		/// <param name="localUrl"></param>
+		/// <param name="data"></param>
+		public void Post(string localUrl, string data)
 		{
-			return m_Client != null && m_Client.IsOnline;
+			string result = m_HttpClient.Post(localUrl, data);
+			ParseResult(result);
 		}
 
-		#region Client Callbacks
+		/// <summary>
+		/// HTTP response handler.
+		/// </summary>
+		/// <param name="result"></param>
+		private void ParseResult(string result)
+		{
+		}
+
+		protected override bool GetIsOnlineStatus()
+		{
+			bool tcp = m_TcpClient != null && m_TcpClient.IsOnline;
+			bool http = m_HttpClient != null && m_HttpClient.IsOnline;
+
+			return tcp && http;
+		}
+
+		#region TCP Client Callbacks
 
 		/// <summary>
 		/// Subscribe to the client callbacks.
@@ -103,7 +130,7 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 		/// <param name="stringEventArgs"></param>
 		private void ClientOnOnSerialDataReceived(object sender, StringEventArgs stringEventArgs)
 		{
-			m_Buffer.Enqueue(stringEventArgs.Data);
+			m_TcpBuffer.Enqueue(stringEventArgs.Data);
 		}
 
 		/// <summary>
@@ -118,7 +145,7 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 
 		#endregion
 
-		#region Buffer Callbacks
+		#region TCP Buffer Callbacks
 
 		/// <summary>
 		/// Subsribe to the buffer events.
@@ -156,25 +183,22 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 		{
 			base.ClearSettingsFinal();
 
-			m_Client.Address = null;
+			m_TcpClient.Address = null;
 		}
 
 		protected override void ApplySettingsFinal(GcITachFlexDeviceSettings settings, IDeviceFactory factory)
 		{
 			base.ApplySettingsFinal(settings, factory);
 
-			m_Client.Address = settings.Address;
-
-			m_Client.Connect();
-
-			m_Client.Send("getdevices\r");
+			m_TcpClient.Address = settings.Address;
+			m_HttpClient.Address = settings.Address;
 		}
 
 		protected override void CopySettingsFinal(GcITachFlexDeviceSettings settings)
 		{
 			base.CopySettingsFinal(settings);
 
-			settings.Address = m_Client.Address;
+			settings.Address = m_TcpClient.Address;
 		}
 
 		#endregion
@@ -186,7 +210,7 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 			foreach (IConsoleNodeBase node in GetBaseConsoleNodes())
 				yield return node;
 
-			yield return m_Client;
+			yield return m_TcpClient;
 		}
 
 		/// <summary>

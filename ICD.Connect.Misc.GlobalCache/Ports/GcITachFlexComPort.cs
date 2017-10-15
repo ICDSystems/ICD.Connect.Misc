@@ -1,8 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
+using ICD.Common.Properties;
+using ICD.Common.Services.Logging;
 using ICD.Common.Utils.EventArguments;
+using ICD.Connect.Devices.Extensions;
 using ICD.Connect.Misc.GlobalCache.Devices;
-using ICD.Connect.Misc.GlobalCache.FlexApi;
+using ICD.Connect.Misc.GlobalCache.FlexApi.RestApi;
 using ICD.Connect.Protocol.Network.Tcp;
 using ICD.Connect.Protocol.Ports;
 using ICD.Connect.Protocol.Ports.ComPort;
@@ -15,16 +17,11 @@ namespace ICD.Connect.Misc.GlobalCache.Ports
 	{
 		private const ushort PORT = 4999;
 
-		private static readonly Dictionary<eComParityType, string> s_ParityStrings = new Dictionary<eComParityType, string>
-		{
-			{eComParityType.ComspecParityNone, "PARITY_NO"},
-			{eComParityType.ComspecParityEven, "PARITY_ODD"},
-			{eComParityType.ComspecParityOdd, "PARITY_EVEN"}
-		};
-
 		private readonly AsyncTcpClient m_Client;
 
 		private GcITachFlexDevice m_Device;
+		private int m_Module;
+		private int m_Address;
 
 		/// <summary>
 		/// Constructor.
@@ -85,19 +82,42 @@ namespace ICD.Connect.Misc.GlobalCache.Ports
 			if (m_Device == null)
 				throw new InvalidOperationException(string.Format("{0} unable to connect - device is null", this));
 
-			/*
-			int baud = ComSpecUtils.BaudRateToRate(baudRate);
-			//string flow = 
-			string parity = s_ParityStrings[parityType];
+			string localUrl = string.Format("api/host/modules/{0}/ports/{1}/config", m_Module, m_Address);
 
-			m_Device.SendCommand(new FlexData("set_SERIAL", 1, 1, baud, flow, parity));
-			*/
+			SerialConfiguration config = new SerialConfiguration
+			{
+				BaudRate = ComSpecUtils.BaudRateToRate(baudRate),
+				Parity = GetParity(parityType),
+				StopBits = ComSpecUtils.StopBitsToCount(numberOfStopBits),
+				FlowControl = hardwareHandShake == eComHardwareHandshakeType.ComspecHardwareHandshakeNone
+								  ? SerialConfiguration.eFlowControl.None
+								  : SerialConfiguration.eFlowControl.Hardware
+			};
+
+			m_Device.Post(localUrl, config.Serialize());
+		}
+
+		private SerialConfiguration.eParity GetParity(eComParityType parityType)
+		{
+			switch (parityType)
+			{
+				case eComParityType.ComspecParityNone:
+					return SerialConfiguration.eParity.None;
+				case eComParityType.ComspecParityEven:
+					return SerialConfiguration.eParity.Even;
+				case eComParityType.ComspecParityOdd:
+					return SerialConfiguration.eParity.Odd;
+
+				default:
+					throw new ArgumentOutOfRangeException("parityType");
+			}
 		}
 
 		/// <summary>
 		/// Sets the parent device.
 		/// </summary>
 		/// <param name="device"></param>
+		[PublicAPI]
 		public void SetDevice(GcITachFlexDevice device)
 		{
 			if (device == m_Device)
@@ -112,12 +132,12 @@ namespace ICD.Connect.Misc.GlobalCache.Ports
 
 		protected override bool GetIsConnectedState()
 		{
-			return m_Client.IsConnected;
+			return m_Client != null && m_Client.IsConnected;
 		}
 
 		protected override bool GetIsOnlineStatus()
 		{
-			return m_Client.IsOnline;
+			return m_Client != null && m_Client.IsOnline;
 		}
 
 		#region TCP Client Callbacks
@@ -182,6 +202,9 @@ namespace ICD.Connect.Misc.GlobalCache.Ports
 		{
 			base.ClearSettingsFinal();
 
+			m_Module = 1;
+			m_Address = 1;
+
 			SetDevice(null);
 		}
 
@@ -189,6 +212,8 @@ namespace ICD.Connect.Misc.GlobalCache.Ports
 		{
 			base.CopySettingsFinal(settings);
 
+			settings.Module = m_Module;
+			settings.Address = m_Address;
 			settings.Device = m_Device == null ? (int?)null : m_Device.Id;
 		}
 
@@ -196,7 +221,18 @@ namespace ICD.Connect.Misc.GlobalCache.Ports
 		{
 			base.ApplySettingsFinal(settings, factory);
 
-			throw new NotImplementedException();
+			GcITachFlexDevice device = null;
+
+			if (settings.Device != null)
+			{
+				device = factory.GetDeviceById((int)settings.Device) as GcITachFlexDevice;
+				if (device == null)
+					Logger.AddEntry(eSeverity.Error, "{0} is not a {1}", m_Device, typeof(GcITachFlexDevice).Name);
+			}
+
+			m_Module = settings.Module;
+			m_Address = settings.Address;
+			SetDevice(device);
 		}
 
 		#endregion

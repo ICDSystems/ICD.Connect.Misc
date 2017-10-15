@@ -12,11 +12,17 @@ namespace ICD.Connect.Misc.GlobalCache.Ports
 		private const string FACTORY_NAME = "GcITachComPort";
 
 		private const string PARENT_DEVICE_ELEMENT = "Device";
+		private const string PARENT_MODULE_ELEMENT = "Module";
+		private const string PARENT_ADDRESS_ELEMENT = "Address";
 
 		#region Properties
 
 		[SettingsProperty(SettingsProperty.ePropertyType.DeviceId)]
 		public int? Device { get; set; }
+
+		public int Module { get; set; }
+
+		public int Address { get; set; }
 
 		/// <summary>
 		/// Gets the originator factory name.
@@ -41,6 +47,8 @@ namespace ICD.Connect.Misc.GlobalCache.Ports
 			base.WriteElements(writer);
 
 			writer.WriteElementString(PARENT_DEVICE_ELEMENT, IcdXmlConvert.ToString(Device));
+			writer.WriteElementString(PARENT_MODULE_ELEMENT, IcdXmlConvert.ToString(Module));
+			writer.WriteElementString(PARENT_ADDRESS_ELEMENT, IcdXmlConvert.ToString(Address));
 		}
 
 		/// <summary>
@@ -63,11 +71,11 @@ namespace ICD.Connect.Misc.GlobalCache.Ports
 		[PublicAPI, XmlFactoryMethod(FACTORY_NAME)]
 		public static GcITachFlexComPortSettings FromXml(string xml)
 		{
-			int? device = XmlUtils.TryReadChildElementContentAsInt(xml, PARENT_DEVICE_ELEMENT);
-
 			GcITachFlexComPortSettings output = new GcITachFlexComPortSettings
 			{
-				Device = device
+				Device = XmlUtils.TryReadChildElementContentAsInt(xml, PARENT_DEVICE_ELEMENT),
+				Module = XmlUtils.TryReadChildElementContentAsInt(xml, PARENT_MODULE_ELEMENT) ?? 1,
+				Address = XmlUtils.TryReadChildElementContentAsInt(xml, PARENT_ADDRESS_ELEMENT) ?? 1,
 			};
 
 			ParseXml(output, xml);
