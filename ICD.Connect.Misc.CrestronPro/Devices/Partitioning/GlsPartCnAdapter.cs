@@ -13,47 +13,66 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 	public sealed class GlsPartCnAdapter : AbstractDevice<GlsPartCnAdapterSettings>
 	{
 #if SIMPLSHARP
-		private GlsPartCn m_PortsDevice;
+		public delegate void PartitionDeviceChangeCallback(GlsPartCnAdapter sender, GlsPartCn device);
+
+		public event PartitionDeviceChangeCallback OnPartitionDeviceChanged;
+
+		private GlsPartCn m_PartitionDevice;
 #endif
 
 		#region Methods
 
 #if SIMPLSHARP
 		/// <summary>
+		/// Constructor.
+		/// </summary>
+		public GlsPartCnAdapter()
+		{
+			Controls.Add(new GlsPartCnPartitionDeviceControl(this, 1));
+		}
+
+		/// <summary>
 		/// Sets the wrapped device.
 		/// </summary>
 		/// <param name="device"></param>
 		public void SetDevice(GlsPartCn device)
 		{
-			Unsubscribe(m_PortsDevice);
+			if (device == m_PartitionDevice)
+				return;
 
-			if (m_PortsDevice != null)
+			Unsubscribe(m_PartitionDevice);
+
+			if (m_PartitionDevice != null)
 			{
-				if (m_PortsDevice.Registered)
-					m_PortsDevice.UnRegister();
+				if (m_PartitionDevice.Registered)
+					m_PartitionDevice.UnRegister();
 
 				try
 				{
-					m_PortsDevice.Dispose();
+					m_PartitionDevice.Dispose();
 				}
 				catch
 				{
 				}
 			}
 
-			m_PortsDevice = device;
+			m_PartitionDevice = device;
 
-			if (m_PortsDevice != null && !m_PortsDevice.Registered)
+			if (m_PartitionDevice != null && !m_PartitionDevice.Registered)
 			{
 				if (Name != null)
-					m_PortsDevice.Description = Name;
-				eDeviceRegistrationUnRegistrationResponse result = m_PortsDevice.Register();
+					m_PartitionDevice.Description = Name;
+				eDeviceRegistrationUnRegistrationResponse result = m_PartitionDevice.Register();
 				if (result != eDeviceRegistrationUnRegistrationResponse.Success)
-					Logger.AddEntry(eSeverity.Error, "Unable to register {0} - {1}", m_PortsDevice.GetType().Name, result);
+					Logger.AddEntry(eSeverity.Error, "Unable to register {0} - {1}", m_PartitionDevice.GetType().Name, result);
 			}
 
-			Subscribe(m_PortsDevice);
+			Subscribe(m_PartitionDevice);
 			UpdateCachedOnlineStatus();
+
+			PartitionDeviceChangeCallback handler = OnPartitionDeviceChanged;
+			if (handler != null)
+				handler(this, m_PartitionDevice);
 		}
 #endif
 
@@ -64,7 +83,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 		protected override bool GetIsOnlineStatus()
 		{
 #if SIMPLSHARP
-			return m_PortsDevice != null && m_PortsDevice.IsOnline;
+			return m_PartitionDevice != null && m_PartitionDevice.IsOnline;
 #else
             return false;
 #endif
@@ -83,7 +102,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 			base.CopySettingsFinal(settings);
 
 #if SIMPLSHARP
-			settings.CresnetId = m_PortsDevice == null ? (byte)0 : (byte)m_PortsDevice.ID;
+			settings.CresnetId = m_PartitionDevice == null ? (byte)0 : (byte)m_PartitionDevice.ID;
 #else
             settings.CresnetId = 0;
 #endif
@@ -145,25 +164,25 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 		/// <summary>
 		/// Subscribe to the device events.
 		/// </summary>
-		/// <param name="portsDevice"></param>
-		private void Subscribe(GlsPartCn portsDevice)
+		/// <param name="partitionDevice"></param>
+		private void Subscribe(GlsPartCn partitionDevice)
 		{
-			if (portsDevice == null)
+			if (partitionDevice == null)
 				return;
 
-			portsDevice.OnlineStatusChange += PortsDeviceOnLineStatusChange;
+			partitionDevice.OnlineStatusChange += PortsDeviceOnLineStatusChange;
 		}
 
 		/// <summary>
 		/// Unsubscribe from the device events.
 		/// </summary>
-		/// <param name="portsDevice"></param>
-		private void Unsubscribe(GlsPartCn portsDevice)
+		/// <param name="partitionDevice"></param>
+		private void Unsubscribe(GlsPartCn partitionDevice)
 		{
-			if (portsDevice == null)
+			if (partitionDevice == null)
 				return;
 
-			portsDevice.OnlineStatusChange -= PortsDeviceOnLineStatusChange;
+			partitionDevice.OnlineStatusChange -= PortsDeviceOnLineStatusChange;
 		}
 
 		/// <summary>

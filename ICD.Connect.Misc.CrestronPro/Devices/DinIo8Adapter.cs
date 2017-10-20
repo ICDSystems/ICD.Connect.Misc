@@ -32,6 +32,9 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
         /// <param name="device"></param>
         public void SetDevice(DinIo8 device)
 		{
+			if (device == m_PortsDevice)
+				return;
+
 			Unsubscribe(m_PortsDevice);
 
 			if (m_PortsDevice != null)
