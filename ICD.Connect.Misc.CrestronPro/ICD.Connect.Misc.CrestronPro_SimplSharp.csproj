@@ -115,6 +115,7 @@
     <Compile Include="Devices\IDmParent.cs" />
     <Compile Include="Devices\Partitioning\GlsPartCnAdapter.cs" />
     <Compile Include="Devices\Partitioning\GlsPartCnAdapterSettings.cs" />
+    <Compile Include="Devices\Partitioning\GlsPartCnPartitionDeviceControl.cs" />
     <Compile Include="KrangPlugin.cs" />
     <Compile Include="Ports\ComPort\ComPortAdapter.cs" />
     <Compile Include="Ports\ComPort\ComPortAdapterSettings.cs" />
@@ -154,6 +155,10 @@
     <ProjectReference Include="..\..\ICD.Connect.Panels\ICD.Connect.Panels\ICD.Connect.Panels_SimplSharp.csproj">
       <Project>{A441FE98-6A8E-4EF3-98F0-D17041D2E118}</Project>
       <Name>ICD.Connect.Panels_SimplSharp</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ICD.Connect.Partitioning\ICD.Connect.Partitioning\ICD.Connect.Partitioning_SimplSharp.csproj">
+      <Project>{42FB8CF0-6AE6-4C70-AFDD-DF95F07E077F}</Project>
+      <Name>ICD.Connect.Partitioning_SimplSharp</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\ICD.Connect.Protocol\ICD.Connect.Protocol\ICD.Connect.Protocol_SimplSharp.csproj">
       <Project>{2E4E01B8-D4EA-4FB1-9FCE-0A0DC8D83C8A}</Project>
