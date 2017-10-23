@@ -295,7 +295,9 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 				Logger.AddEntry(eSeverity.Error, "No IR Port at {0} address {1}", m_Device, settings.Address);
 
 			SetIrPort(port, settings.Address);
-			LoadDriver(settings.Driver);
+
+			if (!string.IsNullOrEmpty(settings.Driver))
+				LoadDriver(settings.Driver);
 #else
             throw new NotImplementedException();
 #endif
