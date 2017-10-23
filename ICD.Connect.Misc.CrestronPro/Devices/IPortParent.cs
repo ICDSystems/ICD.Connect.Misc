@@ -1,5 +1,6 @@
 ﻿#if SIMPLSHARP
 using Crestron.SimplSharpPro;
+#endif
 using ICD.Common.Properties;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices
@@ -10,6 +11,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 	[PublicAPI]
 	public interface IPortParent
 	{
+#if SIMPLSHARP
 		/// <summary>
 		/// Gets the port at the given address.
 		/// </summary>
@@ -41,6 +43,6 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 		/// <returns></returns>
 		[PublicAPI]
 		Versiport GetIoPort(int address);
+#endif
 	}
 }
-#endif
