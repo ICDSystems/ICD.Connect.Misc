@@ -1,4 +1,6 @@
 ﻿using System;
+using ICD.Common.Utils;
+using ICD.Connect.API.Nodes;
 using ICD.Connect.Misc.CrestronPro.Utils;
 using ICD.Connect.Partitioning.Devices;
 using ICD.Connect.Settings.Core;
@@ -77,6 +79,14 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 		{
 		}
 
+		public void SetSensitivity(ushort sensitivity)
+		{
+#if SIMPLSHARP
+			if (m_PartitionDevice != null)
+				m_PartitionDevice.Sensitivity.UShortValue = sensitivity;
+#endif
+		}
+
 		/// <summary>
 		/// Gets the current online status of the device.
 		/// </summary>
@@ -104,8 +114,12 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 
 #if SIMPLSHARP
 			settings.CresnetId = m_PartitionDevice == null ? (byte)0 : (byte)m_PartitionDevice.ID;
+			settings.Sensitivity = m_PartitionDevice == null
+				                       ? (ushort)0
+				                       : m_PartitionDevice.SensitivityFeedback.UShortValue;
 #else
             settings.CresnetId = 0;
+			settings.Sensitivity = 0;
 #endif
 		}
 
@@ -152,6 +166,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 			}
 
 			SetDevice(device);
+			SetSensitivity(settings.Sensitivity);
 #else
             throw new NotImplementedException();
 #endif
@@ -222,6 +237,19 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 			IsOpen = m_PartitionDevice != null && m_PartitionDevice.PartitionNotSensedFeedback.BoolValue;
 		}
 #endif
+
+		#endregion
+
+		#region Console
+
+		public override void BuildConsoleStatus(AddStatusRowDelegate addRow)
+		{
+			base.BuildConsoleStatus(addRow);
+
+#if SIMPLSHARP
+			addRow("Sensitivity", m_PartitionDevice == null ? 0 : m_PartitionDevice.SensitivityFeedback.UShortValue);
+#endif
+		}
 
 		#endregion
 	}

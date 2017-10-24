@@ -12,9 +12,12 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 		private const string FACTORY_NAME = "GlsPartCn";
 
 		private const string CRESNET_ID_ELEMENT = "CresnetID";
+		private const string SENSITIVITY_ELEMENT = "Sensitivity";
 
 		[SettingsProperty(SettingsProperty.ePropertyType.Ipid)]
 		public byte CresnetId { get; set; }
+
+		public ushort Sensitivity { get; set; }
 
 		/// <summary>
 		/// Gets the originator factory name.
@@ -35,6 +38,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 			base.WriteElements(writer);
 
 			writer.WriteElementString(CRESNET_ID_ELEMENT, StringUtils.ToIpIdString(CresnetId));
+			writer.WriteElementString(SENSITIVITY_ELEMENT, IcdXmlConvert.ToString(Sensitivity));
 		}
 
 		/// <summary>
@@ -47,7 +51,8 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 		{
 			GlsPartCnAdapterSettings output = new GlsPartCnAdapterSettings
 			{
-				CresnetId = XmlUtils.TryReadChildElementContentAsByte(xml, CRESNET_ID_ELEMENT) ?? 0
+				CresnetId = XmlUtils.TryReadChildElementContentAsByte(xml, CRESNET_ID_ELEMENT) ?? 0,
+				Sensitivity = XmlUtils.TryReadChildElementContentAsUShort(xml, SENSITIVITY_ELEMENT) ?? 1
 			};
 
 			ParseXml(output, xml);
