@@ -1,35 +1,24 @@
 ﻿using System;
 using ICD.Connect.Misc.CrestronPro.Utils;
+using ICD.Connect.Partitioning.Devices;
 using ICD.Connect.Settings.Core;
 #if SIMPLSHARP
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.GeneralIO;
 #endif
-using ICD.Connect.Devices;
 using ICD.Common.Services.Logging;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 {
-	public sealed class GlsPartCnAdapter : AbstractDevice<GlsPartCnAdapterSettings>
+	public sealed class GlsPartCnAdapter : AbstractPartitionDevice<GlsPartCnAdapterSettings>
 	{
 #if SIMPLSHARP
-		public delegate void PartitionDeviceChangeCallback(GlsPartCnAdapter sender, GlsPartCn device);
-
-		public event PartitionDeviceChangeCallback OnPartitionDeviceChanged;
-
 		private GlsPartCn m_PartitionDevice;
 #endif
 
 		#region Methods
 
 #if SIMPLSHARP
-		/// <summary>
-		/// Constructor.
-		/// </summary>
-		public GlsPartCnAdapter()
-		{
-			Controls.Add(new GlsPartCnPartitionDeviceControl(this, 1));
-		}
 
 		/// <summary>
 		/// Sets the wrapped device.
@@ -70,11 +59,23 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 			Subscribe(m_PartitionDevice);
 			UpdateCachedOnlineStatus();
 
-			PartitionDeviceChangeCallback handler = OnPartitionDeviceChanged;
-			if (handler != null)
-				handler(this, m_PartitionDevice);
+			UpdateStatus();
 		}
 #endif
+
+		/// <summary>
+		/// Opens the partition.
+		/// </summary>
+		public override void Open()
+		{
+		}
+
+		/// <summary>
+		/// Closes the partition.
+		/// </summary>
+		public override void Close()
+		{
+		}
 
 		/// <summary>
 		/// Gets the current online status of the device.
@@ -171,6 +172,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 				return;
 
 			partitionDevice.OnlineStatusChange += PortsDeviceOnLineStatusChange;
+			partitionDevice.BaseEvent += PartitionDeviceOnBaseEvent;
 		}
 
 		/// <summary>
@@ -183,6 +185,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 				return;
 
 			partitionDevice.OnlineStatusChange -= PortsDeviceOnLineStatusChange;
+			partitionDevice.BaseEvent -= PartitionDeviceOnBaseEvent;
 		}
 
 		/// <summary>
@@ -193,6 +196,30 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 		private void PortsDeviceOnLineStatusChange(GenericBase currentDevice, OnlineOfflineEventArgs args)
 		{
 			UpdateCachedOnlineStatus();
+		}
+
+		/// <summary>
+		/// Called when the partition sensor fires an event.
+		/// </summary>
+		/// <param name="device"></param>
+		/// <param name="args"></param>
+		private void PartitionDeviceOnBaseEvent(GenericBase device, BaseEventArgs args)
+		{
+			switch (args.EventId)
+			{
+				case GlsPartCn.PartitionNotSensedFeedbackEventId:
+				case GlsPartCn.PartitionSensedFeedbackEventId:
+					UpdateStatus();
+					break;
+			}
+		}
+
+		/// <summary>
+		/// Updates the state of the control.
+		/// </summary>
+		private void UpdateStatus()
+		{
+			IsOpen = m_PartitionDevice != null && m_PartitionDevice.PartitionNotSensedFeedback.BoolValue;
 		}
 #endif
 

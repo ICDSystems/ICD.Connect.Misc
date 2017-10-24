@@ -2,12 +2,12 @@
 using ICD.Common.Properties;
 using ICD.Common.Utils;
 using ICD.Common.Utils.Xml;
-using ICD.Connect.Devices;
+using ICD.Connect.Partitioning.Devices;
 using ICD.Connect.Settings.Attributes;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 {
-	public sealed class GlsPartCnAdapterSettings : AbstractDeviceSettings
+	public sealed class GlsPartCnAdapterSettings : AbstractPartitionDeviceSettings
 	{
 		private const string FACTORY_NAME = "GlsPartCn";
 
