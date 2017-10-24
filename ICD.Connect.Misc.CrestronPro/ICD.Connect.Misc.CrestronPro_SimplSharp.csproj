@@ -115,7 +115,6 @@
     <Compile Include="Devices\IDmParent.cs" />
     <Compile Include="Devices\Partitioning\GlsPartCnAdapter.cs" />
     <Compile Include="Devices\Partitioning\GlsPartCnAdapterSettings.cs" />
-    <Compile Include="Devices\Partitioning\GlsPartCnPartitionDeviceControl.cs" />
     <Compile Include="KrangPlugin.cs" />
     <Compile Include="Ports\ComPort\ComPortAdapter.cs" />
     <Compile Include="Ports\ComPort\ComPortAdapterSettings.cs" />
