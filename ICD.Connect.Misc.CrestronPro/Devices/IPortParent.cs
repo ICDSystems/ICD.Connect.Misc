@@ -43,6 +43,14 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 		/// <returns></returns>
 		[PublicAPI]
 		Versiport GetIoPort(int address);
+
+		/// <summary>
+		/// Gets the port at the given address.
+		/// </summary>
+		/// <param name="address"></param>
+		/// <returns></returns>
+		[PublicAPI]
+		DigitalInput GetDigitalInputPort(int address);
 #endif
 	}
 }
