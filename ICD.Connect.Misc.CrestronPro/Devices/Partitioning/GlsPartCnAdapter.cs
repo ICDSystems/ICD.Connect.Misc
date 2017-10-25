@@ -1,5 +1,4 @@
 ﻿using System;
-using ICD.Common.Utils;
 using ICD.Connect.API.Nodes;
 using ICD.Connect.Misc.CrestronPro.Utils;
 using ICD.Connect.Partitioning.Devices;
@@ -56,6 +55,9 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 				eDeviceRegistrationUnRegistrationResponse result = m_PartitionDevice.Register();
 				if (result != eDeviceRegistrationUnRegistrationResponse.Success)
 					Logger.AddEntry(eSeverity.Error, "Unable to register {0} - {1}", m_PartitionDevice.GetType().Name, result);
+
+				// Actually enable feedback from the device!
+				m_PartitionDevice.Enable.BoolValue = true;
 			}
 
 			Subscribe(m_PartitionDevice);
