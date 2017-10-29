@@ -9,7 +9,7 @@ namespace ICD.Connect.Misc.GlobalCache.Ports
 {
 	public sealed class GcITachFlexComPortSettings : AbstractComPortSettings
 	{
-		private const string FACTORY_NAME = "GcITachComPort";
+		private const string FACTORY_NAME = "iTachFlexComPort";
 
 		private const string PARENT_DEVICE_ELEMENT = "Device";
 		private const string PARENT_MODULE_ELEMENT = "Module";
