@@ -32,6 +32,9 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
         /// <param name="device"></param>
         public void SetDevice(DinIo8 device)
 		{
+			if (device == m_PortsDevice)
+				return;
+
 			Unsubscribe(m_PortsDevice);
 
 			if (m_PortsDevice != null)
@@ -127,6 +130,17 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 			string message = string.Format("{0} has no {1} with address {2}", this, typeof(Versiport).Name, address);
 			throw new KeyNotFoundException(message);
 		}
+
+	    /// <summary>
+	    /// Gets the port at the given address.
+	    /// </summary>
+	    /// <param name="address"></param>
+	    /// <returns></returns>
+	    public DigitalInput GetDigitalInputPort(int address)
+	    {
+			string message = string.Format("{0} has no {1} with address {2}", this, typeof(DigitalInput).Name, address);
+			throw new KeyNotFoundException(message);
+	    }
 #endif
 
 #endregion

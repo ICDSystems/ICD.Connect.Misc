@@ -91,24 +91,20 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		[PublicAPI, XmlFactoryMethod(FACTORY_NAME)]
 		public static IrPortAdapterSettings FromXml(string xml)
 		{
-			int? device = XmlUtils.TryReadChildElementContentAsInt(xml, PARENT_DEVICE_ELEMENT);
-			int address = XmlUtils.ReadChildElementContentAsInt(xml, ADDRESS_ELEMENT);
-			string driver = XmlUtils.ReadChildElementContentAsString(xml, DRIVER_ELEMENT);
-			ushort? pulseTime = (ushort?)XmlUtils.TryReadChildElementContentAsInt(xml, PULSETIME_ELEMENT);
-			ushort? betweenTime = (ushort?)XmlUtils.TryReadChildElementContentAsInt(xml, BETWEENTIME_ELEMENT);
+			int device = XmlUtils.TryReadChildElementContentAsInt(xml, PARENT_DEVICE_ELEMENT) ?? 0;
+			int address = XmlUtils.TryReadChildElementContentAsInt(xml, ADDRESS_ELEMENT) ?? 0;
+			string driver = XmlUtils.TryReadChildElementContentAsString(xml, DRIVER_ELEMENT);
+			ushort pulseTime = (ushort?)XmlUtils.TryReadChildElementContentAsInt(xml, PULSETIME_ELEMENT) ?? 0;
+			ushort betweenTime = (ushort?)XmlUtils.TryReadChildElementContentAsInt(xml, BETWEENTIME_ELEMENT) ?? 0;
 
 			IrPortAdapterSettings output = new IrPortAdapterSettings
 			{
 				Device = device,
 				Address = address,
-				Driver = driver
+				Driver = driver,
+				PulseTime = pulseTime,
+				BetweenTime = betweenTime
 			};
-
-			if (pulseTime != null)
-				output.PulseTime = (ushort)pulseTime;
-
-			if (betweenTime != null)
-				output.BetweenTime = (ushort)betweenTime;
 
 			ParseXml(output, xml);
 			return output;

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 #if SIMPLSHARP
 using Crestron.SimplSharpPro;
 using ICD.Connect.Misc.CrestronPro.Utils.Extensions;
@@ -8,14 +6,11 @@ using ICD.Connect.Misc.CrestronPro.Utils.Extensions;
 using ICD.Common.Properties;
 using ICD.Common.Services.Logging;
 using ICD.Common.Utils;
-using ICD.Common.Utils.Extensions;
-using ICD.Connect.API.Commands;
 using ICD.Connect.API.Nodes;
 using ICD.Connect.Devices.Extensions;
 using ICD.Connect.Misc.CrestronPro.Devices;
 using ICD.Connect.Protocol.Ports;
 using ICD.Connect.Protocol.Ports.ComPort;
-using ICD.Connect.Protocol.Utils;
 using ICD.Connect.Settings.Core;
 
 namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
@@ -122,8 +117,8 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 #if SIMPLSHARP
             if (m_Port == null)
 			{
-				string message = string.Format("{0} internal port is null", this);
-				throw new InvalidOperationException(message);
+				Logger.AddEntry(eSeverity.Error, "{0} unable to send - internal port is null", this);
+				return false;
 			}
 
 			PrintTx(data);
@@ -140,201 +135,34 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 #region ComSpec
 
 		[PublicAPI]
-		public override void SetComPortSpec(eComBaudRates baudRate, eComDataBits numberOfDataBits, eComParityType parityType,
-											eComStopBits numberOfStopBits, eComProtocolType protocolType, eComHardwareHandshakeType hardwareHandShake,
-											eComSoftwareHandshakeType softwareHandshake, bool reportCtsChanges)
+		public void SetComPortSpec(eComBaudRates baudRate, eComDataBits numberOfDataBits,
+		                           eComParityType parityType,
+		                           eComStopBits numberOfStopBits, eComProtocolType protocolType,
+		                           eComHardwareHandshakeType hardwareHandShake,
+		                           eComSoftwareHandshakeType softwareHandshake, bool reportCtsChanges)
 		{
 #if SIMPLSHARP
-            SetBaudRate(baudRate);
-			SetDataBits(numberOfDataBits);
-			SetParityType(parityType);
-			SetStopBits(numberOfStopBits);
-			SetProtocolType(protocolType);
-			SetHardwardHandshake(hardwareHandShake);
-			SetSoftwareHandshake(softwareHandshake);
-			SetReportCtsChanges(reportCtsChanges);
+			if (m_Port == null)
+			{
+				Logger.AddEntry(eSeverity.Error, "{0} unable to set ComSpec - internal port is null", this);
+				return;
+			}
+
+			m_Port.SetComPortSpec((Crestron.SimplSharpPro.ComPort.eComBaudRates)(int)baudRate,
+			                      (Crestron.SimplSharpPro.ComPort.eComDataBits)(int)numberOfDataBits,
+			                      ParseEnum<Crestron.SimplSharpPro.ComPort.eComParityType>(parityType),
+			                      (Crestron.SimplSharpPro.ComPort.eComStopBits)(int)numberOfStopBits,
+			                      ParseEnum<Crestron.SimplSharpPro.ComPort.eComProtocolType>(protocolType),
+			                      ParseEnum<Crestron.SimplSharpPro.ComPort.eComHardwareHandshakeType>(hardwareHandShake),
+			                      ParseEnum<Crestron.SimplSharpPro.ComPort.eComSoftwareHandshakeType>(softwareHandshake),
+			                      reportCtsChanges);
+
 #else
-			throw new NotImplementedException();
+            throw new NotImplementedException();
 #endif
 		}
 
-#if SIMPLSHARP
-		[PublicAPI]
-		public void SetBaudRate(eComBaudRates baudRate)
-		{
-			if (m_Port == null)
-			{
-				string message = string.Format("{0} internal port is null", this);
-				throw new InvalidOperationException(message);
-			}
-
-			// Cast to int since the numeric values are tied to real world values.
-			int proBaudRate = (int)baudRate;
-
-			m_Port.SetComPortSpec((Crestron.SimplSharpPro.ComPort.eComBaudRates)proBaudRate,
-			                             m_Port.DataBits,
-			                             m_Port.Parity,
-			                             m_Port.StopBits,
-			                             m_Port.Protocol,
-			                             m_Port.HwHandShake,
-			                             m_Port.SwHandShake,
-			                             m_Port.ReportCTSChanges);
-		}
-
-		[PublicAPI]
-		public void SetDataBits(eComDataBits numberOfDataBits)
-		{
-			if (m_Port == null)
-			{
-				string message = string.Format("{0} internal port is null", this);
-				throw new InvalidOperationException(message);
-			}
-
-			// Cast to int since the numeric values are tied to real world values.
-			int proDataBits = (int)numberOfDataBits;
-
-			m_Port.SetComPortSpec(m_Port.BaudRate,
-			                             (Crestron.SimplSharpPro.ComPort.eComDataBits)proDataBits,
-			                             m_Port.Parity,
-			                             m_Port.StopBits,
-			                             m_Port.Protocol,
-			                             m_Port.HwHandShake,
-			                             m_Port.SwHandShake,
-			                             m_Port.ReportCTSChanges);
-		}
-
-		[PublicAPI]
-		public void SetParityType(eComParityType parityType)
-		{
-			if (m_Port == null)
-			{
-				string message = string.Format("{0} internal port is null", this);
-				throw new InvalidOperationException(message);
-			}
-
-			// This is messier than casting to int, but it should be safer if the ComPort enum definitions ever change.
-			Crestron.SimplSharpPro.ComPort.eComParityType proParityType =
-				ParseEnum<Crestron.SimplSharpPro.ComPort.eComParityType>(parityType);
-
-			m_Port.SetComPortSpec(m_Port.BaudRate,
-			                             m_Port.DataBits,
-			                             proParityType,
-			                             m_Port.StopBits,
-			                             m_Port.Protocol,
-			                             m_Port.HwHandShake,
-			                             m_Port.SwHandShake,
-			                             m_Port.ReportCTSChanges);
-		}
-
-		[PublicAPI]
-		public void SetStopBits(eComStopBits numberOfStopBits)
-		{
-			if (m_Port == null)
-			{
-				string message = string.Format("{0} internal port is null", this);
-				throw new InvalidOperationException(message);
-			}
-
-			// Cast to int since the numeric values are tied to real world values.
-			int proStopBits = (int)numberOfStopBits;
-
-			m_Port.SetComPortSpec(m_Port.BaudRate,
-			                             m_Port.DataBits,
-			                             m_Port.Parity,
-			                             (Crestron.SimplSharpPro.ComPort.eComStopBits)proStopBits,
-			                             m_Port.Protocol,
-			                             m_Port.HwHandShake,
-			                             m_Port.SwHandShake,
-			                             m_Port.ReportCTSChanges);
-		}
-
-		[PublicAPI]
-		public void SetProtocolType(eComProtocolType protocolType)
-		{
-			if (m_Port == null)
-			{
-				string message = string.Format("{0} internal port is null", this);
-				throw new InvalidOperationException(message);
-			}
-
-			// This is messier than casting to int, but it should be safer if the ComPort enum definitions ever change.
-			Crestron.SimplSharpPro.ComPort.eComProtocolType proProtocolType =
-				ParseEnum<Crestron.SimplSharpPro.ComPort.eComProtocolType>(protocolType);
-
-			m_Port.SetComPortSpec(m_Port.BaudRate,
-			                             m_Port.DataBits,
-			                             m_Port.Parity,
-			                             m_Port.StopBits,
-			                             proProtocolType,
-			                             m_Port.HwHandShake,
-			                             m_Port.SwHandShake,
-			                             m_Port.ReportCTSChanges);
-		}
-
-		[PublicAPI]
-		public void SetHardwardHandshake(eComHardwareHandshakeType hardwareHandShake)
-		{
-			if (m_Port == null)
-			{
-				string message = string.Format("{0} internal port is null", this);
-				throw new InvalidOperationException(message);
-			}
-
-			// This is messier than casting to int, but it should be safer if the ComPort enum definitions ever change.
-			Crestron.SimplSharpPro.ComPort.eComHardwareHandshakeType proHardwareHandshake =
-				ParseEnum<Crestron.SimplSharpPro.ComPort.eComHardwareHandshakeType>(hardwareHandShake);
-
-			m_Port.SetComPortSpec(m_Port.BaudRate,
-			                             m_Port.DataBits,
-			                             m_Port.Parity,
-			                             m_Port.StopBits,
-			                             m_Port.Protocol,
-			                             proHardwareHandshake,
-			                             m_Port.SwHandShake,
-			                             m_Port.ReportCTSChanges);
-		}
-
-		[PublicAPI]
-		public void SetSoftwareHandshake(eComSoftwareHandshakeType softwareHandshake)
-		{
-			if (m_Port == null)
-			{
-				string message = string.Format("{0} internal port is null", this);
-				throw new InvalidOperationException(message);
-			}
-
-			// This is messier than casting to int, but it should be safer if the ComPort enum definitions ever change.
-			Crestron.SimplSharpPro.ComPort.eComSoftwareHandshakeType proSoftwareHandshake =
-				ParseEnum<Crestron.SimplSharpPro.ComPort.eComSoftwareHandshakeType>(softwareHandshake);
-
-			m_Port.SetComPortSpec(m_Port.BaudRate,
-			                             m_Port.DataBits,
-			                             m_Port.Parity,
-			                             m_Port.StopBits,
-			                             m_Port.Protocol,
-			                             m_Port.HwHandShake,
-			                             proSoftwareHandshake,
-			                             m_Port.ReportCTSChanges);
-		}
-
-		[PublicAPI]
-		public void SetReportCtsChanges(bool reportCtsChanges)
-		{
-			if (m_Port == null)
-				throw new InvalidOperationException(string.Format("{0} internal port is null", this));
-
-			m_Port.SetComPortSpec(m_Port.BaudRate,
-			                             m_Port.DataBits,
-			                             m_Port.Parity,
-			                             m_Port.StopBits,
-			                             m_Port.Protocol,
-			                             m_Port.HwHandShake,
-			                             m_Port.SwHandShake,
-			                             reportCtsChanges);
-		}
-#endif
-
-#endregion
+		#endregion
 
 #region Private Methods
 
@@ -495,59 +323,6 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 			addRow("Hardware Handshake", m_Port.HwHandShake);
 			addRow("Software Handshake", m_Port.SwHandShake);
 			addRow("Report CTS Changes", m_Port.ReportCTSChanges);
-		}
-
-		/// <summary>
-		/// Gets the child console commands.
-		/// </summary>
-		/// <returns></returns>
-		public override IEnumerable<IConsoleCommand> GetConsoleCommands()
-		{
-			foreach (IConsoleCommand command in GetBaseConsoleCommands())
-				yield return command;
-
-			yield return new GenericConsoleCommand<int, eComParityType, int, int>("Set232", "Set232 <baud> <parity> <data> <stop>", (a,b,c,d) => Set232Spec(a,b,c,d));
-
-			yield return new GenericConsoleCommand<int>("SetBaudRate", BaudHelp(), v => SetBaudRate(ComSpecUtils.BaudRateFromRate(v)));
-			yield return new GenericConsoleCommand<int>("SetDataBits", EnumValueHelp<eComDataBits>(), v => SetDataBits((eComDataBits)v));
-			yield return new GenericConsoleCommand<eComParityType>("SetParity", EnumHelp<eComParityType>(), v => SetParityType(v));
-			yield return new GenericConsoleCommand<int>("SetStopBits", EnumValueHelp<eComStopBits>(), v => SetStopBits((eComStopBits)v));
-			yield return new GenericConsoleCommand<eComProtocolType>("SetProtocol", EnumHelp<eComProtocolType>(), v => SetProtocolType(v));
-			yield return new GenericConsoleCommand<eComHardwareHandshakeType>("SetHwHandshake", EnumHelp<eComHardwareHandshakeType>(), v => SetHardwardHandshake(v));
-			yield return new GenericConsoleCommand<eComSoftwareHandshakeType>("SetSwHandshake", EnumHelp<eComSoftwareHandshakeType>(), v => SetSoftwareHandshake(v));
-			yield return new GenericConsoleCommand<bool>("ReportCts", "true/false", v => SetReportCtsChanges(v));
-		}
-
-		private void Set232Spec(int baudRate, eComParityType parity, int dataBits, int stopBits)
-		{
-			SetBaudRate(ComSpecUtils.BaudRateFromRate(baudRate));
-			SetParityType(parity);
-			SetDataBits((eComDataBits)dataBits);
-			SetStopBits((eComStopBits)stopBits);
-		}
-
-		private string EnumValueHelp<T>()
-		{
-			return StringUtils.ArrayFormat(EnumUtils.GetValues<T>().Select(v => EnumUtils.GetUnderlyingValue(v)));
-		}
-
-		private string EnumHelp<T>()
-		{
-			return StringUtils.ArrayFormat(EnumUtils.GetValues<T>());
-		}
-
-		private string BaudHelp()
-		{
-			return StringUtils.ArrayFormat(EnumUtils.GetValues<eComBaudRates>().Select(v => ComSpecUtils.BaudRateToRate(v)).Order());
-		}
-
-		/// <summary>
-		/// Workaround for unverifiable code warning.
-		/// </summary>
-		/// <returns></returns>
-		private IEnumerable<IConsoleCommand> GetBaseConsoleCommands()
-		{
-			return base.GetConsoleCommands();
 		}
 #endif
 
