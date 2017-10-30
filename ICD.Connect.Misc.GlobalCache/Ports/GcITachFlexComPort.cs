@@ -65,6 +65,18 @@ namespace ICD.Connect.Misc.GlobalCache.Ports
 			if (m_Device == null)
 				throw new InvalidOperationException(string.Format("{0} unable to connect - device is null", this));
 
+			// First make sure the device is in the correct configuration
+			Module module = new Module
+			{
+				Id = Module.eId.FlcSerial,
+				Class = Module.eClass.Serial,
+				Type = Module.eType.Rs232
+			};
+
+			string localUrl = string.Format("api/host/modules/{0}", m_Module);
+
+			m_Device.Post(localUrl, module.Serialize());
+
 			HostInfo host = new HostInfo(m_Device.Address, PORT);
 			m_Client.Connect(host);
 		}
