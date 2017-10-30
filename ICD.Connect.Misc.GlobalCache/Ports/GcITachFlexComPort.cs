@@ -2,6 +2,7 @@
 using ICD.Common.Properties;
 using ICD.Common.Services.Logging;
 using ICD.Common.Utils.EventArguments;
+using ICD.Connect.API.Nodes;
 using ICD.Connect.Devices.Extensions;
 using ICD.Connect.Misc.GlobalCache.Devices;
 using ICD.Connect.Misc.GlobalCache.FlexApi.RestApi;
@@ -75,7 +76,14 @@ namespace ICD.Connect.Misc.GlobalCache.Ports
 
 			string localUrl = string.Format("api/host/modules/{0}", m_Module);
 
-			m_Device.Post(localUrl, module.Serialize());
+			try
+			{
+				m_Device.Post(localUrl, module.Serialize());
+			}
+			catch (Exception e)
+			{
+				Logger.AddEntry(eSeverity.Error, e, "{0} failed to set module type", this);
+			}
 
 			HostInfo host = new HostInfo(m_Device.Address, PORT);
 			m_Client.Connect(host);
@@ -108,7 +116,14 @@ namespace ICD.Connect.Misc.GlobalCache.Ports
 								  : SerialConfiguration.eFlowControl.Hardware
 			};
 
-			m_Device.Post(localUrl, config.Serialize());
+			try
+			{
+				m_Device.Post(localUrl, config.Serialize());
+			}
+			catch (Exception e)
+			{
+				Logger.AddEntry(eSeverity.Error, e, "{0} failed to set comspec", this);
+			}
 		}
 
 		private SerialConfiguration.eParity GetParity(eComParityType parityType)
