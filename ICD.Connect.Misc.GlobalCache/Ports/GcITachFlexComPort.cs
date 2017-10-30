@@ -52,7 +52,9 @@ namespace ICD.Connect.Misc.GlobalCache.Ports
 		/// <returns></returns>
 		protected override bool SendFinal(string data)
 		{
-			return m_Client.Send(data);
+			bool output = m_Client.Send(data);
+			PrintTx(data);
+			return output;
 		}
 
 		/// <summary>
@@ -171,6 +173,7 @@ namespace ICD.Connect.Misc.GlobalCache.Ports
 		/// <param name="stringEventArgs"></param>
 		private void ClientOnOnSerialDataReceived(object sender, StringEventArgs stringEventArgs)
 		{
+			PrintRx(stringEventArgs.Data);
 			Receive(stringEventArgs.Data);
 		}
 
