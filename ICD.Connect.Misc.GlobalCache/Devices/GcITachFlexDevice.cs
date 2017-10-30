@@ -205,6 +205,13 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 
 		#region Console
 
+		public override void BuildConsoleStatus(AddStatusRowDelegate addRow)
+		{
+			base.BuildConsoleStatus(addRow);
+
+			addRow("Address", Address);
+		}
+
 		public override IEnumerable<IConsoleNodeBase> GetConsoleNodes()
 		{
 			foreach (IConsoleNodeBase node in GetBaseConsoleNodes())

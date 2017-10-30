@@ -251,5 +251,18 @@ namespace ICD.Connect.Misc.GlobalCache.Ports
 		}
 
 		#endregion
+
+		#region Console
+
+		public override void BuildConsoleStatus(AddStatusRowDelegate addRow)
+		{
+			base.BuildConsoleStatus(addRow);
+
+			addRow("Device", m_Device);
+			addRow("Module", m_Module);
+			addRow("Address", m_Address);
+		}
+
+		#endregion
 	}
 }
