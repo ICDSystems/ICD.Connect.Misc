@@ -273,7 +273,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 			if (port == null)
 				return;
 
-			port.VersiportChange += PortOnVersiportChange;
+			port.VersiportChange -= PortOnVersiportChange;
 		}
 
 		/// <summary>
