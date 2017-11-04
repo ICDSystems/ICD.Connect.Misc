@@ -303,8 +303,8 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 				}
 				catch (Exception e)
 				{
-					Logger.AddEntry(eSeverity.Error, e, "Unable to get ComPort from device {0} at address {1}", m_Device,
-					                settings.Address);
+					Logger.AddEntry(eSeverity.Error, "Unable to get ComPort from device {0} at address {1} - {2}", m_Device,
+					                settings.Address, e.Message);
 				}
 			}
 
