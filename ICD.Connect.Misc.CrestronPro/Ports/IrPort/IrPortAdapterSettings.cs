@@ -71,17 +71,24 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 			writer.WriteElementString(BETWEENTIME_ELEMENT, IcdXmlConvert.ToString(BetweenTime));
 		}
 
-		/// <summary>
-		/// Returns the collection of ids that the settings will depend on.
-		/// For example, to instantiate an IR Port from settings, the device the physical port
-		/// belongs to will need to be instantiated first.
-		/// </summary>
-		/// <returns></returns>
-		public override IEnumerable<int> GetDeviceDependencies()
-		{
-			if (Device != null)
-				yield return (int)Device;
-		}
+        /// <summary>
+        /// Returns true if the settings depend on a device with the given ID.
+        /// For example, to instantiate an IR Port from settings, the device the physical port
+        /// belongs to will need to be instantiated first.
+        /// </summary>
+        /// <returns></returns>
+        public override bool HasDeviceDependency(int id)
+        {
+            return Device != null && Device == id;
+        }
+
+        /// <summary>
+        /// Returns the count from the collection of ids that the settings depends on.
+        /// </summary>
+        public override int DependencyCount
+        {
+            get { return Device != null ? 1 : 0; }
+        } 
 
 		/// <summary>
 		/// Loads the settings from XML.

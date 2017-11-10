@@ -50,16 +50,15 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 			writer.WriteElementString(ADDRESS_ELEMENT, IcdXmlConvert.ToString(Address));
 		}
 
-		/// <summary>
-		/// Returns the collection of ids that the settings will depend on.
-		/// For example, to instantiate an IR Port from settings, the device the physical port
-		/// belongs to will need to be instantiated first.
-		/// </summary>
-		/// <returns></returns>
-		public override IEnumerable<int> GetDeviceDependencies()
+        /// <summary>
+        /// Returns true if the settings depend on a device with the given ID.
+        /// For example, to instantiate an IR Port from settings, the device the physical port
+        /// belongs to will need to be instantiated first.
+        /// </summary>
+        /// <returns></returns>
+		public override bool HasDeviceDependency(int id)
 		{
-			if (Device != null)
-				yield return (int)Device;
+		    return Device != null && Device == id; 
 		}
 
 		/// <summary>
