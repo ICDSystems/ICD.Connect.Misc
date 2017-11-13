@@ -1,7 +1,7 @@
 using System;
-using System.Collections.Generic;
 using ICD.Common.Properties;
 using ICD.Common.Utils.Xml;
+using ICD.Connect.Misc.CrestronPro.Devices;
 using ICD.Connect.Protocol.Ports.IrPort;
 using ICD.Connect.Settings.Attributes;
 
@@ -29,7 +29,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 
 		#region Properties
 
-		[SettingsProperty(SettingsProperty.ePropertyType.DeviceId)]
+		[SettingsProperty(SettingsProperty.ePropertyType.Id, typeof(IPortParent))]
 		public int? Device { get; set; }
 
 		public int Address { get { return m_Address; } set { m_Address = value; } }

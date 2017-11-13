@@ -2,6 +2,7 @@ using System;
 using ICD.Common.Properties;
 using ICD.Common.Utils.Xml;
 using ICD.Connect.Devices;
+using ICD.Connect.Protocol.Ports;
 using ICD.Connect.Settings.Attributes;
 
 namespace ICD.Connect.Power.MiddleAtlantic
@@ -12,7 +13,7 @@ namespace ICD.Connect.Power.MiddleAtlantic
 
 		private const string PORT_ELEMENT = "Port";
 
-		[SettingsProperty(SettingsProperty.ePropertyType.PortId)]
+		[SettingsProperty(SettingsProperty.ePropertyType.Id, typeof(ISerialPort))]
 		public int? Port { get; set; }
 
 		/// <summary>

@@ -1,6 +1,7 @@
 ﻿using ICD.Common.Utils;
 using ICD.Common.Utils.Xml;
 using ICD.Connect.Devices;
+using ICD.Connect.Misc.CrestronPro.Devices.CardFrames;
 using ICD.Connect.Settings.Attributes;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
@@ -13,7 +14,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 		[SettingsProperty(SettingsProperty.ePropertyType.Ipid)]
 		public byte? Ipid { get; set; }
 
-		[SettingsProperty(SettingsProperty.ePropertyType.DeviceId)]
+		[SettingsProperty(SettingsProperty.ePropertyType.Id, typeof(ICardFrameDevice))]
 		public int? CardFrame { get; set; }
 
 		/// <summary>
