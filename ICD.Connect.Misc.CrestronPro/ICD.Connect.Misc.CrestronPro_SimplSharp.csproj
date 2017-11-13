@@ -91,6 +91,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ObfuscationSettings.cs" />
+    <Compile Include="Devices\CardFrames\AbstractCardFrameDevice.cs" />
+    <Compile Include="Devices\CardFrames\AbstractCardFrameDeviceSettings.cs" />
+    <Compile Include="Devices\CardFrames\ICardFrameDevice.cs" />
+    <Compile Include="Devices\CardFrames\ICardFrameDeviceSettings.cs" />
     <Compile Include="Devices\Cards\AbstractC3RyAdapter.cs" />
     <Compile Include="Devices\Cards\AbstractC3RyAdapterSettings.cs" />
     <Compile Include="Devices\Cards\AbstractC3CardAdapter.cs" />
