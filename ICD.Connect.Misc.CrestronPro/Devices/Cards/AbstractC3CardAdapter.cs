@@ -145,7 +145,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 			base.CopySettingsFinal(settings);
 
 #if SIMPLSHARP
-            settings.Ipid = Card == null ? (byte?)null : (byte)Card.ID;
+            settings.Ipid = Card == null ? (byte)0 : (byte)Card.ID;
 #else
             settings.Ipid = 0;
 #endif

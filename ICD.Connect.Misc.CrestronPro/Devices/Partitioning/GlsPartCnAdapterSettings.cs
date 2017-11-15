@@ -4,6 +4,7 @@ using ICD.Common.Utils;
 using ICD.Common.Utils.Xml;
 using ICD.Connect.Partitioning.Devices;
 using ICD.Connect.Settings.Attributes;
+using ICD.Connect.Settings.Attributes.SettingsProperties;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 {
@@ -14,7 +15,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 		private const string CRESNET_ID_ELEMENT = "CresnetID";
 		private const string SENSITIVITY_ELEMENT = "Sensitivity";
 
-		[SettingsProperty(SettingsProperty.ePropertyType.Ipid)]
+		[IpIdSettingsProperty]
 		public byte CresnetId { get; set; }
 
 		public ushort Sensitivity { get; set; }

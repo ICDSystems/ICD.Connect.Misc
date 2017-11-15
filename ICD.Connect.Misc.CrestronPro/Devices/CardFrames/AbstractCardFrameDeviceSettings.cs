@@ -1,7 +1,7 @@
 using ICD.Common.Utils;
 using ICD.Common.Utils.Xml;
 using ICD.Connect.Devices;
-using ICD.Connect.Settings.Attributes;
+using ICD.Connect.Settings.Attributes.SettingsProperties;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.CardFrames
 {
@@ -9,7 +9,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CardFrames
 	{
 		private const string IPID_ELEMENT = "IPID";
 
-		[SettingsProperty(SettingsProperty.ePropertyType.Ipid)]
+		[IpIdSettingsProperty]
 		public byte Ipid { get; set; }
 
 		/// <summary>

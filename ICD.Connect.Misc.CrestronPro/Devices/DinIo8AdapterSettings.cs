@@ -4,6 +4,7 @@ using ICD.Common.Utils;
 using ICD.Common.Utils.Xml;
 using ICD.Connect.Devices;
 using ICD.Connect.Settings.Attributes;
+using ICD.Connect.Settings.Attributes.SettingsProperties;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices
 {
@@ -13,7 +14,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 
 		private const string CRESNET_ID_ELEMENT = "CresnetID";
 
-		[SettingsProperty(SettingsProperty.ePropertyType.Ipid)]
+		[IpIdSettingsProperty]
 		public byte CresnetId { get; set; }
 
 		/// <summary>

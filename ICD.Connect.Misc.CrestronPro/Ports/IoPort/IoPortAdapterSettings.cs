@@ -4,6 +4,7 @@ using ICD.Common.Utils.Xml;
 using ICD.Connect.Misc.CrestronPro.Devices;
 using ICD.Connect.Protocol.Ports.IoPort;
 using ICD.Connect.Settings.Attributes;
+using ICD.Connect.Settings.Attributes.SettingsProperties;
 
 namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 {
@@ -19,7 +20,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 
 		#region Properties
 
-		[SettingsProperty(SettingsProperty.ePropertyType.Id, typeof(IPortParent))]
+		[OriginatorIdSettingsProperty(typeof(IPortParent))]
 		public int? Device { get; set; }
 
 		public int Address { get { return m_Address; } set { m_Address = value; } }
@@ -48,8 +49,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 		{
 			base.WriteElements(writer);
 
-			if (Device != null)
-				writer.WriteElementString(PARENT_DEVICE_ELEMENT, IcdXmlConvert.ToString((int)Device));
+			writer.WriteElementString(PARENT_DEVICE_ELEMENT, IcdXmlConvert.ToString(Device));
 			writer.WriteElementString(ADDRESS_ELEMENT, IcdXmlConvert.ToString(Address));
 			writer.WriteElementString(CONFIGURATION_ELEMENT, Configuration.ToString());
 		}
