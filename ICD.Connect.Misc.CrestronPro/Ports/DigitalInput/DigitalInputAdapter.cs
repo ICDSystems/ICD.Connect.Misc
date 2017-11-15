@@ -8,7 +8,6 @@ using ICD.Common.Services.Logging;
 using ICD.Connect.Devices.Extensions;
 using ICD.Connect.Misc.CrestronPro.Devices;
 #endif
-using ICD.Connect.Protocol.Ports.IoPort;
 using ICD.Connect.Settings.Core;
 
 namespace ICD.Connect.Misc.CrestronPro.Ports.DigitalInput

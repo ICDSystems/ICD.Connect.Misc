@@ -1,6 +1,5 @@
 using System;
 using ICD.Common.Properties;
-using ICD.Connect.Devices;
 using ICD.Connect.Settings.Attributes;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.CardFrames
