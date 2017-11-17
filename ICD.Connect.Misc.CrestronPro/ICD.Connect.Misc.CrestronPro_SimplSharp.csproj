@@ -116,7 +116,6 @@
     <Compile Include="Devices\DinIo8Adapter.cs" />
     <Compile Include="Devices\DinIo8AdapterSettings.cs" />
     <Compile Include="Devices\IPortParent.cs" />
-    <Compile Include="Devices\IDmParent.cs" />
     <Compile Include="Devices\Partitioning\GlsPartCnAdapter.cs" />
     <Compile Include="Devices\Partitioning\GlsPartCnAdapterSettings.cs" />
     <Compile Include="Ports\DigitalInput\DigitalInputAdapter.cs" />
