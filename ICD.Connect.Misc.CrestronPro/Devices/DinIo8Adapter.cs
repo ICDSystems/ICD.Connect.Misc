@@ -59,7 +59,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 					m_PortsDevice.Description = Name;
 				eDeviceRegistrationUnRegistrationResponse result = m_PortsDevice.Register();
 				if (result != eDeviceRegistrationUnRegistrationResponse.Success)
-					Logger.AddEntry(eSeverity.Error, "Unable to register {0} - {1}", m_PortsDevice.GetType().Name, result);
+					Logger.AddEntry(eSeverity.Error, "{0} failed to register {1} - {2}", this, m_PortsDevice.GetType().Name, result);
 			}
 
 			Subscribe(m_PortsDevice);
