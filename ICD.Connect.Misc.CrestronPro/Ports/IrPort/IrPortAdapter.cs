@@ -125,7 +125,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 
 			eDeviceRegistrationUnRegistrationResponse parentResult = parent.ReRegister();
 			if (parentResult != eDeviceRegistrationUnRegistrationResponse.Success)
-				Logger.AddEntry(eSeverity.Error, "Unable to register parent {0} - {1}", parent.GetType().Name, parentResult);
+				Logger.AddEntry(eSeverity.Error, "{0} unable to register parent {1} - {2}", this, parent.GetType().Name, parentResult);
 		}
 #endif
 
@@ -140,7 +140,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 
 			if (m_Port == null)
 			{
-				Logger.AddEntry(eSeverity.Error, "Unable to load driver for null IR Port");
+				Logger.AddEntry(eSeverity.Error, "{0} unable to load driver - internal port is null", this);
 				return;
 			}
 
@@ -152,7 +152,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 			}
 			catch (FileNotFoundException)
 			{
-				Logger.AddEntry(eSeverity.Error, "IR Driver does not exist: {0}", fullPath);
+				Logger.AddEntry(eSeverity.Error, "{0} unable to load driver - file does not exist: {1}", this, fullPath);
 			}
 #else
             throw new NotImplementedException();

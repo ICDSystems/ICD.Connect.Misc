@@ -86,7 +86,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.DigitalInput
 			eDeviceRegistrationUnRegistrationResponse result = port.Register();
 			if (result != eDeviceRegistrationUnRegistrationResponse.Success)
 			{
-				Logger.AddEntry(eSeverity.Error, "Unable to register {0} - {1}", port.GetType().Name, result);
+				Logger.AddEntry(eSeverity.Error, "{0} unable to register {1} - {2}", this, port.GetType().Name, result);
 				return;
 			}
 
@@ -96,7 +96,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.DigitalInput
 
 			eDeviceRegistrationUnRegistrationResponse parentResult = parent.ReRegister();
 			if (parentResult != eDeviceRegistrationUnRegistrationResponse.Success)
-				Logger.AddEntry(eSeverity.Error, "Unable to register parent {0} - {1}", parent.GetType().Name, parentResult);
+				Logger.AddEntry(eSeverity.Error, "{0} unable to register parent {1} - {2}", this, parent.GetType().Name, parentResult);
 		}
 #endif
 

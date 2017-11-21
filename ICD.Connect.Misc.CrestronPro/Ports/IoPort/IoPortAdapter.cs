@@ -99,7 +99,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 			eDeviceRegistrationUnRegistrationResponse result = port.Register();
 			if (result != eDeviceRegistrationUnRegistrationResponse.Success)
 			{
-				Logger.AddEntry(eSeverity.Error, "Unable to register {0} - {1}", port.GetType().Name, result);
+				Logger.AddEntry(eSeverity.Error, "{0} unable to register {1} - {2}", this, port.GetType().Name, result);
 				return;
 			}
 
@@ -109,7 +109,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 
 			eDeviceRegistrationUnRegistrationResponse parentResult = parent.ReRegister();
 			if (parentResult != eDeviceRegistrationUnRegistrationResponse.Success)
-				Logger.AddEntry(eSeverity.Error, "Unable to register parent {0} - {1}", parent.GetType().Name, parentResult);
+				Logger.AddEntry(eSeverity.Error, "{0} unable to register parent {1} - {2}", this, parent.GetType().Name, parentResult);
 		}
 #endif
 
@@ -124,7 +124,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 #if SIMPLSHARP
 			if (m_Port == null)
 			{
-				Logger.AddEntry(eSeverity.Error, "{0} failed to set configuration - no port assigned", this);
+				Logger.AddEntry(eSeverity.Error, "{0} failed to set configuration - no internal port", this);
 				return;
 			}
 
@@ -136,7 +136,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 		    }
 		    catch (InvalidOperationException ex)
 		    {
-		        Logger.AddEntry(eSeverity.Error, "Failed to establish configuration {0} - {1}", configuration, ex.Message);
+		        Logger.AddEntry(eSeverity.Error, "{0} failed to establish configuration {1} - {2}", this, configuration, ex.Message);
 		    }
 
 			Configuration = GetConfiguration(m_Port);
