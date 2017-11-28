@@ -117,7 +117,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CardFrames
 			TCardFrame device = Instantiate(settings.Ipid, ProgramInfo.ControlSystem);
 			SetCardCage(device);
 #else
-            throw new NotImplementedException();
+            throw new System.NotImplementedException();
 #endif
 		}
 
