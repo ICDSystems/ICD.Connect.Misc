@@ -33,16 +33,17 @@ namespace ICD.Connect.Misc.CrestronPro.Sigs
 			{
 				m_CacheSection.Enter();
 
-				if (m_Collection == null)
-					throw new InvalidOperationException("No collection assigned");
-
 				try
 				{
+					if (m_Collection == null)
+						throw new InvalidOperationException("No collection assigned");
+
 					if (!m_SigAdapterNumberCache.ContainsKey(sigNumber))
 					{
 						T sig = m_Collection[sigNumber];
 						m_SigAdapterNumberCache[sigNumber] = m_Factory(sig);
 					}
+
 					return m_SigAdapterNumberCache[sigNumber];
 				}
 				finally
@@ -100,10 +101,19 @@ namespace ICD.Connect.Misc.CrestronPro.Sigs
 		/// <returns></returns>
 		public IEnumerator<TAdapter> GetEnumerator()
 		{
-			return m_Collection.Select(i => i.Number)
-			                   .Select(n => this[n])
-			                   .ToList()
-			                   .GetEnumerator();
+			m_CacheSection.Enter();
+
+			try
+			{
+				return m_Collection.Select(i => i.Number)
+								   .Select(n => this[n])
+								   .ToList()
+								   .GetEnumerator();
+			}
+			finally
+			{
+				m_CacheSection.Leave();
+			}
 		}
 
 		IEnumerator IEnumerable.GetEnumerator()
