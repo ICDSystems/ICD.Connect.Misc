@@ -140,6 +140,7 @@
     <Compile Include="Utils\CresnetUtils.cs" />
     <Compile Include="Utils\DmUtils.cs" />
     <Compile Include="Utils\Extensions\DmOutputExtensions.cs" />
+    <Compile Include="Utils\Extensions\GenericBaseExtensions.cs" />
     <Compile Include="Utils\Extensions\GenericDeviceExtensions.cs" />
     <None Include="Properties\ControlSystem.cfg" />
   </ItemGroup>
