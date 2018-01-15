@@ -1,7 +1,7 @@
-﻿#if SIMPLSHARP
+﻿using ICD.Common.Utils.Services.Logging;
+#if SIMPLSHARP
 using Crestron.SimplSharpPro;
 #endif
-using ICD.Common.Services.Logging;
 using ICD.Connect.Devices;
 using ICD.Connect.Settings.Core;
 

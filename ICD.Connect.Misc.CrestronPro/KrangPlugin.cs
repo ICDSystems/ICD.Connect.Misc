@@ -1,3 +1,3 @@
-﻿using ICD.Common.Attributes;
+﻿using ICD.Common.Utils.Attributes;
 
 [assembly: KrangPlugin]

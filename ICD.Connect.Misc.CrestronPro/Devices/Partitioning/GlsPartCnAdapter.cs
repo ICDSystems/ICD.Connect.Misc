@@ -1,4 +1,5 @@
 ﻿using System;
+using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.API.Nodes;
 using ICD.Connect.Misc.CrestronPro.Utils;
 using ICD.Connect.Partitioning.Devices;
@@ -7,7 +8,6 @@ using ICD.Connect.Settings.Core;
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.GeneralIO;
 #endif
-using ICD.Common.Services.Logging;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 {

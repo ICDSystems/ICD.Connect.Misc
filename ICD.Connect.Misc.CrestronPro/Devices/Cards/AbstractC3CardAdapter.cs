@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ICD.Common.Utils.Services.Logging;
 #if SIMPLSHARP
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.ThreeSeriesCards;
@@ -7,7 +8,6 @@ using Crestron.SimplSharpProInternal;
 using System;
 #endif
 using ICD.Common.Properties;
-using ICD.Common.Services.Logging;
 using ICD.Connect.Devices;
 using ICD.Connect.Devices.Extensions;
 using ICD.Connect.Misc.CrestronPro.Devices.CardFrames;
