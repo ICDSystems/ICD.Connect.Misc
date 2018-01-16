@@ -106,9 +106,9 @@ namespace ICD.Connect.Misc.CrestronPro.Sigs
 			try
 			{
 				return m_Collection.Select(i => i.Number)
-								   .Select(n => this[n])
-								   .ToList()
-								   .GetEnumerator();
+				                   .Select(n => this[n])
+				                   .ToList()
+				                   .GetEnumerator();
 			}
 			finally
 			{
@@ -122,4 +122,5 @@ namespace ICD.Connect.Misc.CrestronPro.Sigs
 		}
 	}
 }
+
 #endif

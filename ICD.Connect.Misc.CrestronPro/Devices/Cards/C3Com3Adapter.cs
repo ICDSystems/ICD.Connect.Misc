@@ -43,7 +43,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 		{
 			return new C3com3(ipid, cardFrame);
 		}
-    }
+	}
 #else
     public sealed class C3Com3Adapter : AbstractC3CardAdapter<C3Com3AdapterSettings>
     {

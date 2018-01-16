@@ -1,28 +1,28 @@
 ﻿using System;
-using ICD.Common.Utils.Services.Logging;
-#if SIMPLSHARP
-using Crestron.SimplSharpPro;
-using ICD.Connect.Misc.CrestronPro.Utils.Extensions;
-#endif
 using ICD.Common.Properties;
+using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.Devices.Extensions;
 using ICD.Connect.Misc.CrestronPro.Devices;
 using ICD.Connect.Protocol.Ports.RelayPort;
 using ICD.Connect.Settings.Core;
+#if SIMPLSHARP
+using Crestron.SimplSharpPro;
+using ICD.Connect.Misc.CrestronPro.Utils.Extensions;
+#endif
 
 namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 {
 	public sealed class RelayPortAdapter : AbstractRelayPort<RelayPortAdapterSettings>
 	{
 #if SIMPLSHARP
-        private Relay m_Port;
+		private Relay m_Port;
 #endif
 
 		// Used with settings
 		private int? m_Device;
 		private int m_Address;
 
-#region Methods
+		#region Methods
 
 		/// <summary>
 		/// Release resources.
@@ -30,8 +30,8 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 		protected override void DisposeFinal(bool disposing)
 		{
 #if SIMPLSHARP
-            // Unregister.
-            SetRelayPort(null, 0);
+			// Unregister.
+			SetRelayPort(null, 0);
 #endif
 
 			base.DisposeFinal(disposing);
@@ -93,7 +93,10 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 
 			eDeviceRegistrationUnRegistrationResponse parentResult = parent.ReRegister();
 			if (parentResult != eDeviceRegistrationUnRegistrationResponse.Success)
-				Logger.AddEntry(eSeverity.Error, "{0} unable to register parent {1} - {2}", this, parent.GetType().Name, parentResult);
+			{
+				Logger.AddEntry(eSeverity.Error, "{0} unable to register parent {1} - {2}", this, parent.GetType().Name,
+				                parentResult);
+			}
 		}
 #endif
 
@@ -107,7 +110,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 #else
             throw new NotImplementedException();
 #endif
-        }
+		}
 
 		/// <summary>
 		/// Close the relay
@@ -119,18 +122,18 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 #else
             throw new NotImplementedException();
 #endif
-        }
+		}
 
-        #endregion
+		#endregion
 
-        #region Port Callbacks
+		#region Port Callbacks
 
 #if SIMPLSHARP
-        /// <summary>
-        /// Subscribe to the relay events.
-        /// </summary>
-        /// <param name="port"></param>
-        private void Subscribe(Relay port)
+		/// <summary>
+		/// Subscribe to the relay events.
+		/// </summary>
+		/// <param name="port"></param>
+		private void Subscribe(Relay port)
 		{
 			if (port == null)
 				return;
@@ -161,15 +164,15 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 		}
 #endif
 
-        #endregion
+		#endregion
 
-        #region Settings
+		#region Settings
 
-        /// <summary>
-        /// Override to apply properties to the settings instance.
-        /// </summary>
-        /// <param name="settings"></param>
-        protected override void CopySettingsFinal(RelayPortAdapterSettings settings)
+		/// <summary>
+		/// Override to apply properties to the settings instance.
+		/// </summary>
+		/// <param name="settings"></param>
+		protected override void CopySettingsFinal(RelayPortAdapterSettings settings)
 		{
 			base.CopySettingsFinal(settings);
 
@@ -187,7 +190,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 			m_Device = 0;
 
 #if SIMPLSHARP
-            SetRelayPort(null, 0);
+			SetRelayPort(null, 0);
 #endif
 		}
 
@@ -201,7 +204,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 			base.ApplySettingsFinal(settings, factory);
 
 #if SIMPLSHARP
-            m_Device = settings.Device;
+			m_Device = settings.Device;
 
 			Relay port = null;
 			IPortParent provider = null;
@@ -233,11 +236,11 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 #else
             throw new NotImplementedException();
 #endif
-        }
+		}
 
-#endregion
+		#endregion
 
-#region Private Methods
+		#region Private Methods
 
 		/// <summary>
 		/// Gets the current online status of the device.
@@ -246,12 +249,12 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 		protected override bool GetIsOnlineStatus()
 		{
 #if SIMPLSHARP
-            return m_Port != null;
+			return m_Port != null;
 #else
             return false;
 #endif
-        }
+		}
 
-#endregion
+		#endregion
 	}
 }

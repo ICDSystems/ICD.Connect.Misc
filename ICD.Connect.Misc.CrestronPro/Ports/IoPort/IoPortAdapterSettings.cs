@@ -54,24 +54,21 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 			writer.WriteElementString(CONFIGURATION_ELEMENT, Configuration.ToString());
 		}
 
-        /// <summary>
-        /// Returns true if the settings depend on a device with the given ID.
-        /// For example, to instantiate an IR Port from settings, the device the physical port
-        /// belongs to will need to be instantiated first.
-        /// </summary>
-        /// <returns></returns>
-        public override bool HasDeviceDependency(int id)
-        {
-            return Device != null && Device == id;
-        }
+		/// <summary>
+		/// Returns true if the settings depend on a device with the given ID.
+		/// For example, to instantiate an IR Port from settings, the device the physical port
+		/// belongs to will need to be instantiated first.
+		/// </summary>
+		/// <returns></returns>
+		public override bool HasDeviceDependency(int id)
+		{
+			return Device != null && Device == id;
+		}
 
-        /// <summary>
-        /// Returns the count from the collection of ids that the settings depends on.
-        /// </summary>
-        public override int DependencyCount
-        {
-            get { return Device != null ? 1 : 0; }
-        } 
+		/// <summary>
+		/// Returns the count from the collection of ids that the settings depends on.
+		/// </summary>
+		public override int DependencyCount { get { return Device != null ? 1 : 0; } }
 
 		/// <summary>
 		/// Loads the settings from XML.

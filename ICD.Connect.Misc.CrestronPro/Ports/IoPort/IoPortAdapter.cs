@@ -1,5 +1,7 @@
 ﻿using System;
 using ICD.Common.Utils.Services.Logging;
+using ICD.Connect.Protocol.Ports.IoPort;
+using ICD.Connect.Settings.Core;
 #if SIMPLSHARP
 using Crestron.SimplSharpPro;
 using ICD.Connect.Misc.CrestronPro.Utils.Extensions;
@@ -9,15 +11,13 @@ using ICD.Connect.Devices.Extensions;
 using ICD.Connect.Misc.CrestronPro.Devices;
 using System.Collections.Generic;
 #endif
-using ICD.Connect.Protocol.Ports.IoPort;
-using ICD.Connect.Settings.Core;
 
 namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 {
 	public sealed class IoPortAdapter : AbstractIoPort<IoPortAdapterSettings>
 	{
 #if SIMPLSHARP
-        private static readonly Dictionary<eIoPortConfiguration, eVersiportConfiguration> s_ConfigMap =
+		private static readonly Dictionary<eIoPortConfiguration, eVersiportConfiguration> s_ConfigMap =
 			new Dictionary<eIoPortConfiguration, eVersiportConfiguration>
 			{
 				{eIoPortConfiguration.None, eVersiportConfiguration.NotSet},
@@ -43,18 +43,18 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 			base.DisposeFinal(disposing);
 
 #if SIMPLSHARP
-            // Unregister.
-            SetIoPort(null, 0);
+			// Unregister.
+			SetIoPort(null, 0);
 #endif
 		}
 
 #if SIMPLSHARP
-        /// <summary>
-        /// Sets the wrapped port instance.
-        /// </summary>
-        /// <param name="port"></param>
-        /// <param name="address"></param>
-        [PublicAPI]
+		/// <summary>
+		/// Sets the wrapped port instance.
+		/// </summary>
+		/// <param name="port"></param>
+		/// <param name="address"></param>
+		[PublicAPI]
 		public void SetIoPort(Versiport port, int address)
 		{
 			m_Address = address;
@@ -109,7 +109,10 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 
 			eDeviceRegistrationUnRegistrationResponse parentResult = parent.ReRegister();
 			if (parentResult != eDeviceRegistrationUnRegistrationResponse.Success)
-				Logger.AddEntry(eSeverity.Error, "{0} unable to register parent {1} - {2}", this, parent.GetType().Name, parentResult);
+			{
+				Logger.AddEntry(eSeverity.Error, "{0} unable to register parent {1} - {2}", this, parent.GetType().Name,
+				                parentResult);
+			}
 		}
 #endif
 
@@ -128,16 +131,16 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 				return;
 			}
 
-            try
-		    {
-		        eVersiportConfiguration config = s_ConfigMap[configuration];
-		        m_Port.SetVersiportConfiguration(config);
+			try
+			{
+				eVersiportConfiguration config = s_ConfigMap[configuration];
+				m_Port.SetVersiportConfiguration(config);
 				Register(m_Port);
-		    }
-		    catch (InvalidOperationException ex)
-		    {
-		        Logger.AddEntry(eSeverity.Error, "{0} failed to establish configuration {1} - {2}", this, configuration, ex.Message);
-		    }
+			}
+			catch (InvalidOperationException ex)
+			{
+				Logger.AddEntry(eSeverity.Error, "{0} failed to establish configuration {1} - {2}", this, configuration, ex.Message);
+			}
 
 			Configuration = GetConfiguration(m_Port);
 #else
@@ -164,7 +167,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 				return;
 			}
 
-            try
+			try
 			{
 				m_Port.DigitalOut = digitalOut;
 
@@ -252,11 +255,11 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 		#region Port Callbacks
 
 #if SIMPLSHARP
-        /// <summary>
-        /// Subscribe to the port events.
-        /// </summary>
-        /// <param name="port"></param>
-        private void Subscribe(Versiport port)
+		/// <summary>
+		/// Subscribe to the port events.
+		/// </summary>
+		/// <param name="port"></param>
+		private void Subscribe(Versiport port)
 		{
 			if (port == null)
 				return;
@@ -329,7 +332,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 			base.ClearSettingsFinal();
 
 #if SIMPLSHARP
-            SetIoPort(null, 0);
+			SetIoPort(null, 0);
 #endif
 		}
 
@@ -343,7 +346,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 			base.ApplySettingsFinal(settings, factory);
 
 #if SIMPLSHARP
-            m_Device = settings.Device;
+			m_Device = settings.Device;
 
 			Versiport port = null;
 			IPortParent provider = null;
@@ -391,7 +394,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 		protected override bool GetIsOnlineStatus()
 		{
 #if SIMPLSHARP
-            return m_Port != null;
+			return m_Port != null;
 #else
 			return false;
 #endif

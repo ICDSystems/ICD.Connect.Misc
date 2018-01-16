@@ -48,7 +48,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 		{
 			DinIo8AdapterSettings output = new DinIo8AdapterSettings
 			{
-				CresnetId =  XmlUtils.TryReadChildElementContentAsByte(xml, CRESNET_ID_ELEMENT) ?? 0
+				CresnetId = XmlUtils.TryReadChildElementContentAsByte(xml, CRESNET_ID_ELEMENT) ?? 0
 			};
 
 			ParseXml(output, xml);

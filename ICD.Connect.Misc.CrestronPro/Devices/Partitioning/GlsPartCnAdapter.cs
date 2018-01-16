@@ -150,7 +150,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 			if (!CresnetUtils.IsValidId(settings.CresnetId))
 			{
 				Logger.AddEntry(eSeverity.Error, "{0} failed to instantiate {1} - CresnetId {2} is out of range",
-								this, typeof(DinIo8).Name, settings.CresnetId);
+				                this, typeof(DinIo8).Name, settings.CresnetId);
 				return;
 			}
 
@@ -163,7 +163,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 			catch (ArgumentException e)
 			{
 				string message = string.Format("{0} failed to instantiate {1} with Cresnet ID {2} - {3}",
-											   this, typeof(DinIo8).Name, settings.CresnetId, e.Message);
+				                               this, typeof(DinIo8).Name, settings.CresnetId, e.Message);
 				Logger.AddEntry(eSeverity.Error, e, message);
 			}
 

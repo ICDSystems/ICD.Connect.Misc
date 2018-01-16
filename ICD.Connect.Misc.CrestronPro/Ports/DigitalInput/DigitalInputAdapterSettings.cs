@@ -8,7 +8,7 @@ using ICD.Connect.Settings.Attributes.SettingsProperties;
 
 namespace ICD.Connect.Misc.CrestronPro.Ports.DigitalInput
 {
-    public sealed class DigitalInputAdapterSettings : AbstractDigitalInputPortSettings
+	public sealed class DigitalInputAdapterSettings : AbstractDigitalInputPortSettings
 	{
 		private const string FACTORY_NAME = "DigitalInputPort";
 
@@ -50,24 +50,21 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.DigitalInput
 			writer.WriteElementString(ADDRESS_ELEMENT, IcdXmlConvert.ToString(Address));
 		}
 
-        /// <summary>
-        /// Returns true if the settings depend on a device with the given ID.
-        /// For example, to instantiate an IR Port from settings, the device the physical port
-        /// belongs to will need to be instantiated first.
-        /// </summary>
-        /// <returns></returns>
-        public override bool HasDeviceDependency(int id)
-        {
-            return Device != null && Device == id;
-        }
+		/// <summary>
+		/// Returns true if the settings depend on a device with the given ID.
+		/// For example, to instantiate an IR Port from settings, the device the physical port
+		/// belongs to will need to be instantiated first.
+		/// </summary>
+		/// <returns></returns>
+		public override bool HasDeviceDependency(int id)
+		{
+			return Device != null && Device == id;
+		}
 
-        /// <summary>
-        /// Returns the count from the collection of ids that the settings depends on.
-        /// </summary>
-        public override int DependencyCount
-        {
-            get { return Device != null ? 1 : 0; }
-        } 
+		/// <summary>
+		/// Returns the count from the collection of ids that the settings depends on.
+		/// </summary>
+		public override int DependencyCount { get { return Device != null ? 1 : 0; } }
 
 		/// <summary>
 		/// Loads the settings from XML.
@@ -80,7 +77,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.DigitalInput
 			int device = XmlUtils.TryReadChildElementContentAsInt(xml, PARENT_DEVICE_ELEMENT) ?? 0;
 			int address = XmlUtils.TryReadChildElementContentAsInt(xml, ADDRESS_ELEMENT) ?? 0;
 
-            DigitalInputAdapterSettings output = new DigitalInputAdapterSettings
+			DigitalInputAdapterSettings output = new DigitalInputAdapterSettings
 			{
 				Device = device,
 				Address = address

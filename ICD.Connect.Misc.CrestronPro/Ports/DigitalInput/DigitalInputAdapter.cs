@@ -1,6 +1,7 @@
 ﻿using System;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.Protocol.Ports.DigitalInput;
+using ICD.Connect.Settings.Core;
 #if SIMPLSHARP
 using Crestron.SimplSharpPro;
 using ICD.Connect.Misc.CrestronPro.Utils.Extensions;
@@ -8,7 +9,6 @@ using ICD.Common.Properties;
 using ICD.Connect.Devices.Extensions;
 using ICD.Connect.Misc.CrestronPro.Devices;
 #endif
-using ICD.Connect.Settings.Core;
 
 namespace ICD.Connect.Misc.CrestronPro.Ports.DigitalInput
 {
@@ -33,19 +33,19 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.DigitalInput
 			base.DisposeFinal(disposing);
 
 #if SIMPLSHARP
-            // Unregister.
-            SetDigitalInputPort(null, 0);
+			// Unregister.
+			SetDigitalInputPort(null, 0);
 #endif
 		}
 
 #if SIMPLSHARP
-        /// <summary>
-        /// Sets the wrapped port instance.
-        /// </summary>
-        /// <param name="port"></param>
-        /// <param name="address"></param>
-        [PublicAPI]
-        public void SetDigitalInputPort(Crestron.SimplSharpPro.DigitalInput port, int address)
+		/// <summary>
+		/// Sets the wrapped port instance.
+		/// </summary>
+		/// <param name="port"></param>
+		/// <param name="address"></param>
+		[PublicAPI]
+		public void SetDigitalInputPort(Crestron.SimplSharpPro.DigitalInput port, int address)
 		{
 			m_Address = address;
 
@@ -66,7 +66,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.DigitalInput
 		/// Unregisters the given port.
 		/// </summary>
 		/// <param name="port"></param>
-        private static void Unregister(Crestron.SimplSharpPro.DigitalInput port)
+		private static void Unregister(Crestron.SimplSharpPro.DigitalInput port)
 		{
 			if (port == null || !port.Registered)
 				return;
@@ -78,7 +78,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.DigitalInput
 		/// Registers the port and then re-registers the parent.
 		/// </summary>
 		/// <param name="port"></param>
-        private void Register(Crestron.SimplSharpPro.DigitalInput port)
+		private void Register(Crestron.SimplSharpPro.DigitalInput port)
 		{
 			if (port == null || port.Registered)
 				return;
@@ -96,7 +96,10 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.DigitalInput
 
 			eDeviceRegistrationUnRegistrationResponse parentResult = parent.ReRegister();
 			if (parentResult != eDeviceRegistrationUnRegistrationResponse.Success)
-				Logger.AddEntry(eSeverity.Error, "{0} unable to register parent {1} - {2}", this, parent.GetType().Name, parentResult);
+			{
+				Logger.AddEntry(eSeverity.Error, "{0} unable to register parent {1} - {2}", this, parent.GetType().Name,
+				                parentResult);
+			}
 		}
 #endif
 
@@ -110,7 +113,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.DigitalInput
 		/// </summary>
 		/// <param name="port"></param>
 		/// <returns>False if the port is null, or the port is not configured for digital in.</returns>
-        private static bool GetState(Crestron.SimplSharpPro.DigitalInput port)
+		private static bool GetState(Crestron.SimplSharpPro.DigitalInput port)
 		{
 			try
 			{
@@ -128,11 +131,11 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.DigitalInput
 		#region Port Callbacks
 
 #if SIMPLSHARP
-        /// <summary>
-        /// Subscribe to the port events.
-        /// </summary>
-        /// <param name="port"></param>
-        private void Subscribe(Crestron.SimplSharpPro.DigitalInput port)
+		/// <summary>
+		/// Subscribe to the port events.
+		/// </summary>
+		/// <param name="port"></param>
+		private void Subscribe(Crestron.SimplSharpPro.DigitalInput port)
 		{
 			if (port == null)
 				return;
@@ -144,7 +147,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.DigitalInput
 		/// Unsubscribe from the port events.
 		/// </summary>
 		/// <param name="port"></param>
-        private void Unsubscribe(Crestron.SimplSharpPro.DigitalInput port)
+		private void Unsubscribe(Crestron.SimplSharpPro.DigitalInput port)
 		{
 			if (port == null)
 				return;
@@ -157,9 +160,9 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.DigitalInput
 		/// </summary>
 		/// <param name="port"></param>
 		/// <param name="args"></param>
-        private void PortOnStateChange(Crestron.SimplSharpPro.DigitalInput port, DigitalInputEventArgs args)
+		private void PortOnStateChange(Crestron.SimplSharpPro.DigitalInput port, DigitalInputEventArgs args)
 		{
-		    State = args.State;
+			State = args.State;
 		}
 #endif
 
@@ -187,7 +190,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.DigitalInput
 			base.ClearSettingsFinal();
 
 #if SIMPLSHARP
-            SetDigitalInputPort(null, 0);
+			SetDigitalInputPort(null, 0);
 #endif
 		}
 
@@ -201,11 +204,11 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.DigitalInput
 			base.ApplySettingsFinal(settings, factory);
 
 #if SIMPLSHARP
-            m_Device = settings.Device;
+			m_Device = settings.Device;
 
 			Crestron.SimplSharpPro.DigitalInput port = null;
 			IPortParent provider = null;
-			
+
 			if (m_Device != null)
 				provider = factory.GetDeviceById((int)m_Device) as IPortParent;
 
@@ -244,7 +247,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.DigitalInput
 		protected override bool GetIsOnlineStatus()
 		{
 #if SIMPLSHARP
-            return m_Port != null;
+			return m_Port != null;
 #else
 			return false;
 #endif

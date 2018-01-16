@@ -1,9 +1,9 @@
 ﻿using ICD.Common.Utils.Services.Logging;
+using ICD.Connect.Devices;
+using ICD.Connect.Settings.Core;
 #if SIMPLSHARP
 using Crestron.SimplSharpPro;
 #endif
-using ICD.Connect.Devices;
-using ICD.Connect.Settings.Core;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.CardFrames
 {
