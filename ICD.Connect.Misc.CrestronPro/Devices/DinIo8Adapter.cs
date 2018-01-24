@@ -88,8 +88,8 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 		/// <returns></returns>
 		public ComPort GetComPort(int address)
 		{
-			string message = string.Format("{0} has no {1} with address {2}", this, typeof(ComPort).Name, address);
-			throw new KeyNotFoundException(message);
+			string message = string.Format("{0} has no {1}", this, typeof(ComPort).Name);
+			throw new NotSupportedException(message);
 		}
 
 		/// <summary>
@@ -99,8 +99,8 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 		/// <returns></returns>
 		public IROutputPort GetIrOutputPort(int address)
 		{
-			string message = string.Format("{0} has no {1} with address {2}", this, typeof(IROutputPort).Name, address);
-			throw new KeyNotFoundException(message);
+			string message = string.Format("{0} has no {1}", this, typeof(IROutputPort).Name);
+			throw new NotSupportedException(message);
 		}
 
 		/// <summary>
@@ -110,8 +110,8 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 		/// <returns></returns>
 		public Relay GetRelayPort(int address)
 		{
-			string message = string.Format("{0} has no {1} with address {2}", this, typeof(Relay).Name, address);
-			throw new KeyNotFoundException(message);
+			string message = string.Format("{0} has no {1}", this, typeof(Relay).Name);
+			throw new NotSupportedException(message);
 		}
 
 		/// <summary>
@@ -128,7 +128,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 				return m_PortsDevice.VersiPorts[(uint)address];
 
 			string message = string.Format("{0} has no {1} with address {2}", this, typeof(Versiport).Name, address);
-			throw new KeyNotFoundException(message);
+			throw new IndexOutOfRangeException(message);
 		}
 
 		/// <summary>
@@ -138,8 +138,8 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 		/// <returns></returns>
 		public DigitalInput GetDigitalInputPort(int address)
 		{
-			string message = string.Format("{0} has no {1} with address {2}", this, typeof(DigitalInput).Name, address);
-			throw new KeyNotFoundException(message);
+			string message = string.Format("{0} has no {1}", this, typeof(DigitalInput).Name);
+			throw new NotSupportedException(message);
 		}
 #endif
 

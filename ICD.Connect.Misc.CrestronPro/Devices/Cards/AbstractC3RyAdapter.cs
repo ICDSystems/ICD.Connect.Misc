@@ -1,5 +1,5 @@
+using System;
 #if SIMPLSHARP
-using System.Collections.Generic;
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.ThreeSeriesCards;
 #endif
@@ -22,7 +22,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 				return Card.RelayPorts[(uint)address];
 
 			string message = string.Format("{0} has no {1} with address {2}", this, typeof(Relay).Name, address);
-			throw new KeyNotFoundException(message);
+			throw new IndexOutOfRangeException(message);
 		}
 	}
 #else

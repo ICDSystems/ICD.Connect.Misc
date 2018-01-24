@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using ICD.Common.Properties;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.Devices;
@@ -83,8 +83,8 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 		/// <returns></returns>
 		public virtual ComPort GetComPort(int address)
 		{
-			string message = string.Format("{0} has no {1} with address {2}", this, typeof(ComPort).Name, address);
-			throw new KeyNotFoundException(message);
+			string message = string.Format("{0} has no {1}", this, typeof(ComPort).Name);
+			throw new NotSupportedException(message);
 		}
 
 		/// <summary>
@@ -94,8 +94,8 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 		/// <returns></returns>
 		public virtual IROutputPort GetIrOutputPort(int address)
 		{
-			string message = string.Format("{0} has no {1} with address {2}", this, typeof(IROutputPort).Name, address);
-			throw new KeyNotFoundException(message);
+			string message = string.Format("{0} has no {1}", this, typeof(IROutputPort).Name);
+			throw new NotSupportedException(message);
 		}
 
 		/// <summary>
@@ -105,8 +105,8 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 		/// <returns></returns>
 		public virtual Relay GetRelayPort(int address)
 		{
-			string message = string.Format("{0} has no {1} with address {2}", this, typeof(Relay).Name, address);
-			throw new KeyNotFoundException(message);
+			string message = string.Format("{0} has no {1}", this, typeof(Relay).Name);
+			throw new NotSupportedException(message);
 		}
 
 		/// <summary>
@@ -116,8 +116,8 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 		/// <returns></returns>
 		public virtual Versiport GetIoPort(int address)
 		{
-			string message = string.Format("{0} has no {1} with address {2}", this, typeof(Versiport).Name, address);
-			throw new KeyNotFoundException(message);
+			string message = string.Format("{0} has no {1}", this, typeof(Versiport).Name);
+			throw new NotSupportedException(message);
 		}
 
 		/// <summary>
@@ -127,8 +127,8 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 		/// <returns></returns>
 		public virtual DigitalInput GetDigitalInputPort(int address)
 		{
-			string message = string.Format("{0} has no {1} with address {2}", this, typeof(DigitalInput).Name, address);
-			throw new KeyNotFoundException(message);
+			string message = string.Format("{0} has no {1}", this, typeof(DigitalInput).Name);
+			throw new NotSupportedException(message);
 		}
 #endif
 
