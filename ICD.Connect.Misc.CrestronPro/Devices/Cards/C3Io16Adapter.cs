@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-#if SIMPLSHARP
+﻿#if SIMPLSHARP
 using Crestron.SimplSharpPro.ThreeSeriesCards;
 #endif
 
