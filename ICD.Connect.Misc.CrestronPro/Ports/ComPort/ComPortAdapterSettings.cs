@@ -86,7 +86,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 				Address = address,
 			};
 
-			ParseXml(output, xml);
+			output.ParseXml(xml);
 			return output;
 		}
 

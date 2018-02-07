@@ -23,11 +23,15 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CardFrames
 			writer.WriteElementString(IPID_ELEMENT, StringUtils.ToIpIdString(Ipid));
 		}
 
-		protected static void ParseXml(AbstractCardFrameDeviceSettings instance, string xml)
+		/// <summary>
+		/// Updates the settings from xml.
+		/// </summary>
+		/// <param name="xml"></param>
+		public override void ParseXml(string xml)
 		{
-			AbstractDeviceSettings.ParseXml(instance, xml);
+			base.ParseXml(xml);
 
-			instance.Ipid = XmlUtils.TryReadChildElementContentAsByte(xml, IPID_ELEMENT) ?? 0;
+			Ipid = XmlUtils.TryReadChildElementContentAsByte(xml, IPID_ELEMENT) ?? 0;
 		}
 	}
 }

@@ -27,7 +27,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 		public static C3Ir8AdapterSettings FromXml(string xml)
 		{
 			C3Ir8AdapterSettings output = new C3Ir8AdapterSettings();
-			ParseXml(output, xml);
+			output.ParseXml(xml);
 			return output;
 		}
 	}

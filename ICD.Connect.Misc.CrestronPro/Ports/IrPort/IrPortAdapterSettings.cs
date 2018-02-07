@@ -110,7 +110,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 				BetweenTime = betweenTime
 			};
 
-			ParseXml(output, xml);
+			output.ParseXml(xml);
 			return output;
 		}
 

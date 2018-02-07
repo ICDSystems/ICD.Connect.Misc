@@ -78,7 +78,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 				Address = address,
 			};
 
-			ParseXml(output, xml);
+			output.ParseXml(xml);
 			return output;
 		}
 

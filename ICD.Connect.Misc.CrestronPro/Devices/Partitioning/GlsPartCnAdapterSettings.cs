@@ -56,7 +56,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 				Sensitivity = XmlUtils.TryReadChildElementContentAsUShort(xml, SENSITIVITY_ELEMENT) ?? 1
 			};
 
-			ParseXml(output, xml);
+			output.ParseXml(xml);
 			return output;
 		}
 	}

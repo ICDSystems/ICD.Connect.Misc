@@ -27,7 +27,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CardFrames
 		public static CenCi31AdapterSettings FromXml(string xml)
 		{
 			CenCi31AdapterSettings output = new CenCi31AdapterSettings();
-			ParseXml(output, xml);
+			output.ParseXml(xml);
 			return output;
 		}
 	}

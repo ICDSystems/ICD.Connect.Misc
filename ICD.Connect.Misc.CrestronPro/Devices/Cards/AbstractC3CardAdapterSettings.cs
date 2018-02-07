@@ -29,12 +29,16 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 			writer.WriteElementString(CARD_FRAME_ELEMENT, IcdXmlConvert.ToString(CardFrame));
 		}
 
-		protected static void ParseXml(AbstractC3CardAdapterSettings instance, string xml)
+		/// <summary>
+		/// Updates the settings from xml.
+		/// </summary>
+		/// <param name="xml"></param>
+		public override void ParseXml(string xml)
 		{
-			instance.Ipid = XmlUtils.TryReadChildElementContentAsByte(xml, IPID_ELEMENT) ?? 0;
-			instance.CardFrame = XmlUtils.TryReadChildElementContentAsInt(xml, CARD_FRAME_ELEMENT);
+			base.ParseXml(xml);
 
-			AbstractDeviceSettings.ParseXml(instance, xml);
+			Ipid = XmlUtils.TryReadChildElementContentAsByte(xml, IPID_ELEMENT) ?? 0;
+			CardFrame = XmlUtils.TryReadChildElementContentAsInt(xml, CARD_FRAME_ELEMENT);
 		}
 	}
 }

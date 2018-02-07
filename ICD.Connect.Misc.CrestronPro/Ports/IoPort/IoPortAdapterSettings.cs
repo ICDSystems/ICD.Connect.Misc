@@ -91,7 +91,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 				Configuration = configuration
 			};
 
-			ParseXml(output, xml);
+			output.ParseXml(xml);
 			return output;
 		}
 
