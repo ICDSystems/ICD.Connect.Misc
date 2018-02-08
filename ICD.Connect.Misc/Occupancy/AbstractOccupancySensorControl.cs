@@ -6,7 +6,7 @@ using ICD.Connect.Devices.Controls;
 
 namespace ICD.Connect.Misc.Occupancy
 {
-	public abstract class AbstractOccupancySensorControl<T> : AbstractDeviceControl<T>, IOccupancySensor where T : IDeviceBase
+	public abstract class AbstractOccupancySensorControl<T> : AbstractDeviceControl<T>, IOccupancySensorControl where T : IDeviceBase
 	{
 
 		#region fields

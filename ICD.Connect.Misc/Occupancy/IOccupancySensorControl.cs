@@ -4,7 +4,7 @@ using ICD.Connect.Devices.Controls;
 
 namespace ICD.Connect.Misc.Occupancy
 {
-	public interface IOccupancySensor : IDeviceControl
+	public interface IOccupancySensorControl : IDeviceControl
 	{
 
 		/// <summary>

@@ -61,8 +61,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ObfuscationSettings.cs" />
-    <Compile Include="Occupancy\AbstractOccupancySensor.cs" />
-    <Compile Include="Occupancy\IOccupancySensor.cs" />
+    <Compile Include="KrangPlugin.cs" />
+    <Compile Include="Occupancy\AbstractOccupancySensorControl.cs" />
+    <Compile Include="Occupancy\IOccupancySensorControl.cs" />
+    <Compile Include="Occupancy\MockOccupancySensorControl.cs" />
+    <Compile Include="Occupancy\MockOccupancySensorDevice.cs" />
+    <Compile Include="Occupancy\MockOccupancySensorDeviceSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="Properties\ControlSystem.cfg" />
   </ItemGroup>
