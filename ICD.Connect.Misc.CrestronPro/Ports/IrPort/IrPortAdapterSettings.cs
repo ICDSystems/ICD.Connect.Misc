@@ -1,5 +1,4 @@
 using System;
-using ICD.Common.Properties;
 using ICD.Common.Utils.Xml;
 using ICD.Connect.Misc.CrestronPro.Devices;
 using ICD.Connect.Protocol.Ports.IrPort;
@@ -11,6 +10,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 	/// <summary>
 	/// Settings for the IrPortAdapter.
 	/// </summary>
+	[KrangSettings(FACTORY_NAME)]
 	public sealed class IrPortAdapterSettings : AbstractIrPortSettings
 	{
 		private const string FACTORY_NAME = "IrPort";
@@ -72,6 +72,21 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		}
 
 		/// <summary>
+		/// Updates the settings from xml.
+		/// </summary>
+		/// <param name="xml"></param>
+		public override void ParseXml(string xml)
+		{
+			base.ParseXml(xml);
+
+			Device = XmlUtils.TryReadChildElementContentAsInt(xml, PARENT_DEVICE_ELEMENT);
+			Address = XmlUtils.TryReadChildElementContentAsInt(xml, ADDRESS_ELEMENT) ?? 1;
+			Driver = XmlUtils.TryReadChildElementContentAsString(xml, DRIVER_ELEMENT);
+			PulseTime = (ushort?)XmlUtils.TryReadChildElementContentAsInt(xml, PULSETIME_ELEMENT) ?? 0;
+			BetweenTime = (ushort?)XmlUtils.TryReadChildElementContentAsInt(xml, BETWEENTIME_ELEMENT) ?? 0;
+		}
+
+		/// <summary>
 		/// Returns true if the settings depend on a device with the given ID.
 		/// For example, to instantiate an IR Port from settings, the device the physical port
 		/// belongs to will need to be instantiated first.
@@ -86,33 +101,6 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		/// Returns the count from the collection of ids that the settings depends on.
 		/// </summary>
 		public override int DependencyCount { get { return Device != null ? 1 : 0; } }
-
-		/// <summary>
-		/// Loads the settings from XML.
-		/// </summary>
-		/// <param name="xml"></param>
-		/// <returns></returns>
-		[PublicAPI, XmlFactoryMethod(FACTORY_NAME)]
-		public static IrPortAdapterSettings FromXml(string xml)
-		{
-			int device = XmlUtils.TryReadChildElementContentAsInt(xml, PARENT_DEVICE_ELEMENT) ?? 0;
-			int address = XmlUtils.TryReadChildElementContentAsInt(xml, ADDRESS_ELEMENT) ?? 0;
-			string driver = XmlUtils.TryReadChildElementContentAsString(xml, DRIVER_ELEMENT);
-			ushort pulseTime = (ushort?)XmlUtils.TryReadChildElementContentAsInt(xml, PULSETIME_ELEMENT) ?? 0;
-			ushort betweenTime = (ushort?)XmlUtils.TryReadChildElementContentAsInt(xml, BETWEENTIME_ELEMENT) ?? 0;
-
-			IrPortAdapterSettings output = new IrPortAdapterSettings
-			{
-				Device = device,
-				Address = address,
-				Driver = driver,
-				PulseTime = pulseTime,
-				BetweenTime = betweenTime
-			};
-
-			output.ParseXml(xml);
-			return output;
-		}
 
 		#endregion
 	}

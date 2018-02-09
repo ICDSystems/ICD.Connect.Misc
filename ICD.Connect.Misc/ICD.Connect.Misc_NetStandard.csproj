@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>ICD.Connect.Misc</RootNamespace>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <Deterministic>false</Deterministic>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>TRACE;DEBUG;STANDARD;NETSTANDARD2_0</DefineConstants>
+    <OutputPath>binNetCoreApp\Debug\netstandard2.0\</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="SIMPLSharpLogs\**" />
+    <EmbeddedResource Remove="SIMPLSharpLogs\**" />
+    <None Remove="SIMPLSharpLogs\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="ICD.Connect.projectinfo" />
+    <None Remove="Properties\ControlSystem.cfg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\ICD.Common.Utils\ICD.Common.Utils\ICD.Common.Utils_NetStandard.csproj" />
+    <ProjectReference Include="..\..\ICD.Connect.Devices\ICD.Connect.Devices\ICD.Connect.Devices_NetStandard.csproj" />
+  </ItemGroup>
+
+</Project>

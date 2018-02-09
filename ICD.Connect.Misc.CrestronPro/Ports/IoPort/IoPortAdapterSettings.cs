@@ -1,5 +1,4 @@
 ﻿using System;
-using ICD.Common.Properties;
 using ICD.Common.Utils.Xml;
 using ICD.Connect.Misc.CrestronPro.Devices;
 using ICD.Connect.Protocol.Ports.IoPort;
@@ -8,6 +7,7 @@ using ICD.Connect.Settings.Attributes.SettingsProperties;
 
 namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 {
+	[KrangSettings(FACTORY_NAME)]
 	public sealed class IoPortAdapterSettings : AbstractIoPortSettings
 	{
 		private const string FACTORY_NAME = "IoPort";
@@ -71,28 +71,19 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 		public override int DependencyCount { get { return Device != null ? 1 : 0; } }
 
 		/// <summary>
-		/// Loads the settings from XML.
+		/// Updates the settings from xml.
 		/// </summary>
 		/// <param name="xml"></param>
-		/// <returns></returns>
-		[PublicAPI, XmlFactoryMethod(FACTORY_NAME)]
-		public static IoPortAdapterSettings FromXml(string xml)
+		public override void ParseXml(string xml)
 		{
-			int device = XmlUtils.TryReadChildElementContentAsInt(xml, PARENT_DEVICE_ELEMENT) ?? 0;
-			int address = XmlUtils.TryReadChildElementContentAsInt(xml, ADDRESS_ELEMENT) ?? 0;
+			base.ParseXml(xml);
+
+			Device = XmlUtils.TryReadChildElementContentAsInt(xml, PARENT_DEVICE_ELEMENT);
+			Address = XmlUtils.TryReadChildElementContentAsInt(xml, ADDRESS_ELEMENT) ?? 1;
 
 			eIoPortConfiguration configuration;
 			XmlUtils.TryReadChildElementContentAsEnum(xml, CONFIGURATION_ELEMENT, true, out configuration);
-
-			IoPortAdapterSettings output = new IoPortAdapterSettings
-			{
-				Device = device,
-				Address = address,
-				Configuration = configuration
-			};
-
-			output.ParseXml(xml);
-			return output;
+			Configuration = configuration;
 		}
 
 		#endregion

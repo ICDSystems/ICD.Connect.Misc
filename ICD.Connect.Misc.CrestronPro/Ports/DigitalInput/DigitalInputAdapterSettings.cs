@@ -8,6 +8,7 @@ using ICD.Connect.Settings.Attributes.SettingsProperties;
 
 namespace ICD.Connect.Misc.CrestronPro.Ports.DigitalInput
 {
+	[KrangSettings(FACTORY_NAME)]
 	public sealed class DigitalInputAdapterSettings : AbstractDigitalInputPortSettings
 	{
 		private const string FACTORY_NAME = "DigitalInputPort";
@@ -51,6 +52,18 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.DigitalInput
 		}
 
 		/// <summary>
+		/// Updates the settings from xml.
+		/// </summary>
+		/// <param name="xml"></param>
+		public override void ParseXml(string xml)
+		{
+			base.ParseXml(xml);
+
+			Device = XmlUtils.TryReadChildElementContentAsInt(xml, PARENT_DEVICE_ELEMENT);
+			Address = XmlUtils.TryReadChildElementContentAsInt(xml, ADDRESS_ELEMENT) ?? 1;
+		}
+
+		/// <summary>
 		/// Returns true if the settings depend on a device with the given ID.
 		/// For example, to instantiate an IR Port from settings, the device the physical port
 		/// belongs to will need to be instantiated first.
@@ -65,27 +78,6 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.DigitalInput
 		/// Returns the count from the collection of ids that the settings depends on.
 		/// </summary>
 		public override int DependencyCount { get { return Device != null ? 1 : 0; } }
-
-		/// <summary>
-		/// Loads the settings from XML.
-		/// </summary>
-		/// <param name="xml"></param>
-		/// <returns></returns>
-		[PublicAPI, XmlFactoryMethod(FACTORY_NAME)]
-		public static DigitalInputAdapterSettings FromXml(string xml)
-		{
-			int device = XmlUtils.TryReadChildElementContentAsInt(xml, PARENT_DEVICE_ELEMENT) ?? 0;
-			int address = XmlUtils.TryReadChildElementContentAsInt(xml, ADDRESS_ELEMENT) ?? 0;
-
-			DigitalInputAdapterSettings output = new DigitalInputAdapterSettings
-			{
-				Device = device,
-				Address = address
-			};
-
-			output.ParseXml(xml);
-			return output;
-		}
 
 		#endregion
 	}
