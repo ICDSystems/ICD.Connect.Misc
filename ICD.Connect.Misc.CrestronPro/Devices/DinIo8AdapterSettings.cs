@@ -1,5 +1,4 @@
 ﻿using System;
-using ICD.Common.Properties;
 using ICD.Common.Utils;
 using ICD.Common.Utils.Xml;
 using ICD.Connect.Devices;
@@ -8,6 +7,7 @@ using ICD.Connect.Settings.Attributes.SettingsProperties;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices
 {
+	[KrangSettings(FACTORY_NAME)]
 	public sealed class DinIo8AdapterSettings : AbstractDeviceSettings
 	{
 		private const string FACTORY_NAME = "DinIo8";
@@ -39,20 +39,14 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 		}
 
 		/// <summary>
-		/// Loads the settings from XML.
+		/// Updates the settings from xml.
 		/// </summary>
 		/// <param name="xml"></param>
-		/// <returns></returns>
-		[PublicAPI, XmlFactoryMethod(FACTORY_NAME)]
-		public static DinIo8AdapterSettings FromXml(string xml)
+		public override void ParseXml(string xml)
 		{
-			DinIo8AdapterSettings output = new DinIo8AdapterSettings
-			{
-				CresnetId = XmlUtils.TryReadChildElementContentAsByte(xml, CRESNET_ID_ELEMENT) ?? 0
-			};
+			base.ParseXml(xml);
 
-			output.ParseXml(xml);
-			return output;
+			CresnetId = XmlUtils.TryReadChildElementContentAsByte(xml, CRESNET_ID_ELEMENT) ?? 0;
 		}
 	}
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using ICD.Common.Properties;
 using ICD.Common.Utils.Xml;
 using ICD.Connect.Misc.CrestronPro.Devices;
 using ICD.Connect.Protocol.Ports.RelayPort;
@@ -8,6 +7,7 @@ using ICD.Connect.Settings.Attributes.SettingsProperties;
 
 namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 {
+	[KrangSettings(FACTORY_NAME)]
 	public sealed class RelayPortAdapterSettings : AbstractRelayPortSettings
 	{
 		private const string FACTORY_NAME = "RelayPort";
@@ -51,6 +51,18 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 		}
 
 		/// <summary>
+		/// Updates the settings from xml.
+		/// </summary>
+		/// <param name="xml"></param>
+		public override void ParseXml(string xml)
+		{
+			base.ParseXml(xml);
+
+			Device = XmlUtils.TryReadChildElementContentAsInt(xml, PARENT_DEVICE_ELEMENT);
+			Address = XmlUtils.TryReadChildElementContentAsInt(xml, ADDRESS_ELEMENT) ?? 1;
+		}
+
+		/// <summary>
 		/// Returns true if the settings depend on a device with the given ID.
 		/// For example, to instantiate an IR Port from settings, the device the physical port
 		/// belongs to will need to be instantiated first.
@@ -59,27 +71,6 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 		public override bool HasDeviceDependency(int id)
 		{
 			return Device != null && Device == id;
-		}
-
-		/// <summary>
-		/// Loads the settings from XML.
-		/// </summary>
-		/// <param name="xml"></param>
-		/// <returns></returns>
-		[PublicAPI, XmlFactoryMethod(FACTORY_NAME)]
-		public static RelayPortAdapterSettings FromXml(string xml)
-		{
-			int? device = XmlUtils.TryReadChildElementContentAsInt(xml, PARENT_DEVICE_ELEMENT);
-			int address = XmlUtils.ReadChildElementContentAsInt(xml, ADDRESS_ELEMENT);
-
-			RelayPortAdapterSettings output = new RelayPortAdapterSettings
-			{
-				Device = device,
-				Address = address,
-			};
-
-			output.ParseXml(xml);
-			return output;
 		}
 
 		#endregion

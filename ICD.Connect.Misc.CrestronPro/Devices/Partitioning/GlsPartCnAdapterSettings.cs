@@ -1,5 +1,4 @@
 ﻿using System;
-using ICD.Common.Properties;
 using ICD.Common.Utils;
 using ICD.Common.Utils.Xml;
 using ICD.Connect.Partitioning.Devices;
@@ -8,6 +7,7 @@ using ICD.Connect.Settings.Attributes.SettingsProperties;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 {
+	[KrangSettings(FACTORY_NAME)]
 	public sealed class GlsPartCnAdapterSettings : AbstractPartitionDeviceSettings
 	{
 		private const string FACTORY_NAME = "GlsPartCn";
@@ -43,21 +43,15 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 		}
 
 		/// <summary>
-		/// Loads the settings from XML.
+		/// Updates the settings from xml.
 		/// </summary>
 		/// <param name="xml"></param>
-		/// <returns></returns>
-		[PublicAPI, XmlFactoryMethod(FACTORY_NAME)]
-		public static GlsPartCnAdapterSettings FromXml(string xml)
+		public override void ParseXml(string xml)
 		{
-			GlsPartCnAdapterSettings output = new GlsPartCnAdapterSettings
-			{
-				CresnetId = XmlUtils.TryReadChildElementContentAsByte(xml, CRESNET_ID_ELEMENT) ?? 0,
-				Sensitivity = XmlUtils.TryReadChildElementContentAsUShort(xml, SENSITIVITY_ELEMENT) ?? 1
-			};
+			base.ParseXml(xml);
 
-			output.ParseXml(xml);
-			return output;
+			CresnetId = XmlUtils.TryReadChildElementContentAsByte(xml, CRESNET_ID_ELEMENT) ?? 0;
+			Sensitivity = XmlUtils.TryReadChildElementContentAsUShort(xml, SENSITIVITY_ELEMENT) ?? 1;
 		}
 	}
 }
