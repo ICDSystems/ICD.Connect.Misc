@@ -6,8 +6,6 @@ using ICD.Connect.Settings.Core;
 #if SIMPLSHARP
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.GeneralIO;
-#else
-using System;
 #endif
 
 namespace ICD.Connect.Misc.CrestronPro.Devices
