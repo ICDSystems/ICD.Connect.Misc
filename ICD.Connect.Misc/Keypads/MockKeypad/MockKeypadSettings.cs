@@ -1,7 +1,9 @@
 ﻿using System;
+using ICD.Connect.Settings.Attributes;
 
 namespace ICD.Connect.Misc.Keypads.MockKeypad
 {
+	[KrangSettings(FACTORY_NAME)]
 	public sealed class MockKeypadSettings : AbstractKeypadDeviceSettings, IMockKeypadSettings
 	{
 		private const string FACTORY_NAME = "MockKeypad";

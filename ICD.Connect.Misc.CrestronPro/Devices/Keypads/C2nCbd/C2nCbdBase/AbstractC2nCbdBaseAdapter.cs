@@ -11,8 +11,6 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.C2nCbd.C2nCbdBase
 		where TKeypad : Crestron.SimplSharpPro.Keypads.C2nCbdBase
 		where TSettings : IC2nCbdBaseAdapterSettings, new()
 	{
-		protected byte CresnetId { get; private set; }
-
 		protected abstract TKeypad InstantiateKeypad(byte cresnetId, CrestronControlSystem controlSystem);
 
 		#region Settings
