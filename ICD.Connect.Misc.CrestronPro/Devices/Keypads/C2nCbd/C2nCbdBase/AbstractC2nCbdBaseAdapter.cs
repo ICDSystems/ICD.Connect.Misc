@@ -68,7 +68,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.C2nCbd.C2nCbdBase
 		{
 			base.CopySettingsFinal(settings);
 
-			settings.CresnetId = CresnetId;
+			settings.CresnetId = Keypad == null ? (byte)0 : (byte)Keypad.ID;
 		}
 
 		#endregion
