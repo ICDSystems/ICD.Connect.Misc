@@ -1,10 +1,8 @@
-﻿using ICD.Common.Properties;
-using ICD.Common.Utils;
+﻿using ICD.Common.Utils;
 using ICD.Common.Utils.Xml;
-using ICD.Connect.Misc.CrestronPro.Devices.Partitioning;
-using ICD.Connect.Settings.Attributes;
+using ICD.Connect.Misc.CrestronPro.Devices.Keypads.KeypadBase;
 
-namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads
+namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.InetCbdex
 {
 	public abstract class AbstractInetCbdexAdapterSettings : AbstractKeypadBaseAdapterSettings, IInetCbdexAdapterSettings
 	{
@@ -31,6 +29,20 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads
 			HoldTime = XmlUtils.TryReadChildElementContentAsUShort(xml, HOLD_TIME_ELEMENT);
 			DoubleTapSpeed = XmlUtils.TryReadChildElementContentAsUShort(xml, DOUBLE_TAP_SPEED_ELEMENT);
 			WaitForDoubleTap = XmlUtils.TryReadChildElementContentAsBoolean(xml, WAIT_FOR_DOUBLE_TAP_ELEMENT);
+		}
+
+		/// <summary>
+		/// Writes property elements to xml.
+		/// </summary>
+		/// <param name="writer"></param>
+		protected override void WriteElements(IcdXmlTextWriter writer)
+		{
+			base.WriteElements(writer);
+
+			writer.WriteElementString(BARGRAPH_TIMEOUT_ELEMENT, IcdXmlConvert.ToString(BargraphTimeout));
+			writer.WriteElementString(HOLD_TIME_ELEMENT, IcdXmlConvert.ToString(HoldTime));
+			writer.WriteElementString(DOUBLE_TAP_SPEED_ELEMENT, IcdXmlConvert.ToString(DoubleTapSpeed));
+			writer.WriteElementString(WAIT_FOR_DOUBLE_TAP_ELEMENT, IcdXmlConvert.ToString(WaitForDoubleTap));
 		}
 	}
 }

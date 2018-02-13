@@ -1,17 +1,24 @@
 ﻿using System;
+#if SIMPLSHARP
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.DeviceSupport;
+#endif
 using ICD.Common.Utils.Extensions;
 using ICD.Common.Utils.Services.Logging;
-using ICD.Connect.Devices;
+using ICD.Connect.Misc.Keypads;
 
-namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads
+namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.KeypadBase
 {
-	public abstract class AbstractKeypadBaseAdapter<TKeypad, TSettings> : AbstractDevice<TSettings>, IKeypadBaseAdapter
-		where TSettings : IDeviceSettings, new()
-		where TKeypad : KeypadBase
+#if SIMPLSHARP
+	public abstract class AbstractKeypadBaseAdapter<TKeypad, TSettings> : AbstractKeypadDevice<TSettings>, IKeypadBaseAdapter
+		where TKeypad : Crestron.SimplSharpPro.DeviceSupport.KeypadBase
+#else
+	public abstract class AbstractKeypadBaseAdapter<TSettings> : AbstractKeypadDevice<TSettings>, IKeypadBaseAdapter
+#endif
+		where TSettings : IKeypadDeviceSettings, new()
 	{
-		public event EventHandler<ButtonEventArgs> OnButtonStateChange;
+		public override event EventHandler<KeypadButtonPressedEventArgs> OnButtonStateChange;
+
 #if SIMPLSHARP
 		protected TKeypad Keypad { get; private set; }
 #endif
@@ -106,7 +113,11 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads
 
 		private void KeypadOnButtonStateChange(GenericBase device, ButtonEventArgs args)
 		{
-			OnButtonStateChange.Raise(this, args);
+			OnButtonStateChange.Raise(this, new KeypadButtonPressedEventArgs
+			{
+				ButtonId = args.Button.Number,
+				ButtonState = ButtonStateConverter.GetButtonState(args.NewButtonState)
+			});
 		}
 #endif
 	}

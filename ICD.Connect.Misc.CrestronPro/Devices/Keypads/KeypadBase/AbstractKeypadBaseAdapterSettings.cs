@@ -1,8 +1,8 @@
-﻿using ICD.Connect.Devices;
+﻿using ICD.Connect.Misc.Keypads;
 
-namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads
+namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.KeypadBase
 {
-	public abstract class AbstractKeypadBaseAdapterSettings : AbstractDeviceSettings , IKeypadBaseAdapterSettings
+	public abstract class AbstractKeypadBaseAdapterSettings : AbstractKeypadDeviceSettings , IKeypadBaseAdapterSettings
 	{
 
 	}

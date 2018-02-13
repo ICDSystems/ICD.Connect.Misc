@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using Crestron.SimplSharpPro.DeviceSupport;
+﻿using ICD.Connect.Misc.Keypads;
 
-namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads
+namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.KeypadBase
 {
-	public interface IKeypadBaseAdapter
+	public interface IKeypadBaseAdapter : IKeypadDevice
 	{
 		
-		//TODO: Roll Down to Our Abstraction
-		event EventHandler<ButtonEventArgs> OnButtonStateChange;
 	}
 }

@@ -1,8 +1,9 @@
 ﻿using ICD.Common.Utils;
 using ICD.Common.Utils.Xml;
+using ICD.Connect.Misc.CrestronPro.Devices.Keypads.InetCbdex;
 using ICD.Connect.Settings.Attributes.SettingsProperties;
 
-namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.C2nCbdBase
+namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.C2nCbd.C2nCbdBase
 {
 	public abstract class AbstractC2nCbdBaseAdapterSettings : AbstractInetCbdexAdapterSettings, IC2nCbdBaseAdapterSettings
 	{

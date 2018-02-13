@@ -61,6 +61,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ObfuscationSettings.cs" />
+    <Compile Include="Keypads\AbstractKeypadDevice.cs" />
+    <Compile Include="Keypads\AbstractKeypadDeviceSettings.cs" />
+    <Compile Include="Keypads\eButtonState.cs" />
+    <Compile Include="Keypads\IKeypadDevice.cs" />
+    <Compile Include="Keypads\IKeypadDeviceSettings.cs" />
+    <Compile Include="Keypads\KeypadButtonPressedEventArgs.cs" />
+    <Compile Include="Keypads\MockKeypad\IMockKeypad.cs" />
+    <Compile Include="Keypads\MockKeypad\IMockKeypadSettings.cs" />
+    <Compile Include="Keypads\MockKeypad\MockKeypad.cs" />
+    <Compile Include="Keypads\MockKeypad\MockKeypadSettings.cs" />
     <Compile Include="KrangPlugin.cs" />
     <Compile Include="Occupancy\AbstractOccupancySensorControl.cs" />
     <Compile Include="Occupancy\IOccupancySensorControl.cs" />

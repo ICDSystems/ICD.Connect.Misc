@@ -120,6 +120,8 @@
     <Compile Include="Devices\DinIo8Adapter.cs" />
     <Compile Include="Devices\DinIo8AdapterSettings.cs" />
     <Compile Include="Devices\IPortParent.cs" />
+    <Compile Include="Devices\Keypads\ButtonStateConverter.cs" />
+    <Compile Include="Devices\Keypads\C2nCbd\C2nCbdPBase\AbstractC2nCbdPBaseAdapterSettings.cs" />
     <Compile Include="Devices\Keypads\C2nCbd\C2nCbdBase\AbstractC2nCbdBaseAdapter.cs" />
     <Compile Include="Devices\Keypads\C2nCbd\C2nCbdBase\AbstractC2nCbdBaseAdapterSettings.cs" />
     <Compile Include="Devices\Keypads\C2nCbd\C2nCbdBase\IC2nCbdBaseAdapter.cs" />
@@ -129,7 +131,6 @@
     <Compile Include="Devices\Keypads\C2nCbd\C2nCbdPBaseWithVersiport\IC2nCbdPBaseWithVersiportAdapter.cs" />
     <Compile Include="Devices\Keypads\C2nCbd\C2nCbdPBaseWithVersiport\IC2nCbdPBaseWithVersiportAdapterSettings.cs" />
     <Compile Include="Devices\Keypads\C2nCbd\C2nCbdPBase\AbstractC2nCbdPBaseAdapter.cs" />
-    <Compile Include="Devices\Keypads\C2nCbd\C2nCbdPBase\AbstractC2nCbdPBaseAdapterSettings.cs" />
     <Compile Include="Devices\Keypads\C2nCbd\C2nCbdPBase\IC2nCbdPBaseAdapter.cs" />
     <Compile Include="Devices\Keypads\C2nCbd\C2nCbdPBase\IC2nCbdPBaseAdapterSettings.cs" />
     <Compile Include="Devices\Keypads\C2nCbd\C2nCbdP\C2nCbdPAdapterSettings.cs" />
@@ -204,6 +205,10 @@
     <ProjectReference Include="..\..\ICD.Connect.Settings\ICD.Connect.Settings\ICD.Connect.Settings_SimplSharp.csproj">
       <Project>{5B84EB3C-1C3A-4C4D-98C2-69F67CF51D5A}</Project>
       <Name>ICD.Connect.Settings_SimplSharp</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ICD.Connect.Misc\ICD.Connect.Misc_SimplSharp.csproj">
+      <Project>{3BAE6352-77B5-499A-9DA5-2AB198F53183}</Project>
+      <Name>ICD.Connect.Misc_SimplSharp</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
