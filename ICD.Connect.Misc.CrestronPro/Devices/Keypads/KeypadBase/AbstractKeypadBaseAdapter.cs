@@ -1,15 +1,21 @@
 ﻿using System;
+#if SIMPLSHARP
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.DeviceSupport;
+#endif
 using ICD.Common.Utils.Extensions;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.Misc.Keypads;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.KeypadBase
 {
+#if SIMPLSHARP
 	public abstract class AbstractKeypadBaseAdapter<TKeypad, TSettings> : AbstractKeypadDevice<TSettings>, IKeypadBaseAdapter
-		where TSettings : IKeypadDeviceSettings, new()
 		where TKeypad : Crestron.SimplSharpPro.DeviceSupport.KeypadBase
+#else
+	public abstract class AbstractKeypadBaseAdapter<TSettings> : AbstractKeypadDevice<TSettings>, IKeypadBaseAdapter
+#endif
+		where TSettings : IKeypadDeviceSettings, new()
 	{
 		public override event EventHandler<KeypadButtonPressedEventArgs> OnButtonStateChange;
 

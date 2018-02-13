@@ -1,5 +1,7 @@
 ﻿using System;
+#if SIMPLSHARP
 using Crestron.SimplSharpPro;
+#endif
 using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.Misc.CrestronPro.Devices.Keypads.InetCbdex;
 using ICD.Connect.Misc.CrestronPro.Utils;
@@ -7,13 +9,19 @@ using ICD.Connect.Settings.Core;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.C2nCbd.C2nCbdBase
 {
+#if SIMPLSHARP
 	public abstract class AbstractC2nCbdBaseAdapter<TKeypad, TSettings> : AbstractInetCbdexAdapter<TKeypad, TSettings>
 		where TKeypad : Crestron.SimplSharpPro.Keypads.C2nCbdBase
+#else
+	public abstract class AbstractC2nCbdBaseAdapter<TSettings> : AbstractInetCbdexAdapter<TSettings>
+#endif
 		where TSettings : IC2nCbdBaseAdapterSettings, new()
 	{
 		protected byte CresnetId { get; private set; }
 
+#if SIMPLSHARP
 		protected abstract TKeypad InstantiateKeypad(byte cresnetId, CrestronControlSystem controlSystem);
+#endif
 
 		#region Settings
 
@@ -57,7 +65,9 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.C2nCbd.C2nCbdBase
 		{
 			base.ClearSettingsFinal();
 
+#if SIMPLSHARP
 			SetKeypad(null);
+#endif
 		}
 
 		/// <summary>
@@ -68,7 +78,11 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.C2nCbd.C2nCbdBase
 		{
 			base.CopySettingsFinal(settings);
 
+#if SIMPLSHARP
 			settings.CresnetId = Keypad == null ? (byte)0 : (byte)Keypad.ID;
+#else
+			settings.CresnetId = 0;
+#endif
 		}
 
 		#endregion
