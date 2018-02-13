@@ -3,8 +3,9 @@ using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.DeviceSupport;
 using ICD.Common.Utils.Extensions;
 using ICD.Common.Utils.Services.Logging;
+using ICD.Connect.Misc.Keypads;
 
-namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads
+namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.KeypadBase
 {
 	public abstract class AbstractKeypadBaseAdapter<TKeypad, TSettings> : AbstractKeypadDevice<TSettings>, IKeypadBaseAdapter
 		where TSettings : IKeypadDeviceSettings, new()

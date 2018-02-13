@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads
+namespace ICD.Connect.Misc.Keypads
 {
-	public class KeypadButtonPressedEventArgs : EventArgs
+	public sealed class KeypadButtonPressedEventArgs : EventArgs
 	{
 		public uint ButtonId { get; set; }
 		public eButtonState ButtonState { get; set; }

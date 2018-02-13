@@ -1,4 +1,4 @@
-﻿namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.MockKeypad
+﻿namespace ICD.Connect.Misc.Keypads.MockKeypad
 {
 	public interface IMockKeypadSettings : IKeypadDeviceSettings
 	{

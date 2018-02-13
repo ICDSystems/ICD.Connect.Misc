@@ -1,21 +1,8 @@
-﻿#if SIMPLSHARP
-#endif
-using System;
+﻿using System;
+using ICD.Connect.Misc.Keypads;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads
 {
-	public enum eButtonState
-	{
-		NA,
-		Pressed,
-		Released,
-		Tapped,
-		DoubleTapped,
-		Held,
-		HeldReleased,
-		Backlight,
-	}
-
 	public static class ButtonStateConverter
 	{
 #if SIMPLSHARP

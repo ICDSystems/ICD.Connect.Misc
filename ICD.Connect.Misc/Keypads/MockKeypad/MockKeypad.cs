@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using ICD.Common.Utils.Extensions;
 using ICD.Connect.API.Commands;
 
-namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.MockKeypad
+namespace ICD.Connect.Misc.Keypads.MockKeypad
 {
 	public sealed class MockKeypad : AbstractKeypadDevice<MockKeypadSettings>, IMockKeypad
 	{
