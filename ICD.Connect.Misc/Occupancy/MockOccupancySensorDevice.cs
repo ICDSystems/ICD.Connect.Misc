@@ -9,7 +9,7 @@ namespace ICD.Connect.Misc.Occupancy
 	{
 	    public MockOccupancySensorDevice()
 	    {
-		    this.Controls.Add(new MockOccupancySensorControl(this, 0));
+		    Controls.Add(new MockOccupancySensorControl(this, 0));
 	    }
 
 		#region Methods
