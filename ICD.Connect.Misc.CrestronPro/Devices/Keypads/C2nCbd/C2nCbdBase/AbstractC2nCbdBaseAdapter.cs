@@ -1,4 +1,5 @@
-﻿using Crestron.SimplSharpPro;
+﻿using System;
+using Crestron.SimplSharpPro;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.Misc.CrestronPro.Devices.Keypads.InetCbdex;
 using ICD.Connect.Misc.CrestronPro.Utils;
@@ -12,19 +13,6 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.C2nCbd.C2nCbdBase
 	{
 		protected byte CresnetId { get; private set; }
 
-
-		protected void SetKeypad(TSettings settings)
-		{
-			if (settings.CresnetId == null || !CresnetUtils.IsValidId(settings.CresnetId.Value))
-			{
-				Logger.AddEntry(eSeverity.Error, "{0} failed to instantiate {1} - CresnetId {2} is out of range",
-								this, typeof(TKeypad).Name, settings.CresnetId);
-				return;
-			}
-			TKeypad keypad = InstantiateKeypad((byte)settings.CresnetId, ProgramInfo.ControlSystem);
-			SetKeypad(keypad); 
-		}
-
 		protected abstract TKeypad InstantiateKeypad(byte cresnetId, CrestronControlSystem controlSystem);
 
 		#region Settings
@@ -37,8 +25,29 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.C2nCbd.C2nCbdBase
 		protected override void ApplySettingsFinal(TSettings settings, IDeviceFactory factory)
 		{
 			base.ApplySettingsFinal(settings, factory);
+#if SIMPLSHARP
+			if (settings.CresnetId == null || !CresnetUtils.IsValidId(settings.CresnetId.Value))
+			{
+				Logger.AddEntry(eSeverity.Error, "{0} failed to instantiate {1} - CresnetId {2} is out of range",
+								this, typeof(TKeypad).Name, settings.CresnetId);
+				return;
+			}
 
-			SetKeypad(settings);
+			TKeypad device = null;
+
+			try
+			{
+				device = InstantiateKeypad((byte)settings.CresnetId, ProgramInfo.ControlSystem);
+			}
+			catch (ArgumentException e)
+			{
+				string message = string.Format("{0} failed to instantiate {1} with Cresnet ID {2} - {3}",
+											   this, typeof(TKeypad).Name, settings.CresnetId, e.Message);
+				Logger.AddEntry(eSeverity.Error, e, message);
+			}
+
+			SetKeypad(device);
+#endif
 		}
 
 		/// <summary>
