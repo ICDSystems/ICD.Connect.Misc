@@ -1,9 +1,10 @@
 ﻿using System;
-using ICD.Connect.Misc.CrestronPro.Devices.Keypads.C2nCbd.C2nCbdP;
 using ICD.Connect.Misc.CrestronPro.Devices.Keypads.C2nCbd.C2nCbdPBaseWithVersiport;
+using ICD.Connect.Settings.Attributes;
 
-namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads
+namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.C2nCbd.C2nCbdP
 {
+	[KrangSettings(FACTORY_NAME)]
 	public sealed class C2nCbdPAdapterSettings : AbstractC2nCbdPBaseWithVersiportAdapterSettings, IC2nCbdPAdapterSettings
 	{
 		private const string FACTORY_NAME = "C2nCbdP";

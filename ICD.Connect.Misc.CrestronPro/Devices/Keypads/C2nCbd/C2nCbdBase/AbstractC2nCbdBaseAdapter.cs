@@ -1,9 +1,10 @@
 ﻿using Crestron.SimplSharpPro;
 using ICD.Common.Utils.Services.Logging;
+using ICD.Connect.Misc.CrestronPro.Devices.Keypads.InetCbdex;
 using ICD.Connect.Misc.CrestronPro.Utils;
 using ICD.Connect.Settings.Core;
 
-namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.C2nCbdBase
+namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.C2nCbd.C2nCbdBase
 {
 	public abstract class AbstractC2nCbdBaseAdapter<TKeypad, TSettings> : AbstractInetCbdexAdapter<TKeypad, TSettings>
 		where TKeypad : Crestron.SimplSharpPro.Keypads.C2nCbdBase

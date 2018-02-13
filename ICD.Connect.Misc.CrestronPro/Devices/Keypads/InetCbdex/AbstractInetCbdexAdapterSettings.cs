@@ -1,10 +1,7 @@
-﻿using ICD.Common.Properties;
-using ICD.Common.Utils;
-using ICD.Common.Utils.Xml;
-using ICD.Connect.Misc.CrestronPro.Devices.Partitioning;
-using ICD.Connect.Settings.Attributes;
+﻿using ICD.Common.Utils.Xml;
+using ICD.Connect.Misc.CrestronPro.Devices.Keypads.KeypadBase;
 
-namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads
+namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.InetCbdex
 {
 	public abstract class AbstractInetCbdexAdapterSettings : AbstractKeypadBaseAdapterSettings, IInetCbdexAdapterSettings
 	{

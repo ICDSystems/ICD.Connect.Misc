@@ -1,5 +1,4 @@
 ﻿using System;
-using ICD.Common.Properties;
 using ICD.Common.Utils.Xml;
 using ICD.Connect.Misc.CrestronPro.Devices;
 using ICD.Connect.Protocol.Ports.DigitalInput;

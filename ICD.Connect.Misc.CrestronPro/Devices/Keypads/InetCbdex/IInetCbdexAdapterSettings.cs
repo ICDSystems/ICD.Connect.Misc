@@ -1,4 +1,4 @@
-﻿namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads
+﻿namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.InetCbdex
 {
 	public interface IInetCbdexAdapterSettings : IKeypadBaseAdapterSettings
 	{

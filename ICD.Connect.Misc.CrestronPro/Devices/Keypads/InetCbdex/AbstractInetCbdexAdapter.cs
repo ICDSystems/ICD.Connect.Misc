@@ -1,9 +1,7 @@
-﻿using Crestron.SimplSharpPro.Keypads;
-
-namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads
+﻿namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.InetCbdex
 {
 	public abstract class AbstractInetCbdexAdapter<TKeypad, TSettings> : AbstractKeypadBaseAdapter<TKeypad, TSettings>
-		where TKeypad : InetCbdex
+		where TKeypad : Crestron.SimplSharpPro.Keypads.InetCbdex
 		where TSettings : IInetCbdexAdapterSettings, new()
 	{
 		 

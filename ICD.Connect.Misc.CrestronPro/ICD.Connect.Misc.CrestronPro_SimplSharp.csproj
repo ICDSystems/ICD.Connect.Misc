@@ -120,6 +120,7 @@
     <Compile Include="Devices\DinIo8Adapter.cs" />
     <Compile Include="Devices\DinIo8AdapterSettings.cs" />
     <Compile Include="Devices\IPortParent.cs" />
+    <Compile Include="Devices\Keypads\C2nCbd\C2nCbdPBase\AbstractC2nCbdPBaseAdapterSettings.cs" />
     <Compile Include="Devices\Keypads\C2nCbd\C2nCbdBase\AbstractC2nCbdBaseAdapter.cs" />
     <Compile Include="Devices\Keypads\C2nCbd\C2nCbdBase\AbstractC2nCbdBaseAdapterSettings.cs" />
     <Compile Include="Devices\Keypads\C2nCbd\C2nCbdBase\IC2nCbdBaseAdapter.cs" />
@@ -129,12 +130,14 @@
     <Compile Include="Devices\Keypads\C2nCbd\C2nCbdPBaseWithVersiport\IC2nCbdPBaseWithVersiportAdapter.cs" />
     <Compile Include="Devices\Keypads\C2nCbd\C2nCbdPBaseWithVersiport\IC2nCbdPBaseWithVersiportAdapterSettings.cs" />
     <Compile Include="Devices\Keypads\C2nCbd\C2nCbdPBase\AbstractC2nCbdPBaseAdapter.cs" />
-    <Compile Include="Devices\Keypads\C2nCbd\C2nCbdPBase\AbstractC2nCbdPBaseAdapterSettings.cs" />
     <Compile Include="Devices\Keypads\C2nCbd\C2nCbdPBase\IC2nCbdPBaseAdapter.cs" />
     <Compile Include="Devices\Keypads\C2nCbd\C2nCbdPBase\IC2nCbdPBaseAdapterSettings.cs" />
     <Compile Include="Devices\Keypads\C2nCbd\C2nCbdP\C2nCbdPAdapterSettings.cs" />
     <Compile Include="Devices\Keypads\C2nCbd\C2nCbdP\IC2nCbdPAdapter.cs" />
     <Compile Include="Devices\Keypads\C2nCbd\C2nCbdP\IC2nCbdPAdapterSettings.cs" />
+    <Compile Include="Devices\Keypads\eButtonState.cs" />
+    <Compile Include="Devices\Keypads\IKeypadDevice.cs" />
+    <Compile Include="Devices\Keypads\IKeypadDeviceSettings.cs" />
     <Compile Include="Devices\Keypads\InetCbdex\AbstractInetCbdexAdapter.cs" />
     <Compile Include="Devices\Keypads\InetCbdex\AbstractInetCbdexAdapterSettings.cs" />
     <Compile Include="Devices\Keypads\InetCbdex\IInetCbdexAdapter.cs" />
@@ -144,6 +147,13 @@
     <Compile Include="Devices\Keypads\C2nCbd\C2nCbdP\C2nCbdPAdapter.cs" />
     <Compile Include="Devices\Keypads\KeypadBase\IKeypadBaseAdapter.cs" />
     <Compile Include="Devices\Keypads\KeypadBase\IKeypadBaseAdapterSettings.cs" />
+    <Compile Include="Devices\Keypads\AbstractKeypadDevice.cs" />
+    <Compile Include="Devices\Keypads\AbstractKeypadDeviceSettings.cs" />
+    <Compile Include="Devices\Keypads\KeypadButtonPressedEventArgs.cs" />
+    <Compile Include="Devices\Keypads\MockKeypad\IMockKeypad.cs" />
+    <Compile Include="Devices\Keypads\MockKeypad\IMockKeypadSettings.cs" />
+    <Compile Include="Devices\Keypads\MockKeypad\MockKeypad.cs" />
+    <Compile Include="Devices\Keypads\MockKeypad\MockKeypadSettings.cs" />
     <Compile Include="Devices\Partitioning\GlsPartCnAdapter.cs" />
     <Compile Include="Devices\Partitioning\GlsPartCnAdapterSettings.cs" />
     <Compile Include="Ports\DigitalInput\DigitalInputAdapter.cs" />
