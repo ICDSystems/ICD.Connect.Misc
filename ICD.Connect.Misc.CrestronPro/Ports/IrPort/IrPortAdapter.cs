@@ -171,6 +171,12 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 #if SIMPLSHARP
 			Clear();
 
+			if (!m_Port.IsIRCommandAvailable(command))
+			{
+				Logger.AddEntry(eSeverity.Error, "{0} does not have command {1}", this, StringUtils.ToRepresentation(command));
+				return;
+			}
+
 			PrintTx(command);
 			m_Port.Press(command);
 #else
@@ -347,8 +353,16 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 #if SIMPLSHARP
 			IrPulse pulse = m_Queue.Peek();
 
-			PrintTx(pulse.Command);
-			m_Port.PressAndRelease(pulse.Command, pulse.PulseTime);
+			if (!m_Port.IsIRCommandAvailable(pulse.Command))
+			{
+				Logger.AddEntry(eSeverity.Error, "{0} does not have command {1}", this, StringUtils.ToRepresentation(pulse.Command));
+			}
+			else
+			{
+				PrintTx(pulse.Command);
+				m_Port.PressAndRelease(pulse.Command, pulse.PulseTime);
+			}
+			
 			m_PulseTimer.Reset(pulse.Duration);
 #else
             throw new NotImplementedException();
