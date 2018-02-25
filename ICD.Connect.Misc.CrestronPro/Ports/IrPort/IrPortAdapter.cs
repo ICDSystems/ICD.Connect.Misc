@@ -4,6 +4,7 @@ using ICD.Common.Properties;
 using ICD.Common.Utils;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Common.Utils.Timers;
+using ICD.Connect.API.Commands;
 using ICD.Connect.API.Nodes;
 using ICD.Connect.Devices.Extensions;
 using ICD.Connect.Misc.CrestronPro.Devices;
@@ -409,6 +410,40 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 			base.BuildConsoleStatus(addRow);
 
 			addRow("Driver", m_Driver);
+		}
+
+		/// <summary>
+		/// Gets the child console commands.
+		/// </summary>
+		/// <returns></returns>
+		public override IEnumerable<IConsoleCommand> GetConsoleCommands()
+		{
+			foreach (IConsoleCommand consoleCommand in GetBaseConsoleCommands())
+				yield return consoleCommand;
+
+			yield return new ConsoleCommand("PrintCommands", "Prints the available commands", () => PrintCommands());
+		}
+
+		/// <summary>
+		/// Workaround for "unverifiable code" warning.
+		/// </summary>
+		/// <returns></returns>
+		private IEnumerable<IConsoleCommand> GetBaseConsoleCommands()
+		{
+			return base.GetConsoleCommands();
+		}
+
+		private string PrintCommands()
+		{
+			TableBuilder builder = new TableBuilder("Command");
+
+			if (m_Port != null)
+			{
+				foreach (var command in m_Port.AvailableIRCmds())
+					builder.AddRow(command);
+			}
+
+			return builder.ToString();
 		}
 
 		#endregion
