@@ -7,7 +7,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.C2nCbd.C2nCbdBase
 {
 	public abstract class AbstractC2nCbdBaseAdapterSettings : AbstractInetCbdexAdapterSettings, IC2nCbdBaseAdapterSettings
 	{
-		private const string CRESNET_ID_ELEMENT = "CresnetId";
+		private const string CRESNET_ID_ELEMENT = "CresnetID";
 
 		[IpIdSettingsProperty]
 		public byte? CresnetId { get; set; }
