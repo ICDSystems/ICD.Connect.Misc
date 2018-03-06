@@ -437,11 +437,13 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		{
 			TableBuilder builder = new TableBuilder("Command");
 
+#if SIMPLSHARP
 			if (m_Port != null)
 			{
 				foreach (var command in m_Port.AvailableIRCmds())
 					builder.AddRow(command);
 			}
+#endif
 
 			return builder.ToString();
 		}

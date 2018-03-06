@@ -246,16 +246,6 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 		}
 
 		/// <summary>
-		/// Called when the debouncer decides on a new value for the open status.
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="genericEventArgs"></param>
-		private void DebounceOnValue(object sender, GenericEventArgs<bool> genericEventArgs)
-		{
-			IsOpen = genericEventArgs.Data;
-		}
-
-		/// <summary>
 		/// Updates the state of the control.
 		/// </summary>
 		private void UpdateStatus()
@@ -264,6 +254,16 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 			m_Debounce.Enqueue(open);
 		}
 #endif
+
+		/// <summary>
+		/// Called when the debouncer decides on a new value for the open status.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="genericEventArgs"></param>
+		private void DebounceOnValue(object sender, GenericEventArgs<bool> genericEventArgs)
+		{
+			IsOpen = genericEventArgs.Data;
+		}
 
 		#endregion
 
