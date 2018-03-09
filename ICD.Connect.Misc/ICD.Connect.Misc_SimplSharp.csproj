@@ -4,11 +4,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{03FD7CA6-81BC-4194-8D68-534D4FBB6885}</ProjectGuid>
+    <ProjectGuid>{3BAE6352-77B5-499A-9DA5-2AB198F53183}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ICD.Connect.Power.MiddleAtlantic</RootNamespace>
-    <AssemblyName>ICD.Connect.Power.MiddleAtlantic_SimplSharp</AssemblyName>
+    <RootNamespace>ICD.Connect.Misc</RootNamespace>
+    <AssemblyName>ICD.Connect.Misc_SimplSharp</AssemblyName>
     <ProjectTypeGuids>{0B4745B0-194B-4BB6-8E21-E9057CA92500};{4D628B5B-2FBC-4AA6-8C16-197242AEB884};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <PlatformFamilyName>WindowsCE</PlatformFamilyName>
     <PlatformID>E2BECB1F-8C8C-41ba-B736-9BE7D946A398</PlatformID>
@@ -44,7 +44,6 @@
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
     <GenerateSerializationAssemblies>off</GenerateSerializationAssemblies>
-    <DefineConstants>SIMPLSHARP</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
@@ -56,25 +55,29 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\ProgramData\Crestron\SDK\SimplSharpHelperInterface.dll</HintPath>
     </Reference>
-    <Reference Include="SimplSharpNewtonsoft, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1099c178b3b54c3b, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\ProgramData\Crestron\SDK\SimplSharpNewtonsoft.dll</HintPath>
-    </Reference>
-    <Reference Include="SimplSharpReflectionInterface, Version=1.0.5583.25238, Culture=neutral, PublicKeyToken=1099c178b3b54c3b, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\ProgramData\Crestron\SDK\SimplSharpReflectionInterface.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ObfuscationSettings.cs" />
+    <Compile Include="Keypads\AbstractKeypadDevice.cs" />
+    <Compile Include="Keypads\AbstractKeypadDeviceSettings.cs" />
+    <Compile Include="Keypads\eButtonState.cs" />
+    <Compile Include="Keypads\IKeypadDevice.cs" />
+    <Compile Include="Keypads\IKeypadDeviceSettings.cs" />
+    <Compile Include="Keypads\KeypadButtonPressedEventArgs.cs" />
+    <Compile Include="Keypads\MockKeypad\IMockKeypad.cs" />
+    <Compile Include="Keypads\MockKeypad\IMockKeypadSettings.cs" />
+    <Compile Include="Keypads\MockKeypad\MockKeypad.cs" />
+    <Compile Include="Keypads\MockKeypad\MockKeypadSettings.cs" />
     <Compile Include="KrangPlugin.cs" />
+    <Compile Include="Occupancy\AbstractOccupancySensorControl.cs" />
+    <Compile Include="Occupancy\IOccupancySensorControl.cs" />
+    <Compile Include="Occupancy\MockOccupancySensorControl.cs" />
+    <Compile Include="Occupancy\MockOccupancySensorDevice.cs" />
+    <Compile Include="Occupancy\MockOccupancySensorDeviceSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RackLinkDevice.cs" />
-    <Compile Include="RackLinkDeviceSettings.cs" />
-    <Compile Include="RackLinkMessage.cs" />
     <None Include="Properties\ControlSystem.cfg" />
   </ItemGroup>
   <ItemGroup>
@@ -90,14 +93,6 @@
       <Project>{FD46A717-5836-4B73-ADD0-2706639DA8ED}</Project>
       <Name>ICD.Connect.Devices_SimplSharp</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\ICD.Connect.Protocol\ICD.Connect.Protocol.Network\ICD.Connect.Protocol.Network_SimplSharp.csproj">
-      <Project>{5ED52F05-EA6C-4FC5-8AA0-9B9727F6AECD}</Project>
-      <Name>ICD.Connect.Protocol.Network_SimplSharp</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\ICD.Connect.Protocol\ICD.Connect.Protocol\ICD.Connect.Protocol_SimplSharp.csproj">
-      <Project>{2E4E01B8-D4EA-4FB1-9FCE-0A0DC8D83C8A}</Project>
-      <Name>ICD.Connect.Protocol_SimplSharp</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\ICD.Connect.Settings\ICD.Connect.Settings\ICD.Connect.Settings_SimplSharp.csproj">
       <Project>{5B84EB3C-1C3A-4C4D-98C2-69F67CF51D5A}</Project>
       <Name>ICD.Connect.Settings_SimplSharp</Name>
@@ -105,7 +100,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>if /I "$(ConfigurationName)" == "Release" Eazfuscator.NET.exe "$(TargetPath)" --msbuild-project-path "$(ProjectPath)" --msbuild-project-configuration "$(ConfigurationName)" --msbuild-project-platform "$(PlatformName)" --msbuild-solution-path "$(SolutionPath)" -n --newline-flush -v 5.2 --configuration-file="$(ProjectDir)ObfuscationSettings.cs"
-rem S# Pro preparation will execute after these operations</PostBuildEvent>
+    <PostBuildEvent>if /I "$(ConfigurationName)" == "Release" Eazfuscator.NET.exe "$(TargetPath)" --msbuild-project-path "$(ProjectPath)" --msbuild-project-configuration "$(ConfigurationName)" --msbuild-project-platform "$(PlatformName)" --msbuild-solution-path "$(SolutionPath)" -n --newline-flush -v 5.2 --configuration-file="$(ProjectDir)ObfuscationSettings.cs"</PostBuildEvent>
   </PropertyGroup>
 </Project>

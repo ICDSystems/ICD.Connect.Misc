@@ -1,19 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-#if SIMPLSHARP
-using Crestron.SimplSharp.CrestronIO;
-using Crestron.SimplSharpPro;
-using ICD.Connect.Misc.CrestronPro.Utils.Extensions;
-#endif
 using ICD.Common.Properties;
-using ICD.Common.Services.Logging;
 using ICD.Common.Utils;
+using ICD.Common.Utils.Services.Logging;
 using ICD.Common.Utils.Timers;
+using ICD.Connect.API.Commands;
 using ICD.Connect.API.Nodes;
 using ICD.Connect.Devices.Extensions;
 using ICD.Connect.Misc.CrestronPro.Devices;
 using ICD.Connect.Protocol.Ports.IrPort;
 using ICD.Connect.Settings.Core;
+#if SIMPLSHARP
+using Crestron.SimplSharp.CrestronIO;
+using Crestron.SimplSharpPro;
+using ICD.Connect.Misc.CrestronPro.Utils.Extensions;
+#endif
 
 namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 {
@@ -23,7 +24,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 	public sealed class IrPortAdapter : AbstractIrPort<IrPortAdapterSettings>
 	{
 #if SIMPLSHARP
-        private IROutputPort m_Port;
+		private IROutputPort m_Port;
 #endif
 		private readonly Queue<IrPulse> m_Queue;
 		private readonly SafeTimer m_PulseTimer;
@@ -33,7 +34,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		private int m_Address;
 		private string m_Driver;
 
-#region Properties
+		#region Properties
 
 		/// <summary>
 		/// Gets/sets the default pulse time in milliseconds for a PressAndRelease.
@@ -45,9 +46,9 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		/// </summary>
 		public override ushort BetweenTime { get; set; }
 
-#endregion
+		#endregion
 
-#region Constructor
+		#region Constructor
 
 		/// <summary>
 		/// Constructor.
@@ -59,9 +60,9 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 			m_PulseTimer = SafeTimer.Stopped(TimerCallbackMethod);
 		}
 
-#endregion
+		#endregion
 
-#region Methods
+		#region Methods
 
 		/// <summary>
 		/// Release resources.
@@ -71,20 +72,20 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 			m_PulseTimer.Dispose();
 
 #if SIMPLSHARP
-            // Unregister.
-            SetIrPort(null, 0);
+			// Unregister.
+			SetIrPort(null, 0);
 #endif
 
 			base.DisposeFinal(disposing);
 		}
 
 #if SIMPLSHARP
-        /// <summary>
-        /// Sets the wrapped port instance.
-        /// </summary>
-        /// <param name="port"></param>
-        /// <param name="address"></param>
-        [PublicAPI]
+		/// <summary>
+		/// Sets the wrapped port instance.
+		/// </summary>
+		/// <param name="port"></param>
+		/// <param name="address"></param>
+		[PublicAPI]
 		public void SetIrPort(IROutputPort port, int address)
 		{
 			m_Address = address;
@@ -125,7 +126,10 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 
 			eDeviceRegistrationUnRegistrationResponse parentResult = parent.ReRegister();
 			if (parentResult != eDeviceRegistrationUnRegistrationResponse.Success)
-				Logger.AddEntry(eSeverity.Error, "Unable to register parent {0} - {1}", parent.GetType().Name, parentResult);
+			{
+				Logger.AddEntry(eSeverity.Error, "{0} unable to register parent {1} - {2}", this, parent.GetType().Name,
+				                parentResult);
+			}
 		}
 #endif
 
@@ -136,11 +140,11 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		public override void LoadDriver(string path)
 		{
 #if SIMPLSHARP
-            m_Driver = path;
+			m_Driver = path;
 
 			if (m_Port == null)
 			{
-				Logger.AddEntry(eSeverity.Error, "Unable to load driver for null IR Port");
+				Logger.AddEntry(eSeverity.Error, "{0} unable to load driver - internal port is null", this);
 				return;
 			}
 
@@ -152,12 +156,12 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 			}
 			catch (FileNotFoundException)
 			{
-				Logger.AddEntry(eSeverity.Error, "IR Driver does not exist: {0}", fullPath);
+				Logger.AddEntry(eSeverity.Error, "{0} unable to load driver - file does not exist: {1}", this, fullPath);
 			}
 #else
             throw new NotImplementedException();
 #endif
-        }
+		}
 
 		/// <summary>
 		/// Begin sending the command.
@@ -166,14 +170,20 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		public override void Press(string command)
 		{
 #if SIMPLSHARP
-            Clear();
+			Clear();
+
+			if (!m_Port.IsIRCommandAvailable(command))
+			{
+				Logger.AddEntry(eSeverity.Error, "{0} does not have command {1}", this, StringUtils.ToRepresentation(command));
+				return;
+			}
 
 			PrintTx(command);
 			m_Port.Press(command);
 #else
             throw new NotImplementedException();
 #endif
-        }
+		}
 
 		/// <summary>
 		/// Stop sending the current command.
@@ -217,9 +227,9 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 				SendNext();
 		}
 
-#endregion
+		#endregion
 
-#region Settings
+		#region Settings
 
 		/// <summary>
 		/// Override to apply properties to the settings instance.
@@ -249,7 +259,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 			BetweenTime = 0;
 
 #if SIMPLSHARP
-            SetIrPort(null, 0);
+			SetIrPort(null, 0);
 #endif
 		}
 
@@ -268,7 +278,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 			BetweenTime = settings.BetweenTime;
 
 #if SIMPLSHARP
-            IROutputPort port = null;
+			IROutputPort port = null;
 			IPortParent provider = null;
 
 			// ReSharper disable SuspiciousTypeConversion.Global
@@ -301,11 +311,11 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 #else
             throw new NotImplementedException();
 #endif
-        }
+		}
 
-#endregion
+		#endregion
 
-#region Private Methods
+		#region Private Methods
 
 		/// <summary>
 		/// Gets the current online status of the device.
@@ -314,11 +324,11 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		protected override bool GetIsOnlineStatus()
 		{
 #if SIMPLSHARP
-            return m_Port != null;
+			return m_Port != null;
 #else
             return false;
 #endif
-        }
+		}
 
 		/// <summary>
 		/// Releases the current command and clears the queued commands.
@@ -326,7 +336,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		private void Clear()
 		{
 #if SIMPLSHARP
-            if (m_Port != null)
+			if (m_Port != null)
 				m_Port.Release();
 
 			m_PulseTimer.Stop();
@@ -334,7 +344,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 #else
             throw new NotImplementedException();
 #endif
-        }
+		}
 
 		/// <summary>
 		/// Sends the next pulse in the queue.
@@ -342,15 +352,23 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		private void SendNext()
 		{
 #if SIMPLSHARP
-            IrPulse pulse = m_Queue.Peek();
+			IrPulse pulse = m_Queue.Peek();
 
-			PrintTx(pulse.Command);
-			m_Port.PressAndRelease(pulse.Command, pulse.PulseTime);
+			if (!m_Port.IsIRCommandAvailable(pulse.Command))
+			{
+				Logger.AddEntry(eSeverity.Error, "{0} does not have command {1}", this, StringUtils.ToRepresentation(pulse.Command));
+			}
+			else
+			{
+				PrintTx(pulse.Command);
+				m_Port.PressAndRelease(pulse.Command, pulse.PulseTime);
+			}
+			
 			m_PulseTimer.Reset(pulse.Duration);
 #else
             throw new NotImplementedException();
 #endif
-        }
+		}
 
 		/// <summary>
 		/// Called when the pulse timer elapses.
@@ -358,7 +376,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		private void TimerCallbackMethod()
 		{
 #if SIMPLSHARP
-            m_Port.Release();
+			m_Port.Release();
 			m_Queue.Dequeue();
 
 			if (m_Queue.Count > 0)
@@ -366,7 +384,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 #else
             throw new NotImplementedException();
 #endif
-        }
+		}
 
 		/// <summary>
 		/// Searches the application path, program config path and common config path to
@@ -379,9 +397,9 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 			return PathUtils.GetDefaultConfigPath(new[] {"IRDrivers", localPath});
 		}
 
-#endregion
+		#endregion
 
-#region Console
+		#region Console
 
 		/// <summary>
 		/// Calls the delegate for each console status item.
@@ -394,6 +412,42 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 			addRow("Driver", m_Driver);
 		}
 
-#endregion
+		/// <summary>
+		/// Gets the child console commands.
+		/// </summary>
+		/// <returns></returns>
+		public override IEnumerable<IConsoleCommand> GetConsoleCommands()
+		{
+			foreach (IConsoleCommand consoleCommand in GetBaseConsoleCommands())
+				yield return consoleCommand;
+
+			yield return new ConsoleCommand("PrintCommands", "Prints the available commands", () => PrintCommands());
+		}
+
+		/// <summary>
+		/// Workaround for "unverifiable code" warning.
+		/// </summary>
+		/// <returns></returns>
+		private IEnumerable<IConsoleCommand> GetBaseConsoleCommands()
+		{
+			return base.GetConsoleCommands();
+		}
+
+		private string PrintCommands()
+		{
+			TableBuilder builder = new TableBuilder("Command");
+
+#if SIMPLSHARP
+			if (m_Port != null)
+			{
+				foreach (var command in m_Port.AvailableIRCmds())
+					builder.AddRow(command);
+			}
+#endif
+
+			return builder.ToString();
+		}
+
+		#endregion
 	}
 }

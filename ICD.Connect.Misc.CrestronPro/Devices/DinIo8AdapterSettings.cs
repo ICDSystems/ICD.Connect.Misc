@@ -1,19 +1,20 @@
 ﻿using System;
-using ICD.Common.Properties;
 using ICD.Common.Utils;
 using ICD.Common.Utils.Xml;
 using ICD.Connect.Devices;
 using ICD.Connect.Settings.Attributes;
+using ICD.Connect.Settings.Attributes.SettingsProperties;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices
 {
+	[KrangSettings(FACTORY_NAME)]
 	public sealed class DinIo8AdapterSettings : AbstractDeviceSettings
 	{
 		private const string FACTORY_NAME = "DinIo8";
 
 		private const string CRESNET_ID_ELEMENT = "CresnetID";
 
-		[SettingsProperty(SettingsProperty.ePropertyType.Ipid)]
+		[IpIdSettingsProperty]
 		public byte CresnetId { get; set; }
 
 		/// <summary>
@@ -38,20 +39,14 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 		}
 
 		/// <summary>
-		/// Loads the settings from XML.
+		/// Updates the settings from xml.
 		/// </summary>
 		/// <param name="xml"></param>
-		/// <returns></returns>
-		[PublicAPI, XmlFactoryMethod(FACTORY_NAME)]
-		public static DinIo8AdapterSettings FromXml(string xml)
+		public override void ParseXml(string xml)
 		{
-			DinIo8AdapterSettings output = new DinIo8AdapterSettings
-			{
-				CresnetId =  XmlUtils.TryReadChildElementContentAsByte(xml, CRESNET_ID_ELEMENT) ?? 0
-			};
+			base.ParseXml(xml);
 
-			ParseXml(output, xml);
-			return output;
+			CresnetId = XmlUtils.TryReadChildElementContentAsByte(xml, CRESNET_ID_ELEMENT) ?? 0;
 		}
 	}
 }

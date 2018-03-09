@@ -66,4 +66,5 @@ namespace ICD.Connect.Misc.CrestronPro.Utils.Extensions
 		}
 	}
 }
+
 #endif

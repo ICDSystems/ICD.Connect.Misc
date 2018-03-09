@@ -1,12 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using ICD.Common.Properties;
 using ICD.Common.Utils.Xml;
+using ICD.Connect.Misc.CrestronPro.Devices;
 using ICD.Connect.Protocol.Ports.RelayPort;
 using ICD.Connect.Settings.Attributes;
+using ICD.Connect.Settings.Attributes.SettingsProperties;
 
 namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 {
+	[KrangSettings(FACTORY_NAME)]
 	public sealed class RelayPortAdapterSettings : AbstractRelayPortSettings
 	{
 		private const string FACTORY_NAME = "RelayPort";
@@ -18,7 +19,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 
 		#region Properties
 
-		[SettingsProperty(SettingsProperty.ePropertyType.DeviceId)]
+		[OriginatorIdSettingsProperty(typeof(IPortParent))]
 		public int? Device { get; set; }
 
 		public int Address { get { return m_Address; } set { m_Address = value; } }
@@ -45,42 +46,31 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 		{
 			base.WriteElements(writer);
 
-			if (Device != null)
-				writer.WriteElementString(PARENT_DEVICE_ELEMENT, IcdXmlConvert.ToString((int)Device));
+			writer.WriteElementString(PARENT_DEVICE_ELEMENT, IcdXmlConvert.ToString(Device));
 			writer.WriteElementString(ADDRESS_ELEMENT, IcdXmlConvert.ToString(Address));
 		}
 
 		/// <summary>
-		/// Returns the collection of ids that the settings will depend on.
+		/// Updates the settings from xml.
+		/// </summary>
+		/// <param name="xml"></param>
+		public override void ParseXml(string xml)
+		{
+			base.ParseXml(xml);
+
+			Device = XmlUtils.TryReadChildElementContentAsInt(xml, PARENT_DEVICE_ELEMENT);
+			Address = XmlUtils.TryReadChildElementContentAsInt(xml, ADDRESS_ELEMENT) ?? 1;
+		}
+
+		/// <summary>
+		/// Returns true if the settings depend on a device with the given ID.
 		/// For example, to instantiate an IR Port from settings, the device the physical port
 		/// belongs to will need to be instantiated first.
 		/// </summary>
 		/// <returns></returns>
-		public override IEnumerable<int> GetDeviceDependencies()
+		public override bool HasDeviceDependency(int id)
 		{
-			if (Device != null)
-				yield return (int)Device;
-		}
-
-		/// <summary>
-		/// Loads the settings from XML.
-		/// </summary>
-		/// <param name="xml"></param>
-		/// <returns></returns>
-		[PublicAPI, XmlFactoryMethod(FACTORY_NAME)]
-		public static RelayPortAdapterSettings FromXml(string xml)
-		{
-			int? device = XmlUtils.TryReadChildElementContentAsInt(xml, PARENT_DEVICE_ELEMENT);
-			int address = XmlUtils.ReadChildElementContentAsInt(xml, ADDRESS_ELEMENT);
-
-			RelayPortAdapterSettings output = new RelayPortAdapterSettings
-			{
-				Device = device,
-				Address = address,
-			};
-
-			ParseXml(output, xml);
-			return output;
+			return Device != null && Device == id;
 		}
 
 		#endregion

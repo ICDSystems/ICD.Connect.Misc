@@ -1,7 +1,8 @@
 ﻿using ICD.Common.Utils;
 using ICD.Common.Utils.Xml;
 using ICD.Connect.Devices;
-using ICD.Connect.Settings.Attributes;
+using ICD.Connect.Misc.CrestronPro.Devices.CardFrames;
+using ICD.Connect.Settings.Attributes.SettingsProperties;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 {
@@ -10,10 +11,10 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 		private const string IPID_ELEMENT = "IPID";
 		private const string CARD_FRAME_ELEMENT = "CardFrame";
 
-		[SettingsProperty(SettingsProperty.ePropertyType.Ipid)]
-		public byte? Ipid { get; set; }
+		[IpIdSettingsProperty]
+		public byte Ipid { get; set; }
 
-		[SettingsProperty(SettingsProperty.ePropertyType.DeviceId)]
+		[OriginatorIdSettingsProperty(typeof(ICardFrameDevice))]
 		public int? CardFrame { get; set; }
 
 		/// <summary>
@@ -24,19 +25,20 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 		{
 			base.WriteElements(writer);
 
-			if (Ipid != null)
-				writer.WriteElementString(IPID_ELEMENT, StringUtils.ToIpIdString((byte)Ipid));
-
-			if (CardFrame != null)
-				writer.WriteElementString(CARD_FRAME_ELEMENT, IcdXmlConvert.ToString((int)CardFrame));
+			writer.WriteElementString(IPID_ELEMENT, StringUtils.ToIpIdString(Ipid));
+			writer.WriteElementString(CARD_FRAME_ELEMENT, IcdXmlConvert.ToString(CardFrame));
 		}
 
-		protected static void ParseXml(AbstractC3CardAdapterSettings instance, string xml)
+		/// <summary>
+		/// Updates the settings from xml.
+		/// </summary>
+		/// <param name="xml"></param>
+		public override void ParseXml(string xml)
 		{
-			instance.Ipid = XmlUtils.TryReadChildElementContentAsByte(xml, IPID_ELEMENT);
-			instance.CardFrame = XmlUtils.TryReadChildElementContentAsInt(xml, CARD_FRAME_ELEMENT);
+			base.ParseXml(xml);
 
-			AbstractDeviceSettings.ParseXml(instance, xml);
+			Ipid = XmlUtils.TryReadChildElementContentAsByte(xml, IPID_ELEMENT) ?? 0;
+			CardFrame = XmlUtils.TryReadChildElementContentAsInt(xml, CARD_FRAME_ELEMENT);
 		}
 	}
 }

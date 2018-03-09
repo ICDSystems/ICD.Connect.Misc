@@ -1,15 +1,16 @@
 using System;
-using System.Collections.Generic;
-using ICD.Common.Properties;
 using ICD.Common.Utils.Xml;
+using ICD.Connect.Misc.CrestronPro.Devices;
 using ICD.Connect.Protocol.Ports.IrPort;
 using ICD.Connect.Settings.Attributes;
+using ICD.Connect.Settings.Attributes.SettingsProperties;
 
 namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 {
 	/// <summary>
 	/// Settings for the IrPortAdapter.
 	/// </summary>
+	[KrangSettings(FACTORY_NAME)]
 	public sealed class IrPortAdapterSettings : AbstractIrPortSettings
 	{
 		private const string FACTORY_NAME = "IrPort";
@@ -29,12 +30,16 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 
 		#region Properties
 
-		[SettingsProperty(SettingsProperty.ePropertyType.DeviceId)]
+		[OriginatorIdSettingsProperty(typeof(IPortParent))]
 		public int? Device { get; set; }
 
 		public int Address { get { return m_Address; } set { m_Address = value; } }
+
+		[PathSettingsProperty("IRDrivers", ".ir")]
 		public string Driver { get; set; }
+
 		public ushort PulseTime { get { return m_PulseTime; } set { m_PulseTime = value; } }
+
 		public ushort BetweenTime { get { return m_BetweenTime; } set { m_BetweenTime = value; } }
 
 		/// <summary>
@@ -59,56 +64,43 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		{
 			base.WriteElements(writer);
 
-			if (Device != null)
-				writer.WriteElementString(PARENT_DEVICE_ELEMENT, IcdXmlConvert.ToString((int)Device));
-
+			writer.WriteElementString(PARENT_DEVICE_ELEMENT, IcdXmlConvert.ToString(Device));
 			writer.WriteElementString(ADDRESS_ELEMENT, IcdXmlConvert.ToString(Address));
-
-			if (!string.IsNullOrEmpty(Driver))
-				writer.WriteElementString(DRIVER_ELEMENT, Driver);
-
+			writer.WriteElementString(DRIVER_ELEMENT, Driver);
 			writer.WriteElementString(PULSETIME_ELEMENT, IcdXmlConvert.ToString(PulseTime));
 			writer.WriteElementString(BETWEENTIME_ELEMENT, IcdXmlConvert.ToString(BetweenTime));
 		}
 
 		/// <summary>
-		/// Returns the collection of ids that the settings will depend on.
+		/// Updates the settings from xml.
+		/// </summary>
+		/// <param name="xml"></param>
+		public override void ParseXml(string xml)
+		{
+			base.ParseXml(xml);
+
+			Device = XmlUtils.TryReadChildElementContentAsInt(xml, PARENT_DEVICE_ELEMENT);
+			Address = XmlUtils.TryReadChildElementContentAsInt(xml, ADDRESS_ELEMENT) ?? 1;
+			Driver = XmlUtils.TryReadChildElementContentAsString(xml, DRIVER_ELEMENT);
+			PulseTime = (ushort?)XmlUtils.TryReadChildElementContentAsInt(xml, PULSETIME_ELEMENT) ?? 0;
+			BetweenTime = (ushort?)XmlUtils.TryReadChildElementContentAsInt(xml, BETWEENTIME_ELEMENT) ?? 0;
+		}
+
+		/// <summary>
+		/// Returns true if the settings depend on a device with the given ID.
 		/// For example, to instantiate an IR Port from settings, the device the physical port
 		/// belongs to will need to be instantiated first.
 		/// </summary>
 		/// <returns></returns>
-		public override IEnumerable<int> GetDeviceDependencies()
+		public override bool HasDeviceDependency(int id)
 		{
-			if (Device != null)
-				yield return (int)Device;
+			return Device != null && Device == id;
 		}
 
 		/// <summary>
-		/// Loads the settings from XML.
+		/// Returns the count from the collection of ids that the settings depends on.
 		/// </summary>
-		/// <param name="xml"></param>
-		/// <returns></returns>
-		[PublicAPI, XmlFactoryMethod(FACTORY_NAME)]
-		public static IrPortAdapterSettings FromXml(string xml)
-		{
-			int device = XmlUtils.TryReadChildElementContentAsInt(xml, PARENT_DEVICE_ELEMENT) ?? 0;
-			int address = XmlUtils.TryReadChildElementContentAsInt(xml, ADDRESS_ELEMENT) ?? 0;
-			string driver = XmlUtils.TryReadChildElementContentAsString(xml, DRIVER_ELEMENT);
-			ushort pulseTime = (ushort?)XmlUtils.TryReadChildElementContentAsInt(xml, PULSETIME_ELEMENT) ?? 0;
-			ushort betweenTime = (ushort?)XmlUtils.TryReadChildElementContentAsInt(xml, BETWEENTIME_ELEMENT) ?? 0;
-
-			IrPortAdapterSettings output = new IrPortAdapterSettings
-			{
-				Device = device,
-				Address = address,
-				Driver = driver,
-				PulseTime = pulseTime,
-				BetweenTime = betweenTime
-			};
-
-			ParseXml(output, xml);
-			return output;
-		}
+		public override int DependencyCount { get { return Device != null ? 1 : 0; } }
 
 		#endregion
 	}

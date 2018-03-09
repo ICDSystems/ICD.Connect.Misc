@@ -57,6 +57,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\ProgramData\Crestron\SDK\SSPDevices\Crestron.SimplSharpPro.GeneralIO.dll</HintPath>
     </Reference>
+    <Reference Include="Crestron.SimplSharpPro.Keypads, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1099c178b3b54c3b, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\ProgramData\Crestron\SDK\SSPDevices\Crestron.SimplSharpPro.Keypads.dll</HintPath>
+    </Reference>
     <Reference Include="Crestron.SimplSharpPro.ThreeSeriesCards, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1099c178b3b54c3b, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\ProgramData\Crestron\SDK\SSPDevices\Crestron.SimplSharpPro.ThreeSeriesCards.dll</HintPath>
@@ -91,6 +95,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ObfuscationSettings.cs" />
+    <Compile Include="Devices\CardFrames\AbstractCardFrameDevice.cs" />
+    <Compile Include="Devices\CardFrames\AbstractCardFrameDeviceSettings.cs" />
+    <Compile Include="Devices\CardFrames\ICardFrameDevice.cs" />
+    <Compile Include="Devices\CardFrames\ICardFrameDeviceSettings.cs" />
     <Compile Include="Devices\Cards\AbstractC3RyAdapter.cs" />
     <Compile Include="Devices\Cards\AbstractC3RyAdapterSettings.cs" />
     <Compile Include="Devices\Cards\AbstractC3CardAdapter.cs" />
@@ -112,9 +120,35 @@
     <Compile Include="Devices\DinIo8Adapter.cs" />
     <Compile Include="Devices\DinIo8AdapterSettings.cs" />
     <Compile Include="Devices\IPortParent.cs" />
-    <Compile Include="Devices\IDmParent.cs" />
+    <Compile Include="Devices\Keypads\ButtonStateConverter.cs" />
+    <Compile Include="Devices\Keypads\C2nCbd\C2nCbdPBase\AbstractC2nCbdPBaseAdapterSettings.cs" />
+    <Compile Include="Devices\Keypads\C2nCbd\C2nCbdBase\AbstractC2nCbdBaseAdapter.cs" />
+    <Compile Include="Devices\Keypads\C2nCbd\C2nCbdBase\AbstractC2nCbdBaseAdapterSettings.cs" />
+    <Compile Include="Devices\Keypads\C2nCbd\C2nCbdBase\IC2nCbdBaseAdapter.cs" />
+    <Compile Include="Devices\Keypads\C2nCbd\C2nCbdBase\IC2nCbdBaseAdapterSettings.cs" />
+    <Compile Include="Devices\Keypads\C2nCbd\C2nCbdPBaseWithVersiport\AbstractC2nCbdPBaseWithVersiportAdapter.cs" />
+    <Compile Include="Devices\Keypads\C2nCbd\C2nCbdPBaseWithVersiport\AbstractC2nCbdPBaseWithVersiportAdapterSettings.cs" />
+    <Compile Include="Devices\Keypads\C2nCbd\C2nCbdPBaseWithVersiport\IC2nCbdPBaseWithVersiportAdapter.cs" />
+    <Compile Include="Devices\Keypads\C2nCbd\C2nCbdPBaseWithVersiport\IC2nCbdPBaseWithVersiportAdapterSettings.cs" />
+    <Compile Include="Devices\Keypads\C2nCbd\C2nCbdPBase\AbstractC2nCbdPBaseAdapter.cs" />
+    <Compile Include="Devices\Keypads\C2nCbd\C2nCbdPBase\IC2nCbdPBaseAdapter.cs" />
+    <Compile Include="Devices\Keypads\C2nCbd\C2nCbdPBase\IC2nCbdPBaseAdapterSettings.cs" />
+    <Compile Include="Devices\Keypads\C2nCbd\C2nCbdP\C2nCbdPAdapterSettings.cs" />
+    <Compile Include="Devices\Keypads\C2nCbd\C2nCbdP\IC2nCbdPAdapter.cs" />
+    <Compile Include="Devices\Keypads\C2nCbd\C2nCbdP\IC2nCbdPAdapterSettings.cs" />
+    <Compile Include="Devices\Keypads\InetCbdex\AbstractInetCbdexAdapter.cs" />
+    <Compile Include="Devices\Keypads\InetCbdex\AbstractInetCbdexAdapterSettings.cs" />
+    <Compile Include="Devices\Keypads\InetCbdex\IInetCbdexAdapter.cs" />
+    <Compile Include="Devices\Keypads\InetCbdex\IInetCbdexAdapterSettings.cs" />
+    <Compile Include="Devices\Keypads\KeypadBase\AbstractKeypadBaseAdapter.cs" />
+    <Compile Include="Devices\Keypads\KeypadBase\AbstractKeypadBaseAdapterSettings.cs" />
+    <Compile Include="Devices\Keypads\C2nCbd\C2nCbdP\C2nCbdPAdapter.cs" />
+    <Compile Include="Devices\Keypads\KeypadBase\IKeypadBaseAdapter.cs" />
+    <Compile Include="Devices\Keypads\KeypadBase\IKeypadBaseAdapterSettings.cs" />
     <Compile Include="Devices\Partitioning\GlsPartCnAdapter.cs" />
     <Compile Include="Devices\Partitioning\GlsPartCnAdapterSettings.cs" />
+    <Compile Include="Ports\DigitalInput\DigitalInputAdapter.cs" />
+    <Compile Include="Ports\DigitalInput\DigitalInputAdapterSettings.cs" />
     <Compile Include="KrangPlugin.cs" />
     <Compile Include="Ports\ComPort\ComPortAdapter.cs" />
     <Compile Include="Ports\ComPort\ComPortAdapterSettings.cs" />
@@ -135,6 +169,7 @@
     <Compile Include="Utils\CresnetUtils.cs" />
     <Compile Include="Utils\DmUtils.cs" />
     <Compile Include="Utils\Extensions\DmOutputExtensions.cs" />
+    <Compile Include="Utils\Extensions\GenericBaseExtensions.cs" />
     <Compile Include="Utils\Extensions\GenericDeviceExtensions.cs" />
     <None Include="Properties\ControlSystem.cfg" />
   </ItemGroup>
@@ -170,6 +205,10 @@
     <ProjectReference Include="..\..\ICD.Connect.Settings\ICD.Connect.Settings\ICD.Connect.Settings_SimplSharp.csproj">
       <Project>{5B84EB3C-1C3A-4C4D-98C2-69F67CF51D5A}</Project>
       <Name>ICD.Connect.Settings_SimplSharp</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ICD.Connect.Misc\ICD.Connect.Misc_SimplSharp.csproj">
+      <Project>{3BAE6352-77B5-499A-9DA5-2AB198F53183}</Project>
+      <Name>ICD.Connect.Misc_SimplSharp</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />

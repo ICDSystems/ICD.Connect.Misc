@@ -1,34 +1,39 @@
 ﻿using System;
-#if SIMPLSHARP
-using Crestron.SimplSharpPro;
-using ICD.Connect.Misc.CrestronPro.Utils.Extensions;
-#endif
 using ICD.Common.Properties;
-using ICD.Common.Services.Logging;
 using ICD.Common.Utils;
+using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.API.Nodes;
 using ICD.Connect.Devices.Extensions;
 using ICD.Connect.Misc.CrestronPro.Devices;
 using ICD.Connect.Protocol.Ports;
 using ICD.Connect.Protocol.Ports.ComPort;
 using ICD.Connect.Settings.Core;
+#if SIMPLSHARP
+using Crestron.SimplSharpPro;
+using ICD.Connect.Misc.CrestronPro.Utils.Extensions;
+#endif
 
 namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 {
 	/// <summary>
 	/// ComPortWrapper wraps a SimplSharpPro ComPort.
 	/// </summary>
-	public sealed class ComPortAdapter : AbstractComPort<ComPortAdapterSettings>, IComPort
+	public sealed class ComPortAdapter : AbstractSerialPort<ComPortAdapterSettings>, IComPort
 	{
 #if SIMPLSHARP
-        private Crestron.SimplSharpPro.ComPort m_Port;
+		private Crestron.SimplSharpPro.ComPort m_Port;
 #endif
 
 		// Used with settings
 		private int? m_Device;
 		private int m_Address;
 
-#region Methods
+		/// <summary>
+		/// Returns the connection state of the port.
+		/// </summary>
+		public override bool IsConnected { get { return true; } protected set { } }
+
+		#region Methods
 
 		/// <summary>
 		/// Release resources.
@@ -38,18 +43,18 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 			base.DisposeFinal(disposing);
 
 #if SIMPLSHARP
-            // Unsbscribe and unregister
-            SetComPort(null, 0);
+			// Unsbscribe and unregister
+			SetComPort(null, 0);
 #endif
 		}
 
 #if SIMPLSHARP
-        /// <summary>
-        /// Sets the com port.
-        /// </summary>
-        /// <param name="port"></param>
-        /// <param name="address"></param>
-        [PublicAPI]
+		/// <summary>
+		/// Sets the com port.
+		/// </summary>
+		/// <param name="port"></param>
+		/// <param name="address"></param>
+		[PublicAPI]
 		public void SetComPort(Crestron.SimplSharpPro.ComPort port, int address)
 		{
 			m_Address = address;
@@ -89,7 +94,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 			eDeviceRegistrationUnRegistrationResponse result = port.Register();
 			if (result != eDeviceRegistrationUnRegistrationResponse.Success)
 			{
-				Logger.AddEntry(eSeverity.Error, "Unable to register {0} - {1}", port.GetType().Name, result);
+				Logger.AddEntry(eSeverity.Error, "{0} unable to register {1} - {2}", this, port.GetType().Name, result);
 				return;
 			}
 
@@ -99,9 +104,22 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 
 			eDeviceRegistrationUnRegistrationResponse parentResult = parent.ReRegister();
 			if (parentResult != eDeviceRegistrationUnRegistrationResponse.Success)
-				Logger.AddEntry(eSeverity.Error, "Unable to register parent {0} - {1}", parent.GetType().Name, parentResult);
+			{
+				Logger.AddEntry(eSeverity.Error, "{0} unable to register parent {1} - {2}", this, parent.GetType().Name,
+				                parentResult);
+			}
 		}
 #endif
+
+		public override void Connect()
+		{
+			IsConnected = true;
+		}
+
+		public override void Disconnect()
+		{
+			IsConnected = false;
+		}
 
 		/// <summary>
 		/// Returns the connection state of the port
@@ -115,7 +133,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 		protected override bool SendFinal(string data)
 		{
 #if SIMPLSHARP
-            if (m_Port == null)
+			if (m_Port == null)
 			{
 				Logger.AddEntry(eSeverity.Error, "{0} unable to send - internal port is null", this);
 				return false;
@@ -128,11 +146,11 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 #else
             throw new NotImplementedException();
 #endif
-        }
+		}
 
-        #endregion
+		#endregion
 
-#region ComSpec
+		#region ComSpec
 
 		[PublicAPI]
 		public void SetComPortSpec(eComBaudRates baudRate, eComDataBits numberOfDataBits,
@@ -164,20 +182,20 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 
 		#endregion
 
-#region Private Methods
+		#region Private Methods
 
-        /// <summary>
-        /// Gets the current online status of the device.
-        /// </summary>
-        /// <returns></returns>
-        protected override bool GetIsOnlineStatus()
+		/// <summary>
+		/// Gets the current online status of the device.
+		/// </summary>
+		/// <returns></returns>
+		protected override bool GetIsOnlineStatus()
 		{
 #if SIMPLSHARP
-            return m_Port != null;
+			return m_Port != null;
 #else
             return false;
 #endif
-        }
+		}
 
 		/// <summary>
 		/// Parses the input enum to the destination type.
@@ -190,15 +208,15 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 			return EnumUtils.Parse<T>(enumValue.ToString(), true);
 		}
 
-#endregion
+		#endregion
 
-#region Port Callbacks
+		#region Port Callbacks
 
 #if SIMPLSHARP
-        /// <summary>
-        /// Subscribe to the port events.
-        /// </summary>
-        private void Subscribe(Crestron.SimplSharpPro.ComPort port)
+		/// <summary>
+		/// Subscribe to the port events.
+		/// </summary>
+		private void Subscribe(Crestron.SimplSharpPro.ComPort port)
 		{
 			if (port == null)
 				return;
@@ -230,9 +248,9 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 		}
 #endif
 
-#endregion
+		#endregion
 
-#region Settings
+		#region Settings
 
 		/// <summary>
 		/// Override to apply properties to the settings instance.
@@ -256,7 +274,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 			m_Device = 0;
 
 #if SIMPLSHARP
-            SetComPort(null, 0);
+			SetComPort(null, 0);
 #endif
 		}
 
@@ -270,7 +288,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 			base.ApplySettingsFinal(settings, factory);
 
 #if SIMPLSHARP
-            m_Device = settings.Device;
+			m_Device = settings.Device;
 
 			Crestron.SimplSharpPro.ComPort port = null;
 			IPortParent provider = null;
@@ -288,8 +306,8 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 				}
 				catch (Exception e)
 				{
-					Logger.AddEntry(eSeverity.Error, e, "Unable to get ComPort from device {0} at address {1}", m_Device,
-					                settings.Address);
+					Logger.AddEntry(eSeverity.Error, "Unable to get ComPort from device {0} at address {1} - {2}", m_Device,
+					                settings.Address, e.Message);
 				}
 			}
 
@@ -300,18 +318,18 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 #else
             throw new NotImplementedException();
 #endif
-        }
+		}
 
-        #endregion
+		#endregion
 
-#region Console Commands
+		#region Console Commands
 
 #if SIMPLSHARP
-        /// <summary>
-        /// Calls the delegate for each console status item.
-        /// </summary>
-        /// <param name="addRow"></param>
-        public override void BuildConsoleStatus(AddStatusRowDelegate addRow)
+		/// <summary>
+		/// Calls the delegate for each console status item.
+		/// </summary>
+		/// <param name="addRow"></param>
+		public override void BuildConsoleStatus(AddStatusRowDelegate addRow)
 		{
 			base.BuildConsoleStatus(addRow);
 
@@ -326,6 +344,6 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 		}
 #endif
 
-#endregion
+		#endregion
 	}
 }

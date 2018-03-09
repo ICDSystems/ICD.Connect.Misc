@@ -12,7 +12,7 @@ namespace ICD.Connect.Misc.CrestronPro
 	{
 		private static CrestronControlSystem s_ControlSystem;
 
-#region Properties
+		#region Properties
 
 		/// <summary>
 		/// Gets the entry point for this program.
@@ -39,7 +39,7 @@ namespace ICD.Connect.Misc.CrestronPro
 		[PublicAPI]
 		public static uint ProgramSlots { get { return ControlSystem.NumProgramsSupported; } }
 
-#endregion
+		#endregion
 
 		/// <summary>
 		/// Registers the given control system.
@@ -58,4 +58,5 @@ namespace ICD.Connect.Misc.CrestronPro
 		}
 	}
 }
+
 #endif

@@ -1,12 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using ICD.Common.Properties;
 using ICD.Common.Utils.Xml;
+using ICD.Connect.Misc.CrestronPro.Devices;
 using ICD.Connect.Protocol.Ports.IoPort;
 using ICD.Connect.Settings.Attributes;
+using ICD.Connect.Settings.Attributes.SettingsProperties;
 
 namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 {
+	[KrangSettings(FACTORY_NAME)]
 	public sealed class IoPortAdapterSettings : AbstractIoPortSettings
 	{
 		private const string FACTORY_NAME = "IoPort";
@@ -19,12 +20,11 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 
 		#region Properties
 
-		[SettingsProperty(SettingsProperty.ePropertyType.DeviceId)]
+		[OriginatorIdSettingsProperty(typeof(IPortParent))]
 		public int? Device { get; set; }
 
 		public int Address { get { return m_Address; } set { m_Address = value; } }
 
-		[SettingsProperty(SettingsProperty.ePropertyType.Enum)]
 		public eIoPortConfiguration Configuration { get; set; }
 
 		/// <summary>
@@ -49,47 +49,41 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 		{
 			base.WriteElements(writer);
 
-			if (Device != null)
-				writer.WriteElementString(PARENT_DEVICE_ELEMENT, IcdXmlConvert.ToString((int)Device));
+			writer.WriteElementString(PARENT_DEVICE_ELEMENT, IcdXmlConvert.ToString(Device));
 			writer.WriteElementString(ADDRESS_ELEMENT, IcdXmlConvert.ToString(Address));
 			writer.WriteElementString(CONFIGURATION_ELEMENT, Configuration.ToString());
 		}
 
 		/// <summary>
-		/// Returns the collection of ids that the settings will depend on.
+		/// Returns true if the settings depend on a device with the given ID.
 		/// For example, to instantiate an IR Port from settings, the device the physical port
 		/// belongs to will need to be instantiated first.
 		/// </summary>
 		/// <returns></returns>
-		public override IEnumerable<int> GetDeviceDependencies()
+		public override bool HasDeviceDependency(int id)
 		{
-			if (Device != null)
-				yield return (int)Device;
+			return Device != null && Device == id;
 		}
 
 		/// <summary>
-		/// Loads the settings from XML.
+		/// Returns the count from the collection of ids that the settings depends on.
+		/// </summary>
+		public override int DependencyCount { get { return Device != null ? 1 : 0; } }
+
+		/// <summary>
+		/// Updates the settings from xml.
 		/// </summary>
 		/// <param name="xml"></param>
-		/// <returns></returns>
-		[PublicAPI, XmlFactoryMethod(FACTORY_NAME)]
-		public static IoPortAdapterSettings FromXml(string xml)
+		public override void ParseXml(string xml)
 		{
-			int device = XmlUtils.TryReadChildElementContentAsInt(xml, PARENT_DEVICE_ELEMENT) ?? 0;
-			int address = XmlUtils.TryReadChildElementContentAsInt(xml, ADDRESS_ELEMENT) ?? 0;
+			base.ParseXml(xml);
+
+			Device = XmlUtils.TryReadChildElementContentAsInt(xml, PARENT_DEVICE_ELEMENT);
+			Address = XmlUtils.TryReadChildElementContentAsInt(xml, ADDRESS_ELEMENT) ?? 1;
 
 			eIoPortConfiguration configuration;
 			XmlUtils.TryReadChildElementContentAsEnum(xml, CONFIGURATION_ELEMENT, true, out configuration);
-
-			IoPortAdapterSettings output = new IoPortAdapterSettings
-			{
-				Device = device,
-				Address = address,
-				Configuration = configuration
-			};
-
-			ParseXml(output, xml);
-			return output;
+			Configuration = configuration;
 		}
 
 		#endregion

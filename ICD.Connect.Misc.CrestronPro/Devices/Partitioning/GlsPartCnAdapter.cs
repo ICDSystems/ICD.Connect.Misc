@@ -1,13 +1,15 @@
 ﻿using System;
+using ICD.Common.Utils.EventArguments;
+using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.API.Nodes;
 using ICD.Connect.Misc.CrestronPro.Utils;
 using ICD.Connect.Partitioning.Devices;
+using ICD.Connect.Protocol.FeedbackDebounce;
 using ICD.Connect.Settings.Core;
 #if SIMPLSHARP
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.GeneralIO;
 #endif
-using ICD.Common.Services.Logging;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 {
@@ -16,6 +18,17 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 #if SIMPLSHARP
 		private GlsPartCn m_PartitionDevice;
 #endif
+
+		private readonly FeedbackDebounce<bool> m_Debounce;
+
+		/// <summary>
+		/// Constructor.
+		/// </summary>
+		public GlsPartCnAdapter()
+		{
+			m_Debounce = new FeedbackDebounce<bool>();
+			m_Debounce.OnValue += DebounceOnValue;
+		}
 
 		#region Methods
 
@@ -150,7 +163,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 			if (!CresnetUtils.IsValidId(settings.CresnetId))
 			{
 				Logger.AddEntry(eSeverity.Error, "{0} failed to instantiate {1} - CresnetId {2} is out of range",
-								GetType().Name, typeof(DinIo8).Name, settings.CresnetId);
+				                this, typeof(GlsPartCnAdapter).Name, settings.CresnetId);
 				return;
 			}
 
@@ -162,8 +175,8 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 			}
 			catch (ArgumentException e)
 			{
-				string message = string.Format("Failed to instantiate {0} with Cresnet ID {1} - {2}",
-											   typeof(DinIo8).Name, settings.CresnetId, e.Message);
+				string message = string.Format("{0} failed to instantiate {1} with Cresnet ID {2} - {3}",
+											   this, typeof(GlsPartCnAdapter).Name, settings.CresnetId, e.Message);
 				Logger.AddEntry(eSeverity.Error, e, message);
 			}
 
@@ -236,9 +249,20 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 		/// </summary>
 		private void UpdateStatus()
 		{
-			IsOpen = m_PartitionDevice != null && m_PartitionDevice.PartitionNotSensedFeedback.BoolValue;
+			bool open = m_PartitionDevice != null && m_PartitionDevice.PartitionNotSensedFeedback.BoolValue;
+			m_Debounce.Enqueue(open);
 		}
 #endif
+
+		/// <summary>
+		/// Called when the debouncer decides on a new value for the open status.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="genericEventArgs"></param>
+		private void DebounceOnValue(object sender, GenericEventArgs<bool> genericEventArgs)
+		{
+			IsOpen = genericEventArgs.Data;
+		}
 
 		#endregion
 
