@@ -2,8 +2,10 @@
 
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <TargetFramework>netstandard1.6</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
 	<RootNamespace>ICD.Connect.Misc.GlobalCache</RootNamespace>
+	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+	<Deterministic>true</Deterministic>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -18,11 +20,6 @@
 
   <ItemGroup>
     <Compile Remove="ObfuscationSettings.cs" />
-    <Compile Remove="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove=".gitignore" />
   </ItemGroup>
 
   <ItemGroup>

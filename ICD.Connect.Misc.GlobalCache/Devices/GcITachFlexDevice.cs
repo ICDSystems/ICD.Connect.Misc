@@ -81,8 +81,9 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 		/// <param name="data"></param>
 		public void Post(string localUrl, string data)
 		{
-			string result = m_HttpClient.Post(localUrl, data);
-			ParseResult(result);
+			string result;
+			if (m_HttpClient.Post(localUrl, data, out result))
+				ParseResult(result);
 		}
 
 		/// <summary>

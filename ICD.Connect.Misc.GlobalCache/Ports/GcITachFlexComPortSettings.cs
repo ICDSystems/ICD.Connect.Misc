@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using ICD.Common.Properties;
 using ICD.Common.Utils.Xml;
+using ICD.Connect.Misc.GlobalCache.Devices;
 using ICD.Connect.Protocol.Ports.ComPort;
-using ICD.Connect.Settings.Attributes;
+using ICD.Connect.Settings.Attributes.SettingsProperties;
 
 namespace ICD.Connect.Misc.GlobalCache.Ports
 {
@@ -17,7 +16,7 @@ namespace ICD.Connect.Misc.GlobalCache.Ports
 
 		#region Properties
 
-		[SettingsProperty(SettingsProperty.ePropertyType.DeviceId)]
+		[OriginatorIdSettingsProperty(typeof(GcITachFlexDevice))]
 		public int? Device { get; set; }
 
 		public int Module { get; set; }
@@ -51,35 +50,20 @@ namespace ICD.Connect.Misc.GlobalCache.Ports
 			writer.WriteElementString(PARENT_ADDRESS_ELEMENT, IcdXmlConvert.ToString(Address));
 		}
 
-		/// <summary>
-		/// Returns the collection of ids that the settings will depend on.
-		/// For example, to instantiate an IR Port from settings, the device the physical port
-		/// belongs to will need to be instantiated first.
-		/// </summary>
-		/// <returns></returns>
-		public override IEnumerable<int> GetDeviceDependencies()
+		public override void ParseXml(string xml)
 		{
-			if (Device != null)
-				yield return (int)Device;
+			base.ParseXml(xml);
+
+			Device = XmlUtils.TryReadChildElementContentAsInt(xml, PARENT_DEVICE_ELEMENT);
+			Module = XmlUtils.TryReadChildElementContentAsInt(xml, PARENT_MODULE_ELEMENT) ?? 1;
+			Address = XmlUtils.TryReadChildElementContentAsInt(xml, PARENT_ADDRESS_ELEMENT) ?? 1;
 		}
 
-		/// <summary>
-		/// Loads the settings from XML.
-		/// </summary>
-		/// <param name="xml"></param>
-		/// <returns></returns>
-		[PublicAPI, XmlFactoryMethod(FACTORY_NAME)]
-		public static GcITachFlexComPortSettings FromXml(string xml)
-		{
-			GcITachFlexComPortSettings output = new GcITachFlexComPortSettings
-			{
-				Device = XmlUtils.TryReadChildElementContentAsInt(xml, PARENT_DEVICE_ELEMENT),
-				Module = XmlUtils.TryReadChildElementContentAsInt(xml, PARENT_MODULE_ELEMENT) ?? 1,
-				Address = XmlUtils.TryReadChildElementContentAsInt(xml, PARENT_ADDRESS_ELEMENT) ?? 1,
-			};
+		public override int DependencyCount { get { return Device == null ? 0 : 1; } }
 
-			ParseXml(output, xml);
-			return output;
+		public override bool HasDeviceDependency(int id)
+		{
+			return base.HasDeviceDependency(id) || id == Device;
 		}
 
 		#endregion

@@ -1,11 +1,11 @@
 ﻿using System;
-using ICD.Common.Properties;
 using ICD.Connect.Devices;
-using ICD.Connect.Settings.Attributes;
 using ICD.Common.Utils.Xml;
+using ICD.Connect.Settings.Attributes;
 
 namespace ICD.Connect.Misc.GlobalCache.Devices
 {
+	[KrangSettings(FACTORY_NAME)]
     public sealed class GcITachFlexDeviceSettings : AbstractDeviceSettings
 	{
 		private const string FACTORY_NAME = "iTachFlex";
@@ -33,20 +33,14 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 		}
 
 		/// <summary>
-		/// Loads the settings from XML.
+		/// Updates the settings from xml.
 		/// </summary>
 		/// <param name="xml"></param>
-		/// <returns></returns>
-		[PublicAPI, XmlFactoryMethod(FACTORY_NAME)]
-		public static GcITachFlexDeviceSettings FromXml(string xml)
+		public override void ParseXml(string xml)
 		{
-			GcITachFlexDeviceSettings output = new GcITachFlexDeviceSettings
-			{
-				Address = XmlUtils.TryReadChildElementContentAsString(xml, ADDRESS_ELEMENT)
-			};
+			base.ParseXml(xml);
 
-			ParseXml(output, xml);
-			return output;
+			Address = XmlUtils.TryReadChildElementContentAsString(xml, ADDRESS_ELEMENT);
 		}
 	}
 }
