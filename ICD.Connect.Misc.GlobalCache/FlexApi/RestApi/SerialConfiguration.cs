@@ -1,5 +1,4 @@
-﻿using System.Text;
-using ICD.Common.Utils.IO;
+﻿using ICD.Common.Utils.Json;
 using Newtonsoft.Json;
 
 namespace ICD.Connect.Misc.GlobalCache.FlexApi.RestApi
@@ -45,37 +44,32 @@ namespace ICD.Connect.Misc.GlobalCache.FlexApi.RestApi
 
 		public string Serialize()
 		{
-			StringBuilder builder = new StringBuilder();
-
-			using (IcdStringWriter writer = new IcdStringWriter(builder))
-			{
-				using (JsonWriter jsonWriter = new JsonTextWriter(writer.WrappedStringWriter))
-				{
-					jsonWriter.WriteStartObject();
-					{
-						jsonWriter.WritePropertyName("gender");
-						jsonWriter.WriteValue(Gender.ToString());
-
-						jsonWriter.WritePropertyName("baudrate");
-						jsonWriter.WriteValue(Gender.ToString());
-
-						jsonWriter.WritePropertyName("parity");
-						jsonWriter.WriteValue(Parity.ToString());
-
-						jsonWriter.WritePropertyName("stopbits");
-						jsonWriter.WriteValue(StopBits.ToString());
-
-						jsonWriter.WritePropertyName("flowcontrol");
-						jsonWriter.WriteValue(FlowControl.ToString());
-
-						jsonWriter.WritePropertyName("duplex");
-						jsonWriter.WriteValue(Duplex.ToString());
-					}
-					jsonWriter.WriteEndObject();
-
-					return builder.ToString();
-				}
-			}
+			return JsonUtils.Serialize(Serialize);
 		}
+
+	    public void Serialize(JsonWriter writer)
+	    {
+			writer.WriteStartObject();
+			{
+				writer.WritePropertyName("gender");
+				writer.WriteValue(Gender.ToString());
+
+				writer.WritePropertyName("baudrate");
+				writer.WriteValue(Gender.ToString());
+
+				writer.WritePropertyName("parity");
+				writer.WriteValue(Parity.ToString());
+
+				writer.WritePropertyName("stopbits");
+				writer.WriteValue(StopBits.ToString());
+
+				writer.WritePropertyName("flowcontrol");
+				writer.WriteValue(FlowControl.ToString());
+
+				writer.WritePropertyName("duplex");
+				writer.WriteValue(Duplex.ToString());
+			}
+			writer.WriteEndObject();
+	    }
 	}
 }

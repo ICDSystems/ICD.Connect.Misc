@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Reflection.Emit;
-using System.Text;
-using ICD.Common.Utils.IO;
+using ICD.Common.Utils.Json;
 using Newtonsoft.Json;
 
 namespace ICD.Connect.Misc.GlobalCache.FlexApi.RestApi
@@ -72,28 +70,23 @@ namespace ICD.Connect.Misc.GlobalCache.FlexApi.RestApi
 
 	    public string Serialize()
 	    {
-			StringBuilder builder = new StringBuilder();
+		    return JsonUtils.Serialize(Serialize);
+	    }
 
-		    using (IcdStringWriter writer = new IcdStringWriter(builder))
-		    {
-			    using (JsonWriter jsonWriter = new JsonTextWriter(writer.WrappedStringWriter))
-			    {
-				    jsonWriter.WriteStartObject();
-				    {
-					    jsonWriter.WritePropertyName("id");
-					    jsonWriter.WriteValue(s_IdStringMap[Id]);
+	    public void Serialize(JsonWriter writer)
+	    {
+			writer.WriteStartObject();
+			{
+				writer.WritePropertyName("id");
+				writer.WriteValue(s_IdStringMap[Id]);
 
-					    jsonWriter.WritePropertyName("class");
-					    jsonWriter.WriteValue(s_ClassStringMap[Class]);
+				writer.WritePropertyName("class");
+				writer.WriteValue(s_ClassStringMap[Class]);
 
-					    jsonWriter.WritePropertyName("type");
-					    jsonWriter.WriteValue(s_TypeStringMap[Type]);
-				    }
-				    jsonWriter.WriteEndObject();
-
-				    return builder.ToString();
-			    }
-		    }
-		}
+				writer.WritePropertyName("type");
+				writer.WriteValue(s_TypeStringMap[Type]);
+			}
+			writer.WriteEndObject();
+	    }
 	}
 }
