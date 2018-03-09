@@ -28,14 +28,16 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 		{
 			m_TcpClient = new AsyncTcpClient
 			{
-				Port = TCP_PORT,
-				DebugRx = true,
-				DebugTx = true
+				Name = GetType().Name,
+				Port = TCP_PORT
 			};
 
 			m_TcpBuffer = new DelimiterSerialBuffer(FlexData.NEWLINE);
 
-			m_HttpClient = new HttpPort();
+			m_HttpClient = new HttpPort
+			{
+				Name = GetType().Name
+			};
 
 			Subscribe(m_TcpBuffer);
 			Subscribe(m_TcpClient);
