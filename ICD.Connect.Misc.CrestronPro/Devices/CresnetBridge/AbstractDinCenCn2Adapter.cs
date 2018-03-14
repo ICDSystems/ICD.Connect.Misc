@@ -1,9 +1,9 @@
 ﻿#if SIMPLSHARP
-#endif
-using System.Collections.Generic;
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.DeviceSupport;
 using Crestron.SimplSharpPro.GeneralIO;
+#endif
+using System.Collections.Generic;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.Devices;
 using ICD.Connect.Settings.Core;
@@ -16,7 +16,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 		where TSettings : ICresnetBridgeAdapterSettings, new()
 		where TBridge : DinCenCn2
 #else
-	pubic abstract class AbstractDinCenCn2Adapter<TSettings> :
+	public abstract class AbstractDinCenCn2Adapter<TSettings> :
 		AbstractDevice<TSettings>
 		where TSettings : IDeviceSettings, new()
 #endif

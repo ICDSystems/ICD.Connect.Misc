@@ -1,11 +1,11 @@
 ﻿using System;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.Devices;
-using ICD.Connect.Misc.CrestronPro.Utils;
 using ICD.Connect.Settings.Core;
 #if SIMPLSHARP
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.GeneralIO;
+using ICD.Connect.Misc.CrestronPro.Utils;
 #endif
 
 namespace ICD.Connect.Misc.CrestronPro.Devices

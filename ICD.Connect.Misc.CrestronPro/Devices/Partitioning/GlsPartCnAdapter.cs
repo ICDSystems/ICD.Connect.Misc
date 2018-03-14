@@ -2,13 +2,13 @@
 using ICD.Common.Utils.EventArguments;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.API.Nodes;
-using ICD.Connect.Misc.CrestronPro.Utils;
 using ICD.Connect.Partitioning.Devices;
 using ICD.Connect.Protocol.FeedbackDebounce;
 using ICD.Connect.Settings.Core;
 #if SIMPLSHARP
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.GeneralIO;
+using ICD.Connect.Misc.CrestronPro.Utils;
 #endif
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning

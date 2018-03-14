@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using Crestron.SimplSharpPro.DeviceSupport;
 using ICD.Connect.Devices;
 #if SIMPLSHARP
-
+using Crestron.SimplSharpPro.DeviceSupport;
 #endif
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
