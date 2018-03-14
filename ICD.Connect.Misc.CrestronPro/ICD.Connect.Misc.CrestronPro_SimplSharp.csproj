@@ -95,8 +95,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ObfuscationSettings.cs" />
+    <Compile Include="CresnetBridge\AbstractDinCenCn2Adapter.cs" />
+    <Compile Include="CresnetBridge\AbstractDinCenCn2AdapterSettings.cs" />
     <Compile Include="CresnetBridge\DinCenCn2Adapter.cs" />
-    <Compile Include="CresnetBridge\AbstractCresnetBridgeAdapterSettings.cs" />
+    <Compile Include="CresnetBridge\DinCenCn2AdapterSettings.cs" />
+    <Compile Include="CresnetBridge\DinCenCn2PoeAdapter.cs" />
+    <Compile Include="CresnetBridge\DinCenCn2PoeAdapterSettings.cs" />
     <Compile Include="CresnetBridge\ICresnetBridgeAdapter.cs" />
     <Compile Include="CresnetBridge\ICresnetBridgeAdapterSettings.cs" />
     <Compile Include="Devices\CardFrames\AbstractCardFrameDevice.cs" />
