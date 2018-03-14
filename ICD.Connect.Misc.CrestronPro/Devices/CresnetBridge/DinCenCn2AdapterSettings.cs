@@ -1,12 +1,12 @@
 ﻿using System;
 using ICD.Connect.Settings.Attributes;
 
-namespace ICD.Connect.Misc.CrestronPro.CresnetBridge
+namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 {
 	[KrangSettings(FACTORY_NAME)]
-	public sealed class DinCenCn2PoeAdapterSettings : AbstractDinCenCn2AdapterSettings
+	public sealed class DinCenCn2AdapterSettings : AbstractDinCenCn2AdapterSettings
 	{
-		private const string FACTORY_NAME = "DinCenCn2Poe";
+		private const string FACTORY_NAME = "DinCenCn2";
 		/// <summary>
 		/// Gets the originator factory name.
 		/// </summary>
@@ -15,6 +15,6 @@ namespace ICD.Connect.Misc.CrestronPro.CresnetBridge
 		/// <summary>
 		/// Gets the type of the originator for this settings instance.
 		/// </summary>
-		public override Type OriginatorType { get { return typeof(DinCenCn2PoeAdapter); } }
+		public override Type OriginatorType { get { return typeof(DinCenCn2Adapter); } }
 	}
 }

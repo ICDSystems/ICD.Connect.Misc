@@ -1,7 +1,6 @@
 ﻿using ICD.Connect.Devices;
-using ICD.Connect.Settings;
 
-namespace ICD.Connect.Misc.CrestronPro.CresnetBridge
+namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 {
 	public interface ICresnetBridgeAdapterSettings : IDeviceSettings
 	{

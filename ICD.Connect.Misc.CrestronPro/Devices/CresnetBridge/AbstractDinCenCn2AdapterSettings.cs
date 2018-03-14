@@ -3,7 +3,7 @@ using ICD.Common.Utils.Xml;
 using ICD.Connect.Devices;
 using ICD.Connect.Settings.Attributes.SettingsProperties;
 
-namespace ICD.Connect.Misc.CrestronPro.CresnetBridge
+namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 {
 	public abstract class AbstractDinCenCn2AdapterSettings : AbstractDeviceSettings, ICresnetBridgeAdapterSettings
 	{

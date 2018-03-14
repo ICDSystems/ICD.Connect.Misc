@@ -1,8 +1,9 @@
 ﻿#if SIMPLSHARP
 using Crestron.SimplSharpPro.GeneralIO;
+
 #endif
 
-namespace ICD.Connect.Misc.CrestronPro.CresnetBridge
+namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 {
 #if SIMPLSHARP
 	public sealed class DinCenCn2Adapter : AbstractDinCenCn2Adapter<DinCenCn2, DinCenCn2AdapterSettings>
