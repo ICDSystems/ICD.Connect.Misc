@@ -2,8 +2,6 @@
 using System;
 using System.Linq;
 using Crestron.SimplSharpPro.DeviceSupport;
-using ICD.Common.Utils.Services;
-using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge;
 using ICD.Connect.Settings.Core;
 
