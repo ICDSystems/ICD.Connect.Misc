@@ -215,23 +215,6 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 			addRow("Address", Address);
 		}
 
-		public override IEnumerable<IConsoleNodeBase> GetConsoleNodes()
-		{
-			foreach (IConsoleNodeBase node in GetBaseConsoleNodes())
-				yield return node;
-
-			yield return m_TcpClient;
-		}
-
-		/// <summary>
-		/// Workaround for "unverifiable code" warning.
-		/// </summary>
-		/// <returns></returns>
-		private IEnumerable<IConsoleNodeBase> GetBaseConsoleNodes()
-		{
-			return base.GetConsoleNodes();
-		}
-
 		#endregion
 	}
 }
