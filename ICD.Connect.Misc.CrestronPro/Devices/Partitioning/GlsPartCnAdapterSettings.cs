@@ -16,7 +16,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 		private const string SENSITIVITY_ELEMENT = "Sensitivity";
 
 		[IpIdSettingsProperty]
-		public byte CresnetId { get; set; }
+		public byte? CresnetId { get; set; }
 
 		public ushort Sensitivity { get; set; }
 
@@ -38,7 +38,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 		{
 			base.WriteElements(writer);
 
-			writer.WriteElementString(CRESNET_ID_ELEMENT, StringUtils.ToIpIdString(CresnetId));
+			writer.WriteElementString(CRESNET_ID_ELEMENT, CresnetId == null ? null : StringUtils.ToIpIdString(CresnetId.Value));
 			writer.WriteElementString(SENSITIVITY_ELEMENT, IcdXmlConvert.ToString(Sensitivity));
 		}
 

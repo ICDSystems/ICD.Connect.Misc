@@ -171,7 +171,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 
 			try
 			{
-				device = new GlsPartCn(settings.CresnetId, ProgramInfo.ControlSystem);
+				device = new GlsPartCn(settings.CresnetId.Value, ProgramInfo.ControlSystem);
 			}
 			catch (ArgumentException e)
 			{
