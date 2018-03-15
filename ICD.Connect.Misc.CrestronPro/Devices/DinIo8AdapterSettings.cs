@@ -15,7 +15,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 		private const string CRESNET_ID_ELEMENT = "CresnetID";
 
 		[IpIdSettingsProperty]
-		public byte CresnetId { get; set; }
+		public byte? CresnetId { get; set; }
 
 		/// <summary>
 		/// Gets the originator factory name.
@@ -35,7 +35,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 		{
 			base.WriteElements(writer);
 
-			writer.WriteElementString(CRESNET_ID_ELEMENT, StringUtils.ToIpIdString(CresnetId));
+			writer.WriteElementString(CRESNET_ID_ELEMENT, CresnetId == null ? null : StringUtils.ToIpIdString((byte)CresnetId));
 		}
 
 		/// <summary>

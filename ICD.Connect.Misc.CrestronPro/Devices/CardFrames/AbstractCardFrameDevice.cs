@@ -114,7 +114,12 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CardFrames
 			base.ApplySettingsFinal(settings, factory);
 
 #if SIMPLSHARP
-			TCardFrame device = Instantiate(settings.Ipid, ProgramInfo.ControlSystem);
+			TCardFrame device = settings.Ipid == null
+								? null 
+								: Instantiate(settings.Ipid.Value, ProgramInfo.ControlSystem);
+
+
+
 			SetCardCage(device);
 #else
             throw new System.NotImplementedException();

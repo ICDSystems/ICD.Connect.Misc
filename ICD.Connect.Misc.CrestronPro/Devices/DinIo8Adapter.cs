@@ -192,7 +192,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 
 			try
 			{
-				device = new DinIo8(settings.CresnetId, ProgramInfo.ControlSystem);
+				device = new DinIo8(settings.CresnetId.Value, ProgramInfo.ControlSystem);
 			}
 			catch (ArgumentException e)
 			{

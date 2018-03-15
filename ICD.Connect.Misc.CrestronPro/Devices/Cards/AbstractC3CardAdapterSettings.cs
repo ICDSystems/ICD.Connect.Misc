@@ -12,7 +12,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 		private const string CARD_FRAME_ELEMENT = "CardFrame";
 
 		[IpIdSettingsProperty]
-		public byte Ipid { get; set; }
+		public byte? Ipid { get; set; }
 
 		[OriginatorIdSettingsProperty(typeof(ICardFrameDevice))]
 		public int? CardFrame { get; set; }
@@ -25,7 +25,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 		{
 			base.WriteElements(writer);
 
-			writer.WriteElementString(IPID_ELEMENT, StringUtils.ToIpIdString(Ipid));
+			writer.WriteElementString(IPID_ELEMENT, Ipid == null ? null : StringUtils.ToIpIdString(Ipid.Value));
 			writer.WriteElementString(CARD_FRAME_ELEMENT, IcdXmlConvert.ToString(CardFrame));
 		}
 
