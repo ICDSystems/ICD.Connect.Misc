@@ -9,7 +9,8 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DefineConstants>TRACE;DEBUG;STANDARD</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;STANDARD;NETSTANDARD2_0</DefineConstants>
+    <OutputPath>binNetCoreApp\Debug\netstandard2.0\</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>

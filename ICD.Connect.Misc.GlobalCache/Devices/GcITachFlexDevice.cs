@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using ICD.Common.Utils;
+﻿using ICD.Common.Utils;
 using ICD.Common.Utils.EventArguments;
 using ICD.Connect.API.Nodes;
 using ICD.Connect.Devices;
@@ -213,23 +212,6 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 			base.BuildConsoleStatus(addRow);
 
 			addRow("Address", Address);
-		}
-
-		public override IEnumerable<IConsoleNodeBase> GetConsoleNodes()
-		{
-			foreach (IConsoleNodeBase node in GetBaseConsoleNodes())
-				yield return node;
-
-			yield return m_TcpClient;
-		}
-
-		/// <summary>
-		/// Workaround for "unverifiable code" warning.
-		/// </summary>
-		/// <returns></returns>
-		private IEnumerable<IConsoleNodeBase> GetBaseConsoleNodes()
-		{
-			return base.GetConsoleNodes();
 		}
 
 		#endregion

@@ -2,10 +2,12 @@
 using ICD.Common.Utils.Xml;
 using ICD.Connect.Misc.GlobalCache.Devices;
 using ICD.Connect.Protocol.Ports.ComPort;
+using ICD.Connect.Settings.Attributes;
 using ICD.Connect.Settings.Attributes.SettingsProperties;
 
 namespace ICD.Connect.Misc.GlobalCache.Ports
 {
+	[KrangSettings(FACTORY_NAME)]
 	public sealed class GcITachFlexComPortSettings : AbstractComPortSettings
 	{
 		private const string FACTORY_NAME = "iTachFlexComPort";
