@@ -50,7 +50,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 		{
 			base.ParseXml(xml);
 
-			CresnetId = XmlUtils.TryReadChildElementContentAsByte(xml, CRESNET_ID_ELEMENT) ?? 0;
+			CresnetId = XmlUtils.TryReadChildElementContentAsByte(xml, CRESNET_ID_ELEMENT);
 			Sensitivity = XmlUtils.TryReadChildElementContentAsUShort(xml, SENSITIVITY_ELEMENT) ?? 1;
 		}
 	}

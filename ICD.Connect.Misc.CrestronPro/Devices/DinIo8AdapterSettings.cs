@@ -46,7 +46,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 		{
 			base.ParseXml(xml);
 
-			CresnetId = XmlUtils.TryReadChildElementContentAsByte(xml, CRESNET_ID_ELEMENT) ?? 0;
+			CresnetId = XmlUtils.TryReadChildElementContentAsByte(xml, CRESNET_ID_ELEMENT);
 		}
 	}
 }
