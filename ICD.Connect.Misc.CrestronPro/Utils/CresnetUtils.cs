@@ -23,16 +23,6 @@ namespace ICD.Connect.Misc.CrestronPro.Utils
 		}
 
 		/// <summary>
-		/// Returns true if the given cresnet id is in a valid range.
-		/// </summary>
-		/// <param name="id"></param>
-		/// <returns></returns>
-		public static bool IsValidId(byte? id)
-		{
-			return id != null && IsValidId(id.Value);
-		}
-
-		/// <summary>
 		/// Determines the correct way to instantiate a cresnet device.
 		/// Instantiates on a branch if one is provided, else instantiates on the controlsystem
 		/// </summary>

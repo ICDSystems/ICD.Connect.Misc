@@ -160,7 +160,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 			base.ApplySettingsFinal(settings, factory);
 
 #if SIMPLSHARP
-			if (!CresnetUtils.IsValidId(settings.CresnetId))
+			if (settings.CresnetId == null || !CresnetUtils.IsValidId(settings.CresnetId.Value))
 			{
 				Logger.AddEntry(eSeverity.Error, "{0} failed to instantiate {1} - CresnetId {2} is out of range",
 				                this, typeof(GlsPartCnAdapter).Name, settings.CresnetId);
