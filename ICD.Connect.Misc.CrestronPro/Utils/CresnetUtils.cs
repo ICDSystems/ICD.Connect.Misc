@@ -27,20 +27,20 @@ namespace ICD.Connect.Misc.CrestronPro.Utils
 		/// Instantiates on a branch if one is provided, else instantiates on the controlsystem
 		/// </summary>
 		/// <typeparam name="TCresnetDevice"></typeparam>
-		/// <param name="ipid"></param>
+		/// <param name="cresnetId"></param>
 		/// <param name="branchId"></param>
 		/// <param name="bridgeId"></param>
 		/// <param name="factory"></param>
 		/// <param name="noBranchInstantiate">Instantiate a cresnet device directly attached to the controlsystem</param>
 		/// <param name="bridgeInstantiate">Instantiate a cresnet device attached to a bridge</param>
 		/// <returns></returns>
-		public static TCresnetDevice InstantiateCresnetDevice<TCresnetDevice>(byte ipid, int? branchId, int? bridgeId,
+		public static TCresnetDevice InstantiateCresnetDevice<TCresnetDevice>(byte cresnetId, int? branchId, int? bridgeId,
 		                                                                      IDeviceFactory factory,
 		                                                                      Func<byte, TCresnetDevice> noBranchInstantiate,
 		                                                                      Func<byte, CresnetBranch, TCresnetDevice> bridgeInstantiate)
 		{
 			if (bridgeId == null || branchId == null)
-				return noBranchInstantiate(ipid);
+				return noBranchInstantiate(cresnetId);
 
 			ICresnetBridgeAdapter bridge = factory.GetOriginatorById<ICresnetBridgeAdapter>(bridgeId.Value);
 			if (bridge == null)
@@ -50,7 +50,7 @@ namespace ICD.Connect.Misc.CrestronPro.Utils
 			if (branch == null)
 				throw new ArgumentException(string.Format("Bridge {0} does not have a branch numbered {1}.", bridgeId, branchId), "branchId");
 
-			return bridgeInstantiate(ipid, branch);
+			return bridgeInstantiate(cresnetId, branch);
 		}
 	}
 }
