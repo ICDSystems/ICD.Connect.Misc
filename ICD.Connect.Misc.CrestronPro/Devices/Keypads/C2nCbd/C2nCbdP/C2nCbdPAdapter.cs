@@ -1,4 +1,5 @@
-﻿#if SIMPLSHARP
+﻿using Crestron.SimplSharpPro.DeviceSupport;
+#if SIMPLSHARP
 using Crestron.SimplSharpPro;
 #endif
 using ICD.Connect.Misc.CrestronPro.Devices.Keypads.C2nCbd.C2nCbdPBaseWithVersiport;
@@ -12,9 +13,14 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.C2nCbd.C2nCbdP
 #endif
 	{
 #if SIMPLSHARP
-		protected override Crestron.SimplSharpPro.Keypads.C2nCbdP InstantiateKeypad(byte cresnetId, CrestronControlSystem controlSystem)
+		protected override Crestron.SimplSharpPro.Keypads.C2nCbdP InstantiateKeypad(byte cresnetId)
 		{
-			return new Crestron.SimplSharpPro.Keypads.C2nCbdP(cresnetId, controlSystem);
+			return new Crestron.SimplSharpPro.Keypads.C2nCbdP(cresnetId, ProgramInfo.ControlSystem);
+		}
+
+		protected override Crestron.SimplSharpPro.Keypads.C2nCbdP InstantiateKeypad(byte cresnetId, CresnetBranch branch)
+		{
+			return new Crestron.SimplSharpPro.Keypads.C2nCbdP(cresnetId, branch);
 		}
 #endif
 	}

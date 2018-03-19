@@ -1,4 +1,5 @@
 ﻿using System;
+using Crestron.SimplSharpPro.DeviceSupport;
 #if SIMPLSHARP
 using Crestron.SimplSharpPro;
 using ICD.Connect.Misc.CrestronPro.Utils;
@@ -18,7 +19,8 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.C2nCbd.C2nCbdBase
 		where TSettings : IC2nCbdBaseAdapterSettings, new()
 	{
 #if SIMPLSHARP
-		protected abstract TKeypad InstantiateKeypad(byte cresnetId, CrestronControlSystem controlSystem);
+		protected abstract TKeypad InstantiateKeypad(byte cresnetId);
+		protected abstract TKeypad InstantiateKeypad(byte cresnetId, CresnetBranch branch);
 #endif
 
 		#region Settings
@@ -43,7 +45,12 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.C2nCbd.C2nCbdBase
 
 			try
 			{
-				device = InstantiateKeypad((byte)settings.CresnetId, ProgramInfo.ControlSystem);
+				device = CresnetUtils.InstantiateCresnetDevice<TKeypad>(settings.CresnetId.Value,
+																		settings.BranchId,
+																		settings.ParentId,
+																		factory,
+																		InstantiateKeypad,
+																		InstantiateKeypad);
 			}
 			catch (ArgumentException e)
 			{

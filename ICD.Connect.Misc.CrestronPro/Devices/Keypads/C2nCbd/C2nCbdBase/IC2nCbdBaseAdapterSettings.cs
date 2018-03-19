@@ -1,9 +1,9 @@
-﻿using ICD.Connect.Misc.CrestronPro.Devices.Keypads.InetCbdex;
+﻿using ICD.Connect.Devices;
+using ICD.Connect.Misc.CrestronPro.Devices.Keypads.InetCbdex;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.C2nCbd.C2nCbdBase
 {
-	public interface IC2nCbdBaseAdapterSettings : IInetCbdexAdapterSettings
+	public interface IC2nCbdBaseAdapterSettings : IInetCbdexAdapterSettings, ICresnetDeviceSettings
 	{
-		 byte? CresnetId { get; set; }
 	}
 }
