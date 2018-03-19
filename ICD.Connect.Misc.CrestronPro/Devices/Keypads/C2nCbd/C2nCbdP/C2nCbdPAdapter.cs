@@ -1,5 +1,4 @@
 ﻿#if SIMPLSHARP
-using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.DeviceSupport;
 #endif
 using ICD.Connect.Misc.CrestronPro.Devices.Keypads.C2nCbd.C2nCbdPBaseWithVersiport;

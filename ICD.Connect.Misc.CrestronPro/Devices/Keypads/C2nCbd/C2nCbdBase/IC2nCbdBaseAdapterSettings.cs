@@ -1,5 +1,4 @@
-﻿using ICD.Connect.Devices;
-using ICD.Connect.Misc.CrestronPro.Devices.Keypads.InetCbdex;
+﻿using ICD.Connect.Misc.CrestronPro.Devices.Keypads.InetCbdex;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.C2nCbd.C2nCbdBase
 {

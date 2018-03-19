@@ -1,6 +1,5 @@
 ﻿using System;
 #if SIMPLSHARP
-using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.DeviceSupport;
 using ICD.Connect.Misc.CrestronPro.Utils;
 #endif
