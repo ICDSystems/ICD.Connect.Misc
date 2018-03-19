@@ -155,6 +155,7 @@
     <Compile Include="Devices\Keypads\KeypadBase\IKeypadBaseAdapterSettings.cs" />
     <Compile Include="Devices\Partitioning\GlsPartCnAdapter.cs" />
     <Compile Include="Devices\Partitioning\GlsPartCnAdapterSettings.cs" />
+    <Compile Include="ICresnetDeviceSettings.cs" />
     <Compile Include="Ports\DigitalInput\DigitalInputAdapter.cs" />
     <Compile Include="Ports\DigitalInput\DigitalInputAdapterSettings.cs" />
     <Compile Include="KrangPlugin.cs" />
