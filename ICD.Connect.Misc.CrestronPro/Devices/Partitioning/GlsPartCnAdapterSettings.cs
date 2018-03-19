@@ -1,6 +1,8 @@
 ﻿using System;
 using ICD.Common.Utils;
 using ICD.Common.Utils.Xml;
+using ICD.Connect.Devices;
+using ICD.Connect.Misc.CrestronPro.Utils;
 using ICD.Connect.Partitioning.Devices;
 using ICD.Connect.Settings.Attributes;
 using ICD.Connect.Settings.Attributes.SettingsProperties;
@@ -8,15 +10,16 @@ using ICD.Connect.Settings.Attributes.SettingsProperties;
 namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 {
 	[KrangSettings(FACTORY_NAME)]
-	public sealed class GlsPartCnAdapterSettings : AbstractPartitionDeviceSettings
+	public sealed class GlsPartCnAdapterSettings : AbstractPartitionDeviceSettings, ICresnetDeviceSettings
 	{
 		private const string FACTORY_NAME = "GlsPartCn";
-
-		private const string CRESNET_ID_ELEMENT = "CresnetID";
+		
 		private const string SENSITIVITY_ELEMENT = "Sensitivity";
 
 		[IpIdSettingsProperty]
 		public byte? CresnetId { get; set; }
+		public int? BranchId { get; set; }
+		public int? ParentId { get; set; }
 
 		public ushort Sensitivity { get; set; }
 
@@ -38,7 +41,9 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 		{
 			base.WriteElements(writer);
 
-			writer.WriteElementString(CRESNET_ID_ELEMENT, CresnetId == null ? null : StringUtils.ToIpIdString(CresnetId.Value));
+			writer.WriteElementString(CresnetSettingsUtils.CRESNET_ID_ELEMENT, CresnetId == null ? null : StringUtils.ToIpIdString(CresnetId.Value));
+			writer.WriteElementString(CresnetSettingsUtils.BRANCH_ID_ELEMENT, BranchId == null ? null : BranchId.Value.ToString());
+			writer.WriteElementString(CresnetSettingsUtils.PARENT_ID_ELEMENT, ParentId == null ? null : ParentId.Value.ToString());
 			writer.WriteElementString(SENSITIVITY_ELEMENT, IcdXmlConvert.ToString(Sensitivity));
 		}
 
@@ -50,7 +55,9 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 		{
 			base.ParseXml(xml);
 
-			CresnetId = XmlUtils.TryReadChildElementContentAsByte(xml, CRESNET_ID_ELEMENT);
+			CresnetId = XmlUtils.TryReadChildElementContentAsByte(xml, CresnetSettingsUtils.CRESNET_ID_ELEMENT);
+			BranchId = XmlUtils.TryReadChildElementContentAsInt(xml, CresnetSettingsUtils.BRANCH_ID_ELEMENT);
+			ParentId = XmlUtils.TryReadChildElementContentAsInt(xml, CresnetSettingsUtils.PARENT_ID_ELEMENT);
 			Sensitivity = XmlUtils.TryReadChildElementContentAsUShort(xml, SENSITIVITY_ELEMENT) ?? 1;
 		}
 	}

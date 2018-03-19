@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Linq;
+using Crestron.SimplSharpPro.DeviceSupport;
 using ICD.Common.Utils.EventArguments;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.API.Nodes;
+using ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge;
 using ICD.Connect.Partitioning.Devices;
 using ICD.Connect.Protocol.FeedbackDebounce;
 using ICD.Connect.Settings.Core;
@@ -130,8 +133,8 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 #if SIMPLSHARP
 			settings.CresnetId = m_PartitionDevice == null ? (byte)0 : (byte)m_PartitionDevice.ID;
 			settings.Sensitivity = m_PartitionDevice == null
-				                       ? (ushort)0
-				                       : m_PartitionDevice.SensitivityFeedback.UShortValue;
+									   ? (ushort)0
+									   : m_PartitionDevice.SensitivityFeedback.UShortValue;
 #else
             settings.CresnetId = 0;
 			settings.Sensitivity = 0;
@@ -163,7 +166,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 			if (settings.CresnetId == null || !CresnetUtils.IsValidId(settings.CresnetId.Value))
 			{
 				Logger.AddEntry(eSeverity.Error, "{0} failed to instantiate {1} - CresnetId {2} is out of range",
-				                this, typeof(GlsPartCnAdapter).Name, settings.CresnetId);
+								this, typeof(GlsPartCnAdapter).Name, settings.CresnetId);
 				return;
 			}
 
@@ -171,7 +174,13 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 
 			try
 			{
-				device = new GlsPartCn(settings.CresnetId.Value, ProgramInfo.ControlSystem);
+				device = CresnetUtils.InstantiateCresnetDevice(settings.CresnetId.Value, 
+															   settings.BranchId,
+															   settings.ParentId, 
+															   factory, 
+															   cresnetId => new GlsPartCn(cresnetId, ProgramInfo.ControlSystem), 
+															   (cresnetId, branch) => new GlsPartCn(cresnetId, branch));
+
 			}
 			catch (ArgumentException e)
 			{
