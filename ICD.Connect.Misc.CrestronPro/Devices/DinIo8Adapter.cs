@@ -193,7 +193,12 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 			if(settings.CresnetId != null){
 			try
 			{
-				device = new DinIo8(settings.CresnetId.Value, ProgramInfo.ControlSystem);
+				device = CresnetUtils.InstantiateCresnetDevice(settings.CresnetId.Value,
+															   settings.BranchId,
+															   settings.ParentId,
+															   factory,
+				                                               cresnetId => new DinIo8(cresnetId, ProgramInfo.ControlSystem),
+															   (cresnetId, branch) => new DinIo8(cresnetId, branch));
 			}
 			catch (ArgumentException e)
 			{
