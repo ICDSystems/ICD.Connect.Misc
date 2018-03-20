@@ -95,6 +95,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ObfuscationSettings.cs" />
+    <Compile Include="Devices\CresnetBridge\CsaPws10sHubEnetAdapter.cs" />
+    <Compile Include="Devices\CresnetBridge\CsaPws10sHubEnetAdapterSettings.cs" />
     <Compile Include="Devices\CresnetBridge\AbstractDinCenCn2Adapter.cs" />
     <Compile Include="Devices\CresnetBridge\AbstractDinCenCn2AdapterSettings.cs" />
     <Compile Include="Devices\CresnetBridge\DinCenCn2Adapter.cs" />
@@ -125,6 +127,8 @@
     <Compile Include="Devices\Cards\C3Ry16AdapterSettings.cs" />
     <Compile Include="Devices\Cards\C3Ry8Adapter.cs" />
     <Compile Include="Devices\Cards\C3Ry8AdapterSettings.cs" />
+    <Compile Include="Devices\CresnetBridge\ICsaPws10sHubEnetAdapter.cs" />
+    <Compile Include="Devices\CresnetBridge\ICsaPws10sHubEnetSettings.cs" />
     <Compile Include="Devices\DinIo8Adapter.cs" />
     <Compile Include="Devices\DinIo8AdapterSettings.cs" />
     <Compile Include="Devices\IPortParent.cs" />
