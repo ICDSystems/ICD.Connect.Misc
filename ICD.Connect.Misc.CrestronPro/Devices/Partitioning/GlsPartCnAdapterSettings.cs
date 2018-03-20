@@ -16,7 +16,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 		
 		private const string SENSITIVITY_ELEMENT = "Sensitivity";
 
-		[IpIdSettingsProperty]
+		[CrestronByteSettingsProperty]
 		public byte? CresnetId { get; set; }
 		public int? BranchId { get; set; }
 		public int? ParentId { get; set; }

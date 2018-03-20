@@ -13,7 +13,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 	{
 		private const string FACTORY_NAME = "DinIo8";
 
-		[IpIdSettingsProperty]
+		[CrestronByteSettingsProperty]
 		public byte? CresnetId { get; set; }
 		public int? ParentId { get; set; }
 		public int? BranchId { get; set; }

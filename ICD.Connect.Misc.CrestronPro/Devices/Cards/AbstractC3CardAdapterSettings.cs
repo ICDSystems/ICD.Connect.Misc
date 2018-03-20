@@ -11,7 +11,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 		private const string IPID_ELEMENT = "IPID";
 		private const string CARD_FRAME_ELEMENT = "CardFrame";
 
-		[IpIdSettingsProperty]
+		[CrestronByteSettingsProperty]
 		public byte? Ipid { get; set; }
 
 		[OriginatorIdSettingsProperty(typeof(ICardFrameDevice))]
