@@ -61,8 +61,5 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 			ParentId = XmlUtils.TryReadChildElementContentAsInt(xml, CresnetSettingsUtils.PARENT_ID_ELEMENT);
 			BranchId = XmlUtils.TryReadChildElementContentAsInt(xml, CresnetSettingsUtils.BRANCH_ID_ELEMENT);
 		}
-		
-
-
 	}
 }
