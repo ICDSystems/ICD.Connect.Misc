@@ -1,5 +1,4 @@
 ﻿using System;
-using Crestron.SimplSharp.Ssh.Common;
 using ICD.Common.Utils;
 using ICD.Common.Utils.Xml;
 using ICD.Connect.Devices;
