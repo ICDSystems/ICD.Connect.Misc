@@ -29,7 +29,7 @@ namespace ICD.Connect.Misc.GlobalCache.Ports
 		/// </summary>
 		public GcITachFlexComPort()
 		{
-			m_Client = new AsyncTcpClient();
+			m_Client = new AsyncTcpClient {Name = GetType().Name};
 			Subscribe(m_Client);
 		}
 
