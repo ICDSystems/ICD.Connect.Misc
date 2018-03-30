@@ -6,7 +6,7 @@ using ICD.Connect.Settings.Attributes.SettingsProperties;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.C2nCbd.C2nCbdBase
 {
-	public abstract class AbstractC2nCbdBaseAdapterSettings : AbstractInetCbdexAdapterSettings, IC2nCbdBaseAdapterSettings, ICresnetDeviceSettings
+	public abstract class AbstractC2nCbdBaseAdapterSettings : AbstractInetCbdexAdapterSettings, IC2nCbdBaseAdapterSettings
 	{
 		[CrestronByteSettingsProperty]
 		public byte? CresnetId { get; set; }
