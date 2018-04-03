@@ -4,6 +4,7 @@
     <OutputType>Library</OutputType>
     <TargetFramework>netstandard2.0</TargetFramework>
 	<RootNamespace>ICD.Connect.Misc.CrestronPro</RootNamespace>
+	<AssemblyName>ICD.Connect.Misc.CrestronPro</AssemblyName>
 	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 	<Deterministic>true</Deterministic>
   </PropertyGroup>
