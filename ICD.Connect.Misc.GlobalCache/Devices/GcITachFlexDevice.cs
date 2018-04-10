@@ -2,6 +2,7 @@
 using ICD.Common.Utils.EventArguments;
 using ICD.Connect.API.Nodes;
 using ICD.Connect.Devices;
+using ICD.Connect.Devices.EventArguments;
 using ICD.Connect.Misc.GlobalCache.FlexApi;
 using ICD.Connect.Protocol.Network.Tcp;
 using ICD.Connect.Protocol.Network.WebPorts;
@@ -139,8 +140,8 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 		/// Called when the 
 		/// </summary>
 		/// <param name="sender"></param>
-		/// <param name="boolEventArgs"></param>
-		private void ClientOnOnIsOnlineStateChanged(object sender, BoolEventArgs boolEventArgs)
+		/// <param name="args"></param>
+		private void ClientOnOnIsOnlineStateChanged(object sender, DeviceBaseOnlineStateApiEventArgs args)
 		{
 			UpdateCachedOnlineStatus();
 		}

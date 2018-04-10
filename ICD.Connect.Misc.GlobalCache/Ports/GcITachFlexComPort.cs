@@ -3,6 +3,7 @@ using ICD.Common.Properties;
 using ICD.Common.Utils.EventArguments;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.API.Nodes;
+using ICD.Connect.Devices.EventArguments;
 using ICD.Connect.Devices.Extensions;
 using ICD.Connect.Misc.GlobalCache.Devices;
 using ICD.Connect.Misc.GlobalCache.FlexApi.RestApi;
@@ -218,8 +219,8 @@ namespace ICD.Connect.Misc.GlobalCache.Ports
 		/// Called when the TCP client changes online status.
 		/// </summary>
 		/// <param name="sender"></param>
-		/// <param name="boolEventArgs"></param>
-		private void ClientOnOnIsOnlineStateChanged(object sender, BoolEventArgs boolEventArgs)
+		/// <param name="args"></param>
+		private void ClientOnOnIsOnlineStateChanged(object sender, DeviceBaseOnlineStateApiEventArgs args)
 		{
 			UpdateCachedOnlineStatus();
 		}
