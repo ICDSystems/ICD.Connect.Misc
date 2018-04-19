@@ -11,15 +11,20 @@ namespace ICD.Connect.Misc.Occupancy
 
 	    public void SetOccupided()
 	    {
-		    SetOccupancyState(true);
+		    SetOccupancyState(eOccupancyState.Occupied);
 	    }
 
 	    public void SetUnoccupied()
 	    {
-		    SetOccupancyState(false);
+		    SetOccupancyState(eOccupancyState.Unoccupied);
 	    }
 
-	    private void SetOccupancyState(bool state)
+	    public void SetUnknown()
+	    {
+		    SetOccupancyState(eOccupancyState.Unknown);
+	    }
+
+	    private void SetOccupancyState(eOccupancyState state)
 	    {
 		    OccupancyState = state;
 	    }
@@ -35,7 +40,7 @@ namespace ICD.Connect.Misc.Occupancy
 		public override void BuildConsoleStatus(AddStatusRowDelegate addRow)
 	    {
 		    base.BuildConsoleStatus(addRow);
-		    addRow("Occupied", OccupancyState);
+		    addRow("State", OccupancyState);
 	    }
 
 	    public override IEnumerable<IConsoleCommand> GetConsoleCommands()
@@ -45,6 +50,7 @@ namespace ICD.Connect.Misc.Occupancy
 
 			yield return new ConsoleCommand("SetOccupied", "Sets Sensor to Occupied", () => SetOccupided());
 			yield return new ConsoleCommand("SetUnoccupied", "Sets the Sensor to Unoccupied", () => SetUnoccupied());
+			yield return new ConsoleCommand("SetUnknown", "Sets the Sensor to Unknown", () => SetUnknown());
 
 	    }
 
