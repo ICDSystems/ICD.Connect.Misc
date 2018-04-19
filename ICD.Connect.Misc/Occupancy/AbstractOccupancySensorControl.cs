@@ -11,13 +11,13 @@ namespace ICD.Connect.Misc.Occupancy
 
 		#region fields
 
-		private bool m_OccupancyState;
+		private eOccupancyState m_OccupancyState;
 
 		#endregion
 
 		#region events
 
-		public event EventHandler<BoolEventArgs> OnOccupancyStateChanged;
+		public event EventHandler<GenericEventArgs<eOccupancyState>> OnOccupancyStateChanged;
 
 		#endregion
 
@@ -28,7 +28,7 @@ namespace ICD.Connect.Misc.Occupancy
 		/// True = occupied
 		/// False = unoccupied/vacant
 		/// </summary>
-		public bool OccupancyState
+		public eOccupancyState OccupancyState
 		{
 			get { return m_OccupancyState; }
 			protected set
@@ -36,7 +36,7 @@ namespace ICD.Connect.Misc.Occupancy
 				if (m_OccupancyState == value)
 					return;
 				m_OccupancyState = value;
-				OnOccupancyStateChanged.Raise(this, new BoolEventArgs(value));
+				OnOccupancyStateChanged.Raise(this, new GenericEventArgs<eOccupancyState>(value));
 			}
 		}
 
