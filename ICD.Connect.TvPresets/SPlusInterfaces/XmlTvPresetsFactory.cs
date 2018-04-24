@@ -115,7 +115,7 @@ namespace ICD.Connect.TvPresets.SPlusInterfaces
 			string basePath = PresetsPath;
 			string xmlPath = IcdDirectory.GetFiles(basePath)
 									  .Where(f =>
-											 String.Equals(IcdPath.GetExtension(f), EXT, StringComparison.CurrentCultureIgnoreCase))
+											 string.Equals(IcdPath.GetExtension(f), EXT, StringComparison.CurrentCultureIgnoreCase))
 									  .Select(f => PathUtils.Join(basePath, f))
 									  .FirstOrDefault();
 			LoadPresets(xmlPath);
