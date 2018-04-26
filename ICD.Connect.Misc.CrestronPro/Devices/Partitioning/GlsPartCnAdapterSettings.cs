@@ -1,5 +1,6 @@
 ﻿using ICD.Common.Utils;
 using ICD.Common.Utils.Xml;
+using ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge;
 using ICD.Connect.Misc.CrestronPro.Utils;
 using ICD.Connect.Partitioning.Devices;
 using ICD.Connect.Settings.Attributes;
@@ -14,7 +15,10 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 
 		[CrestronByteSettingsProperty]
 		public byte? CresnetId { get; set; }
+
 		public int? BranchId { get; set; }
+
+		[OriginatorIdSettingsProperty(typeof(ICresnetBridgeAdapter))]
 		public int? ParentId { get; set; }
 
 		public ushort Sensitivity { get; set; }
