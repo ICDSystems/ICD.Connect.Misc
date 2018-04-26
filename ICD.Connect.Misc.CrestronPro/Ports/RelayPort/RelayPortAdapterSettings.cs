@@ -1,5 +1,4 @@
-﻿using System;
-using ICD.Common.Utils.Xml;
+﻿using ICD.Common.Utils.Xml;
 using ICD.Connect.Misc.CrestronPro.Devices;
 using ICD.Connect.Protocol.Ports.RelayPort;
 using ICD.Connect.Settings.Attributes;
@@ -7,11 +6,9 @@ using ICD.Connect.Settings.Attributes.SettingsProperties;
 
 namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 {
-	[KrangSettings(FACTORY_NAME)]
+	[KrangSettings("RelayPort", typeof(RelayPortAdapter))]
 	public sealed class RelayPortAdapterSettings : AbstractRelayPortSettings
 	{
-		private const string FACTORY_NAME = "RelayPort";
-
 		private const string PARENT_DEVICE_ELEMENT = "Device";
 		private const string ADDRESS_ELEMENT = "Address";
 
@@ -23,16 +20,6 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 		public int? Device { get; set; }
 
 		public int Address { get { return m_Address; } set { m_Address = value; } }
-
-		/// <summary>
-		/// Gets the originator factory name.
-		/// </summary>
-		public override string FactoryName { get { return FACTORY_NAME; } }
-
-		/// <summary>
-		/// Gets the type of the originator for this settings instance.
-		/// </summary>
-		public override Type OriginatorType { get { return typeof(RelayPortAdapter); } }
 
 		#endregion
 

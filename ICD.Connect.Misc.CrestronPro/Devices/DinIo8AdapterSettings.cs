@@ -1,5 +1,4 @@
-﻿using System;
-using ICD.Common.Utils;
+﻿using ICD.Common.Utils;
 using ICD.Common.Utils.Xml;
 using ICD.Connect.Devices;
 using ICD.Connect.Misc.CrestronPro.Utils;
@@ -8,25 +7,15 @@ using ICD.Connect.Settings.Attributes.SettingsProperties;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices
 {
-	[KrangSettings(FACTORY_NAME)]
+	[KrangSettings("DinIo8", typeof(DinIo8Adapter))]
 	public sealed class DinIo8AdapterSettings : AbstractDeviceSettings, ICresnetDeviceSettings
 	{
-		private const string FACTORY_NAME = "DinIo8";
-
 		[CrestronByteSettingsProperty]
 		public byte? CresnetId { get; set; }
 		public int? ParentId { get; set; }
 		public int? BranchId { get; set; }
 
-		/// <summary>
-		/// Gets the originator factory name.
-		/// </summary>
-		public override string FactoryName { get { return FACTORY_NAME; } }
 
-		/// <summary>
-		/// Gets the type of the originator for this settings instance.
-		/// </summary>
-		public override Type OriginatorType { get { return typeof(DinIo8Adapter); } }
 
 		/// <summary>
 		/// Writes property elements to xml.

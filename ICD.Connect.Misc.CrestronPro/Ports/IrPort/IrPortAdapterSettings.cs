@@ -1,4 +1,3 @@
-using System;
 using ICD.Common.Utils.Xml;
 using ICD.Connect.Misc.CrestronPro.Devices;
 using ICD.Connect.Protocol.Ports.IrPort;
@@ -10,11 +9,9 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 	/// <summary>
 	/// Settings for the IrPortAdapter.
 	/// </summary>
-	[KrangSettings(FACTORY_NAME)]
+	[KrangSettings("IrPort", typeof(IrPortAdapter))]
 	public sealed class IrPortAdapterSettings : AbstractIrPortSettings
 	{
-		private const string FACTORY_NAME = "IrPort";
-
 		private const ushort DEFAULT_PULSE_TIME = 100;
 		private const ushort DEFAULT_BETWEEN_TIME = 750;
 
@@ -41,16 +38,6 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		public ushort PulseTime { get { return m_PulseTime; } set { m_PulseTime = value; } }
 
 		public ushort BetweenTime { get { return m_BetweenTime; } set { m_BetweenTime = value; } }
-
-		/// <summary>
-		/// Gets the originator factory name.
-		/// </summary>
-		public override string FactoryName { get { return FACTORY_NAME; } }
-
-		/// <summary>
-		/// Gets the type of the originator for this settings instance.
-		/// </summary>
-		public override Type OriginatorType { get { return typeof(IrPortAdapter); } }
 
 		#endregion
 

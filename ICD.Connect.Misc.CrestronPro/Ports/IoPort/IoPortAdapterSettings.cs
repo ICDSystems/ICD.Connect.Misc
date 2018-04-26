@@ -1,5 +1,4 @@
-﻿using System;
-using ICD.Common.Utils.Xml;
+﻿using ICD.Common.Utils.Xml;
 using ICD.Connect.Misc.CrestronPro.Devices;
 using ICD.Connect.Protocol.Ports.IoPort;
 using ICD.Connect.Settings.Attributes;
@@ -7,11 +6,9 @@ using ICD.Connect.Settings.Attributes.SettingsProperties;
 
 namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 {
-	[KrangSettings(FACTORY_NAME)]
+	[KrangSettings("IoPort", typeof(IoPortAdapter))]
 	public sealed class IoPortAdapterSettings : AbstractIoPortSettings
 	{
-		private const string FACTORY_NAME = "IoPort";
-
 		private const string PARENT_DEVICE_ELEMENT = "Device";
 		private const string ADDRESS_ELEMENT = "Address";
 		private const string CONFIGURATION_ELEMENT = "Configuration";
@@ -26,16 +23,6 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 		public int Address { get { return m_Address; } set { m_Address = value; } }
 
 		public eIoPortConfiguration Configuration { get; set; }
-
-		/// <summary>
-		/// Gets the originator factory name.
-		/// </summary>
-		public override string FactoryName { get { return FACTORY_NAME; } }
-
-		/// <summary>
-		/// Gets the type of the originator for this settings instance.
-		/// </summary>
-		public override Type OriginatorType { get { return typeof(IoPortAdapter); } }
 
 		#endregion
 

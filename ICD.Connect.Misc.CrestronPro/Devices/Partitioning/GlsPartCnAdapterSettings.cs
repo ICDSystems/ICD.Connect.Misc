@@ -1,5 +1,4 @@
-﻿using System;
-using ICD.Common.Utils;
+﻿using ICD.Common.Utils;
 using ICD.Common.Utils.Xml;
 using ICD.Connect.Misc.CrestronPro.Utils;
 using ICD.Connect.Partitioning.Devices;
@@ -8,11 +7,9 @@ using ICD.Connect.Settings.Attributes.SettingsProperties;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 {
-	[KrangSettings(FACTORY_NAME)]
+	[KrangSettings("GlsPartCn", typeof(GlsPartCnAdapter))]
 	public sealed class GlsPartCnAdapterSettings : AbstractPartitionDeviceSettings, ICresnetDeviceSettings
 	{
-		private const string FACTORY_NAME = "GlsPartCn";
-		
 		private const string SENSITIVITY_ELEMENT = "Sensitivity";
 
 		[CrestronByteSettingsProperty]
@@ -21,16 +18,6 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 		public int? ParentId { get; set; }
 
 		public ushort Sensitivity { get; set; }
-
-		/// <summary>
-		/// Gets the originator factory name.
-		/// </summary>
-		public override string FactoryName { get { return FACTORY_NAME; } }
-
-		/// <summary>
-		/// Gets the type of the originator for this settings instance.
-		/// </summary>
-		public override Type OriginatorType { get { return typeof(GlsPartCnAdapter); } }
 
 		/// <summary>
 		/// Writes property elements to xml.

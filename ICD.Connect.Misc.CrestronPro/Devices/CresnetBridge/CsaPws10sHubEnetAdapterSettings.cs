@@ -1,5 +1,4 @@
-﻿using System;
-using ICD.Common.Utils;
+﻿using ICD.Common.Utils;
 using ICD.Common.Utils.Xml;
 using ICD.Connect.Devices;
 using ICD.Connect.Misc.CrestronPro.Utils;
@@ -8,21 +7,10 @@ using ICD.Connect.Settings.Attributes.SettingsProperties;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 {
-	[KrangSettings(FACTORY_NAME)]
+	[KrangSettings("CsaPws10sHubEnet", typeof(CsaPws10sHubEnetAdapter))]
 	public sealed class CsaPws10sHubEnetAdapterSettings : AbstractDeviceSettings , ICsaPws10sHubEnetSettings
 	{
-		private const string FACTORY_NAME = "CsaPws10sHubEnet";
 		private const string IPID_ELEMENT = "IPID";
-
-		/// <summary>
-		/// Gets the originator factory name.
-		/// </summary>
-		public override string FactoryName { get { return FACTORY_NAME; } }
-
-		/// <summary>
-		/// Gets the type of the originator for this settings instance.
-		/// </summary>
-		public override Type OriginatorType { get { return typeof(CsaPws10sHubEnetAdapter); } }
 
 		[CrestronByteSettingsProperty]
 		public byte? Ipid { get; set; }

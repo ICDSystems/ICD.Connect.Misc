@@ -1,5 +1,4 @@
-﻿using System;
-using ICD.Common.Utils.Xml;
+﻿using ICD.Common.Utils.Xml;
 using ICD.Connect.Misc.GlobalCache.Devices;
 using ICD.Connect.Protocol.Ports.ComPort;
 using ICD.Connect.Settings.Attributes;
@@ -7,11 +6,9 @@ using ICD.Connect.Settings.Attributes.SettingsProperties;
 
 namespace ICD.Connect.Misc.GlobalCache.Ports
 {
-	[KrangSettings(FACTORY_NAME)]
+	[KrangSettings("iTachFlexComPort", typeof(GcITachFlexComPort))]
 	public sealed class GcITachFlexComPortSettings : AbstractComPortSettings
 	{
-		private const string FACTORY_NAME = "iTachFlexComPort";
-
 		private const string PARENT_DEVICE_ELEMENT = "Device";
 		private const string PARENT_MODULE_ELEMENT = "Module";
 		private const string PARENT_ADDRESS_ELEMENT = "Address";
@@ -24,16 +21,6 @@ namespace ICD.Connect.Misc.GlobalCache.Ports
 		public int Module { get; set; }
 
 		public int Address { get; set; }
-
-		/// <summary>
-		/// Gets the originator factory name.
-		/// </summary>
-		public override string FactoryName { get { return FACTORY_NAME; } }
-
-		/// <summary>
-		/// Gets the type of the originator for this settings instance.
-		/// </summary>
-		public override Type OriginatorType { get { return typeof(GcITachFlexComPort); } }
 
 		#endregion
 

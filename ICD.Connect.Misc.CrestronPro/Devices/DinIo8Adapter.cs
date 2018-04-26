@@ -190,22 +190,24 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 
 			DinIo8 device = null;
 
-			if(settings.CresnetId != null){
-			try
+			if (settings.CresnetId != null)
 			{
-				device = CresnetUtils.InstantiateCresnetDevice(settings.CresnetId.Value,
-															   settings.BranchId,
-															   settings.ParentId,
-															   factory,
-				                                               cresnetId => new DinIo8(cresnetId, ProgramInfo.ControlSystem),
-															   (cresnetId, branch) => new DinIo8(cresnetId, branch));
+				try
+				{
+					device = CresnetUtils.InstantiateCresnetDevice(settings.CresnetId.Value,
+					                                               settings.BranchId,
+					                                               settings.ParentId,
+					                                               factory,
+					                                               cresnetId => new DinIo8(cresnetId, ProgramInfo.ControlSystem),
+					                                               (cresnetId, branch) => new DinIo8(cresnetId, branch));
+				}
+				catch (ArgumentException e)
+				{
+					string message = string.Format("{0} failed to instantiate {1} with Cresnet ID {2} - {3}",
+					                               this, typeof(DinIo8).Name, settings.CresnetId, e.Message);
+					Logger.AddEntry(eSeverity.Error, e, message);
+				}
 			}
-			catch (ArgumentException e)
-			{
-				string message = string.Format("{0} failed to instantiate {1} with Cresnet ID {2} - {3}",
-				                               this, typeof(DinIo8).Name, settings.CresnetId, e.Message);
-				Logger.AddEntry(eSeverity.Error, e, message);
-			}}
 
 			SetDevice(device);
 #else

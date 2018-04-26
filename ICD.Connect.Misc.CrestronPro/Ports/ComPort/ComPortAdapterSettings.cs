@@ -1,4 +1,3 @@
-using System;
 using ICD.Common.Utils.Xml;
 using ICD.Connect.Misc.CrestronPro.Devices;
 using ICD.Connect.Protocol.Ports.ComPort;
@@ -10,11 +9,9 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 	/// <summary>
 	/// Settings for the ComPortAdapter.
 	/// </summary>
-	[KrangSettings(FACTORY_NAME)]
+	[KrangSettings("ComPort", typeof(ComPortAdapter))]
 	public sealed class ComPortAdapterSettings : AbstractComPortSettings
 	{
-		private const string FACTORY_NAME = "ComPort";
-
 		private const string PARENT_DEVICE_ELEMENT = "Device";
 		private const string ADDRESS_ELEMENT = "Address";
 
@@ -26,16 +23,6 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 		public int? Device { get; set; }
 
 		public int Address { get { return m_Address; } set { m_Address = value; } }
-
-		/// <summary>
-		/// Gets the originator factory name.
-		/// </summary>
-		public override string FactoryName { get { return FACTORY_NAME; } }
-
-		/// <summary>
-		/// Gets the type of the originator for this settings instance.
-		/// </summary>
-		public override Type OriginatorType { get { return typeof(ComPortAdapter); } }
 
 		#endregion
 
