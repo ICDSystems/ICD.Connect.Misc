@@ -1,21 +1,9 @@
-﻿using System;
-using ICD.Connect.Settings.Attributes;
+﻿using ICD.Connect.Settings.Attributes;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 {
-	[KrangSettings(FACTORY_NAME)]
+	[KrangSettings("C3Ir8", typeof(C3Ir8Adapter))]
 	public sealed class C3Ir8AdapterSettings : AbstractC3CardAdapterSettings
 	{
-		private const string FACTORY_NAME = "C3Ir8";
-
-		/// <summary>
-		/// Gets the originator factory name.
-		/// </summary>
-		public override string FactoryName { get { return FACTORY_NAME; } }
-
-		/// <summary>
-		/// Gets the type of the originator for this settings instance.
-		/// </summary>
-		public override Type OriginatorType { get { return typeof(C3Ir8Adapter); } }
 	}
 }
