@@ -9,8 +9,6 @@ using ICD.Connect.Settings.Core;
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.ThreeSeriesCards;
 using Crestron.SimplSharpProInternal;
-#else
-using System;
 #endif
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
