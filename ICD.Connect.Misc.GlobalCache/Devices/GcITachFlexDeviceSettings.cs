@@ -1,6 +1,7 @@
 ﻿using ICD.Connect.Devices;
 using ICD.Common.Utils.Xml;
 using ICD.Connect.Settings.Attributes;
+using ICD.Connect.Settings.Attributes.SettingsProperties;
 
 namespace ICD.Connect.Misc.GlobalCache.Devices
 {
@@ -12,6 +13,7 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 		/// <summary>
 		/// The network address of the iTach device.
 		/// </summary>
+		[IpAddressSettingsProperty]
 		public string Address { get; set; }
 
 		/// <summary>
