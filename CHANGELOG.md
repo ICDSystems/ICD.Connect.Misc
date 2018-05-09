@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
  - Default tv presets path to processor address
 
+## [5.1.2] - 2018-05-09
+### Changed
+ - Fixing issues with loading configs in UTF8-BOM encoding
+
 ## [5.1.1] - 2018-05-03
 ### Added
  - Adding IP attribute to settings
