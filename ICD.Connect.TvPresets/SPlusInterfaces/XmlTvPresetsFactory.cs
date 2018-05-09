@@ -140,7 +140,9 @@ namespace ICD.Connect.TvPresets.SPlusInterfaces
 
 			try
 			{
-				string xml = IcdFile.ReadToEnd(xmlPath, Encoding.UTF8);
+				string xml = IcdFile.ReadToEnd(xmlPath, new UTF8Encoding(false));
+				xml = EncodingUtils.StripUtf8Bom(xml);
+
 				s_Presets = XmlTvPresets.FromXml(xml);
 			}
 			catch (Exception e)
