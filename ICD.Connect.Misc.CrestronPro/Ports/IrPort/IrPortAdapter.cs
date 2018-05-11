@@ -159,7 +159,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 				Log(eSeverity.Error, "Unable to load driver - file does not exist: {0}", fullPath);
 			}
 #else
-            throw new NotImplementedException();
+            throw new NotSupportedException();
 #endif
 		}
 
@@ -181,7 +181,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 			PrintTx(command);
 			m_Port.Press(command);
 #else
-            throw new NotImplementedException();
+            throw new NotSupportedException();
 #endif
 		}
 
@@ -309,7 +309,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 			if (!string.IsNullOrEmpty(settings.IrDriverPath))
 				LoadDriver(settings.IrDriverPath);
 #else
-            throw new NotImplementedException();
+            throw new NotSupportedException();
 #endif
 		}
 
@@ -342,7 +342,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 			m_PulseTimer.Stop();
 			m_Queue.Clear();
 #else
-            throw new NotImplementedException();
+            throw new NotSupportedException();
 #endif
 		}
 
@@ -366,7 +366,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 			
 			m_PulseTimer.Reset(pulse.Duration);
 #else
-            throw new NotImplementedException();
+            throw new NotSupportedException();
 #endif
 		}
 
@@ -382,7 +382,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 			if (m_Queue.Count > 0)
 				SendNext();
 #else
-            throw new NotImplementedException();
+            throw new NotSupportedException();
 #endif
 		}
 
