@@ -9,7 +9,7 @@ using ICD.Connect.API.Nodes;
 using ICD.Connect.Devices.Extensions;
 using ICD.Connect.Misc.CrestronPro.Devices;
 using ICD.Connect.Protocol.Ports.IrPort;
-using ICD.Connect.Settings.Core;
+using ICD.Connect.Settings;
 #if SIMPLSHARP
 using Crestron.SimplSharp.CrestronIO;
 using Crestron.SimplSharpPro;

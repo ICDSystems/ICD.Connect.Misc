@@ -1,7 +1,7 @@
 ﻿using System;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.Protocol.Ports.DigitalInput;
-using ICD.Connect.Settings.Core;
+using ICD.Connect.Settings;
 #if SIMPLSHARP
 using Crestron.SimplSharpPro;
 using ICD.Connect.Misc.CrestronPro.Utils.Extensions;

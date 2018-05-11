@@ -11,7 +11,7 @@ using ICD.Connect.Protocol.Network.Tcp;
 using ICD.Connect.Protocol.Ports;
 using ICD.Connect.Protocol.Ports.ComPort;
 using ICD.Connect.Protocol.Utils;
-using ICD.Connect.Settings.Core;
+using ICD.Connect.Settings;
 
 namespace ICD.Connect.Misc.GlobalCache.Ports
 {

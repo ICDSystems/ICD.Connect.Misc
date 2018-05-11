@@ -7,7 +7,7 @@ using ICD.Connect.Misc.GlobalCache.FlexApi;
 using ICD.Connect.Protocol.Network.Tcp;
 using ICD.Connect.Protocol.Network.WebPorts;
 using ICD.Connect.Protocol.SerialBuffers;
-using ICD.Connect.Settings.Core;
+using ICD.Connect.Settings;
 
 namespace ICD.Connect.Misc.GlobalCache.Devices
 {
