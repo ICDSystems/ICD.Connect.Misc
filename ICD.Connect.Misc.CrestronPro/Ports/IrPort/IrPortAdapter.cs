@@ -241,9 +241,9 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 
 			settings.Device = m_Device;
 			settings.Address = m_Address;
-			settings.Driver = m_Driver;
-			settings.PulseTime = PulseTime;
-			settings.BetweenTime = BetweenTime;
+			settings.IrDriverPath = m_Driver;
+			settings.IrPulseTime = PulseTime;
+			settings.IrBetweenTime = BetweenTime;
 		}
 
 		/// <summary>
@@ -274,8 +274,8 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 
 			m_Device = settings.Device;
 
-			PulseTime = settings.PulseTime;
-			BetweenTime = settings.BetweenTime;
+			PulseTime = settings.IrPulseTime;
+			BetweenTime = settings.IrBetweenTime;
 
 #if SIMPLSHARP
 			IROutputPort port = null;
@@ -306,8 +306,8 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 
 			SetIrPort(port, settings.Address);
 
-			if (!string.IsNullOrEmpty(settings.Driver))
-				LoadDriver(settings.Driver);
+			if (!string.IsNullOrEmpty(settings.IrDriverPath))
+				LoadDriver(settings.IrDriverPath);
 #else
             throw new NotImplementedException();
 #endif
@@ -392,7 +392,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		/// </summary>
 		/// <param name="localPath"></param>
 		/// <returns></returns>
-		public static string GetIrDriversPath(string localPath)
+		private static string GetIrDriversPath(string localPath)
 		{
 			return PathUtils.GetDefaultConfigPath(new[] {"IRDrivers", localPath});
 		}
