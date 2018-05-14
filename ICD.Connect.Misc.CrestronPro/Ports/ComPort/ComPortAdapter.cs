@@ -111,11 +111,17 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 		}
 #endif
 
+		/// <summary>
+		/// Connects to the end point.
+		/// </summary>
 		public override void Connect()
 		{
 			IsConnected = true;
 		}
 
+		/// <summary>
+		/// Disconnects from the end point.
+		/// </summary>
 		public override void Disconnect()
 		{
 			IsConnected = false;
@@ -130,6 +136,9 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 			return IsConnected;
 		}
 
+		/// <summary>
+		/// Implements the actual sending logic. Wrapped by Send to handle connection status.
+		/// </summary>
 		protected override bool SendFinal(string data)
 		{
 #if SIMPLSHARP
@@ -152,6 +161,17 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 
 		#region ComSpec
 
+		/// <summary>
+		/// Configures the ComPort for communication.
+		/// </summary>
+		/// <param name="baudRate"></param>
+		/// <param name="numberOfDataBits"></param>
+		/// <param name="parityType"></param>
+		/// <param name="numberOfStopBits"></param>
+		/// <param name="protocolType"></param>
+		/// <param name="hardwareHandShake"></param>
+		/// <param name="softwareHandshake"></param>
+		/// <param name="reportCtsChanges"></param>
 		[PublicAPI]
 		public void SetComPortSpec(eComBaudRates baudRate, eComDataBits numberOfDataBits,
 		                           eComParityType parityType,
