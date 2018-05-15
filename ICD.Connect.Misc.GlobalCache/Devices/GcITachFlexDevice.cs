@@ -11,7 +11,7 @@ using ICD.Connect.Settings;
 
 namespace ICD.Connect.Misc.GlobalCache.Devices
 {
-    public sealed class GcITachFlexDevice : AbstractDevice<GcITachFlexDeviceSettings>
+	public sealed class GcITachFlexDevice : AbstractDevice<GcITachFlexDeviceSettings>
 	{
 		private const ushort TCP_PORT = 4998;
 
