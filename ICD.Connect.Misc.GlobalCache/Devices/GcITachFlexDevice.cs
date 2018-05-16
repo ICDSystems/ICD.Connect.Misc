@@ -1,11 +1,16 @@
-﻿using ICD.Common.Utils;
+﻿using System;
+using System.Text;
+using ICD.Common.Properties;
 using ICD.Common.Utils.EventArguments;
-using ICD.Connect.API.Nodes;
+using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.Devices;
 using ICD.Connect.Devices.EventArguments;
 using ICD.Connect.Misc.GlobalCache.FlexApi;
-using ICD.Connect.Protocol.Network.Tcp;
+using ICD.Connect.Protocol.Extensions;
+using ICD.Connect.Protocol.Network;
+using ICD.Connect.Protocol.Network.Settings;
 using ICD.Connect.Protocol.Network.WebPorts;
+using ICD.Connect.Protocol.Ports;
 using ICD.Connect.Protocol.SerialBuffers;
 using ICD.Connect.Settings;
 
@@ -13,34 +18,23 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 {
 	public sealed class GcITachFlexDevice : AbstractDevice<GcITachFlexDeviceSettings>
 	{
-		private const ushort TCP_PORT = 4998;
+		private readonly UriProperties m_UriProperties;
+		private readonly NetworkProperties m_NetworkProperties;
+		private readonly DelimiterSerialBuffer m_Buffer;
 
-		private readonly AsyncTcpClient m_TcpClient;
-		private readonly DelimiterSerialBuffer m_TcpBuffer;
-		private readonly HttpPort m_HttpClient;
-
-		public string Address { get { return m_TcpClient.Address; } }
+		[CanBeNull] private ISerialPort m_SerialPort;
+		[CanBeNull] private IWebPort m_WebPort;
 
 		/// <summary>
 		/// Constructor.
 		/// </summary>
 		public GcITachFlexDevice()
 		{
-			m_TcpClient = new AsyncTcpClient
-			{
-				Name = GetType().Name,
-				Port = TCP_PORT
-			};
+			m_UriProperties = new UriProperties();
+			m_NetworkProperties = new NetworkProperties();
 
-			m_TcpBuffer = new DelimiterSerialBuffer(FlexData.NEWLINE);
-
-			m_HttpClient = new HttpPort
-			{
-				Name = GetType().Name
-			};
-
-			Subscribe(m_TcpBuffer);
-			Subscribe(m_TcpClient);
+			m_Buffer = new DelimiterSerialBuffer(FlexData.NEWLINE);
+			Subscribe(m_Buffer);
 		}
 
 		/// <summary>
@@ -51,11 +45,43 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 		{
 			base.DisposeFinal(disposing);
 
-			Unsubscribe(m_TcpBuffer);
-			Unsubscribe(m_TcpClient);
+			Unsubscribe(m_Buffer);
 
-			m_TcpClient.Dispose();
-			m_HttpClient.Dispose();
+			SetSerialPort(null);
+			SetWebPort(null);
+		}
+
+		#region Methods
+
+		/// <summary>
+		/// Sets the WebPort for communication with the GlobalCache device web API.
+		/// </summary>
+		/// <param name="port"></param>
+		public void SetWebPort(IWebPort port)
+		{
+			if (port == m_WebPort)
+				return;
+
+			Unsubscribe(m_WebPort);
+			m_WebPort = port;
+			Subscribe(m_WebPort);
+		}
+
+		/// <summary>
+		/// Sets the serial port for communication with the 
+		/// </summary>
+		/// <param name="port"></param>
+		public void SetSerialPort(ISerialPort port)
+		{
+			if (port == m_SerialPort)
+				return;
+
+			Unsubscribe(m_SerialPort);
+
+			m_Buffer.Clear();
+			m_SerialPort = port;
+
+			Subscribe(m_SerialPort);
 		}
 
 		/// <summary>
@@ -64,7 +90,10 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 		/// <param name="command"></param>
 		public void SendCommand(string command)
 		{
-			m_TcpClient.Send(command);
+			if (m_SerialPort == null)
+				throw new InvalidOperationException("Wrapped serial port is null");
+
+			m_SerialPort.Send(command);
 		}
 
 		/// <summary>
@@ -83,10 +112,28 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 		/// <param name="data"></param>
 		public void Post(string localUrl, string data)
 		{
+			if (m_WebPort == null)
+				throw new InvalidOperationException("Wrapped web port is null");
+
 			string result;
-			if (m_HttpClient.Post(localUrl, data, out result))
+			if (m_WebPort.Post(localUrl, data, Encoding.ASCII, out result))
 				ParseResult(result);
 		}
+
+		/// <summary>
+		/// Gets the network address for the device.
+		/// </summary>
+		/// <returns></returns>
+		public string GetNetworkAddress()
+		{
+			if (m_WebPort != null && !string.IsNullOrEmpty(m_WebPort.UriProperties.UriHost))
+				return m_WebPort.UriProperties.UriHost;
+
+			INetworkPort networkPort = m_SerialPort as INetworkPort;
+			return networkPort != null ? networkPort.Address : null;
+		}
+
+		#endregion
 
 		/// <summary>
 		/// HTTP response handler.
@@ -96,34 +143,82 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 		{
 		}
 
+		/// <summary>
+		/// Gets the current online status of the device.
+		/// </summary>
+		/// <returns></returns>
 		protected override bool GetIsOnlineStatus()
 		{
-			bool tcp = m_TcpClient != null && m_TcpClient.IsOnline;
-			bool http = m_HttpClient != null && m_HttpClient.IsOnline;
+			bool serial = m_SerialPort != null && m_SerialPort.IsOnline;
+			bool web = m_WebPort != null && m_WebPort.IsOnline;
 
-			return tcp && http;
+			return serial && web;
 		}
 
-		#region TCP Client Callbacks
+		#region Web Port Callbacks
 
 		/// <summary>
-		/// Subscribe to the client callbacks.
+		/// Subscribe to the web port events.
 		/// </summary>
-		/// <param name="client"></param>
-		private void Subscribe(AsyncTcpClient client)
+		/// <param name="port"></param>
+		private void Subscribe(IWebPort port)
 		{
-			client.OnIsOnlineStateChanged += ClientOnOnIsOnlineStateChanged;
-			client.OnSerialDataReceived += ClientOnOnSerialDataReceived;
+			if (port == null)
+				return;
+
+			port.OnIsOnlineStateChanged += WebPortOnIsOnlineStateChanged;
 		}
 
 		/// <summary>
-		/// Unsubscribe from the client callbacks.
+		/// Unsubscribe from the web port events.
 		/// </summary>
-		/// <param name="client"></param>
-		private void Unsubscribe(AsyncTcpClient client)
+		/// <param name="port"></param>
+		private void Unsubscribe(IWebPort port)
 		{
-			client.OnIsOnlineStateChanged -= ClientOnOnIsOnlineStateChanged;
-			client.OnSerialDataReceived -= ClientOnOnSerialDataReceived;
+			if (port == null)
+				return;
+
+			port.OnIsOnlineStateChanged -= WebPortOnIsOnlineStateChanged;
+		}
+
+		/// <summary>
+		/// Called when the web port online status changes.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="eventArgs"></param>
+		private void WebPortOnIsOnlineStateChanged(object sender, DeviceBaseOnlineStateApiEventArgs eventArgs)
+		{
+			UpdateCachedOnlineStatus();
+		}
+
+		#endregion
+
+		#region Serial Port Callbacks
+
+		/// <summary>
+		/// Subscribe to the port callbacks.
+		/// </summary>
+		/// <param name="port"></param>
+		private void Subscribe(ISerialPort port)
+		{
+			if (port == null)
+				return;
+
+			port.OnIsOnlineStateChanged += SerialPortOnIsOnlineStateChanged;
+			port.OnSerialDataReceived += SerialPortOnSerialDataReceived;
+		}
+
+		/// <summary>
+		/// Unsubscribe from the port callbacks.
+		/// </summary>
+		/// <param name="port"></param>
+		private void Unsubscribe(ISerialPort port)
+		{
+			if (port == null)
+				return;
+
+			port.OnIsOnlineStateChanged -= SerialPortOnIsOnlineStateChanged;
+			port.OnSerialDataReceived -= SerialPortOnSerialDataReceived;
 		}
 
 		/// <summary>
@@ -131,30 +226,30 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="stringEventArgs"></param>
-		private void ClientOnOnSerialDataReceived(object sender, StringEventArgs stringEventArgs)
+		private void SerialPortOnSerialDataReceived(object sender, StringEventArgs stringEventArgs)
 		{
-			m_TcpBuffer.Enqueue(stringEventArgs.Data);
+			m_Buffer.Enqueue(stringEventArgs.Data);
 		}
 
 		/// <summary>
-		/// Called when the 
+		/// Called when the serial port online state changes.
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="args"></param>
-		private void ClientOnOnIsOnlineStateChanged(object sender, DeviceBaseOnlineStateApiEventArgs args)
+		private void SerialPortOnIsOnlineStateChanged(object sender, DeviceBaseOnlineStateApiEventArgs args)
 		{
 			UpdateCachedOnlineStatus();
 		}
 
 		#endregion
 
-		#region TCP Buffer Callbacks
+		#region Serial Buffer Callbacks
 
 		/// <summary>
-		/// Subsribe to the buffer events.
+		/// Subscribe to the buffer events.
 		/// </summary>
 		/// <param name="buffer"></param>
-		private void Subscribe(DelimiterSerialBuffer buffer)
+		private void Subscribe(ISerialBuffer buffer)
 		{
 			buffer.OnCompletedSerial += BufferOnOnCompletedSerial;
 		}
@@ -163,7 +258,7 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 		/// Unsubscribe from the buffer events.
 		/// </summary>
 		/// <param name="buffer"></param>
-		private void Unsubscribe(DelimiterSerialBuffer buffer)
+		private void Unsubscribe(ISerialBuffer buffer)
 		{
 			buffer.OnCompletedSerial -= BufferOnOnCompletedSerial;
 		}
@@ -175,44 +270,76 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 		/// <param name="stringEventArgs"></param>
 		private void BufferOnOnCompletedSerial(object sender, StringEventArgs stringEventArgs)
 		{
-			IcdConsole.PrintLine(stringEventArgs.Data);
 		}
 
 		#endregion
 
 		#region Settings
 
+		/// <summary>
+		/// Override to clear the instance settings.
+		/// </summary>
 		protected override void ClearSettingsFinal()
 		{
 			base.ClearSettingsFinal();
 
-			m_TcpClient.Address = null;
+			SetWebPort(null);
+			SetSerialPort(null);
+
+			m_NetworkProperties.Clear();
+			m_UriProperties.Clear();
 		}
 
+		/// <summary>
+		/// Override to apply settings to the instance.
+		/// </summary>
+		/// <param name="settings"></param>
+		/// <param name="factory"></param>
 		protected override void ApplySettingsFinal(GcITachFlexDeviceSettings settings, IDeviceFactory factory)
 		{
 			base.ApplySettingsFinal(settings, factory);
 
-			m_TcpClient.Address = settings.Address;
-			m_HttpClient.Address = settings.Address;
+			m_NetworkProperties.Copy(settings);
+			m_UriProperties.Copy(settings);
+
+			// Web Port
+			IWebPort webPort = null;
+
+			if (settings.WebPort != null)
+			{
+				webPort = factory.GetPortById((int)settings.WebPort) as IWebPort;
+				if (webPort == null)
+					Log(eSeverity.Error, "No web Port with id {0}", settings.WebPort);
+			}
+
+			SetWebPort(webPort);
+
+			// Serial Port
+			ISerialPort serialPort = null;
+
+			if (settings.SerialPort != null)
+			{
+				serialPort = factory.GetPortById((int)settings.SerialPort) as ISerialPort;
+				if (serialPort == null)
+					Log(eSeverity.Error, "No serial Port with id {0}", settings.SerialPort);
+			}
+
+			SetSerialPort(serialPort);
 		}
 
+		/// <summary>
+		/// Override to apply properties to the settings instance.
+		/// </summary>
+		/// <param name="settings"></param>
 		protected override void CopySettingsFinal(GcITachFlexDeviceSettings settings)
 		{
 			base.CopySettingsFinal(settings);
 
-			settings.Address = m_TcpClient.Address;
-		}
+			settings.WebPort = m_WebPort == null ? (int?)null : m_WebPort.Id;
+			settings.SerialPort = m_SerialPort == null ? (int?)null : m_SerialPort.Id;
 
-		#endregion
-
-		#region Console
-
-		public override void BuildConsoleStatus(AddStatusRowDelegate addRow)
-		{
-			base.BuildConsoleStatus(addRow);
-
-			addRow("Address", Address);
+			settings.Copy(m_UriProperties);
+			settings.Copy(m_NetworkProperties);
 		}
 
 		#endregion

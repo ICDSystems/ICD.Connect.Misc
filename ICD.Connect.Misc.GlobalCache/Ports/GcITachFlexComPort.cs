@@ -83,10 +83,10 @@ namespace ICD.Connect.Misc.GlobalCache.Ports
 			}
 			catch (Exception e)
 			{
-				Logger.AddEntry(eSeverity.Error, e, "{0} failed to set module type", this);
+				Log(eSeverity.Error, e, "Failed to set module type");
 			}
 
-			HostInfo host = new HostInfo(m_Device.Address, PORT);
+			HostInfo host = new HostInfo(m_Device.GetNetworkAddress(), PORT);
 			m_Client.Connect(host);
 		}
 
@@ -123,7 +123,7 @@ namespace ICD.Connect.Misc.GlobalCache.Ports
 			}
 			catch (Exception e)
 			{
-				Logger.AddEntry(eSeverity.Error, e, "{0} failed to set comspec", this);
+				Log(eSeverity.Error, e, "Failed to set comspec");
 			}
 		}
 
@@ -258,7 +258,7 @@ namespace ICD.Connect.Misc.GlobalCache.Ports
 			{
 				device = factory.GetDeviceById((int)settings.Device) as GcITachFlexDevice;
 				if (device == null)
-					Logger.AddEntry(eSeverity.Error, "{0} is not a {1}", m_Device, typeof(GcITachFlexDevice).Name);
+					Log(eSeverity.Error, "{0} is not a {1}", m_Device, typeof(GcITachFlexDevice).Name);
 			}
 
 			m_Module = settings.Module;

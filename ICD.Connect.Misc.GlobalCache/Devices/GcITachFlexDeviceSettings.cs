@@ -1,17 +1,39 @@
 ﻿using ICD.Connect.Devices;
 using ICD.Common.Utils.Xml;
 using ICD.Connect.Protocol.Network.Settings;
+using ICD.Connect.Protocol.Network.WebPorts;
+using ICD.Connect.Protocol.Ports;
 using ICD.Connect.Settings.Attributes;
+using ICD.Connect.Settings.Attributes.SettingsProperties;
 
 namespace ICD.Connect.Misc.GlobalCache.Devices
 {
 	[KrangSettings("iTachFlex", typeof(GcITachFlexDevice))]
-	public sealed class GcITachFlexDeviceSettings : AbstractDeviceSettings, IUriProperties, INetworkProperties
+	public sealed class GcITachFlexDeviceSettings : AbstractDeviceSettings, IUriSettings, ISecureNetworkSettings
 	{
 		private const ushort DEFAULT_NETWORK_PORT = 4998;
 
+		private const string SERIAL_PORT_ELEMENT = "SerialPort";
+		private const string WEB_PORT_ELEMENT = "WebPort";
+
 		private readonly UriProperties m_UriProperties;
-		private readonly NetworkProperties m_NetworkProperties;
+		private readonly SecureNetworkProperties m_NetworkProperties;
+
+		#region Properties
+
+		/// <summary>
+		/// The serial port id.
+		/// </summary>
+		[OriginatorIdSettingsProperty(typeof(ISerialPort))]
+		public int? SerialPort { get; set; }
+
+		/// <summary>
+		/// The web port id.
+		/// </summary>
+		[OriginatorIdSettingsProperty(typeof(IWebPort))]
+		public int? WebPort { get; set; }
+
+		#endregion
 
 		#region Network
 
@@ -104,7 +126,7 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 		{
 			m_UriProperties = new UriProperties();
 
-			m_NetworkProperties = new NetworkProperties
+			m_NetworkProperties = new SecureNetworkProperties
 			{
 				NetworkPort = DEFAULT_NETWORK_PORT
 			};
@@ -118,6 +140,9 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 		{
 			base.WriteElements(writer);
 
+			writer.WriteElementString(WEB_PORT_ELEMENT, IcdXmlConvert.ToString(WebPort));
+			writer.WriteElementString(SERIAL_PORT_ELEMENT, IcdXmlConvert.ToString(SerialPort));
+
 			m_UriProperties.WriteElements(writer);
 			m_NetworkProperties.WriteElements(writer);
 		}
@@ -129,6 +154,9 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 		public override void ParseXml(string xml)
 		{
 			base.ParseXml(xml);
+
+			WebPort = XmlUtils.TryReadChildElementContentAsInt(xml, WEB_PORT_ELEMENT);
+			SerialPort = XmlUtils.TryReadChildElementContentAsInt(xml, SERIAL_PORT_ELEMENT);
 
 			m_UriProperties.ParseXml(xml);
 			m_NetworkProperties.ParseXml(xml);
