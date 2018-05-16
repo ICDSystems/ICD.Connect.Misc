@@ -7,7 +7,6 @@ using ICD.Connect.Devices;
 using ICD.Connect.Devices.EventArguments;
 using ICD.Connect.Misc.GlobalCache.FlexApi;
 using ICD.Connect.Protocol.Extensions;
-using ICD.Connect.Protocol.Network;
 using ICD.Connect.Protocol.Network.Ports;
 using ICD.Connect.Protocol.Network.Ports.Web;
 using ICD.Connect.Protocol.Network.Settings;
