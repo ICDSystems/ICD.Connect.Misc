@@ -7,7 +7,7 @@ using ICD.Connect.Devices.EventArguments;
 using ICD.Connect.Devices.Extensions;
 using ICD.Connect.Misc.GlobalCache.Devices;
 using ICD.Connect.Misc.GlobalCache.FlexApi.RestApi;
-using ICD.Connect.Protocol.Network.Tcp;
+using ICD.Connect.Protocol.Network.Ports.Tcp;
 using ICD.Connect.Protocol.Ports;
 using ICD.Connect.Protocol.Ports.ComPort;
 using ICD.Connect.Protocol.Utils;
