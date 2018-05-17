@@ -9,6 +9,7 @@ using ICD.Connect.API.Nodes;
 using ICD.Connect.Devices.Extensions;
 using ICD.Connect.Misc.CrestronPro.Devices;
 using ICD.Connect.Protocol.Ports.IrPort;
+using ICD.Connect.Protocol.Settings;
 using ICD.Connect.Settings;
 #if SIMPLSHARP
 using Crestron.SimplSharp.CrestronIO;
@@ -23,28 +24,40 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 	/// </summary>
 	public sealed class IrPortAdapter : AbstractIrPort<IrPortAdapterSettings>
 	{
+		private const ushort DEFAULT_PULSE_TIME = 100;
+		private const ushort DEFAULT_BETWEEN_TIME = 750;
+
 #if SIMPLSHARP
 		private IROutputPort m_Port;
 #endif
 		private readonly Queue<IrPulse> m_Queue;
 		private readonly SafeTimer m_PulseTimer;
 
+		private readonly IrDriverProperties m_IrDriverProperties;
+
 		// Used with settings
 		private int? m_Device;
 		private int m_Address;
-		private string m_Driver;
 
 		#region Properties
 
 		/// <summary>
 		/// Gets/sets the default pulse time in milliseconds for a PressAndRelease.
 		/// </summary>
-		public override ushort PulseTime { get; set; }
+		public override ushort PulseTime
+		{
+			get { return m_IrDriverProperties.IrPulseTime ?? DEFAULT_PULSE_TIME; }
+			set { m_IrDriverProperties.IrPulseTime = value == 0 ? DEFAULT_PULSE_TIME : value; }
+		}
 
 		/// <summary>
 		/// Gets/sets the default time in milliseconds between PressAndRelease commands.
 		/// </summary>
-		public override ushort BetweenTime { get; set; }
+		public override ushort BetweenTime
+		{
+			get { return m_IrDriverProperties.IrBetweenTime ?? DEFAULT_BETWEEN_TIME; }
+			set { m_IrDriverProperties.IrBetweenTime = value == 0 ? DEFAULT_BETWEEN_TIME : value; }
+		}
 
 		#endregion
 
@@ -55,7 +68,12 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		/// </summary>
 		public IrPortAdapter()
 		{
+			m_IrDriverProperties = new IrDriverProperties();
+
 			m_Queue = new Queue<IrPulse>();
+
+			PulseTime = DEFAULT_PULSE_TIME;
+			BetweenTime = DEFAULT_BETWEEN_TIME;
 
 			m_PulseTimer = SafeTimer.Stopped(TimerCallbackMethod);
 		}
@@ -140,7 +158,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		public override void LoadDriver(string path)
 		{
 #if SIMPLSHARP
-			m_Driver = path;
+			m_IrDriverProperties.IrDriverPath = path;
 
 			if (m_Port == null)
 			{
@@ -241,9 +259,8 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 
 			settings.Device = m_Device;
 			settings.Address = m_Address;
-			settings.IrDriverPath = m_Driver;
-			settings.IrPulseTime = PulseTime;
-			settings.IrBetweenTime = BetweenTime;
+			
+			settings.Copy(m_IrDriverProperties);
 		}
 
 		/// <summary>
@@ -254,13 +271,12 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 			base.ClearSettingsFinal();
 
 			m_Device = 0;
-			m_Driver = null;
-			PulseTime = 0;
-			BetweenTime = 0;
 
 #if SIMPLSHARP
 			SetIrPort(null, 0);
 #endif
+
+			m_IrDriverProperties.Clear();
 		}
 
 		/// <summary>
@@ -274,8 +290,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 
 			m_Device = settings.Device;
 
-			PulseTime = settings.IrPulseTime;
-			BetweenTime = settings.IrBetweenTime;
+			m_IrDriverProperties.Copy(settings);
 
 #if SIMPLSHARP
 			IROutputPort port = null;
@@ -408,7 +423,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		{
 			base.BuildConsoleStatus(addRow);
 
-			addRow("Driver", m_Driver);
+			addRow("Driver", m_IrDriverProperties.IrDriverPath);
 		}
 
 		/// <summary>

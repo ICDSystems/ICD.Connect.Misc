@@ -67,7 +67,7 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 		/// <summary>
 		/// Gets/sets the configurable network port.
 		/// </summary>
-		public ushort NetworkPort
+		public ushort? NetworkPort
 		{
 			get { return m_NetworkProperties.NetworkPort; }
 			set { m_NetworkProperties.NetworkPort = value; }
@@ -95,7 +95,7 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 		/// <summary>
 		/// Gets/sets the configurable URI port.
 		/// </summary>
-		public ushort UriPort { get { return m_UriProperties.UriPort; } set { m_UriProperties.UriPort = value; } }
+		public ushort? UriPort { get { return m_UriProperties.UriPort; } set { m_UriProperties.UriPort = value; } }
 
 		/// <summary>
 		/// Gets/sets the configurable URI scheme.
