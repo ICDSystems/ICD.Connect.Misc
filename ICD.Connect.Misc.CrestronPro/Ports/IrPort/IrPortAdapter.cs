@@ -296,8 +296,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 				}
 				catch (Exception e)
 				{
-					Logger.AddEntry(eSeverity.Error, e, "Unable to get IrPort from device {0} at address {1}", m_Device,
-					                settings.Address);
+					Log(eSeverity.Error, e, "Unable to get IrPort from device {0} at address {1}", m_Device, settings.Address);
 				}
 			}
 
