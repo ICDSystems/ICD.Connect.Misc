@@ -19,7 +19,7 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 	public sealed class GcITachFlexDevice : AbstractDevice<GcITachFlexDeviceSettings>
 	{
 		private readonly UriProperties m_UriProperties;
-		private readonly NetworkProperties m_NetworkProperties;
+		private readonly SecureNetworkProperties m_NetworkProperties;
 		private readonly DelimiterSerialBuffer m_Buffer;
 
 		[CanBeNull] private ISerialPort m_SerialPort;
@@ -31,7 +31,7 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 		public GcITachFlexDevice()
 		{
 			m_UriProperties = new UriProperties();
-			m_NetworkProperties = new NetworkProperties();
+			m_NetworkProperties = new SecureNetworkProperties();
 
 			m_Buffer = new DelimiterSerialBuffer(FlexData.NEWLINE);
 			Subscribe(m_Buffer);
@@ -62,6 +62,8 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 			if (port == m_WebPort)
 				return;
 
+			ConfigurePort(port);
+
 			Unsubscribe(m_WebPort);
 			m_WebPort = port;
 			Subscribe(m_WebPort);
@@ -76,12 +78,31 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 			if (port == m_SerialPort)
 				return;
 
+			ConfigurePort(port);
+
 			Unsubscribe(m_SerialPort);
 
 			m_Buffer.Clear();
 			m_SerialPort = port;
 
 			Subscribe(m_SerialPort);
+		}
+
+		/// <summary>
+		/// Configures the given port for communication with the device.
+		/// </summary>
+		/// <param name="port"></param>
+		private void ConfigurePort(IPort port)
+		{
+			// URI
+			if (port is IWebPort)
+				(port as IWebPort).ApplyDeviceConfiguration(m_UriProperties);
+
+			// Network (TCP, UDP, SSH)
+			if (port is ISecureNetworkPort)
+				(port as ISecureNetworkPort).ApplyDeviceConfiguration(m_NetworkProperties);
+			else if (port is INetworkPort)
+				(port as INetworkPort).ApplyDeviceConfiguration(m_NetworkProperties);
 		}
 
 		/// <summary>
