@@ -10,26 +10,36 @@ using ICD.Connect.Misc.GlobalCache.FlexApi.RestApi;
 using ICD.Connect.Protocol.Network.Ports.Tcp;
 using ICD.Connect.Protocol.Ports;
 using ICD.Connect.Protocol.Ports.ComPort;
+using ICD.Connect.Protocol.Settings;
 using ICD.Connect.Protocol.Utils;
 using ICD.Connect.Settings;
 
 namespace ICD.Connect.Misc.GlobalCache.Ports
 {
-    public sealed class GcITachFlexComPort : AbstractComPort<GcITachFlexComPortSettings>
+	public sealed class GcITachFlexComPort : AbstractComPort<GcITachFlexComPortSettings>
 	{
 		private const ushort PORT = 4999;
 
 		private readonly AsyncTcpClient m_Client;
+
+		private readonly ComSpecProperties m_ComSpecProperties;
 
 		private GcITachFlexDevice m_Device;
 		private int m_Module;
 		private int m_Address;
 
 		/// <summary>
+		/// Gets the Com Spec configuration properties.
+		/// </summary>
+		protected override IComSpecProperties ComSpecProperties { get { return m_ComSpecProperties; } }
+
+		/// <summary>
 		/// Constructor.
 		/// </summary>
 		public GcITachFlexComPort()
 		{
+			m_ComSpecProperties = new ComSpecProperties();
+
 			m_Client = new AsyncTcpClient {Name = GetType().Name};
 			Subscribe(m_Client);
 		}
@@ -237,6 +247,8 @@ namespace ICD.Connect.Misc.GlobalCache.Ports
 			m_Address = 1;
 
 			SetDevice(null);
+
+			m_ComSpecProperties.Clear();
 		}
 
 		protected override void CopySettingsFinal(GcITachFlexComPortSettings settings)
@@ -246,11 +258,15 @@ namespace ICD.Connect.Misc.GlobalCache.Ports
 			settings.Module = m_Module;
 			settings.Address = m_Address;
 			settings.Device = m_Device == null ? (int?)null : m_Device.Id;
+
+			settings.Copy(m_ComSpecProperties);
 		}
 
 		protected override void ApplySettingsFinal(GcITachFlexComPortSettings settings, IDeviceFactory factory)
 		{
 			base.ApplySettingsFinal(settings, factory);
+
+			m_ComSpecProperties.Copy(settings);
 
 			GcITachFlexDevice device = null;
 
