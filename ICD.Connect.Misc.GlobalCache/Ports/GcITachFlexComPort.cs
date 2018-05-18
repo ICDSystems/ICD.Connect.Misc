@@ -108,9 +108,21 @@ namespace ICD.Connect.Misc.GlobalCache.Ports
 			m_Client.Disconnect();
 		}
 
+		/// <summary>
+		/// Configures the ComPort for communication.
+		/// </summary>
+		/// <param name="baudRate"></param>
+		/// <param name="numberOfDataBits"></param>
+		/// <param name="parityType"></param>
+		/// <param name="numberOfStopBits"></param>
+		/// <param name="protocolType"></param>
+		/// <param name="hardwareHandShake"></param>
+		/// <param name="softwareHandshake"></param>
+		/// <param name="reportCtsChanges"></param>
 		public override void SetComPortSpec(eComBaudRates baudRate, eComDataBits numberOfDataBits, eComParityType parityType,
-											eComStopBits numberOfStopBits, eComProtocolType protocolType, eComHardwareHandshakeType hardwareHandShake,
-											eComSoftwareHandshakeType softwareHandshake, bool reportCtsChanges)
+		                                    eComStopBits numberOfStopBits, eComProtocolType protocolType,
+		                                    eComHardwareHandshakeType hardwareHandShake,
+		                                    eComSoftwareHandshakeType softwareHandshake, bool reportCtsChanges)
 		{
 			if (m_Device == null)
 				throw new InvalidOperationException(string.Format("{0} unable to connect - device is null", this));
@@ -123,8 +135,8 @@ namespace ICD.Connect.Misc.GlobalCache.Ports
 				Parity = GetParity(parityType),
 				StopBits = ComSpecUtils.StopBitsToCount(numberOfStopBits),
 				FlowControl = hardwareHandShake == eComHardwareHandshakeType.ComspecHardwareHandshakeNone
-								  ? SerialConfiguration.eFlowControl.None
-								  : SerialConfiguration.eFlowControl.Hardware
+					              ? SerialConfiguration.eFlowControl.None
+					              : SerialConfiguration.eFlowControl.Hardware
 			};
 
 			try
