@@ -30,7 +30,9 @@ namespace ICD.Connect.Misc.GlobalCache.FlexApi.RestApi
 			Full
 		}
 
-		public eGender Gender { get; set; }
+	    #region Properties
+
+	    public eGender Gender { get; set; }
 
 		public int BaudRate { get; set; }
 
@@ -42,7 +44,11 @@ namespace ICD.Connect.Misc.GlobalCache.FlexApi.RestApi
 
 		public eDuplex Duplex { get; set; }
 
-		public string Serialize()
+	    #endregion
+
+	    #region Methods
+
+	    public string Serialize()
 		{
 			return JsonUtils.Serialize(Serialize);
 		}
@@ -71,5 +77,7 @@ namespace ICD.Connect.Misc.GlobalCache.FlexApi.RestApi
 			}
 			writer.WriteEndObject();
 	    }
-	}
+
+	    #endregion
+    }
 }
