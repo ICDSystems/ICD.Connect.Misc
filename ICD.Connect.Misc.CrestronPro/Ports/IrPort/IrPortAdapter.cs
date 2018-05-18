@@ -59,6 +59,11 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 			set { m_IrDriverProperties.IrBetweenTime = value == 0 ? DEFAULT_BETWEEN_TIME : value; }
 		}
 
+		/// <summary>
+		/// Gets the IR Driver configuration properties.
+		/// </summary>
+		protected override IIrDriverProperties IrDriverProperties { get { return m_IrDriverProperties; } }
+
 		#endregion
 
 		#region Constructor

@@ -20,6 +20,8 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 	/// </summary>
 	public sealed class ComPortAdapter : AbstractComPort<ComPortAdapterSettings>
 	{
+		private readonly ComSpecProperties m_ComSpecProperties;
+
 #if SIMPLSHARP
 		private Crestron.SimplSharpPro.ComPort m_Port;
 #endif
@@ -28,10 +30,27 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 		private int? m_Device;
 		private int m_Address;
 
+		#region Properties
+
 		/// <summary>
 		/// Returns the connection state of the port.
 		/// </summary>
 		public override bool IsConnected { get { return true; } protected set { } }
+
+		/// <summary>
+		/// Gets the Com Spec configuration properties.
+		/// </summary>
+		protected override IComSpecProperties ComSpecProperties { get { return m_ComSpecProperties; } }
+
+		#endregion
+
+		/// <summary>
+		/// Constructor.
+		/// </summary>
+		public ComPortAdapter()
+		{
+			m_ComSpecProperties = new ComSpecProperties();
+		}
 
 		#region Methods
 
@@ -282,6 +301,8 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 
 			settings.Device = m_Device;
 			settings.Address = m_Address;
+
+			settings.Copy(m_ComSpecProperties);
 		}
 
 		/// <summary>
@@ -296,6 +317,8 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 #if SIMPLSHARP
 			SetComPort(null, 0);
 #endif
+
+			m_ComSpecProperties.Clear();
 		}
 
 		/// <summary>
@@ -306,6 +329,8 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 		protected override void ApplySettingsFinal(ComPortAdapterSettings settings, IDeviceFactory factory)
 		{
 			base.ApplySettingsFinal(settings, factory);
+
+			m_ComSpecProperties.Copy(settings);
 
 #if SIMPLSHARP
 			m_Device = settings.Device;
