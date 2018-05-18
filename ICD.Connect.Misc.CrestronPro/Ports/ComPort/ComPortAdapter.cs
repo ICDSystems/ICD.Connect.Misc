@@ -323,6 +323,8 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 				try
 				{
 					port = provider.GetComPort(settings.Address);
+					if (port == null)
+						Log(eSeverity.Error, "No Com Port at {0} address {1}", m_Device, settings.Address);
 				}
 				catch (Exception e)
 				{
@@ -330,9 +332,6 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 					    settings.Address, e.Message);
 				}
 			}
-
-			if (provider != null && port == null)
-				Log(eSeverity.Error, "No Com Port at {0} address {1}", m_Device, settings.Address);
 
 			SetComPort(port, settings.Address);
 #else
