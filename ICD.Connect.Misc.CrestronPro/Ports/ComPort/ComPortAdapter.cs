@@ -5,8 +5,8 @@ using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.API.Nodes;
 using ICD.Connect.Devices.Extensions;
 using ICD.Connect.Misc.CrestronPro.Devices;
-using ICD.Connect.Protocol.Ports;
 using ICD.Connect.Protocol.Ports.ComPort;
+using ICD.Connect.Protocol.Settings;
 using ICD.Connect.Settings;
 #if SIMPLSHARP
 using Crestron.SimplSharpPro;
@@ -18,7 +18,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 	/// <summary>
 	/// ComPortWrapper wraps a SimplSharpPro ComPort.
 	/// </summary>
-	public sealed class ComPortAdapter : AbstractSerialPort<ComPortAdapterSettings>, IComPort
+	public sealed class ComPortAdapter : AbstractComPort<ComPortAdapterSettings>
 	{
 #if SIMPLSHARP
 		private Crestron.SimplSharpPro.ComPort m_Port;
@@ -173,7 +173,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 		/// <param name="softwareHandshake"></param>
 		/// <param name="reportCtsChanges"></param>
 		[PublicAPI]
-		public void SetComPortSpec(eComBaudRates baudRate, eComDataBits numberOfDataBits,
+		public override void SetComPortSpec(eComBaudRates baudRate, eComDataBits numberOfDataBits,
 		                           eComParityType parityType,
 		                           eComStopBits numberOfStopBits, eComProtocolType protocolType,
 		                           eComHardwareHandshakeType hardwareHandShake,
