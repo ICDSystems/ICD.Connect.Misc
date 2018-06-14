@@ -21,25 +21,31 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		private const string PULSETIME_ELEMENT = "PulseTime";
 		private const string BETWEENTIME_ELEMENT = "BetweenTime";
 
-		private int m_Address = 1;
-		private ushort m_PulseTime = DEFAULT_PULSE_TIME;
-		private ushort m_BetweenTime = DEFAULT_BETWEEN_TIME;
-
 		#region Properties
 
 		[OriginatorIdSettingsProperty(typeof(IPortParent))]
 		public int? Device { get; set; }
 
-		public int Address { get { return m_Address; } set { m_Address = value; } }
+		public int Address { get; set; }
 
 		[PathSettingsProperty("IRDrivers", ".ir")]
 		public string Driver { get; set; }
 
-		public ushort PulseTime { get { return m_PulseTime; } set { m_PulseTime = value; } }
+		public ushort PulseTime { get; set; }
 
-		public ushort BetweenTime { get { return m_BetweenTime; } set { m_BetweenTime = value; } }
+		public ushort BetweenTime { get; set; }
 
 		#endregion
+
+		/// <summary>
+		/// Constructor.
+		/// </summary>
+		public IrPortAdapterSettings()
+		{
+			BetweenTime = DEFAULT_BETWEEN_TIME;
+			PulseTime = DEFAULT_PULSE_TIME;
+			Address = 1;
+		}
 
 		#region Method
 

@@ -13,18 +13,24 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 		private const string ADDRESS_ELEMENT = "Address";
 		private const string CONFIGURATION_ELEMENT = "Configuration";
 
-		private int m_Address = 1;
-
 		#region Properties
 
 		[OriginatorIdSettingsProperty(typeof(IPortParent))]
 		public int? Device { get; set; }
 
-		public int Address { get { return m_Address; } set { m_Address = value; } }
+		public int Address { get; set; }
 
 		public eIoPortConfiguration Configuration { get; set; }
 
 		#endregion
+
+		/// <summary>
+		/// Constructor.
+		/// </summary>
+		public IoPortAdapterSettings()
+		{
+			Address = 1;
+		}
 
 		#region Methods
 

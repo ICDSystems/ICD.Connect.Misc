@@ -15,16 +15,22 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 		private const string PARENT_DEVICE_ELEMENT = "Device";
 		private const string ADDRESS_ELEMENT = "Address";
 
-		private int m_Address = 1;
-
 		#region Properties
 
 		[OriginatorIdSettingsProperty(typeof(IPortParent))]
 		public int? Device { get; set; }
 
-		public int Address { get { return m_Address; } set { m_Address = value; } }
+		public int Address { get; set; }
 
 		#endregion
+
+		/// <summary>
+		/// Constructor.
+		/// </summary>
+		public ComPortAdapterSettings()
+		{
+			Address = 1;
+		}
 
 		#region Methods
 
