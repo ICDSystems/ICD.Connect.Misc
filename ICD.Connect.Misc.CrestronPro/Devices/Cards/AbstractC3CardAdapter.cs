@@ -67,7 +67,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 					Card.Description = Name;
 				eDeviceRegistrationUnRegistrationResponse result = Card.Register();
 				if (result != eDeviceRegistrationUnRegistrationResponse.Success)
-					Logger.AddEntry(eSeverity.Error, "Unable to register {0} - {1}", Card.GetType().Name, result);
+					Log(eSeverity.Error, "Unable to register {0} - {1}", Card.GetType().Name, result);
 			}
 
 			Subscribe(Card);
@@ -174,14 +174,14 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 #if SIMPLSHARP
 			if (!settings.CardFrame.HasValue)
 			{
-				Logger.AddEntry(eSeverity.Error, "Unable to instantiate {0} - No CardFrame DeviceId specified.", typeof(TCard).Name);
+				Log(eSeverity.Error, "Unable to instantiate {0} - No CardFrame DeviceId specified.", typeof(TCard).Name);
 				return;
 			}
 
 			TCard card = InstantiateCard(settings.Ipid, settings.CardFrame.Value, factory);
 			SetCard(card, settings.CardFrame);
 #else
-            throw new NotImplementedException();
+            throw new NotSupportedException();
 #endif
 		}
 
@@ -204,14 +204,14 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 				CenCi33Adapter ci33 = cardFrame as CenCi33Adapter;
 				if (ci33 != null)
 					return InstantiateCard(ipid.Value, ci33.CardFrame);
-				Logger.AddEntry(eSeverity.Error, "Device {0} is not a {1}.", cardFrameId, typeof(CenCi33Adapter).Name);
+				Log(eSeverity.Error, "Device {0} is not a {1}.", cardFrameId, typeof(CenCi33Adapter).Name);
 			}
 			else
 			{
 				CenCi31Adapter ci31 = cardFrame as CenCi31Adapter;
 				if (ci31 != null)
 					return InstantiateCard(ci31.CardFrame);
-				Logger.AddEntry(eSeverity.Error, "Device {0} is not a {1}.", cardFrameId, typeof(CenCi31Adapter).Name);
+				Log(eSeverity.Error, "Device {0} is not a {1}.", cardFrameId, typeof(CenCi31Adapter).Name);
 			}
 
 			return null;
