@@ -147,7 +147,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 #if SIMPLSHARP
 			settings.CardId = Card == null ? 0 : Card.ID;
 #else
-            settings.Ipid = 0;
+            settings.CardId = 0;
 #endif
 			settings.CardFrame = m_ParentId;
 		}
