@@ -36,12 +36,12 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 		/// <summary>
 		/// Instantiates the card for the given card frame parent.
 		/// </summary>
-		/// <param name="ipid"></param>
+		/// <param name="cardId"></param>
 		/// <param name="cardFrame"></param>
 		/// <returns></returns>
-		protected override C3com3 InstantiateCard(byte ipid, CenCi33 cardFrame)
+		protected override C3com3 InstantiateCard(uint cardId, CenCi33 cardFrame)
 		{
-			return new C3com3(ipid, cardFrame);
+			return new C3com3(cardId, cardFrame);
 		}
 	}
 #else

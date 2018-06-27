@@ -143,7 +143,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 			base.CopySettingsFinal(settings);
 
 #if SIMPLSHARP
-			settings.Ipid = Card == null ? (byte)0 : (byte)Card.ID;
+			settings.CardId = Card == null ? (byte)0 : (byte)Card.ID;
 #else
             settings.Ipid = 0;
 #endif
@@ -178,7 +178,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 				return;
 			}
 
-			TCard card = InstantiateCard(settings.Ipid, settings.CardFrame.Value, factory);
+			TCard card = InstantiateCard(settings.CardId, settings.CardFrame.Value, factory);
 			SetCard(card, settings.CardFrame);
 #else
             throw new NotSupportedException();
@@ -189,21 +189,21 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 		/// <summary>
 		/// Instantiates the internal card based on provided parameters
 		/// </summary>
-		/// <param name="ipid"></param>
+		/// <param name="cardId"></param>
 		/// <param name="cardFrameId"></param>
 		/// <param name="factory"></param>
 		/// <returns></returns>
 		[CanBeNull]
-		private TCard InstantiateCard(byte? ipid, int cardFrameId, IDeviceFactory factory)
+		private TCard InstantiateCard(uint? cardId, int cardFrameId, IDeviceFactory factory)
 		{
 			IDevice cardFrame = factory.GetDeviceById(cardFrameId);
 
 			// If an IPID is specified the CardFrame has multiple slots
-			if (ipid.HasValue)
+			if (cardId.HasValue)
 			{
 				CenCi33Adapter ci33 = cardFrame as CenCi33Adapter;
 				if (ci33 != null)
-					return InstantiateCard(ipid.Value, ci33.CardFrame);
+					return InstantiateCard(cardId.Value, ci33.CardFrame);
 				Log(eSeverity.Error, "Device {0} is not a {1}.", cardFrameId, typeof(CenCi33Adapter).Name);
 			}
 			else
@@ -227,10 +227,10 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 		/// <summary>
 		/// Instantiates the card for the given card frame parent.
 		/// </summary>
-		/// <param name="ipid"></param>
+		/// <param name="cardId"></param>
 		/// <param name="cardFrame"></param>
 		/// <returns></returns>
-		protected abstract TCard InstantiateCard(byte ipid, CenCi33 cardFrame);
+		protected abstract TCard InstantiateCard(uint cardId, CenCi33 cardFrame);
 #endif
 
 		#endregion
