@@ -170,6 +170,12 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		public override void Press(string command)
 		{
 #if SIMPLSHARP
+			if (m_Port == null)
+			{
+				Logger.AddEntry(eSeverity.Error, "{0} unable to send command - internal port is null", this);
+				return;
+			}
+
 			Clear();
 
 			if (!m_Port.IsIRCommandAvailable(command))
@@ -352,6 +358,12 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		private void SendNext()
 		{
 #if SIMPLSHARP
+			if (m_Port == null)
+			{
+				Logger.AddEntry(eSeverity.Error, "{0} unable to sebd command - internal port is null", this);
+				return;
+			}
+
 			IrPulse pulse = m_Queue.Peek();
 
 			if (!m_Port.IsIRCommandAvailable(pulse.Command))
