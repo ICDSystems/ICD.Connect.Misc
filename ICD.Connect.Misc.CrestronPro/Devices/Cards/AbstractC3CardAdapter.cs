@@ -205,7 +205,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 			{
 				CenCi33Adapter ci33 = cardFrame as CenCi33Adapter;
 				if (ci33 != null)
-					InstantiateCard(cardId.Value, ci33.CardFrame);
+					return InstantiateCard(cardId.Value, ci33.CardFrame);
 				Logger.AddEntry(eSeverity.Error, "Device {0} is not a {1}.", cardFrameId, typeof(CenCi33Adapter).Name);
 			}
 			else
