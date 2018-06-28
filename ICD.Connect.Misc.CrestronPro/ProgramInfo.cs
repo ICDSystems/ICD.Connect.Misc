@@ -22,7 +22,7 @@ namespace ICD.Connect.Misc.CrestronPro
 			get
 			{
 				if (s_ControlSystem == null)
-					throw new Exception("No registered control system");
+					throw new InvalidOperationException("No registered control system");
 				return s_ControlSystem;
 			}
 		}
@@ -52,7 +52,7 @@ namespace ICD.Connect.Misc.CrestronPro
 				return;
 
 			if (s_ControlSystem != null)
-				throw new Exception("Different control system already registered");
+				throw new InvalidOperationException("Different control system already registered");
 
 			s_ControlSystem = controlSystem;
 		}
