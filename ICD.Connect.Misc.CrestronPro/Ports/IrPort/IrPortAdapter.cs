@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using ICD.Common.Properties;
 using ICD.Common.Utils;
+using ICD.Common.Utils.Extensions;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Common.Utils.Timers;
 using ICD.Connect.API.Commands;
@@ -28,6 +29,8 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 #endif
 		private readonly Queue<IrPulse> m_Queue;
 		private readonly SafeTimer m_PulseTimer;
+
+		private readonly SafeCriticalSection m_PressSection;
 
 		// Used with settings
 		private int? m_Device;
@@ -56,8 +59,9 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		public IrPortAdapter()
 		{
 			m_Queue = new Queue<IrPulse>();
+			m_PressSection = new SafeCriticalSection();
 
-			m_PulseTimer = SafeTimer.Stopped(TimerCallbackMethod);
+			m_PulseTimer = SafeTimer.Stopped(PulseElapseCallback);
 		}
 
 		#endregion
@@ -169,20 +173,29 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 #if SIMPLSHARP
 			if (m_Port == null)
 			{
-				Logger.AddEntry(eSeverity.Error, "{0} unable to send command - internal port is null", this);
+				Log(eSeverity.Error, "Unable to send command - internal port is null");
 				return;
 			}
 
-			Clear();
+			m_PressSection.Enter();
 
-			if (!m_Port.IsIRCommandAvailable(command))
+			try
 			{
-				Log(eSeverity.Error, "Unable to send command - No command with name {0}", StringUtils.ToRepresentation(command));
-				return;
-			}
+				Clear();
 
-			PrintTx(command);
-			m_Port.Press(command);
+				if (!m_Port.IsIRCommandAvailable(command))
+				{
+					Log(eSeverity.Error, "Unable to send command - No command {0}", StringUtils.ToRepresentation(command));
+					return;
+				}
+
+				PrintTx(command);
+				m_Port.Press(command);
+			}
+			finally
+			{
+				m_PressSection.Leave();
+			}
 #else
             throw new NotSupportedException();
 #endif
@@ -224,10 +237,20 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		public override void PressAndRelease(string command, ushort pulseTime, ushort betweenTime)
 		{
 			IrPulse pulse = new IrPulse(command, pulseTime, betweenTime);
-			m_Queue.Enqueue(pulse);
 
-			if (m_Queue.Count == 1)
-				SendNext();
+			m_PressSection.Enter();
+
+			try
+			{
+				m_Queue.Enqueue(pulse);
+
+				if (m_Queue.Count == 1)
+					SendNext();
+			}
+			finally
+			{
+				m_PressSection.Leave();
+			}
 		}
 
 		#endregion
@@ -299,7 +322,8 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 				}
 				catch (Exception e)
 				{
-					Log(eSeverity.Error, "Unable to get IrPort from device {0} at address {1} - {2}", m_Device, settings.Address, e.Message);
+					Log(eSeverity.Error, "Unable to get IrPort from device {0} at address {1} - {2}", m_Device,
+					    settings.Address, e.Message);
 				}
 			}
 
@@ -336,11 +360,20 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		private void Clear()
 		{
 #if SIMPLSHARP
-			if (m_Port != null)
-				m_Port.Release();
+			m_PressSection.Enter();
 
-			m_PulseTimer.Stop();
-			m_Queue.Clear();
+			try
+			{
+				if (m_Port != null)
+					m_Port.Release();
+
+				m_PulseTimer.Stop();
+				m_Queue.Clear();
+			}
+			finally
+			{
+				m_PressSection.Leave();
+			}
 #else
             throw new NotSupportedException();
 #endif
@@ -352,25 +385,37 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		private void SendNext()
 		{
 #if SIMPLSHARP
-			if (m_Port == null)
-			{
-				Logger.AddEntry(eSeverity.Error, "{0} unable to sebd command - internal port is null", this);
-				return;
-			}
+			m_PressSection.Enter();
 
-			IrPulse pulse = m_Queue.Peek();
+			try
+			{
+				IrPulse pulse;
+				if (!m_Queue.Dequeue(out pulse))
+					return;
 
-			if (!m_Port.IsIRCommandAvailable(pulse.Command))
-			{
-				Log(eSeverity.Error, "Unable to send command - No command with name {0}", StringUtils.ToRepresentation(pulse.Command));
-			}
-			else
-			{
+				if (m_Port == null)
+				{
+					Log(eSeverity.Error, "Unable to send command - internal port is null");
+					Clear();
+					return;
+				}
+
+				if (!m_Port.IsIRCommandAvailable(pulse.Command))
+				{
+					Log(eSeverity.Error, "Unable to send command - No command {0}", StringUtils.ToRepresentation(pulse.Command));
+					SendNext();
+					return;
+				}
+
 				PrintTx(pulse.Command);
 				m_Port.PressAndRelease(pulse.Command, pulse.PulseTime);
+
+				m_PulseTimer.Reset(pulse.Duration);
 			}
-			
-			m_PulseTimer.Reset(pulse.Duration);
+			finally
+			{
+				m_PressSection.Leave();
+			}
 #else
             throw new NotSupportedException();
 #endif
@@ -379,14 +424,20 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		/// <summary>
 		/// Called when the pulse timer elapses.
 		/// </summary>
-		private void TimerCallbackMethod()
+		private void PulseElapseCallback()
 		{
 #if SIMPLSHARP
-			m_Port.Release();
-			m_Queue.Dequeue();
+			m_PressSection.Enter();
 
-			if (m_Queue.Count > 0)
-				SendNext();
+			try
+			{
+				if (m_Queue.Count > 0)
+					SendNext();
+			}
+			finally
+			{
+				m_PressSection.Leave();
+			}
 #else
             throw new NotSupportedException();
 #endif
