@@ -2,6 +2,7 @@
 #if SIMPLSHARP
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.ThreeSeriesCards;
+using Crestron.SimplSharpProInternal;
 #endif
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
@@ -28,7 +29,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 		/// </summary>
 		/// <param name="cardFrame"></param>
 		/// <returns></returns>
-		protected override C3com3 InstantiateCard(CenCi31 cardFrame)
+		protected override C3com3 InstantiateCard(Ci3SingleCardCage cardFrame)
 		{
 			return new C3com3(cardFrame);
 		}
@@ -39,7 +40,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 		/// <param name="cardId"></param>
 		/// <param name="cardFrame"></param>
 		/// <returns></returns>
-		protected override C3com3 InstantiateCard(uint cardId, CenCi33 cardFrame)
+		protected override C3com3 InstantiateCard(uint cardId, Ci3MultiCardCage cardFrame)
 		{
 			return new C3com3(cardId, cardFrame);
 		}
