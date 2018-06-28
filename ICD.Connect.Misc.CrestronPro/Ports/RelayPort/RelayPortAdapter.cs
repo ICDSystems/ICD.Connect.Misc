@@ -106,9 +106,15 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 		public override void Open()
 		{
 #if SIMPLSHARP
+			if (m_Port == null)
+			{
+				Logger.AddEntry(eSeverity.Error, "{0} unable to open relay - internal port is null", this);
+				return;
+			}
+
 			m_Port.Open();
 #else
-            throw new NotImplementedException();
+            throw new NotSupportedException();
 #endif
 		}
 
@@ -118,9 +124,15 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 		public override void Close()
 		{
 #if SIMPLSHARP
+			if (m_Port == null)
+			{
+				Logger.AddEntry(eSeverity.Error, "{0} unable to close relay - internal port is null", this);
+				return;
+			}
+
 			m_Port.Close();
 #else
-            throw new NotImplementedException();
+            throw new NotSupportedException();
 #endif
 		}
 
@@ -233,8 +245,6 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 				Logger.AddEntry(eSeverity.Error, "No Relay Port at device {0} address {1}", m_Device, settings.Address);
 
 			SetRelayPort(port, settings.Address);
-#else
-            throw new NotImplementedException();
 #endif
 		}
 
