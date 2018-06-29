@@ -94,7 +94,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 			eDeviceRegistrationUnRegistrationResponse result = port.Register();
 			if (result != eDeviceRegistrationUnRegistrationResponse.Success)
 			{
-				Logger.AddEntry(eSeverity.Error, "{0} unable to register {1} - {2}", this, port.GetType().Name, result);
+				Log(eSeverity.Error, "Unable to register {0} - {1}", port.GetType().Name, result);
 				return;
 			}
 
@@ -104,10 +104,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 
 			eDeviceRegistrationUnRegistrationResponse parentResult = parent.ReRegister();
 			if (parentResult != eDeviceRegistrationUnRegistrationResponse.Success)
-			{
-				Logger.AddEntry(eSeverity.Error, "{0} unable to register parent {1} - {2}", this, parent.GetType().Name,
-				                parentResult);
-			}
+				Log(eSeverity.Error, "Unable to register parent {0} - {1}", parent.GetType().Name, parentResult);
 		}
 #endif
 
@@ -135,7 +132,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 #if SIMPLSHARP
 			if (m_Port == null)
 			{
-				Logger.AddEntry(eSeverity.Error, "{0} unable to send - internal port is null", this);
+				Log(eSeverity.Error, "Unable to send - internal port is null");
 				return false;
 			}
 
@@ -162,7 +159,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 #if SIMPLSHARP
 			if (m_Port == null)
 			{
-				Logger.AddEntry(eSeverity.Error, "{0} unable to set ComSpec - internal port is null", this);
+				Log(eSeverity.Error, "Unable to set ComSpec - internal port is null");
 				return;
 			}
 
