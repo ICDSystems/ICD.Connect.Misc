@@ -141,7 +141,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 
 			return true;
 #else
-            throw new NotImplementedException();
+            throw new NotSupportedException();
 #endif
 		}
 
@@ -173,7 +173,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 			                      reportCtsChanges);
 
 #else
-            throw new NotImplementedException();
+            throw new NotSupportedException();
 #endif
 		}
 
@@ -294,7 +294,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 				provider = factory.GetDeviceById((int)m_Device) as IPortParent;
 
 			if (provider == null)
-				Logger.AddEntry(eSeverity.Error, "{0} is not a {1}", m_Device, typeof(IPortParent).Name);
+				Log(eSeverity.Error, "{0} is not a {1}", m_Device, typeof(IPortParent).Name);
 			else
 			{
 				try
@@ -303,17 +303,15 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 				}
 				catch (Exception e)
 				{
-					Logger.AddEntry(eSeverity.Error, "Unable to get ComPort from device {0} at address {1} - {2}", m_Device,
-					                settings.Address, e.Message);
+					Log(eSeverity.Error, "Unable to get ComPort from device {0} at address {1} - {2}", m_Device,
+					    settings.Address, e.Message);
 				}
 			}
 
 			if (provider != null && port == null)
-				Logger.AddEntry(eSeverity.Error, "No Com Port at {0} address {1}", m_Device, settings.Address);
+				Log(eSeverity.Error, "No Com Port at {0} address {1}", m_Device, settings.Address);
 
 			SetComPort(port, settings.Address);
-#else
-            throw new NotImplementedException();
 #endif
 		}
 
