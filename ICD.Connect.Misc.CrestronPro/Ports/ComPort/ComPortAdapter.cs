@@ -328,6 +328,8 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 		{
 			base.BuildConsoleStatus(addRow);
 
+			addRow("Device", m_Device);
+			addRow("Address", m_Address);
 			addRow("Baud Rate", m_Port.BaudRate);
 			addRow("Data Bits", m_Port.DataBits);
 			addRow("Parity Type", m_Port.Parity);
