@@ -23,6 +23,10 @@ namespace ICD.Connect.Misc.CrestronPro.Utils.Extensions
 			{
 				return extends.AudioOutFeedback;
 			}
+            catch (NotSupportedException)
+            {
+                return null;
+            }
 			catch (IndexOutOfRangeException)
 			{
 				return null;
@@ -41,6 +45,10 @@ namespace ICD.Connect.Misc.CrestronPro.Utils.Extensions
 			{
 				return extends.VideoOutFeedback;
 			}
+            catch (NotSupportedException)
+            {
+                return null;
+            }
 			catch (IndexOutOfRangeException)
 			{
 				return null;
@@ -59,6 +67,10 @@ namespace ICD.Connect.Misc.CrestronPro.Utils.Extensions
 			{
 				return extends.USBRoutedToFeedback;
 			}
+            catch (NotSupportedException)
+            {
+                return null;
+            }
 			catch (IndexOutOfRangeException)
 			{
 				return null;
