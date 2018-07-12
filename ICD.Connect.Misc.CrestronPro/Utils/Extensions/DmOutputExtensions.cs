@@ -23,6 +23,10 @@ namespace ICD.Connect.Misc.CrestronPro.Utils.Extensions
 			{
 				return extends.AudioOutFeedback;
 			}
+            catch (NotSupportedException)
+            {
+                return null;
+            }
 			catch (IndexOutOfRangeException)
 			{
 				return null;
