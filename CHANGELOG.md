@@ -5,8 +5,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [5.3.0] - 2018-07-19
 ### Added
  - Added catch for NotSupportedException for all DmOutputExtensions methods
+ - Added basic support for DMPS3 4K Series audio switching
 
 ## [5.2.0] - 2018-07-02
 ### Added
