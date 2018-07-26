@@ -201,6 +201,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 		/// <param name="enumValue"></param>
 		/// <returns></returns>
 		private static T ParseEnum<T>(object enumValue)
+			where T : struct, IConvertible
 		{
 			return EnumUtils.Parse<T>(enumValue.ToString(), true);
 		}
