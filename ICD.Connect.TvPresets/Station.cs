@@ -1,11 +1,12 @@
-﻿using ICD.Common.Utils.Xml;
+﻿using System;
+using ICD.Common.Utils.Xml;
 
 namespace ICD.Connect.TvPresets
 {
 	/// <summary>
 	/// Represents a TV Station on a TV Tuner.
 	/// </summary>
-	public struct Station
+	public struct Station : IEquatable<Station>
 	{
 		private readonly string m_Channel;
 		private readonly string m_Name;
@@ -92,7 +93,7 @@ namespace ICD.Connect.TvPresets
 		/// <returns></returns>
 		public static bool operator !=(Station s1, Station s2)
 		{
-			return !(s1 == s2);
+			return !s1.Equals(s2);
 		}
 
 		/// <summary>
@@ -102,10 +103,15 @@ namespace ICD.Connect.TvPresets
 		/// <returns></returns>
 		public override bool Equals(object other)
 		{
-			if (other == null || GetType() != other.GetType())
-				return false;
+			return other is Station && Equals((Station)other);
+		}
 
-			return GetHashCode() == ((Station)other).GetHashCode();
+		public bool Equals(Station other)
+		{
+			return m_Channel == other.m_Channel &&
+			       m_Name == other.m_Name &&
+			       m_Image == other.m_Image &&
+			       m_Url == other.m_Url;
 		}
 
 		/// <summary>
