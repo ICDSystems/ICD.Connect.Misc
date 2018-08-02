@@ -1,5 +1,6 @@
 ﻿using System;
 using ICD.Common.Utils.Services.Logging;
+using ICD.Connect.Protocol.Ports;
 using ICD.Connect.Protocol.Ports.IoPort;
 using ICD.Connect.Settings.Core;
 #if SIMPLSHARP
@@ -290,18 +291,26 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 			{
 				case eVersiportEvent.DigitalInChange:
 					DigitalIn = GetDigitalIn(m_Port);
+					if (DebugRx != eDebugMode.Off)
+						PrintRx("Digital In - " + DigitalIn);
 					break;
 
 				case eVersiportEvent.DigitalOutChange:
 					DigitalOut = GetDigitalOut(m_Port);
+					if (DebugTx != eDebugMode.Off)
+						PrintTx("Digital Out - " + DigitalOut);
 					break;
 
 				case eVersiportEvent.AnalogInChange:
 					AnalogIn = GetAnalogIn(m_Port);
+					if (DebugRx != eDebugMode.Off)
+						PrintRx("Analog In - " + AnalogIn);
 					break;
 
 				case eVersiportEvent.VersiportConfigurationChange:
 					Configuration = GetConfiguration(m_Port);
+					if (DebugTx != eDebugMode.Off)
+						PrintTx("Configuration - " + Configuration);
 					break;
 			}
 		}
