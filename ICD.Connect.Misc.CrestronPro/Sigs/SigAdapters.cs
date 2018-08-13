@@ -12,7 +12,8 @@ namespace ICD.Connect.Misc.CrestronPro.Sigs
 		/// Constructor.
 		/// </summary>
 		/// <param name="sig"></param>
-		public BoolInputSigAdapter(BoolInputSig sig) : base(sig)
+		public BoolInputSigAdapter(BoolInputSig sig)
+			: base(sig)
 		{
 		}
 
@@ -59,7 +60,8 @@ namespace ICD.Connect.Misc.CrestronPro.Sigs
 		/// Constructor.
 		/// </summary>
 		/// <param name="sig"></param>
-		public StringInputSigAdapter(StringInputSig sig) : base(sig)
+		public StringInputSigAdapter(StringInputSig sig)
+			: base(sig)
 		{
 		}
 
@@ -103,7 +105,8 @@ namespace ICD.Connect.Misc.CrestronPro.Sigs
 		/// Constructor.
 		/// </summary>
 		/// <param name="sig"></param>
-		public UShortInputSigAdapter(UShortInputSig sig) : base(sig)
+		public UShortInputSigAdapter(UShortInputSig sig)
+			: base(sig)
 		{
 		}
 
