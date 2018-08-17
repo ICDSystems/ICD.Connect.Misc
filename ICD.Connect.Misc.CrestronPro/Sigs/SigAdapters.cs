@@ -6,7 +6,7 @@ namespace ICD.Connect.Misc.CrestronPro.Sigs
 {
 	public sealed class BoolInputSigAdapter : AbstractSigAdapter<BoolInputSig>, IBoolInputSig
 	{
-		private bool m_Cache;
+		private bool? m_Cache;
 
 		/// <summary>
 		/// Constructor.
@@ -26,7 +26,7 @@ namespace ICD.Connect.Misc.CrestronPro.Sigs
 				return false;
 
 			m_Cache = value;
-			Sig.BoolValue = m_Cache;
+			Sig.BoolValue = value;
 
 			return true;
 		}
@@ -37,7 +37,7 @@ namespace ICD.Connect.Misc.CrestronPro.Sigs
 		/// <returns></returns>
 		public override bool GetBoolValue()
 		{
-			return m_Cache;
+			return m_Cache ?? false;
 		}
 	}
 
@@ -47,7 +47,8 @@ namespace ICD.Connect.Misc.CrestronPro.Sigs
 		/// Constructor.
 		/// </summary>
 		/// <param name="sig"></param>
-		public BoolOutputSigAdapter(BoolOutputSig sig) : base(sig)
+		public BoolOutputSigAdapter(BoolOutputSig sig)
+			: base(sig)
 		{
 		}
 	}
@@ -75,7 +76,7 @@ namespace ICD.Connect.Misc.CrestronPro.Sigs
 				return false;
 
 			m_Cache = value;
-			Sig.StringValue = m_Cache;
+			Sig.StringValue = value;
 
 			return true;
 		}
@@ -92,14 +93,15 @@ namespace ICD.Connect.Misc.CrestronPro.Sigs
 		/// Constructor.
 		/// </summary>
 		/// <param name="sig"></param>
-		public StringOutputSigAdapter(StringOutputSig sig) : base(sig)
+		public StringOutputSigAdapter(StringOutputSig sig)
+			: base(sig)
 		{
 		}
 	}
 
 	public sealed class UShortInputSigAdapter : AbstractSigAdapter<UShortInputSig>, IUShortInputSig
 	{
-		private ushort m_Cache;
+		private ushort? m_Cache;
 
 		/// <summary>
 		/// Constructor.
@@ -120,14 +122,14 @@ namespace ICD.Connect.Misc.CrestronPro.Sigs
 				return false;
 
 			m_Cache = value;
-			Sig.UShortValue = m_Cache;
+			Sig.UShortValue = value;
 
 			return true;
 		}
 
 		public override ushort GetUShortValue()
 		{
-			return m_Cache;
+			return m_Cache ?? 0;
 		}
 	}
 
@@ -137,7 +139,8 @@ namespace ICD.Connect.Misc.CrestronPro.Sigs
 		/// Constructor.
 		/// </summary>
 		/// <param name="sig"></param>
-		public UShortOutputSigAdapter(UShortOutputSig sig) : base(sig)
+		public UShortOutputSigAdapter(UShortOutputSig sig)
+			: base(sig)
 		{
 		}
 	}
