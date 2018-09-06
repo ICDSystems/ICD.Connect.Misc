@@ -153,6 +153,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 
 			try
 			{
+				m_Port.UnloadAllIRDrivers();
 				m_Port.LoadIRDriver(fullPath);
 			}
 			catch (FileNotFoundException)
