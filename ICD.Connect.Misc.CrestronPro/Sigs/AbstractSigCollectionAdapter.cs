@@ -38,13 +38,15 @@ namespace ICD.Connect.Misc.CrestronPro.Sigs
 					if (m_Collection == null)
 						throw new InvalidOperationException("No collection assigned");
 
-					if (!m_SigAdapterNumberCache.ContainsKey(sigNumber))
+					TAdapter adapter;
+					if (!m_SigAdapterNumberCache.TryGetValue(sigNumber, out adapter))
 					{
 						T sig = m_Collection[sigNumber];
-						m_SigAdapterNumberCache[sigNumber] = m_Factory(sig);
+						adapter = m_Factory(sig);
+						m_SigAdapterNumberCache[sigNumber] = adapter;
 					}
 
-					return m_SigAdapterNumberCache[sigNumber];
+					return adapter;
 				}
 				finally
 				{
