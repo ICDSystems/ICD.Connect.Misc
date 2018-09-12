@@ -8,6 +8,11 @@ namespace ICD.Connect.Misc.Keypads.MockKeypad
 	public sealed class MockKeypad : AbstractKeypadDevice<MockKeypadSettings>, IMockKeypad
 	{
 		/// <summary>
+		/// Raised when a button state changes.
+		/// </summary>
+		public override event EventHandler<KeypadButtonPressedEventArgs> OnButtonStateChange;
+
+		/// <summary>
 		/// Gets the current online status of the device.
 		/// </summary>
 		/// <returns></returns>
@@ -15,8 +20,6 @@ namespace ICD.Connect.Misc.Keypads.MockKeypad
 		{
 			return true;
 		}
-
-		public override event EventHandler<KeypadButtonPressedEventArgs> OnButtonStateChange;
 
 		private void SimulateButtonFeedback(uint buttonId, eButtonState pressType)
 		{
