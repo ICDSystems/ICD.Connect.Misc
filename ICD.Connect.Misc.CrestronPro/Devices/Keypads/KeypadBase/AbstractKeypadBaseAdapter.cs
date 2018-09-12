@@ -6,6 +6,7 @@ using Crestron.SimplSharpPro.DeviceSupport;
 using ICD.Common.Utils.Extensions;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.Misc.Keypads;
+using eButtonState = ICD.Connect.Misc.Keypads.eButtonState;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.KeypadBase
 {
@@ -113,11 +114,10 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.KeypadBase
 
 		private void KeypadOnButtonStateChange(GenericBase device, ButtonEventArgs args)
 		{
-			OnButtonStateChange.Raise(this, new KeypadButtonPressedEventArgs
-			{
-				ButtonId = args.Button.Number,
-				ButtonState = ButtonStateConverter.GetButtonState(args.NewButtonState)
-			});
+			uint button = args.Button.Number;
+			eButtonState state = ButtonStateConverter.GetButtonState(args.NewButtonState);
+
+			OnButtonStateChange.Raise(this, new KeypadButtonPressedEventArgs(button, state));
 		}
 #endif
 	}

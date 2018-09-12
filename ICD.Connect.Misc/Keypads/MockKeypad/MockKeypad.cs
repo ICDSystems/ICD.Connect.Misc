@@ -23,7 +23,7 @@ namespace ICD.Connect.Misc.Keypads.MockKeypad
 
 		private void SimulateButtonFeedback(uint buttonId, eButtonState pressType)
 		{
-			OnButtonStateChange.Raise(this, new KeypadButtonPressedEventArgs{ButtonId = buttonId, ButtonState = pressType});
+			OnButtonStateChange.Raise(this, new KeypadButtonPressedEventArgs(buttonId, pressType));
 		}
 
 		#region Console
