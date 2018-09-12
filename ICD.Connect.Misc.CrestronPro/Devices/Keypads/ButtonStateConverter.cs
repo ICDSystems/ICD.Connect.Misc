@@ -1,5 +1,8 @@
 ﻿using System;
-using ICD.Connect.Misc.Keypads;
+#if SIMPLSHARP
+using Crestron.SimplSharpPro.DeviceSupport;
+#endif
+using eButtonState = ICD.Connect.Misc.Keypads.eButtonState;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads
 {
@@ -29,6 +32,14 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads
 				default:
 					throw new ArgumentOutOfRangeException("state");
 			}
+		}
+
+		public static eButtonState GetButtonState(Button button)
+		{
+			if (button == null)
+				throw new ArgumentNullException("button");
+
+			return GetButtonState(button.State);
 		}
 #endif
 	}
