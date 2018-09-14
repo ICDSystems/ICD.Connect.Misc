@@ -13,8 +13,11 @@
     <EazfuscatorCompatibilityVersion>2018.2</EazfuscatorCompatibilityVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DefineConstants>TRACE;DEBUG;STANDARD;NETSTANDARD2_0</DefineConstants>
-    <OutputPath>binNetCoreApp\Debug\netstandard2.0\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;STANDARD</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OutputPath>binNetCoreApp\$(Configuration)\</OutputPath>
+    <DefineConstants>TRACE;STANDARD</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="SIMPLSharpLogs\**" />
