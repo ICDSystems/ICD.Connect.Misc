@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [5.4.0] - 2018-09-14
+### Added
+ - Shim for getting crestron button states
+ - Added SigExtensions
+
+### Changed
+ - Small performance improvements
+
 ## [5.3.0] - 2018-07-19
 ### Added
  - Added catch for NotSupportedException for all DmOutputExtensions methods
