@@ -12,7 +12,16 @@ namespace ICD.Connect.Misc.CrestronPro.Sigs
 		/// Constructor.
 		/// </summary>
 		public DeviceStringInputCollectionAdapter()
-			: base(sig => new StringInputSigAdapter(sig))
+			: this(null)
+		{
+		}
+
+		/// <summary>
+		/// Constructor.
+		/// </summary>
+		/// <param name="inputCollection"></param>
+		public DeviceStringInputCollectionAdapter(DeviceStringInputCollection inputCollection)
+			: base(sig => new StringInputSigAdapter(sig), inputCollection)
 		{
 		}
 	}
@@ -24,7 +33,16 @@ namespace ICD.Connect.Misc.CrestronPro.Sigs
 		/// Constructor.
 		/// </summary>
 		public DeviceUShortInputCollectionAdapter()
-			: base(sig => new UShortInputSigAdapter(sig))
+			: this(null)
+		{
+		}
+
+		/// <summary>
+		/// Constructor.
+		/// </summary>
+		/// <param name="inputCollection"></param>
+		public DeviceUShortInputCollectionAdapter(DeviceUShortInputCollection inputCollection)
+			: base(sig => new UShortInputSigAdapter(sig), inputCollection)
 		{
 		}
 	}
@@ -36,7 +54,16 @@ namespace ICD.Connect.Misc.CrestronPro.Sigs
 		/// Constructor.
 		/// </summary>
 		public DeviceBooleanInputCollectionAdapter()
-			: base(sig => new BoolInputSigAdapter(sig))
+			: this(null)
+		{
+		}
+
+		/// <summary>
+		/// Constructor.
+		/// </summary>
+		/// <param name="inputCollection"></param>
+		public DeviceBooleanInputCollectionAdapter(DeviceBooleanInputCollection inputCollection)
+			: base(sig => new BoolInputSigAdapter(sig), inputCollection)
 		{
 		}
 	}

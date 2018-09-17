@@ -58,12 +58,17 @@ namespace ICD.Connect.Misc.CrestronPro.Sigs
 		/// <summary>
 		/// Constructor.
 		/// </summary>
-		protected AbstractSigCollectionAdapter(Func<T, TAdapter> factory)
+		protected AbstractSigCollectionAdapter(Func<T, TAdapter> factory, SigCollectionBase<T> collection)
 		{
+			if (factory == null)
+				throw new ArgumentNullException("factory");
+
 			m_Factory = factory;
 
 			m_SigAdapterNumberCache = new Dictionary<uint, TAdapter>();
 			m_CacheSection = new SafeCriticalSection();
+
+			SetCollection(collection);
 		}
 
 		/// <summary>
