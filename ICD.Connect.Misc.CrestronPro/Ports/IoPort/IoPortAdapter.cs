@@ -1,5 +1,6 @@
 ﻿using System;
 using ICD.Common.Utils.Services.Logging;
+using ICD.Connect.Protocol.Ports;
 using ICD.Connect.Protocol.Ports.IoPort;
 using ICD.Connect.Settings.Core;
 #if SIMPLSHARP
@@ -143,6 +144,10 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 			}
 
 			Configuration = GetConfiguration(m_Port);
+
+
+			if (DebugTx != eDebugMode.Off)
+				PrintTx("Configuration - " + Configuration);
 #else
 			throw new NotImplementedException();
 #endif
@@ -178,6 +183,9 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 			{
 				Logger.AddEntry(eSeverity.Error, "{0} failed to set digital out - {1}", this, e.Message);
 			}
+
+			if (DebugTx != eDebugMode.Off)
+				PrintTx("Digital Out - " + DigitalOut);
 #else
 			throw new NotImplementedException();
 #endif
@@ -290,6 +298,8 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 			{
 				case eVersiportEvent.DigitalInChange:
 					DigitalIn = GetDigitalIn(m_Port);
+					if (DebugRx != eDebugMode.Off)
+						PrintRx("Digital In - " + DigitalIn);
 					break;
 
 				case eVersiportEvent.DigitalOutChange:
@@ -298,6 +308,8 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 
 				case eVersiportEvent.AnalogInChange:
 					AnalogIn = GetAnalogIn(m_Port);
+					if (DebugRx != eDebugMode.Off)
+						PrintRx("Analog In - " + AnalogIn);
 					break;
 
 				case eVersiportEvent.VersiportConfigurationChange:
