@@ -3,7 +3,9 @@ using ICD.Common.Properties;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.Devices.Extensions;
 using ICD.Connect.Misc.CrestronPro.Devices;
+using ICD.Connect.Protocol.Ports;
 using ICD.Connect.Protocol.Ports.RelayPort;
+using ICD.Connect.Protocol.Utils;
 using ICD.Connect.Settings.Core;
 #if SIMPLSHARP
 using Crestron.SimplSharpPro;
@@ -112,6 +114,9 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 				return;
 			}
 
+			if (DebugTx != eDebugMode.Off)
+				DebugUtils.PrintTx(this, DebugTx, "Relay Open");
+
 			m_Port.Open();
 #else
             throw new NotSupportedException();
@@ -129,6 +134,9 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 				Logger.AddEntry(eSeverity.Error, "{0} unable to close relay - internal port is null", this);
 				return;
 			}
+
+			if (DebugTx != eDebugMode.Off)
+				DebugUtils.PrintTx(this, DebugTx, "Relay Closed");
 
 			m_Port.Close();
 #else
