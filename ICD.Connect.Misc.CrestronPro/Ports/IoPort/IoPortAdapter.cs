@@ -100,7 +100,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 			eDeviceRegistrationUnRegistrationResponse result = port.Register();
 			if (result != eDeviceRegistrationUnRegistrationResponse.Success)
 			{
-				Logger.AddEntry(eSeverity.Error, "{0} unable to register {1} - {2}", this, port.GetType().Name, result);
+				Log(eSeverity.Error, "Unable to register {0} - {1}", port.GetType().Name, result);
 				return;
 			}
 
@@ -111,8 +111,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 			eDeviceRegistrationUnRegistrationResponse parentResult = parent.ReRegister();
 			if (parentResult != eDeviceRegistrationUnRegistrationResponse.Success)
 			{
-				Logger.AddEntry(eSeverity.Error, "{0} unable to register parent {1} - {2}", this, parent.GetType().Name,
-				                parentResult);
+				Log(eSeverity.Error, "Unable to register parent {0} - {1}", parent.GetType().Name, parentResult);
 			}
 		}
 #endif
@@ -128,7 +127,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 #if SIMPLSHARP
 			if (m_Port == null)
 			{
-				Logger.AddEntry(eSeverity.Error, "{0} failed to set configuration - no internal port", this);
+				Log(eSeverity.Error, "Failed to set configuration - no internal port");
 				return;
 			}
 
@@ -140,7 +139,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 			}
 			catch (InvalidOperationException ex)
 			{
-				Logger.AddEntry(eSeverity.Error, "{0} failed to establish configuration {1} - {2}", this, configuration, ex.Message);
+				Log(eSeverity.Error, "Failed to establish configuration {0} - {1}", configuration, ex.Message);
 			}
 
 			Configuration = GetConfiguration(m_Port);
@@ -162,13 +161,13 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 #if SIMPLSHARP
 			if (m_Port == null)
 			{
-				Logger.AddEntry(eSeverity.Error, "{0} failed to set digital out - no port assigned", this);
+				Log(eSeverity.Error, "Failed to set digital out - no port assigned");
 				return;
 			}
 
 			if (m_Port.VersiportConfiguration != eVersiportConfiguration.DigitalOutput)
 			{
-				Logger.AddEntry(eSeverity.Error, "{0} failed to set digital out - not configured as a digital output", this);
+				Log(eSeverity.Error, "Failed to set digital out - not configured as a digital output");
 				return;
 			}
 
@@ -181,7 +180,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 			}
 			catch (InvalidOperationException e)
 			{
-				Logger.AddEntry(eSeverity.Error, "{0} failed to set digital out - {1}", this, e.Message);
+				Log(eSeverity.Error, "Failed to set digital out - {0}", e.Message);
 			}
 
 			if (DebugTx != eDebugMode.Off)
@@ -369,7 +368,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 			// ReSharper restore SuspiciousTypeConversion.Global
 
 			if (provider == null)
-				Logger.AddEntry(eSeverity.Error, "{0} is not a port provider", m_Device);
+				Log(eSeverity.Error, "{0} is not a port provider", m_Device);
 			else
 			{
 				try
@@ -378,13 +377,13 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 				}
 				catch (Exception e)
 				{
-					Logger.AddEntry(eSeverity.Error, e, "Unable to get IOPort from device {0} at address {1}", m_Device,
-					                settings.Address);
+					Log(eSeverity.Error, "Unable to get IOPort from device {0} at address {1} - {2}", m_Device,
+					    settings.Address, e.Message);
 				}
 			}
 
 			if (provider != null && port == null)
-				Logger.AddEntry(eSeverity.Error, "No IO Port at device {0} address {1}", m_Device, settings.Address);
+				Log(eSeverity.Error, "No IO Port at device {0} address {1}", m_Device, settings.Address);
 
 			SetIoPort(port, settings.Address);
 
