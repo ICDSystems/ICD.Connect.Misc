@@ -148,7 +148,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 			if (DebugTx != eDebugMode.Off)
 				PrintTx("Configuration - " + Configuration);
 #else
-			throw new NotImplementedException();
+			throw new NotSupportedException();
 #endif
 		}
 
@@ -186,7 +186,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 			if (DebugTx != eDebugMode.Off)
 				PrintTx("Digital Out - " + DigitalOut);
 #else
-			throw new NotImplementedException();
+			throw new NotSupportedException();
 #endif
 		}
 
@@ -390,7 +390,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 			if (settings.Configuration != eIoPortConfiguration.None)
 				SetConfiguration(settings.Configuration);
 #else
-			throw new NotImplementedException();
+			throw new NotSupportedException();
 #endif
 		}
 
