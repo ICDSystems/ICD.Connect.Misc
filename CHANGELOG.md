@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
  - Debug logging for IOPort
 
+## [5.5.0] - 2018-09-25
+### Added
+ - Additional constructors for sig collections
+
 ## [5.4.0] - 2018-09-14
 ### Added
  - Shim for getting crestron button states
