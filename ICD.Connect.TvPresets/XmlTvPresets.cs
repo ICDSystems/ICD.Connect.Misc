@@ -81,19 +81,20 @@ namespace ICD.Connect.TvPresets
 		[PublicAPI]
 		public static IEnumerable<Station> ParseStations(string xml)
 		{
-			string baseUrl = XmlUtils.TryReadChildElementContentAsString(xml, "BaseUrl") ?? GenerateBaseUrl();
+			string baseUrl = XmlUtils.TryReadChildElementContentAsString(xml, "BaseUrl") ?? BuildDefaultBaseUrl();
 			string stations = XmlUtils.GetChildElementAsString(xml, "Stations");
 
 			return XmlUtils.GetChildElementsAsString(stations)
 			               .Select(s => Station.FromXml(baseUrl, s));
 		}
 
-		private static string GenerateBaseUrl()
+		private static string BuildDefaultBaseUrl()
 		{
-			const string format = @"http://{0}/TvPresets/Icons/";
-			string ip = IcdEnvironment.NetworkAddresses.FirstOrDefault();
-
-			return string.Format(format, ip);
+			return new IcdUriBuilder
+			{
+				Host = IcdEnvironment.NetworkAddresses.FirstOrDefault(),
+				Path = "/TvPresets/Icons/",
+			}.ToString();
 		}
 
 		public IEnumerator<Station> GetEnumerator()
