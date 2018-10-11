@@ -1,5 +1,7 @@
 ﻿using System;
+using ICD.Common.Utils;
 using ICD.Common.Utils.Services.Logging;
+using ICD.Common.Utils.Timers;
 using ICD.Connect.Protocol.Ports;
 using ICD.Connect.Protocol.Ports.IoPort;
 using ICD.Connect.Settings.Core;
@@ -18,6 +20,9 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 	public sealed class IoPortAdapter : AbstractIoPort<IoPortAdapterSettings>
 	{
 #if SIMPLSHARP
+
+		private const int PORT_RECHECK_TIME = 250;
+
 		private static readonly Dictionary<eIoPortConfiguration, eVersiportConfiguration> s_ConfigMap =
 			new Dictionary<eIoPortConfiguration, eVersiportConfiguration>
 			{
@@ -28,11 +33,26 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 			};
 
 		private Versiport m_Port;
+
+		private bool m_RequestedState;
+
+		private bool m_PortStateBusy;
+
+		private SafeTimer m_PortRecheckTimer;
 #endif
 
 		// Used with settings
 		private int? m_Device;
 		private int m_Address;
+
+		private bool m_IsRegistered;
+		private readonly SafeCriticalSection m_SetDigitalSection;
+
+		public IoPortAdapter()
+		{
+			m_SetDigitalSection = new SafeCriticalSection();
+			m_PortRecheckTimer = SafeTimer.Stopped(PortRecheck);
+		}
 
 		#region Methods
 
@@ -86,6 +106,8 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 				return;
 
 			port.UnRegister();
+
+			m_IsRegistered = false;
 		}
 
 		/// <summary>
@@ -94,8 +116,30 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 		/// <param name="port"></param>
 		private void Register(Versiport port)
 		{
-			if (port == null || port.Registered)
+			if (port == null || (m_IsRegistered && port.Registered))
 				return;
+
+			// In this case, the port says it's registered, but we never did it
+			// Assume this is the parent device reporting, and re-register the parent
+			if (!m_IsRegistered && port.Registered)
+			{
+				GenericDevice parent = port.Parent as GenericDevice;
+				if (parent == null)
+				{
+					Log(eSeverity.Error,"{0} Error registering port, no parent device", this);
+					return;
+				}
+
+				eDeviceRegistrationUnRegistrationResponse parentResult = parent.ReRegister();
+				if (parentResult != eDeviceRegistrationUnRegistrationResponse.Success)
+				{
+					Log(eSeverity.Error, "{0} unable to register parent {1} - {2}", this, parent.GetType().Name,
+									parentResult);
+					return;
+				}
+				m_IsRegistered = true;
+				return;
+			}
 
 			eDeviceRegistrationUnRegistrationResponse result = port.Register();
 			if (result != eDeviceRegistrationUnRegistrationResponse.Success)
@@ -103,16 +147,11 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 				Log(eSeverity.Error, "Unable to register {0} - {1}", port.GetType().Name, result);
 				return;
 			}
+			m_IsRegistered = true;
 
-			GenericDevice parent = port.Parent as GenericDevice;
-			if (parent == null)
-				return;
+			// Removed parent re-register here, since I don't think we need it?
 
-			eDeviceRegistrationUnRegistrationResponse parentResult = parent.ReRegister();
-			if (parentResult != eDeviceRegistrationUnRegistrationResponse.Success)
-			{
-				Log(eSeverity.Error, "Unable to register parent {0} - {1}", parent.GetType().Name, parentResult);
-			}
+
 		}
 #endif
 
@@ -159,32 +198,53 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 		public override void SetDigitalOut(bool digitalOut)
 		{
 #if SIMPLSHARP
-			if (m_Port == null)
-			{
-				Log(eSeverity.Error, "Failed to set digital out - no port assigned");
-				return;
-			}
 
-			if (m_Port.VersiportConfiguration != eVersiportConfiguration.DigitalOutput)
-			{
-				Log(eSeverity.Error, "Failed to set digital out - not configured as a digital output");
-				return;
-			}
+			m_RequestedState = digitalOut;
 
+			m_SetDigitalSection.Enter();
 			try
 			{
-				m_Port.DigitalOut = digitalOut;
+				if (m_PortStateBusy)
+				{
+					m_PortRecheckTimer.Reset(PORT_RECHECK_TIME);
+					return;
+				}
 
-				// Not all devices (e.g. DIN-IO8 give DigitalOut feedback, so lets cache it)
-				DigitalOut = digitalOut;
+				m_PortStateBusy = true;
+
+				if (m_Port == null)
+				{
+					Log(eSeverity.Error, "{0} failed to set digital out - no port assigned", this);
+					return;
+				}
+
+				if (m_Port.VersiportConfiguration != eVersiportConfiguration.DigitalOutput)
+				{
+					Log(eSeverity.Error, "{0} failed to set digital out - not configured as a digital output", this);
+					return;
+				}
+
+				try
+				{
+					m_Port.DigitalOut = digitalOut;
+
+					// Not all devices (e.g. DIN-IO8 give DigitalOut feedback, so lets cache it)
+					DigitalOut = digitalOut;
+				}
+				catch (InvalidOperationException e)
+				{
+					Log(eSeverity.Error, "{0} failed to set digital out - {1}", this, e.Message);
+				}
+
+				if (DebugTx != eDebugMode.Off)
+					PrintTx("Digital Out - " + DigitalOut);
+
+				m_PortRecheckTimer.Reset(PORT_RECHECK_TIME);
 			}
-			catch (InvalidOperationException e)
+			finally
 			{
-				Log(eSeverity.Error, "Failed to set digital out - {0}", e.Message);
+				m_SetDigitalSection.Leave();
 			}
-
-			if (DebugTx != eDebugMode.Off)
-				PrintTx("Digital Out - " + DigitalOut);
 #else
 			throw new NotSupportedException();
 #endif
@@ -195,6 +255,31 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 		#region Private Methods
 
 #if SIMPLSHARP
+
+		/// <summary>
+		/// This abominiation is to fix versiports not updating
+		/// fast enough in some situations.
+		/// </summary>
+		private void PortRecheck()
+		{
+			bool needsSet = false;
+
+			m_SetDigitalSection.Enter();
+			try
+			{
+				if (m_RequestedState != DigitalOut)
+					needsSet = true;
+				m_PortStateBusy = false;
+			}
+			finally
+			{
+				m_SetDigitalSection.Leave();
+			}
+
+			if (needsSet)
+				SetDigitalOut(m_RequestedState);
+		}
+
 		/// <summary>
 		/// Gets digital in state for the given port.
 		/// </summary>
@@ -332,7 +417,6 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 
 			settings.Device = m_Device;
 			settings.Address = m_Address;
-			settings.Configuration = Configuration;
 		}
 
 		/// <summary>
@@ -386,9 +470,6 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 				Log(eSeverity.Error, "No IO Port at device {0} address {1}", m_Device, settings.Address);
 
 			SetIoPort(port, settings.Address);
-
-			if (settings.Configuration != eIoPortConfiguration.None)
-				SetConfiguration(settings.Configuration);
 #else
 			throw new NotSupportedException();
 #endif
