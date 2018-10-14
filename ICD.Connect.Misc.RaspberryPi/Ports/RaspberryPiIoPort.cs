@@ -21,6 +21,16 @@ namespace ICD.Connect.Misc.RaspberryPi.Ports
 		/// </summary>
 		public override void SetConfiguration(eIoPortConfiguration configuration)
 		{
+			switch (configuration)
+			{
+				case eIoPortConfiguration.DigitalIn:
+				case eIoPortConfiguration.DigitalOut:
+					break;
+
+				default:
+					throw new NotSupportedException("configuration");
+			}
+
 			SetPin(m_Pin, configuration);
 		}
 
@@ -30,6 +40,9 @@ namespace ICD.Connect.Misc.RaspberryPi.Ports
 		/// <param name="pin"></param>
 		public void SetPin(int pin)
 		{
+			if (!EnumUtils.IsDefined(typeof(ProcessorPin), pin))
+				throw new ArgumentOutOfRangeException("pin");
+
 			SetPin(pin, Configuration);
 		}
 
