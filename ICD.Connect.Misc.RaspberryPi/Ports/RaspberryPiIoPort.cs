@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
 using ICD.Common.Utils;
+using ICD.Connect.API.Commands;
 using ICD.Connect.API.Nodes;
 using ICD.Connect.Protocol.Ports.IoPort;
 using ICD.Connect.Settings.Core;
@@ -10,75 +11,42 @@ namespace ICD.Connect.Misc.RaspberryPi.Ports
 {
 	public sealed class RaspberryPiIoPort : AbstractIoPort<RaspberryPiIoPortSettings>
 	{
-		private readonly GpioConnection m_Connection;
-
+		private GpioConnection m_Connection;
 		private int m_Pin;
 
-		/// <summary>
-		/// Gets the configured processor pin enum.
-		/// </summary>
-		private ProcessorPin ProcessorPin { get { return (ProcessorPin)m_Pin; } }
-
-		/// <summary>
-		/// Constructor.
-		/// </summary>
-		public RaspberryPiIoPort()
-		{
-			m_Connection = new GpioConnection();
-			m_Connection.PinStatusChanged += ConnectionOnPinStatusChanged;
-		}
-
-		/// <summary>
-		/// Release resources.
-		/// </summary>
-		protected override void DisposeFinal(bool disposing)
-		{
-			base.DisposeFinal(disposing);
-
-			m_Connection.PinStatusChanged -= ConnectionOnPinStatusChanged;
-
-			(m_Connection as IDisposable).Dispose();
-		}
-
 		#region Methods
-
-		/// <summary>
-		/// Gets the current online status of the device.
-		/// </summary>
-		/// <returns></returns>
-		protected override bool GetIsOnlineStatus()
-		{
-			return m_Connection.Pins.Any();
-		}
 
 		/// <summary>
 		/// Sets the configuration mode.
 		/// </summary>
 		public override void SetConfiguration(eIoPortConfiguration configuration)
 		{
-			// Clear the existing pins
-			foreach (ConnectedPin pin in m_Connection.Pins)
-				m_Connection.Remove(pin.Configuration);
+			SetPin(m_Pin, configuration);
+		}
 
-			switch (configuration)
-			{
-				case eIoPortConfiguration.DigitalIn:
-					InputPinConfiguration inputPin = new InputPinConfiguration(ProcessorPin);
-					m_Connection.Add(inputPin);
-					break;
+		/// <summary>
+		/// Sets the pin address.
+		/// </summary>
+		/// <param name="pin"></param>
+		public void SetPin(int pin)
+		{
+			SetPin(pin, Configuration);
+		}
 
-				case eIoPortConfiguration.DigitalOut:
-					OutputPinConfiguration outputPin = new OutputPinConfiguration(ProcessorPin);
-					m_Connection.Add(outputPin);
-					break;
+		/// <summary>
+		/// Sets the pin address and configuration.
+		/// </summary>
+		/// <param name="pin"></param>
+		/// <param name="configuration"></param>
+		private void SetPin(int pin, eIoPortConfiguration configuration)
+		{
+			if (pin == m_Pin && configuration == Configuration)
+				return;
 
-				case eIoPortConfiguration.AnalogIn:
-					throw new NotImplementedException();
-					break;
+			m_Pin = pin;
+			Configuration = configuration;
 
-				default:
-					throw new ArgumentOutOfRangeException("configuration");
-			}
+			RebuildConnection();
 		}
 
 		/// <summary>
@@ -95,6 +63,64 @@ namespace ICD.Connect.Misc.RaspberryPi.Ports
 
 		#endregion
 
+		#region Private Methods
+
+		/// <summary>
+		/// Gets the current online status of the device.
+		/// </summary>
+		/// <returns></returns>
+		protected override bool GetIsOnlineStatus()
+		{
+			return m_Connection != null;
+		}
+
+		/// <summary>
+		/// Destroys the old connection and makes a new connection based on the
+		/// pin and configuration info.
+		/// </summary>
+		private void RebuildConnection()
+		{
+			Unscubscribe(m_Connection);
+
+			IDisposable disposable = m_Connection;
+			if (disposable != null)
+				disposable.Dispose();
+
+			m_Connection = null;
+
+			if (m_Pin == 0 || Configuration == eIoPortConfiguration.None)
+				return;
+
+			ProcessorPin pin = (ProcessorPin)m_Pin;
+			PinConfiguration pinConfiguration = BuildPinConfiguration(Configuration, pin);
+
+			m_Connection = new GpioConnection(pinConfiguration);
+			Subscribe(m_Connection);
+		}
+
+		/// <summary>
+		/// Instantiates a pin configuration for the given configuration and pin address.
+		/// </summary>
+		/// <param name="configuration"></param>
+		/// <param name="pin"></param>
+		/// <returns></returns>
+		private static PinConfiguration BuildPinConfiguration(eIoPortConfiguration configuration, ProcessorPin pin)
+		{
+			switch (configuration)
+			{
+				case eIoPortConfiguration.DigitalIn:
+					return pin.Input();
+
+				case eIoPortConfiguration.DigitalOut:
+					return pin.Output();
+
+				default:
+					throw new ArgumentOutOfRangeException(nameof(configuration), configuration, null);
+			}
+		}
+
+		#endregion
+
 		#region Settings
 
 		/// <summary>
@@ -104,7 +130,7 @@ namespace ICD.Connect.Misc.RaspberryPi.Ports
 		{
 			base.ClearSettingsFinal();
 
-			m_Pin = 0;
+			SetPin(0);
 		}
 
 		/// <summary>
@@ -134,6 +160,35 @@ namespace ICD.Connect.Misc.RaspberryPi.Ports
 
 		#region Connection Callbacks
 
+		/// <summary>
+		/// Subscribe to the connection events.
+		/// </summary>
+		/// <param name="connection"></param>
+		private void Subscribe(GpioConnection connection)
+		{
+			if (connection == null)
+				return;
+
+			connection.PinStatusChanged += ConnectionOnPinStatusChanged;
+		}
+
+		/// <summary>
+		/// Unsubscribe from the connection events.
+		/// </summary>
+		/// <param name="connection"></param>
+		private void Unscubscribe(GpioConnection connection)
+		{
+			if (connection == null)
+				return;
+
+			connection.PinStatusChanged -= ConnectionOnPinStatusChanged;
+		}
+
+		/// <summary>
+		/// Called when a connection pin status changes.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="pinStatusEventArgs"></param>
 		private void ConnectionOnPinStatusChanged(object sender, PinStatusEventArgs pinStatusEventArgs)
 		{
 			IcdConsole.PrintLine(eConsoleColor.Magenta, "{0}, {1}", pinStatusEventArgs.Configuration,
@@ -153,6 +208,27 @@ namespace ICD.Connect.Misc.RaspberryPi.Ports
 			base.BuildConsoleStatus(addRow);
 
 			addRow("Pin", m_Pin);
+		}
+
+		/// <summary>
+		/// Gets the child console commands.
+		/// </summary>
+		/// <returns></returns>
+		public override IEnumerable<IConsoleCommand> GetConsoleCommands()
+		{
+			foreach (IConsoleCommand command in GetBaseConsoleCommands())
+				yield return command;
+
+			yield return new GenericConsoleCommand<int>("SetPin", "SetPin <NUMBER>", i => SetPin(i));
+		}
+
+		/// <summary>
+		/// Workaround for "unverifiable code" warning.
+		/// </summary>
+		/// <returns></returns>
+		private IEnumerable<IConsoleCommand> GetBaseConsoleCommands()
+		{
+			return base.GetConsoleCommands();
 		}
 
 		#endregion
