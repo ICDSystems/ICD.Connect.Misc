@@ -122,7 +122,9 @@ namespace ICD.Connect.Misc.RaspberryPi.Ports
 			switch (configuration)
 			{
 				case eIoPortConfiguration.DigitalIn:
-					return pin.Input();
+					InputPinConfiguration output = pin.Input();
+					output.Resistor = PinResistor.PullUp;
+					return output;
 
 				case eIoPortConfiguration.DigitalOut:
 					return pin.Output();
@@ -166,7 +168,7 @@ namespace ICD.Connect.Misc.RaspberryPi.Ports
 		{
 			base.ApplySettingsFinal(settings, factory);
 
-			m_Pin = settings.Pin;
+			SetPin(settings.Pin);
 		}
 
 		#endregion
@@ -204,8 +206,15 @@ namespace ICD.Connect.Misc.RaspberryPi.Ports
 		/// <param name="pinStatusEventArgs"></param>
 		private void ConnectionOnPinStatusChanged(object sender, PinStatusEventArgs pinStatusEventArgs)
 		{
-			IcdConsole.PrintLine(eConsoleColor.Magenta, "{0}, {1}", pinStatusEventArgs.Configuration,
-								 pinStatusEventArgs.Enabled);
+			switch (Configuration)
+			{
+				case eIoPortConfiguration.DigitalIn:
+					DigitalIn = !pinStatusEventArgs.Enabled;
+					break;
+				case eIoPortConfiguration.DigitalOut:
+					DigitalOut = !pinStatusEventArgs.Enabled;
+					break;
+			}
 		}
 
 		#endregion
