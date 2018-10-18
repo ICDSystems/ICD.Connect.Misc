@@ -69,9 +69,9 @@ namespace ICD.Connect.Misc.RaspberryPi.Ports
 		public override void SetDigitalOut(bool digitalOut)
 		{
 			if (digitalOut)
-				m_Connection.Close();
-			else
 				m_Connection.Open();
+			else
+				m_Connection.Close();
 		}
 
 		#endregion
@@ -122,12 +122,13 @@ namespace ICD.Connect.Misc.RaspberryPi.Ports
 			switch (configuration)
 			{
 				case eIoPortConfiguration.DigitalIn:
-					InputPinConfiguration output = pin.Input();
-					output.Resistor = PinResistor.PullUp;
-					return output;
+					InputPinConfiguration input = pin.Input();
+					input.Resistor = PinResistor.PullUp;
+					return input;
 
 				case eIoPortConfiguration.DigitalOut:
-					return pin.Output();
+					OutputPinConfiguration output = pin.Output().Enable();
+					return output;
 
 				default:
 					throw new ArgumentOutOfRangeException(nameof(configuration), configuration, null);
@@ -212,7 +213,7 @@ namespace ICD.Connect.Misc.RaspberryPi.Ports
 					DigitalIn = !pinStatusEventArgs.Enabled;
 					break;
 				case eIoPortConfiguration.DigitalOut:
-					DigitalOut = !pinStatusEventArgs.Enabled;
+					DigitalOut = pinStatusEventArgs.Enabled;
 					break;
 			}
 		}
