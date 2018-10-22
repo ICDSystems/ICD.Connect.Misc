@@ -121,7 +121,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		/// <param name="port"></param>
 		private void Register(IROutputPort port)
 		{
-			if (port == null || port.Registered)
+			if (port == null)
 				return;
 
 			GenericDevice parent = port.Parent as GenericDevice;
