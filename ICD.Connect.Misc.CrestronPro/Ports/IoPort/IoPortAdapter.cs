@@ -2,12 +2,13 @@
 using ICD.Common.Utils;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Common.Utils.Timers;
+using ICD.Connect.API.Commands;
+using ICD.Connect.API.Nodes;
 using ICD.Connect.Protocol.Ports;
 using ICD.Connect.Protocol.Ports.IoPort;
 using ICD.Connect.Settings.Core;
 #if SIMPLSHARP
 using Crestron.SimplSharpPro;
-using ICD.Connect.Misc.CrestronPro.Utils.Extensions;
 using ICD.Common.Properties;
 using ICD.Common.Utils.Extensions;
 using ICD.Connect.Devices.Extensions;
@@ -45,7 +46,6 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 		private int? m_Device;
 		private int m_Address;
 
-		private bool m_IsRegistered;
 		private readonly SafeCriticalSection m_SetDigitalSection;
 
 		public IoPortAdapter()
@@ -106,8 +106,6 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 				return;
 
 			port.UnRegister();
-
-			m_IsRegistered = false;
 		}
 
 		/// <summary>
@@ -116,42 +114,53 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 		/// <param name="port"></param>
 		private void Register(Versiport port)
 		{
-			if (port == null || (m_IsRegistered && port.Registered))
+			if (port == null)
 				return;
+			
 
-			// In this case, the port says it's registered, but we never did it
-			// Assume this is the parent device reporting, and re-register the parent
-			if (!m_IsRegistered && port.Registered)
+			eDeviceRegistrationUnRegistrationResponse result = port.Register();
+
+			// If result is ParentRegistered, we have to unregister and re-register the parent after
+			if (result == eDeviceRegistrationUnRegistrationResponse.ParentRegistered)
 			{
 				GenericDevice parent = port.Parent as GenericDevice;
 				if (parent == null)
 				{
-					Log(eSeverity.Error,"{0} Error registering port, no parent device", this);
+					Log(eSeverity.Error, "{0} Error registering port, no parent device", this);
 					return;
 				}
 
-				eDeviceRegistrationUnRegistrationResponse parentResult = parent.ReRegister();
+				Log(eSeverity.Debug, "{0} Registration for {1} returned {2}, re-registering {3}", this, port.GetType().Name, result, parent.GetType().Name);
+
+				// Unregiser Parent
+				eDeviceRegistrationUnRegistrationResponse parentResult = parent.UnRegister();
 				if (parentResult != eDeviceRegistrationUnRegistrationResponse.Success)
 				{
-					Log(eSeverity.Error, "{0} unable to register parent {1} - {2}", this, parent.GetType().Name,
-									parentResult);
+					Log(eSeverity.Error, "{0} Error registering port, parent unregistration failed: {1}", this,
+					                parentResult);
 					return;
 				}
-				m_IsRegistered = true;
-				return;
-			}
 
-			eDeviceRegistrationUnRegistrationResponse result = port.Register();
-			if (result != eDeviceRegistrationUnRegistrationResponse.Success)
+				// Register Port
+				result = port.Register();
+				if (result != eDeviceRegistrationUnRegistrationResponse.Success)
+				{
+					Log(eSeverity.Error, "{0} unable to register {1} - {2}", this, port.GetType().Name, result);
+					return;
+				}
+
+				// Register Parent
+				parentResult = parent.Register();
+				if (parentResult != eDeviceRegistrationUnRegistrationResponse.Success)
+				{
+					Log(eSeverity.Error, "{0} Error registering port, parent registration failed: {1}", this,
+					                parentResult);
+				}
+			}
+			else if (result != eDeviceRegistrationUnRegistrationResponse.Success)
 			{
-				Log(eSeverity.Error, "Unable to register {0} - {1}", port.GetType().Name, result);
-				return;
+				Log(eSeverity.Error, "{0} unable to register {1} - {2}", this, port.GetType().Name, result);
 			}
-			m_IsRegistered = true;
-
-			// Removed parent re-register here, since I don't think we need it?
-
-
 		}
 #endif
 
@@ -490,6 +499,44 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 #else
 			return false;
 #endif
+		}
+
+		#endregion
+
+		#region Console
+
+		/// <summary>
+		/// Calls the delegate for each console status item.
+		/// </summary>
+		/// <param name="addRow"></param>
+		public override void BuildConsoleStatus(AddStatusRowDelegate addRow)
+		{
+			base.BuildConsoleStatus(addRow);
+			addRow("Address", m_Address);
+			if (m_Port != null)
+				addRow("Port Registration", m_Port.Registered);
+		}
+
+		/// <summary>
+		/// Gets the child console commands.
+		/// </summary>
+		/// <returns></returns>
+		public override IEnumerable<IConsoleCommand> GetConsoleCommands()
+		{
+			foreach (IConsoleCommand command in GetBaseConsoleCommands())
+				yield return command;
+
+			if (m_Port != null)
+			{
+				yield return new ConsoleCommand("Register", "Register the port", () => Register(m_Port));
+				yield return new ConsoleCommand("Unregister", "Unregister the port", () => Unregister(m_Port));
+			}
+		}
+
+
+		private IEnumerable<IConsoleCommand> GetBaseConsoleCommands()
+		{
+			return base.GetConsoleCommands();
 		}
 
 		#endregion
