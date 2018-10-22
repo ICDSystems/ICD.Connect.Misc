@@ -11,7 +11,6 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 	{
 		private const string PARENT_DEVICE_ELEMENT = "Device";
 		private const string ADDRESS_ELEMENT = "Address";
-		private const string CONFIGURATION_ELEMENT = "Configuration";
 
 		#region Properties
 
@@ -19,8 +18,6 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 		public int? Device { get; set; }
 
 		public int Address { get; set; }
-
-		public eIoPortConfiguration Configuration { get; set; }
 
 		#endregion
 
@@ -44,7 +41,18 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 
 			writer.WriteElementString(PARENT_DEVICE_ELEMENT, IcdXmlConvert.ToString(Device));
 			writer.WriteElementString(ADDRESS_ELEMENT, IcdXmlConvert.ToString(Address));
-			writer.WriteElementString(CONFIGURATION_ELEMENT, Configuration.ToString());
+		}
+
+		/// <summary>
+		/// Updates the settings from xml.
+		/// </summary>
+		/// <param name="xml"></param>
+		public override void ParseXml(string xml)
+		{
+			base.ParseXml(xml);
+
+			Device = XmlUtils.TryReadChildElementContentAsInt(xml, PARENT_DEVICE_ELEMENT);
+			Address = XmlUtils.TryReadChildElementContentAsInt(xml, ADDRESS_ELEMENT) ?? 1;
 		}
 
 		/// <summary>
@@ -62,22 +70,6 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 		/// Returns the count from the collection of ids that the settings depends on.
 		/// </summary>
 		public override int DependencyCount { get { return Device != null ? 1 : 0; } }
-
-		/// <summary>
-		/// Updates the settings from xml.
-		/// </summary>
-		/// <param name="xml"></param>
-		public override void ParseXml(string xml)
-		{
-			base.ParseXml(xml);
-
-			Device = XmlUtils.TryReadChildElementContentAsInt(xml, PARENT_DEVICE_ELEMENT);
-			Address = XmlUtils.TryReadChildElementContentAsInt(xml, ADDRESS_ELEMENT) ?? 1;
-
-			eIoPortConfiguration configuration;
-			XmlUtils.TryReadChildElementContentAsEnum(xml, CONFIGURATION_ELEMENT, true, out configuration);
-			Configuration = configuration;
-		}
 
 		#endregion
 	}
