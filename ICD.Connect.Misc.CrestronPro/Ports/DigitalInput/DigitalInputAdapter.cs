@@ -4,7 +4,6 @@ using ICD.Connect.Protocol.Ports.DigitalInput;
 using ICD.Connect.Settings.Core;
 #if SIMPLSHARP
 using Crestron.SimplSharpPro;
-using ICD.Connect.Misc.CrestronPro.Utils.Extensions;
 using ICD.Common.Properties;
 using ICD.Connect.Devices.Extensions;
 using ICD.Connect.Misc.CrestronPro.Devices;
@@ -80,25 +79,52 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.DigitalInput
 		/// <param name="port"></param>
 		private void Register(Crestron.SimplSharpPro.DigitalInput port)
 		{
-			if (port == null || port.Registered)
+			if (port == null)
 				return;
+
 
 			eDeviceRegistrationUnRegistrationResponse result = port.Register();
-			if (result != eDeviceRegistrationUnRegistrationResponse.Success)
+
+			// If result is ParentRegistered, we have to unregister and re-register the parent after
+			if (result == eDeviceRegistrationUnRegistrationResponse.ParentRegistered)
 			{
-				Logger.AddEntry(eSeverity.Error, "{0} unable to register {1} - {2}", this, port.GetType().Name, result);
-				return;
+				GenericDevice parent = port.Parent as GenericDevice;
+				if (parent == null)
+				{
+					Log(eSeverity.Error, "{0} Error registering port, no parent device", this);
+					return;
+				}
+
+				Log(eSeverity.Debug, "{0} Registration for {1} returned {2}, re-registering {3}", this, port.GetType().Name, result, parent.GetType().Name);
+
+				// Unregiser Parent
+				eDeviceRegistrationUnRegistrationResponse parentResult = parent.UnRegister();
+				if (parentResult != eDeviceRegistrationUnRegistrationResponse.Success)
+				{
+					Log(eSeverity.Error, "{0} Error registering port, parent unregistration failed: {1}", this,
+									parentResult);
+					return;
+				}
+
+				// Register Port
+				result = port.Register();
+				if (result != eDeviceRegistrationUnRegistrationResponse.Success)
+				{
+					Log(eSeverity.Error, "{0} unable to register {1} - {2}", this, port.GetType().Name, result);
+					return;
+				}
+
+				// Register Parent
+				parentResult = parent.Register();
+				if (parentResult != eDeviceRegistrationUnRegistrationResponse.Success)
+				{
+					Log(eSeverity.Error, "{0} Error registering port, parent registration failed: {1}", this,
+									parentResult);
+				}
 			}
-
-			GenericDevice parent = port.Parent as GenericDevice;
-			if (parent == null)
-				return;
-
-			eDeviceRegistrationUnRegistrationResponse parentResult = parent.ReRegister();
-			if (parentResult != eDeviceRegistrationUnRegistrationResponse.Success)
+			else if (result != eDeviceRegistrationUnRegistrationResponse.Success)
 			{
-				Logger.AddEntry(eSeverity.Error, "{0} unable to register parent {1} - {2}", this, parent.GetType().Name,
-				                parentResult);
+				Log(eSeverity.Error, "{0} unable to register {1} - {2}", this, port.GetType().Name, result);
 			}
 		}
 #endif
@@ -213,7 +239,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.DigitalInput
 				provider = factory.GetDeviceById((int)m_Device) as IPortParent;
 
 			if (provider == null)
-				Logger.AddEntry(eSeverity.Error, "{0} is not a port provider", m_Device);
+				Log(eSeverity.Error, "{0} is not a port provider", m_Device);
 			else
 			{
 				try
@@ -222,13 +248,13 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.DigitalInput
 				}
 				catch (Exception e)
 				{
-					Logger.AddEntry(eSeverity.Error, e, "Unable to get Digital Input Port from device {0} at address {1}", m_Device,
-					                settings.Address);
+					Log(eSeverity.Error, "Unable to get Digital Input Port from device {0} at address {1}:{2}", m_Device,
+					                settings.Address, e);
 				}
 			}
 
 			if (provider != null && port == null)
-				Logger.AddEntry(eSeverity.Error, "No Digital Input Port at device {0} address {1}", m_Device, settings.Address);
+				Log(eSeverity.Error, "No Digital Input Port at device {0} address {1}", m_Device, settings.Address);
 
 			SetDigitalInputPort(port, settings.Address);
 #else
