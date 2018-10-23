@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
  - Fixed registration issue with Crestron ports on some secondary devices
  - Fixed issue where versiports setup as digital outputs don't handle rapid changes of state properly
+ - iTachFlex wraps a configurable TCP port.
 
 ## [5.6.0] - 2018-10-18
 ### Added

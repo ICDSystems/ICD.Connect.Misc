@@ -1,20 +1,21 @@
 ﻿using ICD.Connect.Devices;
 using ICD.Common.Utils.Xml;
+using ICD.Connect.Protocol.Network.Tcp;
 using ICD.Connect.Settings.Attributes;
 using ICD.Connect.Settings.Attributes.SettingsProperties;
 
 namespace ICD.Connect.Misc.GlobalCache.Devices
 {
 	[KrangSettings("iTachFlex", typeof(GcITachFlexDevice))]
-    public sealed class GcITachFlexDeviceSettings : AbstractDeviceSettings
+	public sealed class GcITachFlexDeviceSettings : AbstractDeviceSettings
 	{
-		private const string ADDRESS_ELEMENT = "Address";
+		private const string PORT_ELEMENT = "Port";
 
 		/// <summary>
-		/// The network address of the iTach device.
+		/// The port id.
 		/// </summary>
-		[IpAddressSettingsProperty]
-		public string Address { get; set; }
+		[OriginatorIdSettingsProperty(typeof(AsyncTcpClient))]
+		public int? Port { get; set; }
 
 		/// <summary>
 		/// Writes property elements to xml.
@@ -24,7 +25,7 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 		{
 			base.WriteElements(writer);
 
-			writer.WriteElementString(ADDRESS_ELEMENT, Address);
+			writer.WriteElementString(PORT_ELEMENT, IcdXmlConvert.ToString(Port));
 		}
 
 		/// <summary>
@@ -35,7 +36,7 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 		{
 			base.ParseXml(xml);
 
-			Address = XmlUtils.TryReadChildElementContentAsString(xml, ADDRESS_ELEMENT);
+			Port = XmlUtils.TryReadChildElementContentAsInt(xml, PORT_ELEMENT);
 		}
 	}
 }

@@ -1,38 +1,49 @@
-﻿using ICD.Common.Utils;
-using ICD.Common.Utils.EventArguments;
+﻿using ICD.Common.Utils.EventArguments;
+using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.API.Nodes;
 using ICD.Connect.Devices;
-using ICD.Connect.Devices.EventArguments;
 using ICD.Connect.Misc.GlobalCache.FlexApi;
+using ICD.Connect.Protocol;
+using ICD.Connect.Protocol.Extensions;
 using ICD.Connect.Protocol.Network.Tcp;
 using ICD.Connect.Protocol.Network.WebPorts;
+using ICD.Connect.Protocol.Ports;
 using ICD.Connect.Protocol.SerialBuffers;
 using ICD.Connect.Settings.Core;
 
 namespace ICD.Connect.Misc.GlobalCache.Devices
 {
-    public sealed class GcITachFlexDevice : AbstractDevice<GcITachFlexDeviceSettings>
+	public sealed class GcITachFlexDevice : AbstractDevice<GcITachFlexDeviceSettings>
 	{
 		private const ushort TCP_PORT = 4998;
 
-		private readonly AsyncTcpClient m_TcpClient;
+		private readonly ConnectionStateManager m_ConnectionStateManager;
 		private readonly DelimiterSerialBuffer m_TcpBuffer;
 		private readonly HttpPort m_HttpClient;
 
-		public string Address { get { return m_TcpClient.Address; } }
+		/// <summary>
+		/// Gets the network address of the device.
+		/// </summary>
+		public string Address
+		{
+			get
+			{
+				AsyncTcpClient client = m_ConnectionStateManager.Port as AsyncTcpClient;
+				return client == null ? null : client.Address;
+			}
+		}
 
 		/// <summary>
 		/// Constructor.
 		/// </summary>
 		public GcITachFlexDevice()
 		{
-			m_TcpClient = new AsyncTcpClient
-			{
-				Name = GetType().Name,
-				Port = TCP_PORT
-			};
-
 			m_TcpBuffer = new DelimiterSerialBuffer(FlexData.NEWLINE);
+
+			m_ConnectionStateManager = new ConnectionStateManager(this) {ConfigurePort = ConfigurePort};
+			m_ConnectionStateManager.OnConnectedStateChanged += PortOnConnectionStatusChanged;
+			m_ConnectionStateManager.OnIsOnlineStateChanged += PortOnIsOnlineStateChanged;
+			m_ConnectionStateManager.OnSerialDataReceived += PortOnSerialDataReceived;
 
 			m_HttpClient = new HttpPort
 			{
@@ -40,7 +51,6 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 			};
 
 			Subscribe(m_TcpBuffer);
-			Subscribe(m_TcpClient);
 		}
 
 		/// <summary>
@@ -52,10 +62,20 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 			base.DisposeFinal(disposing);
 
 			Unsubscribe(m_TcpBuffer);
-			Unsubscribe(m_TcpClient);
 
-			m_TcpClient.Dispose();
+			m_ConnectionStateManager.Dispose();
 			m_HttpClient.Dispose();
+		}
+
+		#region Methods
+
+		/// <summary>
+		/// Sets the TCP client for communication with the device.
+		/// </summary>
+		/// <param name="port"></param>
+		public void SetPort(AsyncTcpClient port)
+		{
+			m_ConnectionStateManager.SetPort(port);
 		}
 
 		/// <summary>
@@ -64,7 +84,7 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 		/// <param name="command"></param>
 		public void SendCommand(string command)
 		{
-			m_TcpClient.Send(command);
+			m_ConnectionStateManager.Send(command);
 		}
 
 		/// <summary>
@@ -81,24 +101,30 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 		/// </summary>
 		/// <param name="localUrl"></param>
 		/// <param name="data"></param>
-		public void Post(string localUrl, string data)
+		public string Post(string localUrl, string data)
 		{
 			string result;
-			if (m_HttpClient.Post(localUrl, data, out result))
-				ParseResult(result);
+			m_HttpClient.Post(localUrl, data, out result);
+
+			return result;
+		}
+
+		#endregion
+
+		private void ConfigurePort(ISerialPort port)
+		{
+			AsyncTcpClient client = port as AsyncTcpClient;
+			if (client != null)
+				client.Port = TCP_PORT;
 		}
 
 		/// <summary>
-		/// HTTP response handler.
+		/// Gets the current online status of the device.
 		/// </summary>
-		/// <param name="result"></param>
-		private void ParseResult(string result)
-		{
-		}
-
+		/// <returns></returns>
 		protected override bool GetIsOnlineStatus()
 		{
-			bool tcp = m_TcpClient != null && m_TcpClient.IsOnline;
+			bool tcp = m_ConnectionStateManager.IsOnline;
 			bool http = m_HttpClient != null && m_HttpClient.IsOnline;
 
 			return tcp && http;
@@ -107,48 +133,37 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 		#region TCP Client Callbacks
 
 		/// <summary>
-		/// Subscribe to the client callbacks.
-		/// </summary>
-		/// <param name="client"></param>
-		private void Subscribe(AsyncTcpClient client)
-		{
-			client.OnIsOnlineStateChanged += ClientOnOnIsOnlineStateChanged;
-			client.OnSerialDataReceived += ClientOnOnSerialDataReceived;
-		}
-
-		/// <summary>
-		/// Unsubscribe from the client callbacks.
-		/// </summary>
-		/// <param name="client"></param>
-		private void Unsubscribe(AsyncTcpClient client)
-		{
-			client.OnIsOnlineStateChanged -= ClientOnOnIsOnlineStateChanged;
-			client.OnSerialDataReceived -= ClientOnOnSerialDataReceived;
-		}
-
-		/// <summary>
 		/// Called when we receive data from the device.
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="stringEventArgs"></param>
-		private void ClientOnOnSerialDataReceived(object sender, StringEventArgs stringEventArgs)
+		private void PortOnSerialDataReceived(object sender, StringEventArgs stringEventArgs)
 		{
 			m_TcpBuffer.Enqueue(stringEventArgs.Data);
 		}
 
 		/// <summary>
-		/// Called when the 
+		/// Called when the port connection status changes.
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="args"></param>
-		private void ClientOnOnIsOnlineStateChanged(object sender, DeviceBaseOnlineStateApiEventArgs args)
+		private void PortOnConnectionStatusChanged(object sender, BoolEventArgs args)
+		{
+		}
+
+		/// <summary>
+		/// Called when the port online status changes.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="args"></param>
+		private void PortOnIsOnlineStateChanged(object sender, BoolEventArgs args)
 		{
 			UpdateCachedOnlineStatus();
 		}
 
 		#endregion
 
-		#region TCP Buffer Callbacks
+		#region Buffer Callbacks
 
 		/// <summary>
 		/// Subsribe to the buffer events.
@@ -175,39 +190,61 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 		/// <param name="stringEventArgs"></param>
 		private void BufferOnOnCompletedSerial(object sender, StringEventArgs stringEventArgs)
 		{
-			IcdConsole.PrintLine(stringEventArgs.Data);
 		}
 
 		#endregion
 
 		#region Settings
 
+		/// <summary>
+		/// Override to clear the instance settings.
+		/// </summary>
 		protected override void ClearSettingsFinal()
 		{
 			base.ClearSettingsFinal();
 
-			m_TcpClient.Address = null;
+			SetPort(null);
 		}
 
-		protected override void ApplySettingsFinal(GcITachFlexDeviceSettings settings, IDeviceFactory factory)
-		{
-			base.ApplySettingsFinal(settings, factory);
-
-			m_TcpClient.Address = settings.Address;
-			m_HttpClient.Address = settings.Address;
-		}
-
+		/// <summary>
+		/// Override to apply properties to the settings instance.
+		/// </summary>
+		/// <param name="settings"></param>
 		protected override void CopySettingsFinal(GcITachFlexDeviceSettings settings)
 		{
 			base.CopySettingsFinal(settings);
 
-			settings.Address = m_TcpClient.Address;
+			settings.Port = m_ConnectionStateManager.PortNumber;
+		}
+
+		/// <summary>
+		/// Override to apply settings to the instance.
+		/// </summary>
+		/// <param name="settings"></param>
+		/// <param name="factory"></param>
+		protected override void ApplySettingsFinal(GcITachFlexDeviceSettings settings, IDeviceFactory factory)
+		{
+			base.ApplySettingsFinal(settings, factory);
+
+			AsyncTcpClient port = null;
+
+			if (settings.Port != null)
+			{
+				port = factory.GetPortById((int)settings.Port) as AsyncTcpClient;
+				if (port == null)
+					Log(eSeverity.Error, "No AsyncTcpClient with id {0}", settings.Port);
+			}
+			SetPort(port);
 		}
 
 		#endregion
 
 		#region Console
 
+		/// <summary>
+		/// Calls the delegate for each console status item.
+		/// </summary>
+		/// <param name="addRow"></param>
 		public override void BuildConsoleStatus(AddStatusRowDelegate addRow)
 		{
 			base.BuildConsoleStatus(addRow);
