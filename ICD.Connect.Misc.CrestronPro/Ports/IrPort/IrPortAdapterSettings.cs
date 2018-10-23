@@ -23,6 +23,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 
 		#region Properties
 
+		[ControlPortParentSettingsProperty]
 		[OriginatorIdSettingsProperty(typeof(IPortParent))]
 		public int? Device { get; set; }
 

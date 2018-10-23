@@ -15,6 +15,7 @@ namespace ICD.Connect.Misc.GlobalCache.Ports
 
 		#region Properties
 
+		[ControlPortParentSettingsProperty]
 		[OriginatorIdSettingsProperty(typeof(GcITachFlexDevice))]
 		public int? Device { get; set; }
 
