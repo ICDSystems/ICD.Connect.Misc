@@ -97,7 +97,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 #if SIMPLSHARP
 			if (m_Port == null)
 			{
-				Log(eSeverity.Error, "{0} unable to open relay - internal port is null", this);
+				Log(eSeverity.Error, "Unable to open relay - internal port is null");
 				return;
 			}
 
@@ -118,7 +118,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 #if SIMPLSHARP
 			if (m_Port == null)
 			{
-				Log(eSeverity.Error, "{0} unable to close relay - internal port is null", this);
+				Log(eSeverity.Error, "Unable to close relay - internal port is null");
 				return;
 			}
 

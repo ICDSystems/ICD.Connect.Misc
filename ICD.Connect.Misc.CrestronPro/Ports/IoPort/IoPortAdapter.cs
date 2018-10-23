@@ -40,7 +40,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 
 		private bool m_PortStateBusy;
 
-		private SafeTimer m_PortRecheckTimer;
+		private readonly SafeTimer m_PortRecheckTimer;
 #endif
 
 		// Used with settings

@@ -219,7 +219,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.DigitalInput
 
 			SetDigitalInputPort(port, settings.Address);
 #else
-			throw new NotImplementedException();
+			throw new NotSupportedException();
 #endif
 		}
 
