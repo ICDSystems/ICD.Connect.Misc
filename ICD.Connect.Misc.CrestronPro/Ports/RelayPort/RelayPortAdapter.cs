@@ -9,7 +9,6 @@ using ICD.Connect.Protocol.Utils;
 using ICD.Connect.Settings.Core;
 #if SIMPLSHARP
 using Crestron.SimplSharpPro;
-using ICD.Connect.Misc.CrestronPro.Utils.Extensions;
 #endif
 
 namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
@@ -79,25 +78,52 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 		/// <param name="port"></param>
 		private void Register(Relay port)
 		{
-			if (port == null || port.Registered)
+			if (port == null)
 				return;
+
 
 			eDeviceRegistrationUnRegistrationResponse result = port.Register();
-			if (result != eDeviceRegistrationUnRegistrationResponse.Success)
+
+			// If result is ParentRegistered, we have to unregister and re-register the parent after
+			if (result == eDeviceRegistrationUnRegistrationResponse.ParentRegistered)
+			{
+				GenericDevice parent = port.Parent as GenericDevice;
+				if (parent == null)
+				{
+					Logger.AddEntry(eSeverity.Error, "{0} Error registering port, no parent device", this);
+					return;
+				}
+
+				Logger.AddEntry(eSeverity.Debug, "{0} Registration for {1} returned {2}, re-registering {3}", this, port.GetType().Name, result, parent.GetType().Name);
+
+				// Unregiser Parent
+				eDeviceRegistrationUnRegistrationResponse parentResult = parent.UnRegister();
+				if (parentResult != eDeviceRegistrationUnRegistrationResponse.Success)
+				{
+					Logger.AddEntry(eSeverity.Error, "{0} Error registering port, parent unregistration failed: {1}", this,
+									parentResult);
+					return;
+				}
+
+				// Register Port
+				result = port.Register();
+				if (result != eDeviceRegistrationUnRegistrationResponse.Success)
+				{
+					Logger.AddEntry(eSeverity.Error, "{0} unable to register {1} - {2}", this, port.GetType().Name, result);
+					return;
+				}
+
+				// Register Parent
+				parentResult = parent.Register();
+				if (parentResult != eDeviceRegistrationUnRegistrationResponse.Success)
+				{
+					Logger.AddEntry(eSeverity.Error, "{0} Error registering port, parent registration failed: {1}", this,
+									parentResult);
+				}
+			}
+			else if (result != eDeviceRegistrationUnRegistrationResponse.Success)
 			{
 				Logger.AddEntry(eSeverity.Error, "{0} unable to register {1} - {2}", this, port.GetType().Name, result);
-				return;
-			}
-
-			GenericDevice parent = port.Parent as GenericDevice;
-			if (parent == null)
-				return;
-
-			eDeviceRegistrationUnRegistrationResponse parentResult = parent.ReRegister();
-			if (parentResult != eDeviceRegistrationUnRegistrationResponse.Success)
-			{
-				Logger.AddEntry(eSeverity.Error, "{0} unable to register parent {1} - {2}", this, parent.GetType().Name,
-				                parentResult);
 			}
 		}
 #endif
