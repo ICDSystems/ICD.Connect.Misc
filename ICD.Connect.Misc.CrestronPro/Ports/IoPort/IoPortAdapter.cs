@@ -5,6 +5,7 @@ using ICD.Common.Utils.Services.Logging;
 using ICD.Common.Utils.Timers;
 using ICD.Connect.API.Commands;
 using ICD.Connect.API.Nodes;
+using ICD.Connect.Misc.CrestronPro.Utils;
 using ICD.Connect.Protocol.Ports;
 using ICD.Connect.Protocol.Ports.IoPort;
 using ICD.Connect.Settings.Core;
@@ -39,7 +40,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 
 		private bool m_PortStateBusy;
 
-		private SafeTimer m_PortRecheckTimer;
+		private readonly SafeTimer m_PortRecheckTimer;
 #endif
 
 		// Used with settings
@@ -104,10 +105,8 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 		/// <param name="port"></param>
 		private void Unregister(Versiport port)
 		{
-			if (port == null || !port.Registered)
-				return;
-
-			port.UnRegister();
+			if (port != null)
+				PortDeviceUtils.Unregister(port);
 		}
 
 		/// <summary>
@@ -116,53 +115,14 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 		/// <param name="port"></param>
 		private void Register(Versiport port)
 		{
-			if (port == null)
-				return;
-
-
-			eDeviceRegistrationUnRegistrationResponse result = port.Register();
-
-			// If result is ParentRegistered, we have to unregister and re-register the parent after
-			if (result == eDeviceRegistrationUnRegistrationResponse.ParentRegistered)
+			try
 			{
-				GenericDevice parent = port.Parent as GenericDevice;
-				if (parent == null)
-				{
-					Log(eSeverity.Error, "{0} Error registering port, no parent device", this);
-					return;
-				}
-
-				Log(eSeverity.Debug, "{0} Registration for {1} returned {2}, re-registering {3}", this, port.GetType().Name, result,
-				    parent.GetType().Name);
-
-				// Unregiser Parent
-				eDeviceRegistrationUnRegistrationResponse parentResult = parent.UnRegister();
-				if (parentResult != eDeviceRegistrationUnRegistrationResponse.Success)
-				{
-					Log(eSeverity.Error, "{0} Error registering port, parent unregistration failed: {1}", this,
-					    parentResult);
-					return;
-				}
-
-				// Register Port
-				result = port.Register();
-				if (result != eDeviceRegistrationUnRegistrationResponse.Success)
-				{
-					Log(eSeverity.Error, "{0} unable to register {1} - {2}", this, port.GetType().Name, result);
-					return;
-				}
-
-				// Register Parent
-				parentResult = parent.Register();
-				if (parentResult != eDeviceRegistrationUnRegistrationResponse.Success)
-				{
-					Log(eSeverity.Error, "{0} Error registering port, parent registration failed: {1}", this,
-					    parentResult);
-				}
+				if (port != null)
+					PortDeviceUtils.Register(port);
 			}
-			else if (result != eDeviceRegistrationUnRegistrationResponse.Success)
+			catch (InvalidOperationException e)
 			{
-				Log(eSeverity.Error, "{0} unable to register {1} - {2}", this, port.GetType().Name, result);
+				Log(eSeverity.Error, "Error registering port - {0}", e.Message);
 			}
 		}
 #endif
@@ -226,13 +186,13 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 
 				if (m_Port == null)
 				{
-					Log(eSeverity.Error, "{0} failed to set digital out - no port assigned", this);
+					Log(eSeverity.Error, "Failed to set digital out - no port assigned");
 					return;
 				}
 
 				if (m_Port.VersiportConfiguration != eVersiportConfiguration.DigitalOutput)
 				{
-					Log(eSeverity.Error, "{0} failed to set digital out - not configured as a digital output", this);
+					Log(eSeverity.Error, "Failed to set digital out - not configured as a digital output");
 					return;
 				}
 
@@ -245,7 +205,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 				}
 				catch (InvalidOperationException e)
 				{
-					Log(eSeverity.Error, "{0} failed to set digital out - {1}", this, e.Message);
+					Log(eSeverity.Error, "Failed to set digital out - {0}", e.Message);
 				}
 
 				if (DebugTx != eDebugMode.Off)

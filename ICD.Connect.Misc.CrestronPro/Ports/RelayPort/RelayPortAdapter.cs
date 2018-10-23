@@ -3,6 +3,7 @@ using ICD.Common.Properties;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.Devices.Extensions;
 using ICD.Connect.Misc.CrestronPro.Devices;
+using ICD.Connect.Misc.CrestronPro.Utils;
 using ICD.Connect.Protocol.Ports;
 using ICD.Connect.Protocol.Ports.RelayPort;
 using ICD.Connect.Protocol.Utils;
@@ -66,10 +67,8 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 		/// <param name="port"></param>
 		private void Unregister(Relay port)
 		{
-			if (port == null || !port.Registered)
-				return;
-
-			port.UnRegister();
+			if (port != null)
+				PortDeviceUtils.Unregister(port);
 		}
 
 		/// <summary>
@@ -78,52 +77,14 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 		/// <param name="port"></param>
 		private void Register(Relay port)
 		{
-			if (port == null)
-				return;
-
-
-			eDeviceRegistrationUnRegistrationResponse result = port.Register();
-
-			// If result is ParentRegistered, we have to unregister and re-register the parent after
-			if (result == eDeviceRegistrationUnRegistrationResponse.ParentRegistered)
+			try
 			{
-				GenericDevice parent = port.Parent as GenericDevice;
-				if (parent == null)
-				{
-					Log(eSeverity.Error, "{0} Error registering port, no parent device", this);
-					return;
-				}
-
-				Log(eSeverity.Debug, "{0} Registration for {1} returned {2}, re-registering {3}", this, port.GetType().Name, result, parent.GetType().Name);
-
-				// Unregiser Parent
-				eDeviceRegistrationUnRegistrationResponse parentResult = parent.UnRegister();
-				if (parentResult != eDeviceRegistrationUnRegistrationResponse.Success)
-				{
-					Log(eSeverity.Error, "{0} Error registering port, parent unregistration failed: {1}", this,
-									parentResult);
-					return;
-				}
-
-				// Register Port
-				result = port.Register();
-				if (result != eDeviceRegistrationUnRegistrationResponse.Success)
-				{
-					Log(eSeverity.Error, "{0} unable to register {1} - {2}", this, port.GetType().Name, result);
-					return;
-				}
-
-				// Register Parent
-				parentResult = parent.Register();
-				if (parentResult != eDeviceRegistrationUnRegistrationResponse.Success)
-				{
-					Log(eSeverity.Error, "{0} Error registering port, parent registration failed: {1}", this,
-									parentResult);
-				}
+				if (port != null)
+					PortDeviceUtils.Register(port);
 			}
-			else if (result != eDeviceRegistrationUnRegistrationResponse.Success)
+			catch (InvalidOperationException e)
 			{
-				Log(eSeverity.Error, "{0} unable to register {1} - {2}", this, port.GetType().Name, result);
+				Log(eSeverity.Error, "Error registering port - {0}", e.Message);
 			}
 		}
 #endif
@@ -136,7 +97,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 #if SIMPLSHARP
 			if (m_Port == null)
 			{
-				Log(eSeverity.Error, "{0} unable to open relay - internal port is null", this);
+				Log(eSeverity.Error, "Unable to open relay - internal port is null");
 				return;
 			}
 
@@ -157,7 +118,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 #if SIMPLSHARP
 			if (m_Port == null)
 			{
-				Log(eSeverity.Error, "{0} unable to close relay - internal port is null", this);
+				Log(eSeverity.Error, "Unable to close relay - internal port is null");
 				return;
 			}
 
