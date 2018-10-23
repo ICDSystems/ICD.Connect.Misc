@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using ICD.Common.Utils;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Common.Utils.Timers;
@@ -13,7 +14,6 @@ using ICD.Common.Properties;
 using ICD.Common.Utils.Extensions;
 using ICD.Connect.Devices.Extensions;
 using ICD.Connect.Misc.CrestronPro.Devices;
-using System.Collections.Generic;
 #endif
 
 namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
@@ -51,7 +51,9 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 		public IoPortAdapter()
 		{
 			m_SetDigitalSection = new SafeCriticalSection();
+#if SIMPLSHARP
 			m_PortRecheckTimer = SafeTimer.Stopped(PortRecheck);
+#endif
 		}
 
 		#region Methods
@@ -116,7 +118,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 		{
 			if (port == null)
 				return;
-			
+
 
 			eDeviceRegistrationUnRegistrationResponse result = port.Register();
 
@@ -130,14 +132,15 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 					return;
 				}
 
-				Log(eSeverity.Debug, "{0} Registration for {1} returned {2}, re-registering {3}", this, port.GetType().Name, result, parent.GetType().Name);
+				Log(eSeverity.Debug, "{0} Registration for {1} returned {2}, re-registering {3}", this, port.GetType().Name, result,
+				    parent.GetType().Name);
 
 				// Unregiser Parent
 				eDeviceRegistrationUnRegistrationResponse parentResult = parent.UnRegister();
 				if (parentResult != eDeviceRegistrationUnRegistrationResponse.Success)
 				{
 					Log(eSeverity.Error, "{0} Error registering port, parent unregistration failed: {1}", this,
-					                parentResult);
+					    parentResult);
 					return;
 				}
 
@@ -154,7 +157,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 				if (parentResult != eDeviceRegistrationUnRegistrationResponse.Success)
 				{
 					Log(eSeverity.Error, "{0} Error registering port, parent registration failed: {1}", this,
-					                parentResult);
+					    parentResult);
 				}
 			}
 			else if (result != eDeviceRegistrationUnRegistrationResponse.Success)
@@ -513,8 +516,10 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 		{
 			base.BuildConsoleStatus(addRow);
 			addRow("Address", m_Address);
-			if (m_Port != null)
-				addRow("Port Registration", m_Port.Registered);
+
+#if SIMPLSHARP
+			addRow("Port Registration", m_Port != null && m_Port.Registered);
+#endif
 		}
 
 		/// <summary>
@@ -526,14 +531,16 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 			foreach (IConsoleCommand command in GetBaseConsoleCommands())
 				yield return command;
 
-			if (m_Port != null)
-			{
-				yield return new ConsoleCommand("Register", "Register the port", () => Register(m_Port));
-				yield return new ConsoleCommand("Unregister", "Unregister the port", () => Unregister(m_Port));
-			}
+#if SIMPLSHARP
+			yield return new ConsoleCommand("Register", "Register the port", () => Register(m_Port));
+			yield return new ConsoleCommand("Unregister", "Unregister the port", () => Unregister(m_Port));
+#endif
 		}
 
-
+		/// <summary>
+		/// Workaround for "unverifiable code" warning.
+		/// </summary>
+		/// <returns></returns>
 		private IEnumerable<IConsoleCommand> GetBaseConsoleCommands()
 		{
 			return base.GetConsoleCommands();
