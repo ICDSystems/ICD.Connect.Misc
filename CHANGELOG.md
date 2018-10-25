@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
  - Added ControlPortParentSettingsProperty to port settings parent properties
  - Added Global Cache IP2SL device
+ - Added RaspberryPi project for controlling GPIO pins as Krang IO ports
 
 ### Changed
  - Fixed registration issue with Crestron ports on some secondary devices
