@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using ICD.Common.Properties;
 using ICD.Common.Utils;
 using ICD.Common.Utils.Services.Logging;
@@ -282,7 +283,16 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 			IPortParent provider = null;
 
 			if (m_Device != null)
-				provider = factory.GetDeviceById((int)m_Device) as IPortParent;
+			{
+				try
+				{
+					provider = factory.GetDeviceById((int)m_Device) as IPortParent;
+				}
+				catch (KeyNotFoundException)
+				{
+					Log(eSeverity.Error, "No device with id {0}", m_Device);
+				}
+			}
 
 			if (provider == null)
 				Log(eSeverity.Error, "{0} is not a {1}", m_Device, typeof(IPortParent).Name);

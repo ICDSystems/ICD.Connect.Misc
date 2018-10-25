@@ -308,10 +308,17 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 			IROutputPort port = null;
 			IPortParent provider = null;
 
-			// ReSharper disable SuspiciousTypeConversion.Global
 			if (m_Device != null)
-				provider = factory.GetDeviceById((int)m_Device) as IPortParent;
-			// ReSharper restore SuspiciousTypeConversion.Global
+			{
+				try
+				{
+					provider = factory.GetDeviceById((int)m_Device) as IPortParent;
+				}
+				catch (KeyNotFoundException)
+				{
+					Log(eSeverity.Error, "No device with id {0}", m_Device);
+				}
+			}
 
 			if (provider == null)
 				Log(eSeverity.Error, "{0} is not a port provider", m_Device);

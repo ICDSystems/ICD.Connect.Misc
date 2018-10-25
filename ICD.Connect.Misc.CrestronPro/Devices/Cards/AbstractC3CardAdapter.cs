@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using ICD.Common.Properties;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.Devices;
@@ -194,7 +195,17 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 		[CanBeNull]
 		private TCard InstantiateCard(uint? cardId, int cardFrameId, IDeviceFactory factory)
 		{
-			IDevice cardFrame = factory.GetDeviceById(cardFrameId);
+			IDevice cardFrame;
+
+			try
+			{
+				cardFrame = factory.GetDeviceById(cardFrameId);
+			}
+			catch (KeyNotFoundException)
+			{
+				Log(eSeverity.Error, "No device with id {0}", cardFrameId);
+				return null;
+			}
 
 			// If an IPID is specified the CardFrame has multiple slots
 			if (cardId.HasValue)
