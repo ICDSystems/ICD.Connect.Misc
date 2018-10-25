@@ -6,7 +6,22 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 ### Added
+ - Added ControlPortParentSettingsProperty to port settings parent properties
+ - Added Global Cache IP2SL device
+
+### Changed
+ - Fixed registration issue with Crestron ports on some secondary devices
+ - Fixed issue where versiports setup as digital outputs don't handle rapid changes of state properly
+ - iTachFlex wraps a configurable TCP port.
+ - Fail gracefully when a referenced port/device is not present in the configuration
+
+## [5.6.0] - 2018-10-18
+### Added
  - Debug logging for IOPort
+ 
+### Changed
+ - More appropriate exception types
+ - Small logging improvements
 
 ## [5.5.0] - 2018-09-25
 ### Added

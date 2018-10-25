@@ -65,16 +65,24 @@
     <Reference Include="System.Data" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Devices\GcITachFlexDevice.cs" />
-    <Compile Include="Devices\GcITachFlexDeviceSettings.cs" />
+    <Compile Include="Devices\AbstractGcITachDevice.cs" />
+    <Compile Include="Devices\AbstractGcITachDeviceSettings.cs" />
+    <Compile Include="Devices\IGcITachDevice.cs" />
+    <Compile Include="Devices\IGcITachDeviceSettings.cs" />
+    <Compile Include="Devices\IP2SL\GcIp2SlDevice.cs" />
+    <Compile Include="Devices\IP2SL\GcIp2SlDeviceSettings.cs" />
+    <Compile Include="Devices\ITachFlex\GcITachFlexDevice.cs" />
+    <Compile Include="Devices\ITachFlex\GcITachFlexDeviceSettings.cs" />
     <Compile Include="FlexApi\FlexData.cs" />
     <Compile Include="FlexApi\FlexUtils.cs" />
     <Compile Include="FlexApi\RestApi\Module.cs" />
     <Compile Include="FlexApi\RestApi\SerialConfiguration.cs" />
     <Compile Include="KrangPlugin.cs" />
     <None Include="ObfuscationSettings.cs" />
-    <Compile Include="Ports\GcITachFlexComPort.cs" />
-    <Compile Include="Ports\GcITachFlexComPortSettings.cs" />
+    <Compile Include="Ports\ComPort\GcITachComPort.cs" />
+    <Compile Include="Ports\ComPort\GcITachComPortSettings.cs" />
+    <Compile Include="Ports\IGcITachPort.cs" />
+    <Compile Include="Ports\IGcITachPortSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="Properties\ControlSystem.cfg" />
   </ItemGroup>

@@ -1,16 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using ICD.Common.Properties;
 using ICD.Common.Utils;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.API.Nodes;
 using ICD.Connect.Devices.Extensions;
 using ICD.Connect.Misc.CrestronPro.Devices;
+using ICD.Connect.Misc.CrestronPro.Utils;
 using ICD.Connect.Protocol.Ports;
 using ICD.Connect.Protocol.Ports.ComPort;
 using ICD.Connect.Settings.Core;
 #if SIMPLSHARP
 using Crestron.SimplSharpPro;
-using ICD.Connect.Misc.CrestronPro.Utils.Extensions;
 #endif
 
 namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
@@ -76,10 +77,8 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 		/// <param name="port"></param>
 		private void Unregister(Crestron.SimplSharpPro.ComPort port)
 		{
-			if (port == null || !port.Registered)
-				return;
-
-			port.UnRegister();
+			if (port != null)
+				PortDeviceUtils.Unregister(port);
 		}
 
 		/// <summary>
@@ -88,23 +87,15 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 		/// <param name="port"></param>
 		private void Register(Crestron.SimplSharpPro.ComPort port)
 		{
-			if (port == null || port.Registered)
-				return;
-
-			eDeviceRegistrationUnRegistrationResponse result = port.Register();
-			if (result != eDeviceRegistrationUnRegistrationResponse.Success)
+			try
 			{
-				Log(eSeverity.Error, "Unable to register {0} - {1}", port.GetType().Name, result);
-				return;
+				if (port != null)
+					PortDeviceUtils.Register(port);
 			}
-
-			GenericDevice parent = port.Parent as GenericDevice;
-			if (parent == null)
-				return;
-
-			eDeviceRegistrationUnRegistrationResponse parentResult = parent.ReRegister();
-			if (parentResult != eDeviceRegistrationUnRegistrationResponse.Success)
-				Log(eSeverity.Error, "Unable to register parent {0} - {1}", parent.GetType().Name, parentResult);
+			catch (InvalidOperationException e)
+			{
+				Log(eSeverity.Error, "Error registering port - {0}", e.Message);
+			}
 		}
 #endif
 
@@ -292,7 +283,16 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 			IPortParent provider = null;
 
 			if (m_Device != null)
-				provider = factory.GetDeviceById((int)m_Device) as IPortParent;
+			{
+				try
+				{
+					provider = factory.GetDeviceById((int)m_Device) as IPortParent;
+				}
+				catch (KeyNotFoundException)
+				{
+					Log(eSeverity.Error, "No device with id {0}", m_Device);
+				}
+			}
 
 			if (provider == null)
 				Log(eSeverity.Error, "{0} is not a {1}", m_Device, typeof(IPortParent).Name);

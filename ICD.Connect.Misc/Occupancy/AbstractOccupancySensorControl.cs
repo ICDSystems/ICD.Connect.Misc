@@ -6,17 +6,18 @@ using ICD.Connect.Devices.Controls;
 
 namespace ICD.Connect.Misc.Occupancy
 {
-	public abstract class AbstractOccupancySensorControl<T> : AbstractDeviceControl<T>, IOccupancySensorControl where T : IDeviceBase
+	public abstract class AbstractOccupancySensorControl<T> : AbstractDeviceControl<T>, IOccupancySensorControl
+		where T : IDeviceBase
 	{
-
-		#region fields
-
 		private eOccupancyState m_OccupancyState;
-
-		#endregion
 
 		#region events
 
+		/// <summary>
+		/// Triggered when the occupancy state changes
+		/// True = occupied
+		/// False = unoccupied/vacant
+		/// </summary>
 		public event EventHandler<GenericEventArgs<eOccupancyState>> OnOccupancyStateChanged;
 
 		#endregion
@@ -35,7 +36,9 @@ namespace ICD.Connect.Misc.Occupancy
 			{
 				if (m_OccupancyState == value)
 					return;
+
 				m_OccupancyState = value;
+
 				OnOccupancyStateChanged.Raise(this, new GenericEventArgs<eOccupancyState>(value));
 			}
 		}
@@ -47,10 +50,9 @@ namespace ICD.Connect.Misc.Occupancy
 		/// </summary>
 		/// <param name="parent"></param>
 		/// <param name="id"></param>
-		protected AbstractOccupancySensorControl(T parent, int id) : base(parent, id)
+		protected AbstractOccupancySensorControl(T parent, int id)
+			: base(parent, id)
 		{
 		}
-
-		
 	}
 }

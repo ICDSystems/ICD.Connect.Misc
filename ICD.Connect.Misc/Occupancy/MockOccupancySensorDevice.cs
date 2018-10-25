@@ -7,10 +7,13 @@ namespace ICD.Connect.Misc.Occupancy
 {
 	public sealed class MockOccupancySensorDevice : AbstractDevice<MockOccupancySensorDeviceSettings>
 	{
-	    public MockOccupancySensorDevice()
-	    {
-		    Controls.Add(new MockOccupancySensorControl(this, 0));
-	    }
+		/// <summary>
+		/// Constructor.
+		/// </summary>
+		public MockOccupancySensorDevice()
+		{
+			Controls.Add(new MockOccupancySensorControl(this, 0));
+		}
 
 		#region Methods
 
@@ -54,17 +57,27 @@ namespace ICD.Connect.Misc.Occupancy
 
 		#region Console
 
+		/// <summary>
+		/// Gets the child console commands.
+		/// </summary>
+		/// <returns></returns>
 		public override IEnumerable<IConsoleCommand> GetConsoleCommands()
 		{
 			foreach (IConsoleCommand command in GetBaseConsoleCommands())
 				yield return command;
 
 			yield return
-				new GenericConsoleCommand<int>("AddOccupancySensorControl", "AddOccupancySensorControl <ID>", id => AddOccupancySensorControl(id));
+				new GenericConsoleCommand<int>("AddOccupancySensorControl", "AddOccupancySensorControl <ID>",
+				                               id => AddOccupancySensorControl(id));
 			yield return
-				new GenericConsoleCommand<int>("RemoveOccupancySensorControl", "RemoveOccupancySensorControl <ID>", id => RemoveOccupancySensorControl(id));
+				new GenericConsoleCommand<int>("RemoveOccupancySensorControl", "RemoveOccupancySensorControl <ID>",
+				                               id => RemoveOccupancySensorControl(id));
 		}
 
+		/// <summary>
+		/// Workaround for "unverifiable code" warning.
+		/// </summary>
+		/// <returns></returns>
 		private IEnumerable<IConsoleCommand> GetBaseConsoleCommands()
 		{
 			return base.GetConsoleCommands();

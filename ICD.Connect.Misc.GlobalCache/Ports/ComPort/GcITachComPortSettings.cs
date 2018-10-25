@@ -4,10 +4,10 @@ using ICD.Connect.Protocol.Ports.ComPort;
 using ICD.Connect.Settings.Attributes;
 using ICD.Connect.Settings.Attributes.SettingsProperties;
 
-namespace ICD.Connect.Misc.GlobalCache.Ports
+namespace ICD.Connect.Misc.GlobalCache.Ports.ComPort
 {
-	[KrangSettings("iTachFlexComPort", typeof(GcITachFlexComPort))]
-	public sealed class GcITachFlexComPortSettings : AbstractComPortSettings
+	[KrangSettings("GlobalCacheITachComPort", typeof(GcITachComPort))]
+	public sealed class GcITachComPortSettings : AbstractComPortSettings
 	{
 		private const string PARENT_DEVICE_ELEMENT = "Device";
 		private const string PARENT_MODULE_ELEMENT = "Module";
@@ -15,7 +15,8 @@ namespace ICD.Connect.Misc.GlobalCache.Ports
 
 		#region Properties
 
-		[OriginatorIdSettingsProperty(typeof(GcITachFlexDevice))]
+		[ControlPortParentSettingsProperty]
+		[OriginatorIdSettingsProperty(typeof(IGcITachDevice))]
 		public int? Device { get; set; }
 
 		public int Module { get; set; }
