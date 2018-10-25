@@ -1,4 +1,6 @@
-﻿using ICD.Common.Utils.EventArguments;
+﻿using System;
+using System.Collections.Generic;
+using ICD.Common.Utils.EventArguments;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.API.Nodes;
 using ICD.Connect.Devices;
@@ -230,10 +232,16 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 
 			if (settings.Port != null)
 			{
-				port = factory.GetPortById((int)settings.Port) as AsyncTcpClient;
-				if (port == null)
+				try
+				{
+					port = factory.GetPortById((int)settings.Port) as AsyncTcpClient;
+				}
+				catch (KeyNotFoundException)
+				{
 					Log(eSeverity.Error, "No AsyncTcpClient with id {0}", settings.Port);
+				}
 			}
+
 			SetPort(port);
 		}
 
