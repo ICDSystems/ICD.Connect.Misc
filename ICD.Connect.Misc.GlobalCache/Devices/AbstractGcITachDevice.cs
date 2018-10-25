@@ -1,26 +1,24 @@
 ﻿using System.Collections.Generic;
 using ICD.Common.Utils.EventArguments;
 using ICD.Common.Utils.Services.Logging;
-using ICD.Connect.API.Nodes;
 using ICD.Connect.Devices;
 using ICD.Connect.Misc.GlobalCache.FlexApi;
 using ICD.Connect.Protocol;
 using ICD.Connect.Protocol.Extensions;
 using ICD.Connect.Protocol.Network.Tcp;
-using ICD.Connect.Protocol.Network.WebPorts;
 using ICD.Connect.Protocol.Ports;
 using ICD.Connect.Protocol.SerialBuffers;
 using ICD.Connect.Settings.Core;
 
 namespace ICD.Connect.Misc.GlobalCache.Devices
 {
-	public sealed class GcITachFlexDevice : AbstractDevice<GcITachFlexDeviceSettings>
+	public abstract class AbstractGcITachDevice<TSettings> : AbstractDevice<TSettings>, IGcITachDevice
+		where TSettings : IGcITachDeviceSettings, new()
 	{
 		private const ushort TCP_PORT = 4998;
 
 		private readonly ConnectionStateManager m_ConnectionStateManager;
 		private readonly DelimiterSerialBuffer m_TcpBuffer;
-		private readonly HttpPort m_HttpClient;
 
 		/// <summary>
 		/// Gets the network address of the device.
@@ -37,21 +35,15 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 		/// <summary>
 		/// Constructor.
 		/// </summary>
-		public GcITachFlexDevice()
+		protected AbstractGcITachDevice()
 		{
 			m_TcpBuffer = new DelimiterSerialBuffer(FlexData.NEWLINE);
+			Subscribe(m_TcpBuffer);
 
 			m_ConnectionStateManager = new ConnectionStateManager(this) {ConfigurePort = ConfigurePort};
 			m_ConnectionStateManager.OnConnectedStateChanged += PortOnConnectionStatusChanged;
 			m_ConnectionStateManager.OnIsOnlineStateChanged += PortOnIsOnlineStateChanged;
 			m_ConnectionStateManager.OnSerialDataReceived += PortOnSerialDataReceived;
-
-			m_HttpClient = new HttpPort
-			{
-				Name = GetType().Name
-			};
-
-			Subscribe(m_TcpBuffer);
 		}
 
 		/// <summary>
@@ -65,7 +57,6 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 			Unsubscribe(m_TcpBuffer);
 
 			m_ConnectionStateManager.Dispose();
-			m_HttpClient.Dispose();
 		}
 
 		#region Methods
@@ -97,22 +88,9 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 			SendCommand(command.Serialize());
 		}
 
-		/// <summary>
-		/// Sends the data to the device.
-		/// </summary>
-		/// <param name="localUrl"></param>
-		/// <param name="data"></param>
-		public string Post(string localUrl, string data)
-		{
-			string result;
-
-			m_HttpClient.Address = Address;
-			m_HttpClient.Post(localUrl, data, out result);
-
-			return result;
-		}
-
 		#endregion
+
+		#region Private Methods
 
 		private void ConfigurePort(ISerialPort port)
 		{
@@ -127,11 +105,10 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 		/// <returns></returns>
 		protected override bool GetIsOnlineStatus()
 		{
-			bool tcp = m_ConnectionStateManager.IsOnline;
-			bool http = m_HttpClient != null && m_HttpClient.IsOnline;
-
-			return tcp && http;
+			return m_ConnectionStateManager.IsOnline;
 		}
+
+		#endregion
 
 		#region TCP Client Callbacks
 
@@ -213,7 +190,7 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 		/// Override to apply properties to the settings instance.
 		/// </summary>
 		/// <param name="settings"></param>
-		protected override void CopySettingsFinal(GcITachFlexDeviceSettings settings)
+		protected override void CopySettingsFinal(TSettings settings)
 		{
 			base.CopySettingsFinal(settings);
 
@@ -225,7 +202,7 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 		/// </summary>
 		/// <param name="settings"></param>
 		/// <param name="factory"></param>
-		protected override void ApplySettingsFinal(GcITachFlexDeviceSettings settings, IDeviceFactory factory)
+		protected override void ApplySettingsFinal(TSettings settings, IDeviceFactory factory)
 		{
 			base.ApplySettingsFinal(settings, factory);
 
@@ -244,21 +221,6 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 			}
 
 			SetPort(port);
-		}
-
-		#endregion
-
-		#region Console
-
-		/// <summary>
-		/// Calls the delegate for each console status item.
-		/// </summary>
-		/// <param name="addRow"></param>
-		public override void BuildConsoleStatus(AddStatusRowDelegate addRow)
-		{
-			base.BuildConsoleStatus(addRow);
-
-			addRow("Address", Address);
 		}
 
 		#endregion

@@ -1,13 +1,11 @@
-﻿using ICD.Connect.Devices;
-using ICD.Common.Utils.Xml;
+﻿using ICD.Common.Utils.Xml;
+using ICD.Connect.Devices;
 using ICD.Connect.Protocol.Network.Tcp;
-using ICD.Connect.Settings.Attributes;
 using ICD.Connect.Settings.Attributes.SettingsProperties;
 
 namespace ICD.Connect.Misc.GlobalCache.Devices
 {
-	[KrangSettings("iTachFlex", typeof(GcITachFlexDevice))]
-	public sealed class GcITachFlexDeviceSettings : AbstractDeviceSettings
+	public abstract class AbstractGcITachDeviceSettings : AbstractDeviceSettings, IGcITachDeviceSettings
 	{
 		private const string PORT_ELEMENT = "Port";
 
