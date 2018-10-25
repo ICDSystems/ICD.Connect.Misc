@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using ICD.Common.Utils.EventArguments;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.API.Nodes;
@@ -106,6 +105,8 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 		public string Post(string localUrl, string data)
 		{
 			string result;
+
+			m_HttpClient.Address = Address;
 			m_HttpClient.Post(localUrl, data, out result);
 
 			return result;
