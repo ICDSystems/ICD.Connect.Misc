@@ -55,7 +55,7 @@ namespace ICD.Connect.TvPresets.SPlusInterfaces
 		/// Gets the directory where xml tv presets documents are located.
 		/// </summary>
 		[PublicAPI]
-		public static string PresetsPath { get { return PathUtils.Join(PathUtils.NvramPath, SUBDIR); } }
+		public static string PresetsPath { get { return PathUtils.Join(PathUtils.RootConfigPath, SUBDIR); } }
 
 		public static XmlTvPresets Presets
 		{
