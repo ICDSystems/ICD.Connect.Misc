@@ -49,13 +49,6 @@ namespace ICD.Connect.Misc.GlobalCache.Ports.ComPort
 			Address = XmlUtils.TryReadChildElementContentAsInt(xml, PARENT_ADDRESS_ELEMENT) ?? 1;
 		}
 
-		public override int DependencyCount { get { return Device == null ? 0 : 1; } }
-
-		public override bool HasDeviceDependency(int id)
-		{
-			return base.HasDeviceDependency(id) || id == Device;
-		}
-
 		#endregion
 	}
 }
