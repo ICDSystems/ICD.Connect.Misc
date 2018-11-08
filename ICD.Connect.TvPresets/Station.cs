@@ -46,7 +46,7 @@ namespace ICD.Connect.TvPresets
 		/// <param name="name"></param>
 		/// <param name="channel"></param>
 		/// <param name="url"></param>
-		private Station(string image, string name, string channel, string url)
+		public Station(string image, string name, string channel, string url)
 		{
 			m_Image = image;
 			m_Name = name;
