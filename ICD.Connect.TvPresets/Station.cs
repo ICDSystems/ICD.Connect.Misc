@@ -62,9 +62,9 @@ namespace ICD.Connect.TvPresets
 		/// <returns></returns>
 		public static Station FromXml(string baseUrl, string xml)
 		{
-			string image = XmlUtils.GetAttribute(xml, "Image").Value;
-			string name = XmlUtils.GetAttribute(xml, "Name").Value;
-			string channel = XmlUtils.GetAttribute(xml, "Channel").Value;
+			string image = XmlUtils.GetAttribute(xml, "Image");
+			string name = XmlUtils.GetAttribute(xml, "Name");
+			string channel = XmlUtils.GetAttribute(xml, "Channel");
 			string path = (baseUrl ?? string.Empty) + XmlUtils.ReadElementContent(xml);
 
 			return new Station(image, name, channel, path);
