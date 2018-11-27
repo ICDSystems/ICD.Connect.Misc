@@ -159,6 +159,7 @@
     <Compile Include="Devices\Keypads\KeypadBase\IKeypadBaseAdapterSettings.cs" />
     <Compile Include="Devices\Partitioning\GlsPartCnAdapter.cs" />
     <Compile Include="Devices\Partitioning\GlsPartCnAdapterSettings.cs" />
+    <Compile Include="Extensions\SigExtensions.cs" />
     <Compile Include="ICresnetDeviceSettings.cs" />
     <Compile Include="Ports\DigitalInput\DigitalInputAdapter.cs" />
     <Compile Include="Ports\DigitalInput\DigitalInputAdapterSettings.cs" />
@@ -185,6 +186,7 @@
     <Compile Include="Utils\Extensions\DmOutputExtensions.cs" />
     <Compile Include="Utils\Extensions\GenericBaseExtensions.cs" />
     <Compile Include="Utils\Extensions\GenericDeviceExtensions.cs" />
+    <Compile Include="Utils\PortDeviceUtils.cs" />
     <None Include="Properties\ControlSystem.cfg" />
   </ItemGroup>
   <ItemGroup>

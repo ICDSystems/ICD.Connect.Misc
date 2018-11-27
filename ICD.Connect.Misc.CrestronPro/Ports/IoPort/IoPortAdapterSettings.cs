@@ -11,20 +11,24 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 	{
 		private const string PARENT_DEVICE_ELEMENT = "Device";
 		private const string ADDRESS_ELEMENT = "Address";
-		private const string CONFIGURATION_ELEMENT = "Configuration";
-
-		private int m_Address = 1;
 
 		#region Properties
 
+		[ControlPortParentSettingsProperty]
 		[OriginatorIdSettingsProperty(typeof(IPortParent))]
 		public int? Device { get; set; }
 
-		public int Address { get { return m_Address; } set { m_Address = value; } }
-
-		public eIoPortConfiguration Configuration { get; set; }
+		public int Address { get; set; }
 
 		#endregion
+
+		/// <summary>
+		/// Constructor.
+		/// </summary>
+		public IoPortAdapterSettings()
+		{
+			Address = 1;
+		}
 
 		#region Methods
 
@@ -38,24 +42,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 
 			writer.WriteElementString(PARENT_DEVICE_ELEMENT, IcdXmlConvert.ToString(Device));
 			writer.WriteElementString(ADDRESS_ELEMENT, IcdXmlConvert.ToString(Address));
-			writer.WriteElementString(CONFIGURATION_ELEMENT, Configuration.ToString());
 		}
-
-		/// <summary>
-		/// Returns true if the settings depend on a device with the given ID.
-		/// For example, to instantiate an IR Port from settings, the device the physical port
-		/// belongs to will need to be instantiated first.
-		/// </summary>
-		/// <returns></returns>
-		public override bool HasDeviceDependency(int id)
-		{
-			return Device != null && Device == id;
-		}
-
-		/// <summary>
-		/// Returns the count from the collection of ids that the settings depends on.
-		/// </summary>
-		public override int DependencyCount { get { return Device != null ? 1 : 0; } }
 
 		/// <summary>
 		/// Updates the settings from xml.
@@ -67,10 +54,6 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 
 			Device = XmlUtils.TryReadChildElementContentAsInt(xml, PARENT_DEVICE_ELEMENT);
 			Address = XmlUtils.TryReadChildElementContentAsInt(xml, ADDRESS_ELEMENT) ?? 1;
-
-			eIoPortConfiguration configuration;
-			XmlUtils.TryReadChildElementContentAsEnum(xml, CONFIGURATION_ELEMENT, true, out configuration);
-			Configuration = configuration;
 		}
 
 		#endregion

@@ -4,10 +4,10 @@ using ICD.Connect.Protocol.Ports.ComPort;
 using ICD.Connect.Settings.Attributes;
 using ICD.Connect.Settings.Attributes.SettingsProperties;
 
-namespace ICD.Connect.Misc.GlobalCache.Ports
+namespace ICD.Connect.Misc.GlobalCache.Ports.ComPort
 {
-	[KrangSettings("iTachFlexComPort", typeof(GcITachFlexComPort))]
-	public sealed class GcITachFlexComPortSettings : AbstractComPortSettings
+	[KrangSettings("GlobalCacheITachComPort", typeof(GcITachComPort))]
+	public sealed class GcITachComPortSettings : AbstractComPortSettings
 	{
 		private const string PARENT_DEVICE_ELEMENT = "Device";
 		private const string PARENT_MODULE_ELEMENT = "Module";
@@ -15,7 +15,8 @@ namespace ICD.Connect.Misc.GlobalCache.Ports
 
 		#region Properties
 
-		[OriginatorIdSettingsProperty(typeof(GcITachFlexDevice))]
+		[ControlPortParentSettingsProperty]
+		[OriginatorIdSettingsProperty(typeof(IGcITachDevice))]
 		public int? Device { get; set; }
 
 		public int Module { get; set; }
@@ -46,13 +47,6 @@ namespace ICD.Connect.Misc.GlobalCache.Ports
 			Device = XmlUtils.TryReadChildElementContentAsInt(xml, PARENT_DEVICE_ELEMENT);
 			Module = XmlUtils.TryReadChildElementContentAsInt(xml, PARENT_MODULE_ELEMENT) ?? 1;
 			Address = XmlUtils.TryReadChildElementContentAsInt(xml, PARENT_ADDRESS_ELEMENT) ?? 1;
-		}
-
-		public override int DependencyCount { get { return Device == null ? 0 : 1; } }
-
-		public override bool HasDeviceDependency(int id)
-		{
-			return base.HasDeviceDependency(id) || id == Device;
 		}
 
 		#endregion

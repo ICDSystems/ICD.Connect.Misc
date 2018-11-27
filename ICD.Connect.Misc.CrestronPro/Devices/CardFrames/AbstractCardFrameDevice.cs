@@ -28,6 +28,9 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CardFrames
 		/// <param name="device"></param>
 		public void SetCardCage(TCardFrame device)
 		{
+			if (device == CardFrame)
+				return;
+
 			Unsubscribe(CardFrame);
 
 			if (CardFrame != null)
@@ -50,6 +53,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CardFrames
 			{
 				if (Name != null)
 					CardFrame.Description = Name;
+
 				eDeviceRegistrationUnRegistrationResponse result = CardFrame.Register();
 				if (result != eDeviceRegistrationUnRegistrationResponse.Success)
 					Logger.AddEntry(eSeverity.Error, "Unable to register {0} - {1}", CardFrame.GetType().Name, result);
@@ -121,8 +125,6 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CardFrames
 
 
 			SetCardCage(device);
-#else
-            throw new System.NotImplementedException();
 #endif
 		}
 

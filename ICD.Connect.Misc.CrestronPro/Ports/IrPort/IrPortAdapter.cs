@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using ICD.Common.Properties;
 using ICD.Common.Utils;
+using ICD.Common.Utils.Extensions;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Common.Utils.Timers;
 using ICD.Connect.API.Commands;
@@ -34,6 +35,8 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		private readonly SafeTimer m_PulseTimer;
 
 		private readonly IrDriverProperties m_IrDriverProperties;
+
+		private readonly SafeCriticalSection m_PressSection;
 
 		// Used with settings
 		private int? m_Device;
@@ -76,11 +79,9 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 			m_IrDriverProperties = new IrDriverProperties();
 
 			m_Queue = new Queue<IrPulse>();
+			m_PressSection = new SafeCriticalSection();
 
-			PulseTime = DEFAULT_PULSE_TIME;
-			BetweenTime = DEFAULT_BETWEEN_TIME;
-
-			m_PulseTimer = SafeTimer.Stopped(TimerCallbackMethod);
+			m_PulseTimer = SafeTimer.Stopped(PulseElapseCallback);
 		}
 
 		#endregion
@@ -140,7 +141,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		/// <param name="port"></param>
 		private void Register(IROutputPort port)
 		{
-			if (port == null || port.Registered)
+			if (port == null)
 				return;
 
 			GenericDevice parent = port.Parent as GenericDevice;
@@ -149,10 +150,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 
 			eDeviceRegistrationUnRegistrationResponse parentResult = parent.ReRegister();
 			if (parentResult != eDeviceRegistrationUnRegistrationResponse.Success)
-			{
-				Log(eSeverity.Error, "Unable to register parent {0} - {1}", parent.GetType().Name,
-				    parentResult);
-			}
+				Log(eSeverity.Error, "Unable to register parent {0} - {1}", parent.GetType().Name, parentResult);
 		}
 #endif
 
@@ -175,6 +173,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 
 			try
 			{
+				m_Port.UnloadAllIRDrivers();
 				m_Port.LoadIRDriver(fullPath);
 			}
 			catch (FileNotFoundException)
@@ -193,16 +192,31 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		public override void Press(string command)
 		{
 #if SIMPLSHARP
-			Clear();
-
-			if (!m_Port.IsIRCommandAvailable(command))
+			if (m_Port == null)
 			{
-				Log(eSeverity.Error, "No command {0}", StringUtils.ToRepresentation(command));
+				Log(eSeverity.Error, "Unable to send command - internal port is null");
 				return;
 			}
 
-			PrintTx(command);
-			m_Port.Press(command);
+			m_PressSection.Enter();
+
+			try
+			{
+				Clear();
+
+				if (!m_Port.IsIRCommandAvailable(command))
+				{
+					Log(eSeverity.Error, "Unable to send command - No command {0}", StringUtils.ToRepresentation(command));
+					return;
+				}
+
+				PrintTx(command);
+				m_Port.Press(command);
+			}
+			finally
+			{
+				m_PressSection.Leave();
+			}
 #else
             throw new NotSupportedException();
 #endif
@@ -244,10 +258,20 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		public override void PressAndRelease(string command, ushort pulseTime, ushort betweenTime)
 		{
 			IrPulse pulse = new IrPulse(command, pulseTime, betweenTime);
-			m_Queue.Enqueue(pulse);
 
-			if (m_Queue.Count == 1)
-				SendNext();
+			m_PressSection.Enter();
+
+			try
+			{
+				m_Queue.Enqueue(pulse);
+
+				if (m_Queue.Count == 1)
+					SendNext();
+			}
+			finally
+			{
+				m_PressSection.Leave();
+			}
 		}
 
 		#endregion
@@ -301,10 +325,17 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 			IROutputPort port = null;
 			IPortParent provider = null;
 
-			// ReSharper disable SuspiciousTypeConversion.Global
 			if (m_Device != null)
-				provider = factory.GetDeviceById((int)m_Device) as IPortParent;
-			// ReSharper restore SuspiciousTypeConversion.Global
+			{
+				try
+				{
+					provider = factory.GetDeviceById((int)m_Device) as IPortParent;
+				}
+				catch (KeyNotFoundException)
+				{
+					Log(eSeverity.Error, "No device with id {0}", m_Device);
+				}
+			}
 
 			if (provider == null)
 				Log(eSeverity.Error, "{0} is not a port provider", m_Device);
@@ -316,7 +347,8 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 				}
 				catch (Exception e)
 				{
-					Log(eSeverity.Error, e, "Unable to get IrPort from device {0} at address {1}", m_Device, settings.Address);
+					Log(eSeverity.Error, "Unable to get IrPort from device {0} at address {1} - {2}", m_Device,
+					    settings.Address, e.Message);
 				}
 			}
 
@@ -327,8 +359,6 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 
 			if (!string.IsNullOrEmpty(settings.IrDriverPath))
 				LoadDriver(settings.IrDriverPath);
-#else
-            throw new NotSupportedException();
 #endif
 		}
 
@@ -355,11 +385,20 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		private void Clear()
 		{
 #if SIMPLSHARP
-			if (m_Port != null)
-				m_Port.Release();
+			m_PressSection.Enter();
 
-			m_PulseTimer.Stop();
-			m_Queue.Clear();
+			try
+			{
+				if (m_Port != null)
+					m_Port.Release();
+
+				m_PulseTimer.Stop();
+				m_Queue.Clear();
+			}
+			finally
+			{
+				m_PressSection.Leave();
+			}
 #else
             throw new NotSupportedException();
 #endif
@@ -371,19 +410,37 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		private void SendNext()
 		{
 #if SIMPLSHARP
-			IrPulse pulse = m_Queue.Peek();
+			m_PressSection.Enter();
 
-			if (!m_Port.IsIRCommandAvailable(pulse.Command))
+			try
 			{
-				Log(eSeverity.Error, "No command {0}", StringUtils.ToRepresentation(pulse.Command));
-			}
-			else
-			{
+				IrPulse pulse;
+				if (!m_Queue.Dequeue(out pulse))
+					return;
+
+				if (m_Port == null)
+				{
+					Log(eSeverity.Error, "Unable to send command - internal port is null");
+					Clear();
+					return;
+				}
+
+				if (!m_Port.IsIRCommandAvailable(pulse.Command))
+				{
+					Log(eSeverity.Error, "Unable to send command - No command {0}", StringUtils.ToRepresentation(pulse.Command));
+					SendNext();
+					return;
+				}
+
 				PrintTx(pulse.Command);
 				m_Port.PressAndRelease(pulse.Command, pulse.PulseTime);
+
+				m_PulseTimer.Reset(pulse.Duration);
 			}
-			
-			m_PulseTimer.Reset(pulse.Duration);
+			finally
+			{
+				m_PressSection.Leave();
+			}
 #else
             throw new NotSupportedException();
 #endif
@@ -392,14 +449,20 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		/// <summary>
 		/// Called when the pulse timer elapses.
 		/// </summary>
-		private void TimerCallbackMethod()
+		private void PulseElapseCallback()
 		{
 #if SIMPLSHARP
-			m_Port.Release();
-			m_Queue.Dequeue();
+			m_PressSection.Enter();
 
-			if (m_Queue.Count > 0)
-				SendNext();
+			try
+			{
+				if (m_Queue.Count > 0)
+					SendNext();
+			}
+			finally
+			{
+				m_PressSection.Leave();
+			}
 #else
             throw new NotSupportedException();
 #endif

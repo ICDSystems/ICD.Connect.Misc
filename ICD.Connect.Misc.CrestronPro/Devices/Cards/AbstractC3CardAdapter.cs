@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using ICD.Common.Properties;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.Devices;
@@ -7,7 +8,6 @@ using ICD.Connect.Misc.CrestronPro.Devices.CardFrames;
 using ICD.Connect.Settings;
 #if SIMPLSHARP
 using Crestron.SimplSharpPro;
-using Crestron.SimplSharpPro.ThreeSeriesCards;
 using Crestron.SimplSharpProInternal;
 #endif
 
@@ -65,9 +65,10 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 			{
 				if (Name != null)
 					Card.Description = Name;
+
 				eDeviceRegistrationUnRegistrationResponse result = Card.Register();
 				if (result != eDeviceRegistrationUnRegistrationResponse.Success)
-					Logger.AddEntry(eSeverity.Error, "Unable to register {0} - {1}", Card.GetType().Name, result);
+					Log(eSeverity.Error, "Unable to register {0} - {1}", Card.GetType().Name, result);
 			}
 
 			Subscribe(Card);
@@ -143,9 +144,9 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 			base.CopySettingsFinal(settings);
 
 #if SIMPLSHARP
-			settings.Ipid = Card == null ? (byte)0 : (byte)Card.ID;
+			settings.CardId = Card == null ? 0 : Card.ID;
 #else
-            settings.Ipid = 0;
+            settings.CardId = 0;
 #endif
 			settings.CardFrame = m_ParentId;
 		}
@@ -172,16 +173,14 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 			base.ApplySettingsFinal(settings, factory);
 
 #if SIMPLSHARP
-			if (!settings.CardFrame.HasValue)
-			{
-				Logger.AddEntry(eSeverity.Error, "Unable to instantiate {0} - No CardFrame DeviceId specified.", typeof(TCard).Name);
-				return;
-			}
+			TCard card = null;
 
-			TCard card = InstantiateCard(settings.Ipid, settings.CardFrame.Value, factory);
+			if (settings.CardFrame.HasValue)
+				card = InstantiateCard(settings.CardId, settings.CardFrame.Value, factory);
+			else
+				Log(eSeverity.Warning, "No CardFrame ID specified, unable to instantiate internal card");
+
 			SetCard(card, settings.CardFrame);
-#else
-            throw new NotImplementedException();
 #endif
 		}
 
@@ -189,29 +188,39 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 		/// <summary>
 		/// Instantiates the internal card based on provided parameters
 		/// </summary>
-		/// <param name="ipid"></param>
+		/// <param name="cardId"></param>
 		/// <param name="cardFrameId"></param>
 		/// <param name="factory"></param>
 		/// <returns></returns>
 		[CanBeNull]
-		private TCard InstantiateCard(byte? ipid, int cardFrameId, IDeviceFactory factory)
+		private TCard InstantiateCard(uint? cardId, int cardFrameId, IDeviceFactory factory)
 		{
-			IDevice cardFrame = factory.GetDeviceById(cardFrameId);
+			IDevice cardFrame;
+
+			try
+			{
+				cardFrame = factory.GetDeviceById(cardFrameId);
+			}
+			catch (KeyNotFoundException)
+			{
+				Log(eSeverity.Error, "No device with id {0}", cardFrameId);
+				return null;
+			}
 
 			// If an IPID is specified the CardFrame has multiple slots
-			if (ipid.HasValue)
+			if (cardId.HasValue)
 			{
 				CenCi33Adapter ci33 = cardFrame as CenCi33Adapter;
 				if (ci33 != null)
-					return InstantiateCard(ipid.Value, ci33.CardFrame);
-				Logger.AddEntry(eSeverity.Error, "Device {0} is not a {1}.", cardFrameId, typeof(CenCi33Adapter).Name);
+					return InstantiateCard(cardId.Value, ci33.CardFrame);
+				Log(eSeverity.Error, "Device {0} is not a {1}.", cardFrameId, typeof(CenCi33Adapter).Name);
 			}
 			else
 			{
 				CenCi31Adapter ci31 = cardFrame as CenCi31Adapter;
 				if (ci31 != null)
 					return InstantiateCard(ci31.CardFrame);
-				Logger.AddEntry(eSeverity.Error, "Device {0} is not a {1}.", cardFrameId, typeof(CenCi31Adapter).Name);
+				Log(eSeverity.Error, "Device {0} is not a {1}.", cardFrameId, typeof(CenCi31Adapter).Name);
 			}
 
 			return null;
@@ -222,15 +231,15 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 		/// </summary>
 		/// <param name="cardFrame"></param>
 		/// <returns></returns>
-		protected abstract TCard InstantiateCard(CenCi31 cardFrame);
+		protected abstract TCard InstantiateCard(Ci3SingleCardCage cardFrame);
 
 		/// <summary>
 		/// Instantiates the card for the given card frame parent.
 		/// </summary>
-		/// <param name="ipid"></param>
+		/// <param name="cardId"></param>
 		/// <param name="cardFrame"></param>
 		/// <returns></returns>
-		protected abstract TCard InstantiateCard(byte ipid, CenCi33 cardFrame);
+		protected abstract TCard InstantiateCard(uint cardId, Ci3MultiCardCage cardFrame);
 #endif
 
 		#endregion

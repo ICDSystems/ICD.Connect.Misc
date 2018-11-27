@@ -26,6 +26,5 @@ namespace ICD.Connect.Misc.Occupancy
 		/// False = unoccupied/vacant
 		/// </summary>
 		eOccupancyState OccupancyState { get; }
-
 	}
 }

@@ -1,13 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using ICD.Common.Properties;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.Devices.Extensions;
 using ICD.Connect.Misc.CrestronPro.Devices;
+using ICD.Connect.Misc.CrestronPro.Utils;
+using ICD.Connect.Protocol.Ports;
 using ICD.Connect.Protocol.Ports.RelayPort;
 using ICD.Connect.Settings;
+using ICD.Connect.Protocol.Utils;
 #if SIMPLSHARP
 using Crestron.SimplSharpPro;
-using ICD.Connect.Misc.CrestronPro.Utils.Extensions;
 #endif
 
 namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
@@ -65,10 +68,8 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 		/// <param name="port"></param>
 		private void Unregister(Relay port)
 		{
-			if (port == null || !port.Registered)
-				return;
-
-			port.UnRegister();
+			if (port != null)
+				PortDeviceUtils.Unregister(port);
 		}
 
 		/// <summary>
@@ -77,25 +78,14 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 		/// <param name="port"></param>
 		private void Register(Relay port)
 		{
-			if (port == null || port.Registered)
-				return;
-
-			eDeviceRegistrationUnRegistrationResponse result = port.Register();
-			if (result != eDeviceRegistrationUnRegistrationResponse.Success)
+			try
 			{
-				Logger.AddEntry(eSeverity.Error, "{0} unable to register {1} - {2}", this, port.GetType().Name, result);
-				return;
+				if (port != null)
+					PortDeviceUtils.Register(port);
 			}
-
-			GenericDevice parent = port.Parent as GenericDevice;
-			if (parent == null)
-				return;
-
-			eDeviceRegistrationUnRegistrationResponse parentResult = parent.ReRegister();
-			if (parentResult != eDeviceRegistrationUnRegistrationResponse.Success)
+			catch (InvalidOperationException e)
 			{
-				Logger.AddEntry(eSeverity.Error, "{0} unable to register parent {1} - {2}", this, parent.GetType().Name,
-				                parentResult);
+				Log(eSeverity.Error, "Error registering port - {0}", e.Message);
 			}
 		}
 #endif
@@ -106,9 +96,18 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 		public override void Open()
 		{
 #if SIMPLSHARP
+			if (m_Port == null)
+			{
+				Log(eSeverity.Error, "Unable to open relay - internal port is null");
+				return;
+			}
+
+			if (DebugTx != eDebugMode.Off)
+				DebugUtils.PrintTx(this, DebugTx, "Relay Open");
+
 			m_Port.Open();
 #else
-            throw new NotImplementedException();
+            throw new NotSupportedException();
 #endif
 		}
 
@@ -118,9 +117,18 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 		public override void Close()
 		{
 #if SIMPLSHARP
+			if (m_Port == null)
+			{
+				Log(eSeverity.Error, "Unable to close relay - internal port is null");
+				return;
+			}
+
+			if (DebugTx != eDebugMode.Off)
+				DebugUtils.PrintTx(this, DebugTx, "Relay Closed");
+
 			m_Port.Close();
 #else
-            throw new NotImplementedException();
+            throw new NotSupportedException();
 #endif
 		}
 
@@ -209,13 +217,20 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 			Relay port = null;
 			IPortParent provider = null;
 
-			// ReSharper disable SuspiciousTypeConversion.Global
 			if (m_Device != null)
-				provider = factory.GetDeviceById((int)m_Device) as IPortParent;
-			// ReSharper restore SuspiciousTypeConversion.Global
+			{
+				try
+				{
+					provider = factory.GetDeviceById((int)m_Device) as IPortParent;
+				}
+				catch (KeyNotFoundException)
+				{
+					Log(eSeverity.Error, "No device with id {0}", m_Device);
+				}
+			}
 
 			if (provider == null)
-				Logger.AddEntry(eSeverity.Error, "{0} is not a port provider", m_Device);
+				Log(eSeverity.Error, "{0} is not a port provider", m_Device);
 			else
 			{
 				try
@@ -224,17 +239,15 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 				}
 				catch (Exception e)
 				{
-					Logger.AddEntry(eSeverity.Error, e, "Unable to get Relay Port from device {0} at address {1}", m_Device,
-					                settings.Address);
+					Log(eSeverity.Error, "Unable to get Relay Port from device {0} at address {1}:{2}", m_Device,
+					                settings.Address, e);
 				}
 			}
 
 			if (provider != null && port == null)
-				Logger.AddEntry(eSeverity.Error, "No Relay Port at device {0} address {1}", m_Device, settings.Address);
+				Log(eSeverity.Error, "No Relay Port at device {0} address {1}", m_Device, settings.Address);
 
 			SetRelayPort(port, settings.Address);
-#else
-            throw new NotImplementedException();
 #endif
 		}
 

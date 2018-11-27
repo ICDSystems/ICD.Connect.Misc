@@ -22,7 +22,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 				return Card.RelayPorts[(uint)address];
 
 			string message = string.Format("{0} has no {1} with address {2}", this, typeof(Relay).Name, address);
-			throw new IndexOutOfRangeException(message);
+			throw new ArgumentOutOfRangeException("address", message);
 		}
 	}
 #else

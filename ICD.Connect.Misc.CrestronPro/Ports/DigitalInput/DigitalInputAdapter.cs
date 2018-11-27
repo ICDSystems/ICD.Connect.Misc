@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using ICD.Common.Utils.Services.Logging;
+using ICD.Connect.Misc.CrestronPro.Utils;
 using ICD.Connect.Protocol.Ports.DigitalInput;
 using ICD.Connect.Settings;
 #if SIMPLSHARP
 using Crestron.SimplSharpPro;
-using ICD.Connect.Misc.CrestronPro.Utils.Extensions;
 using ICD.Common.Properties;
 using ICD.Connect.Devices.Extensions;
 using ICD.Connect.Misc.CrestronPro.Devices;
@@ -68,10 +69,8 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.DigitalInput
 		/// <param name="port"></param>
 		private static void Unregister(Crestron.SimplSharpPro.DigitalInput port)
 		{
-			if (port == null || !port.Registered)
-				return;
-
-			port.UnRegister();
+			if (port != null)
+				PortDeviceUtils.Unregister(port);
 		}
 
 		/// <summary>
@@ -80,25 +79,14 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.DigitalInput
 		/// <param name="port"></param>
 		private void Register(Crestron.SimplSharpPro.DigitalInput port)
 		{
-			if (port == null || port.Registered)
-				return;
-
-			eDeviceRegistrationUnRegistrationResponse result = port.Register();
-			if (result != eDeviceRegistrationUnRegistrationResponse.Success)
+			try
 			{
-				Logger.AddEntry(eSeverity.Error, "{0} unable to register {1} - {2}", this, port.GetType().Name, result);
-				return;
+				if (port != null)
+					PortDeviceUtils.Register(port);
 			}
-
-			GenericDevice parent = port.Parent as GenericDevice;
-			if (parent == null)
-				return;
-
-			eDeviceRegistrationUnRegistrationResponse parentResult = parent.ReRegister();
-			if (parentResult != eDeviceRegistrationUnRegistrationResponse.Success)
+			catch (InvalidOperationException e)
 			{
-				Logger.AddEntry(eSeverity.Error, "{0} unable to register parent {1} - {2}", this, parent.GetType().Name,
-				                parentResult);
+				Log(eSeverity.Error, "Error registering port - {0}", e.Message);
 			}
 		}
 #endif
@@ -210,10 +198,19 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.DigitalInput
 			IPortParent provider = null;
 
 			if (m_Device != null)
-				provider = factory.GetDeviceById((int)m_Device) as IPortParent;
+			{
+				try
+				{
+					provider = factory.GetDeviceById((int)m_Device) as IPortParent;
+				}
+				catch (KeyNotFoundException)
+				{
+					Log(eSeverity.Error, "No device with id {0}", m_Device);
+				}
+			}
 
 			if (provider == null)
-				Logger.AddEntry(eSeverity.Error, "{0} is not a port provider", m_Device);
+				Log(eSeverity.Error, "{0} is not a port provider", m_Device);
 			else
 			{
 				try
@@ -222,17 +219,17 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.DigitalInput
 				}
 				catch (Exception e)
 				{
-					Logger.AddEntry(eSeverity.Error, e, "Unable to get Digital Input Port from device {0} at address {1}", m_Device,
-					                settings.Address);
+					Log(eSeverity.Error, "Unable to get Digital Input Port from device {0} at address {1}:{2}", m_Device,
+					                settings.Address, e);
 				}
 			}
 
 			if (provider != null && port == null)
-				Logger.AddEntry(eSeverity.Error, "No Digital Input Port at device {0} address {1}", m_Device, settings.Address);
+				Log(eSeverity.Error, "No Digital Input Port at device {0} address {1}", m_Device, settings.Address);
 
 			SetDigitalInputPort(port, settings.Address);
 #else
-			throw new NotImplementedException();
+			throw new NotSupportedException();
 #endif
 		}
 

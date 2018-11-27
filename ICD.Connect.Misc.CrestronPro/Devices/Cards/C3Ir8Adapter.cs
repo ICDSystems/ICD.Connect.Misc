@@ -2,6 +2,7 @@
 #if SIMPLSHARP
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.ThreeSeriesCards;
+using Crestron.SimplSharpProInternal;
 #endif
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
@@ -20,7 +21,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 				return Card.IROutputPorts[(uint)address];
 
 			string message = string.Format("{0} has no {1} with address {2}", this, typeof(IROutputPort).Name, address);
-			throw new IndexOutOfRangeException(message);
+			throw new ArgumentOutOfRangeException("address", message);
 		}
 
 		/// <summary>
@@ -28,7 +29,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 		/// </summary>
 		/// <param name="cardFrame"></param>
 		/// <returns></returns>
-		protected override C3ir8 InstantiateCard(CenCi31 cardFrame)
+		protected override C3ir8 InstantiateCard(Ci3SingleCardCage cardFrame)
 		{
 			return new C3ir8(cardFrame);
 		}
@@ -36,12 +37,12 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 		/// <summary>
 		/// Instantiates the card for the given card frame parent.
 		/// </summary>
-		/// <param name="ipid"></param>
+		/// <param name="cardId"></param>
 		/// <param name="cardFrame"></param>
 		/// <returns></returns>
-		protected override C3ir8 InstantiateCard(byte ipid, CenCi33 cardFrame)
+		protected override C3ir8 InstantiateCard(uint cardId, Ci3MultiCardCage cardFrame)
 		{
-			return new C3ir8(ipid, cardFrame);
+			return new C3ir8(cardId, cardFrame);
 		}
 	}
 #else

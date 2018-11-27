@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using ICD.Common.Properties;
+using ICD.Common.Utils.Collections;
 using ICD.Common.Utils.EventArguments;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.API.Nodes;
 using ICD.Connect.Devices.EventArguments;
 using ICD.Connect.Devices.Extensions;
 using ICD.Connect.Misc.GlobalCache.Devices;
+using ICD.Connect.Misc.GlobalCache.Devices.ITachFlex;
 using ICD.Connect.Misc.GlobalCache.FlexApi.RestApi;
 using ICD.Connect.Protocol.Network.Ports.Tcp;
 using ICD.Connect.Protocol.Ports;
@@ -14,17 +17,25 @@ using ICD.Connect.Protocol.Settings;
 using ICD.Connect.Protocol.Utils;
 using ICD.Connect.Settings;
 
-namespace ICD.Connect.Misc.GlobalCache.Ports
+namespace ICD.Connect.Misc.GlobalCache.Ports.ComPort
 {
-	public sealed class GcITachFlexComPort : AbstractComPort<GcITachFlexComPortSettings>
+    public sealed class GcITachComPort : AbstractComPort<GcITachComPortSettings>, IGcITachPort
 	{
 		private const ushort PORT = 4999;
 
-		private readonly AsyncTcpClient m_Client;
+	    private static readonly BiDictionary<eComParityType, SerialConfiguration.eParity> s_ParityToSerialConfiguration =
+		    new BiDictionary<eComParityType, SerialConfiguration.eParity>
+		    {
+			    {eComParityType.ComspecParityNone, SerialConfiguration.eParity.None},
+			    {eComParityType.ComspecParityEven, SerialConfiguration.eParity.Even},
+			    {eComParityType.ComspecParityOdd, SerialConfiguration.eParity.Odd}
+		    };
 
 		private readonly ComSpecProperties m_ComSpecProperties;
 
-		private GcITachFlexDevice m_Device;
+	    private readonly AsyncTcpClient m_Client;
+
+		private IGcITachDevice m_Device;
 		private int m_Module;
 		private int m_Address;
 
@@ -36,7 +47,7 @@ namespace ICD.Connect.Misc.GlobalCache.Ports
 		/// <summary>
 		/// Constructor.
 		/// </summary>
-		public GcITachFlexComPort()
+		public GcITachComPort()
 		{
 			m_ComSpecProperties = new ComSpecProperties();
 
@@ -78,29 +89,13 @@ namespace ICD.Connect.Misc.GlobalCache.Ports
 				throw new InvalidOperationException(string.Format("{0} unable to connect - device is null", this));
 
 			// First make sure the device is in the correct configuration
-			Module module = new Module
-			{
-				Id = Module.eId.FlcSerial,
-				Class = Module.eClass.Serial,
-				Type = Module.eType.Rs232
-			};
+			SetModuleType(Module.eId.FlcSerial, Module.eClass.Serial, Module.eType.Rs232);
 
-			string localUrl = string.Format("api/host/modules/{0}", m_Module);
-
-			try
-			{
-				m_Device.Post(localUrl, module.Serialize());
-			}
-			catch (Exception e)
-			{
-				Log(eSeverity.Error, e, "Failed to set module type");
-			}
-
-			HostInfo host = new HostInfo(m_Device.GetNetworkAddress(), PORT);
+			HostInfo host = new HostInfo(m_Device.Address, PORT);
 			m_Client.Connect(host);
 		}
 
-		/// <summary>
+	    /// <summary>
 		/// Disconnects from the device.
 		/// </summary>
 		public override void Disconnect()
@@ -108,31 +103,31 @@ namespace ICD.Connect.Misc.GlobalCache.Ports
 			m_Client.Disconnect();
 		}
 
-		/// <summary>
-		/// Configures the ComPort for communication.
-		/// </summary>
-		/// <param name="baudRate"></param>
-		/// <param name="numberOfDataBits"></param>
-		/// <param name="parityType"></param>
-		/// <param name="numberOfStopBits"></param>
-		/// <param name="protocolType"></param>
-		/// <param name="hardwareHandShake"></param>
-		/// <param name="softwareHandshake"></param>
-		/// <param name="reportCtsChanges"></param>
-		public override void SetComPortSpec(eComBaudRates baudRate, eComDataBits numberOfDataBits, eComParityType parityType,
-		                                    eComStopBits numberOfStopBits, eComProtocolType protocolType,
-		                                    eComHardwareHandshakeType hardwareHandShake,
-		                                    eComSoftwareHandshakeType softwareHandshake, bool reportCtsChanges)
+	    /// <summary>
+	    /// Configures the com port with the given attributes.
+	    /// </summary>
+	    /// <param name="baudRate"></param>
+	    /// <param name="numberOfDataBits"></param>
+	    /// <param name="parityType"></param>
+	    /// <param name="numberOfStopBits"></param>
+	    /// <param name="protocolType"></param>
+	    /// <param name="hardwareHandShake"></param>
+	    /// <param name="softwareHandshake"></param>
+	    /// <param name="reportCtsChanges"></param>
+	    public override void SetComPortSpec(eComBaudRates baudRate, eComDataBits numberOfDataBits, eComParityType parityType,
+											eComStopBits numberOfStopBits, eComProtocolType protocolType, eComHardwareHandshakeType hardwareHandShake,
+											eComSoftwareHandshakeType softwareHandshake, bool reportCtsChanges)
 		{
-			if (m_Device == null)
-				throw new InvalidOperationException(string.Format("{0} unable to connect - device is null", this));
+			GcITachFlexDevice flexDevice = m_Device as GcITachFlexDevice;
+			if (flexDevice == null)
+				return;
 
 			string localUrl = string.Format("api/host/modules/{0}/ports/{1}/config", m_Module, m_Address);
 
 			SerialConfiguration config = new SerialConfiguration
 			{
 				BaudRate = ComSpecUtils.BaudRateToRate(baudRate),
-				Parity = GetParity(parityType),
+				Parity = s_ParityToSerialConfiguration.GetValue(parityType),
 				StopBits = ComSpecUtils.StopBitsToCount(numberOfStopBits),
 				FlowControl = hardwareHandShake == eComHardwareHandshakeType.ComspecHardwareHandshakeNone
 					              ? SerialConfiguration.eFlowControl.None
@@ -141,7 +136,7 @@ namespace ICD.Connect.Misc.GlobalCache.Ports
 
 			try
 			{
-				m_Device.Post(localUrl, config.Serialize());
+				flexDevice.Post(localUrl, config.Serialize());
 			}
 			catch (Exception e)
 			{
@@ -149,28 +144,12 @@ namespace ICD.Connect.Misc.GlobalCache.Ports
 			}
 		}
 
-		private SerialConfiguration.eParity GetParity(eComParityType parityType)
-		{
-			switch (parityType)
-			{
-				case eComParityType.ComspecParityNone:
-					return SerialConfiguration.eParity.None;
-				case eComParityType.ComspecParityEven:
-					return SerialConfiguration.eParity.Even;
-				case eComParityType.ComspecParityOdd:
-					return SerialConfiguration.eParity.Odd;
-
-				default:
-					throw new ArgumentOutOfRangeException("parityType");
-			}
-		}
-
-		/// <summary>
+	    /// <summary>
 		/// Sets the parent device.
 		/// </summary>
 		/// <param name="device"></param>
 		[PublicAPI]
-		public void SetDevice(GcITachFlexDevice device)
+		public void SetDevice(IGcITachDevice device)
 		{
 			if (device == m_Device)
 				return;
@@ -182,7 +161,38 @@ namespace ICD.Connect.Misc.GlobalCache.Ports
 
 		#endregion
 
-		protected override bool GetIsConnectedState()
+	    /// <summary>
+	    /// Sets the configuration for the module.
+	    /// </summary>
+	    /// <param name="id"></param>
+	    /// <param name="class"></param>
+	    /// <param name="type"></param>
+	    private void SetModuleType(Module.eId id, Module.eClass @class, Module.eType type)
+	    {
+		    GcITachFlexDevice flexDevice = m_Device as GcITachFlexDevice;
+		    if (flexDevice == null)
+			    return;
+
+		    Module module = new Module
+		    {
+			    Id = id,
+			    Class = @class,
+			    Type = type
+		    };
+
+		    string localUrl = string.Format("api/host/modules/{0}", m_Module);
+
+		    try
+		    {
+			    flexDevice.Post(localUrl, module.Serialize());
+		    }
+		    catch (Exception e)
+		    {
+			    Log(eSeverity.Error, e, "Failed to set module type");
+		    }
+	    }
+
+	    protected override bool GetIsConnectedState()
 		{
 			return m_Client != null && m_Client.IsConnected;
 		}
@@ -263,7 +273,7 @@ namespace ICD.Connect.Misc.GlobalCache.Ports
 			m_ComSpecProperties.Clear();
 		}
 
-		protected override void CopySettingsFinal(GcITachFlexComPortSettings settings)
+		protected override void CopySettingsFinal(GcITachComPortSettings settings)
 		{
 			base.CopySettingsFinal(settings);
 
@@ -274,23 +284,29 @@ namespace ICD.Connect.Misc.GlobalCache.Ports
 			settings.Copy(m_ComSpecProperties);
 		}
 
-		protected override void ApplySettingsFinal(GcITachFlexComPortSettings settings, IDeviceFactory factory)
+		protected override void ApplySettingsFinal(GcITachComPortSettings settings, IDeviceFactory factory)
 		{
 			base.ApplySettingsFinal(settings, factory);
 
 			m_ComSpecProperties.Copy(settings);
 
-			GcITachFlexDevice device = null;
+			m_Module = settings.Module;
+			m_Address = settings.Address;
+
+			IGcITachDevice device = null;
 
 			if (settings.Device != null)
 			{
-				device = factory.GetDeviceById((int)settings.Device) as GcITachFlexDevice;
-				if (device == null)
-					Log(eSeverity.Error, "{0} is not a {1}", m_Device, typeof(GcITachFlexDevice).Name);
+				try
+				{
+					device = factory.GetDeviceById((int)settings.Device) as IGcITachDevice;
+				}
+				catch (KeyNotFoundException)
+				{
+					Log(eSeverity.Error, "No device with id {0}", m_Device);
+				}
 			}
 
-			m_Module = settings.Module;
-			m_Address = settings.Address;
 			SetDevice(device);
 		}
 

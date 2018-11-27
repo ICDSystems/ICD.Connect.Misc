@@ -5,6 +5,54 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [6.0.0] - 2018-10-30
+### Added
+ - Added ControlPortParentSettingsProperty to port settings parent properties
+ - Added Global Cache IP2SL device
+ - Added RaspberryPi project for controlling GPIO pins as Krang IO ports
+
+### Changed
+ - Fixed registration issue with Crestron ports on some secondary devices
+ - Fixed issue where versiports setup as digital outputs don't handle rapid changes of state properly
+ - iTachFlex wraps a configurable TCP port.
+ - Fail gracefully when a referenced port/device is not present in the configuration
+
+## [5.6.0] - 2018-10-18
+### Added
+ - Debug logging for IOPort
+ 
+### Changed
+ - More appropriate exception types
+ - Small logging improvements
+
+## [5.5.0] - 2018-09-25
+### Added
+ - Additional constructors for sig collections
+
+## [5.4.0] - 2018-09-14
+### Added
+ - Shim for getting crestron button states
+ - Added SigExtensions
+
+### Changed
+ - Small performance improvements
+
+## [5.3.0] - 2018-07-19
+### Added
+ - Added catch for NotSupportedException for all DmOutputExtensions methods
+ - Added basic support for DMPS3 4K Series audio switching
+
+## [5.2.0] - 2018-07-02
+### Added
+ - Added missing GetIoPort method to C3Io16Adapter
+
+### Changed
+ - Control cards now use uint CardId instead of byte IPID
+ - Fixed bug where IR Port would stop sending commands after an unavailable command
+ - Fixed bugs in control card/frame instantiation
+
+## [5.1.3] - 2018-05-24
 ### Changed
  - Default tv presets path to processor address
 
