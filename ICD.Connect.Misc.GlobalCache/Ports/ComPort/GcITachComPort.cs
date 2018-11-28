@@ -106,17 +106,8 @@ namespace ICD.Connect.Misc.GlobalCache.Ports.ComPort
 	    /// <summary>
 	    /// Configures the com port with the given attributes.
 	    /// </summary>
-	    /// <param name="baudRate"></param>
-	    /// <param name="numberOfDataBits"></param>
-	    /// <param name="parityType"></param>
-	    /// <param name="numberOfStopBits"></param>
-	    /// <param name="protocolType"></param>
-	    /// <param name="hardwareHandShake"></param>
-	    /// <param name="softwareHandshake"></param>
-	    /// <param name="reportCtsChanges"></param>
-	    public override void SetComPortSpec(eComBaudRates baudRate, eComDataBits numberOfDataBits, eComParityType parityType,
-											eComStopBits numberOfStopBits, eComProtocolType protocolType, eComHardwareHandshakeType hardwareHandShake,
-											eComSoftwareHandshakeType softwareHandshake, bool reportCtsChanges)
+		/// <param name="comSpec"></param>
+	    public override void SetComPortSpec(ComSpec comSpec)
 		{
 			GcITachFlexDevice flexDevice = m_Device as GcITachFlexDevice;
 			if (flexDevice == null)
@@ -124,15 +115,15 @@ namespace ICD.Connect.Misc.GlobalCache.Ports.ComPort
 
 			string localUrl = string.Format("api/host/modules/{0}/ports/{1}/config", m_Module, m_Address);
 
-			SerialConfiguration config = new SerialConfiguration
-			{
-				BaudRate = ComSpecUtils.BaudRateToRate(baudRate),
-				Parity = s_ParityToSerialConfiguration.GetValue(parityType),
-				StopBits = ComSpecUtils.StopBitsToCount(numberOfStopBits),
-				FlowControl = hardwareHandShake == eComHardwareHandshakeType.ComspecHardwareHandshakeNone
-					              ? SerialConfiguration.eFlowControl.None
-					              : SerialConfiguration.eFlowControl.Hardware
-			};
+		    SerialConfiguration config = new SerialConfiguration
+		    {
+			    BaudRate = ComSpecUtils.BaudRateToRate(comSpec.BaudRate),
+			    Parity = s_ParityToSerialConfiguration.GetValue(comSpec.ParityType),
+			    StopBits = ComSpecUtils.StopBitsToCount(comSpec.NumberOfStopBits),
+			    FlowControl = comSpec.HardwareHandShake == eComHardwareHandshakeType.ComspecHardwareHandshakeNone
+				                  ? SerialConfiguration.eFlowControl.None
+				                  : SerialConfiguration.eFlowControl.Hardware
+		    };
 
 			try
 			{

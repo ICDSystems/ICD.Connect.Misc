@@ -171,20 +171,9 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 		/// <summary>
 		/// Configures the ComPort for communication.
 		/// </summary>
-		/// <param name="baudRate"></param>
-		/// <param name="numberOfDataBits"></param>
-		/// <param name="parityType"></param>
-		/// <param name="numberOfStopBits"></param>
-		/// <param name="protocolType"></param>
-		/// <param name="hardwareHandShake"></param>
-		/// <param name="softwareHandshake"></param>
-		/// <param name="reportCtsChanges"></param>
+		/// <param name="comSpec"></param>
 		[PublicAPI]
-		public override void SetComPortSpec(eComBaudRates baudRate, eComDataBits numberOfDataBits,
-		                           eComParityType parityType,
-		                           eComStopBits numberOfStopBits, eComProtocolType protocolType,
-		                           eComHardwareHandshakeType hardwareHandShake,
-		                           eComSoftwareHandshakeType softwareHandshake, bool reportCtsChanges)
+		public override void SetComPortSpec(ComSpec comSpec)
 		{
 #if SIMPLSHARP
 			if (m_Port == null)
@@ -193,14 +182,14 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 				return;
 			}
 
-			m_Port.SetComPortSpec((Crestron.SimplSharpPro.ComPort.eComBaudRates)(int)baudRate,
-			                      (Crestron.SimplSharpPro.ComPort.eComDataBits)(int)numberOfDataBits,
-			                      ParseEnum<Crestron.SimplSharpPro.ComPort.eComParityType>(parityType),
-			                      (Crestron.SimplSharpPro.ComPort.eComStopBits)(int)numberOfStopBits,
-			                      ParseEnum<Crestron.SimplSharpPro.ComPort.eComProtocolType>(protocolType),
-			                      ParseEnum<Crestron.SimplSharpPro.ComPort.eComHardwareHandshakeType>(hardwareHandShake),
-			                      ParseEnum<Crestron.SimplSharpPro.ComPort.eComSoftwareHandshakeType>(softwareHandshake),
-			                      reportCtsChanges);
+			m_Port.SetComPortSpec((Crestron.SimplSharpPro.ComPort.eComBaudRates)(int)comSpec.BaudRate,
+								  (Crestron.SimplSharpPro.ComPort.eComDataBits)(int)comSpec.NumberOfDataBits,
+								  ParseEnum<Crestron.SimplSharpPro.ComPort.eComParityType>(comSpec.ParityType),
+								  (Crestron.SimplSharpPro.ComPort.eComStopBits)(int)comSpec.NumberOfStopBits,
+								  ParseEnum<Crestron.SimplSharpPro.ComPort.eComProtocolType>(comSpec.ProtocolType),
+								  ParseEnum<Crestron.SimplSharpPro.ComPort.eComHardwareHandshakeType>(comSpec.HardwareHandShake),
+								  ParseEnum<Crestron.SimplSharpPro.ComPort.eComSoftwareHandshakeType>(comSpec.SoftwareHandshake),
+								  comSpec.ReportCtsChanges);
 
 #else
             throw new NotSupportedException();
