@@ -42,7 +42,7 @@ namespace ICD.Connect.Misc.GlobalCache.Ports.ComPort
 		/// <summary>
 		/// Gets the Com Spec configuration properties.
 		/// </summary>
-		protected override IComSpecProperties ComSpecProperties { get { return m_ComSpecProperties; } }
+		public override IComSpecProperties ComSpecProperties { get { return m_ComSpecProperties; } }
 
 		/// <summary>
 		/// Constructor.

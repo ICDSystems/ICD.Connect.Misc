@@ -41,7 +41,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 		/// <summary>
 		/// Gets the Com Spec configuration properties.
 		/// </summary>
-		protected override IComSpecProperties ComSpecProperties { get { return m_ComSpecProperties; } }
+		public override IComSpecProperties ComSpecProperties { get { return m_ComSpecProperties; } }
 
 		#endregion
 
