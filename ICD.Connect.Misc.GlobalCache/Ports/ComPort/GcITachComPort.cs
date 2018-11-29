@@ -26,9 +26,9 @@ namespace ICD.Connect.Misc.GlobalCache.Ports.ComPort
 	    private static readonly BiDictionary<eComParityType, SerialConfiguration.eParity> s_ParityToSerialConfiguration =
 		    new BiDictionary<eComParityType, SerialConfiguration.eParity>
 		    {
-			    {eComParityType.ComspecParityNone, SerialConfiguration.eParity.None},
-			    {eComParityType.ComspecParityEven, SerialConfiguration.eParity.Even},
-			    {eComParityType.ComspecParityOdd, SerialConfiguration.eParity.Odd}
+			    {eComParityType.None, SerialConfiguration.eParity.None},
+			    {eComParityType.Even, SerialConfiguration.eParity.Even},
+			    {eComParityType.Odd, SerialConfiguration.eParity.Odd}
 		    };
 
 		private readonly ComSpecProperties m_ComSpecProperties;
@@ -120,7 +120,7 @@ namespace ICD.Connect.Misc.GlobalCache.Ports.ComPort
 			    BaudRate = ComSpecUtils.BaudRateToRate(comSpec.BaudRate),
 			    Parity = s_ParityToSerialConfiguration.GetValue(comSpec.ParityType),
 			    StopBits = ComSpecUtils.StopBitsToCount(comSpec.NumberOfStopBits),
-			    FlowControl = comSpec.HardwareHandShake == eComHardwareHandshakeType.ComspecHardwareHandshakeNone
+			    FlowControl = comSpec.HardwareHandShake == eComHardwareHandshakeType.None
 				                  ? SerialConfiguration.eFlowControl.None
 				                  : SerialConfiguration.eFlowControl.Hardware
 		    };

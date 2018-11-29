@@ -182,14 +182,14 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 				return;
 			}
 
-			m_Port.SetComPortSpec((Crestron.SimplSharpPro.ComPort.eComBaudRates)(int)comSpec.BaudRate,
-								  (Crestron.SimplSharpPro.ComPort.eComDataBits)(int)comSpec.NumberOfDataBits,
-								  ParseEnum<Crestron.SimplSharpPro.ComPort.eComParityType>(comSpec.ParityType),
-								  (Crestron.SimplSharpPro.ComPort.eComStopBits)(int)comSpec.NumberOfStopBits,
-								  ParseEnum<Crestron.SimplSharpPro.ComPort.eComProtocolType>(comSpec.ProtocolType),
-								  ParseEnum<Crestron.SimplSharpPro.ComPort.eComHardwareHandshakeType>(comSpec.HardwareHandShake),
-								  ParseEnum<Crestron.SimplSharpPro.ComPort.eComSoftwareHandshakeType>(comSpec.SoftwareHandshake),
-								  comSpec.ReportCtsChanges);
+			m_Port.SetComPortSpec(comSpec.BaudRate.ToCrestron(),
+			                      comSpec.NumberOfDataBits.ToCrestron(),
+			                      comSpec.ParityType.ToCrestron(),
+			                      comSpec.NumberOfStopBits.ToCrestron(),
+			                      comSpec.ProtocolType.ToCrestron(),
+			                      comSpec.HardwareHandShake.ToCrestron(),
+			                      comSpec.SoftwareHandshake.ToCrestron(),
+			                      comSpec.ReportCtsChanges);
 
 #else
             throw new NotSupportedException();
@@ -211,18 +211,6 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 #else
             return false;
 #endif
-		}
-
-		/// <summary>
-		/// Parses the input enum to the destination type.
-		/// </summary>
-		/// <typeparam name="T"></typeparam>
-		/// <param name="enumValue"></param>
-		/// <returns></returns>
-		private static T ParseEnum<T>(object enumValue)
-			where T : struct, IConvertible
-		{
-			return EnumUtils.Parse<T>(enumValue.ToString(), true);
 		}
 
 		#endregion
