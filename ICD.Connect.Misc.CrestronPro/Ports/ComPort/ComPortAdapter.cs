@@ -187,7 +187,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 			                      comSpec.ParityType.ToCrestron(),
 			                      comSpec.NumberOfStopBits.ToCrestron(),
 			                      comSpec.ProtocolType.ToCrestron(),
-			                      comSpec.HardwareHandShake.ToCrestron(),
+			                      comSpec.HardwareHandshake.ToCrestron(),
 			                      comSpec.SoftwareHandshake.ToCrestron(),
 			                      comSpec.ReportCtsChanges);
 

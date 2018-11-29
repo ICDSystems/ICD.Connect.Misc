@@ -120,7 +120,7 @@ namespace ICD.Connect.Misc.GlobalCache.Ports.ComPort
 			    BaudRate = ComSpecUtils.BaudRateToRate(comSpec.BaudRate),
 			    Parity = s_ParityToSerialConfiguration.GetValue(comSpec.ParityType),
 			    StopBits = ComSpecUtils.StopBitsToCount(comSpec.NumberOfStopBits),
-			    FlowControl = comSpec.HardwareHandShake == eComHardwareHandshakeType.None
+			    FlowControl = comSpec.HardwareHandshake == eComHardwareHandshakeType.None
 				                  ? SerialConfiguration.eFlowControl.None
 				                  : SerialConfiguration.eFlowControl.Hardware
 		    };
