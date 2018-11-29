@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using ICD.Common.Properties;
-using ICD.Common.Utils;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.API.Nodes;
 using ICD.Connect.Devices.Extensions;
 using ICD.Connect.Misc.CrestronPro.Devices;
+using ICD.Connect.Misc.CrestronPro.Extensions;
 using ICD.Connect.Misc.CrestronPro.Utils;
 using ICD.Connect.Protocol.Ports.ComPort;
 using ICD.Connect.Protocol.Settings;
@@ -42,6 +42,126 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 		/// Gets the Com Spec configuration properties.
 		/// </summary>
 		public override IComSpecProperties ComSpecProperties { get { return m_ComSpecProperties; } }
+
+		/// <summary>
+		/// Gets the baud rate.
+		/// </summary>
+		public override eComBaudRates BaudRate
+		{
+			get
+			{
+#if SIMPLSHARP
+				return m_Port == null ? default(eComBaudRates) : m_Port.BaudRate.FromCrestron();
+#else
+				return default(eComBaudRates);
+#endif
+			}
+		}
+
+		/// <summary>
+		/// Gets the number of data bits.
+		/// </summary>
+		public override eComDataBits NumberOfDataBits
+		{
+			get
+			{
+#if SIMPLSHARP
+				return m_Port == null ? default(eComDataBits) : m_Port.DataBits.FromCrestron();
+#else
+				return default(eComDataBits);
+#endif
+			}
+		}
+
+		/// <summary>
+		/// Gets the parity type.
+		/// </summary>
+		public override eComParityType ParityType
+		{
+			get
+			{
+#if SIMPLSHARP
+				return m_Port == null ? default(eComParityType) : m_Port.Parity.FromCrestron();
+#else
+				return default(eComParityType);
+#endif
+			}
+		}
+
+		/// <summary>
+		/// Gets the number of stop bits.
+		/// </summary>
+		public override eComStopBits NumberOfStopBits
+		{
+			get
+			{
+#if SIMPLSHARP
+				return m_Port == null ? default(eComStopBits) : m_Port.StopBits.FromCrestron();
+#else
+				return default(eComStopBits);
+#endif
+			}
+		}
+
+		/// <summary>
+		/// Gets the protocol type.
+		/// </summary>
+		public override eComProtocolType ProtocolType
+		{
+			get
+			{
+#if SIMPLSHARP
+				return m_Port == null ? default(eComProtocolType) : m_Port.Protocol.FromCrestron();
+#else
+				return default(eComProtocolType);
+#endif
+			}
+		}
+
+		/// <summary>
+		/// Gets the hardware handshake mode.
+		/// </summary>
+		public override eComHardwareHandshakeType HardwareHandshake
+		{
+			get
+			{
+#if SIMPLSHARP
+				return m_Port == null ? default(eComHardwareHandshakeType) : m_Port.HwHandShake.FromCrestron();
+#else
+				return default(eComHardwareHandshakeType);
+#endif
+			}
+		}
+
+		/// <summary>
+		/// Gets the software handshake mode.
+		/// </summary>
+		public override eComSoftwareHandshakeType SoftwareHandshake
+		{
+			get
+			{
+#if SIMPLSHARP
+				return m_Port == null ? default(eComSoftwareHandshakeType) : m_Port.SwHandShake.FromCrestron();
+#else
+				return default(eComSoftwareHandshakeType);
+#endif
+			}
+		}
+
+		/// <summary>
+		/// Gets the report CTS changes mode.
+		/// </summary>
+		public override bool ReportCtsChanges
+		{
+			get
+			{
+#if SIMPLSHARP
+				return m_Port != null && m_Port.ReportCTSChanges;
+#else
+				return false;
+#endif
+			}
+		}
 
 		#endregion
 
