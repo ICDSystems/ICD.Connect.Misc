@@ -16,28 +16,43 @@ using ICD.Connect.Protocol.Ports.ComPort;
 using ICD.Connect.Protocol.Settings;
 using ICD.Connect.Protocol.Utils;
 using ICD.Connect.Settings;
+using Newtonsoft.Json;
 
 namespace ICD.Connect.Misc.GlobalCache.Ports.ComPort
 {
-    public sealed class GcITachComPort : AbstractComPort<GcITachComPortSettings>, IGcITachPort
+	public sealed class GcITachComPort : AbstractComPort<GcITachComPortSettings>, IGcITachPort
 	{
 		private const ushort PORT = 4999;
 
-	    private static readonly BiDictionary<eComParityType, SerialConfiguration.eParity> s_ParityToSerialConfiguration =
-		    new BiDictionary<eComParityType, SerialConfiguration.eParity>
-		    {
-			    {eComParityType.None, SerialConfiguration.eParity.None},
-			    {eComParityType.Even, SerialConfiguration.eParity.Even},
-			    {eComParityType.Odd, SerialConfiguration.eParity.Odd}
-		    };
+		private static readonly BiDictionary<eComParityType, SerialConfiguration.eParity> s_ParityToSerialConfiguration =
+			new BiDictionary<eComParityType, SerialConfiguration.eParity>
+			{
+				{eComParityType.None, SerialConfiguration.eParity.None},
+				{eComParityType.Even, SerialConfiguration.eParity.Even},
+				{eComParityType.Odd, SerialConfiguration.eParity.Odd}
+			};
+
+		private static readonly ComSpec s_DefaultComSpec = new ComSpec
+		{
+			BaudRate = eComBaudRates.BaudRate9600,
+			NumberOfDataBits = eComDataBits.DataBits8,
+			ParityType = eComParityType.None,
+			NumberOfStopBits = eComStopBits.StopBits1,
+			ProtocolType = eComProtocolType.Rs232,
+			HardwareHandshake = eComHardwareHandshakeType.None,
+			SoftwareHandshake = eComSoftwareHandshakeType.None,
+			ReportCtsChanges = false,
+		};
 
 		private readonly ComSpecProperties m_ComSpecProperties;
-
-	    private readonly AsyncTcpClient m_Client;
+		private readonly AsyncTcpClient m_Client;
+		private readonly ComSpec m_ComSpec;
 
 		private IGcITachDevice m_Device;
 		private int m_Module;
 		private int m_Address;
+
+		#region Properties
 
 		/// <summary>
 		/// Gets the Com Spec configuration properties.
@@ -45,11 +60,54 @@ namespace ICD.Connect.Misc.GlobalCache.Ports.ComPort
 		public override IComSpecProperties ComSpecProperties { get { return m_ComSpecProperties; } }
 
 		/// <summary>
+		/// Gets the baud rate.
+		/// </summary>
+		public override eComBaudRates BaudRate { get { return m_ComSpec.BaudRate; } }
+
+		/// <summary>
+		/// Gets the number of data bits.
+		/// </summary>
+		public override eComDataBits NumberOfDataBits { get { return m_ComSpec.NumberOfDataBits; } }
+
+		/// <summary>
+		/// Gets the parity type.
+		/// </summary>
+		public override eComParityType ParityType { get { return m_ComSpec.ParityType; } }
+
+		/// <summary>
+		/// Gets the number of stop bits.
+		/// </summary>
+		public override eComStopBits NumberOfStopBits { get { return m_ComSpec.NumberOfStopBits; } }
+
+		/// <summary>
+		/// Gets the protocol type.
+		/// </summary>
+		public override eComProtocolType ProtocolType { get { return m_ComSpec.ProtocolType; } }
+
+		/// <summary>
+		/// Gets the hardware handshake mode.
+		/// </summary>
+		public override eComHardwareHandshakeType HardwareHandshake { get { return m_ComSpec.HardwareHandshake; } }
+
+		/// <summary>
+		/// Gets the software handshake mode.
+		/// </summary>
+		public override eComSoftwareHandshakeType SoftwareHandshake { get { return m_ComSpec.SoftwareHandshake; } }
+
+		/// <summary>
+		/// Gets the report CTS changes mode.
+		/// </summary>
+		public override bool ReportCtsChanges { get { return false; } }
+
+		#endregion
+
+		/// <summary>
 		/// Constructor.
 		/// </summary>
 		public GcITachComPort()
 		{
 			m_ComSpecProperties = new ComSpecProperties();
+			m_ComSpec = s_DefaultComSpec.Copy();
 
 			m_Client = new AsyncTcpClient {Name = GetType().Name};
 			Subscribe(m_Client);
@@ -95,7 +153,7 @@ namespace ICD.Connect.Misc.GlobalCache.Ports.ComPort
 			m_Client.Connect(host);
 		}
 
-	    /// <summary>
+		/// <summary>
 		/// Disconnects from the device.
 		/// </summary>
 		public override void Disconnect()
@@ -103,39 +161,47 @@ namespace ICD.Connect.Misc.GlobalCache.Ports.ComPort
 			m_Client.Disconnect();
 		}
 
-	    /// <summary>
-	    /// Configures the com port with the given attributes.
-	    /// </summary>
+		/// <summary>
+		/// Configures the com port with the given attributes.
+		/// </summary>
 		/// <param name="comSpec"></param>
-	    public override void SetComPortSpec(ComSpec comSpec)
+		public override void SetComPortSpec(ComSpec comSpec)
 		{
 			GcITachFlexDevice flexDevice = m_Device as GcITachFlexDevice;
 			if (flexDevice == null)
+			{
+				Log(eSeverity.Warning, "Setting ComSpec is unsupported - Parent device must be configured manually.");
 				return;
+			}
 
 			string localUrl = string.Format("api/host/modules/{0}/ports/{1}/config", m_Module, m_Address);
 
-		    SerialConfiguration config = new SerialConfiguration
-		    {
-			    BaudRate = ComSpecUtils.BaudRateToRate(comSpec.BaudRate),
-			    Parity = s_ParityToSerialConfiguration.GetValue(comSpec.ParityType),
-			    StopBits = ComSpecUtils.StopBitsToCount(comSpec.NumberOfStopBits),
-			    FlowControl = comSpec.HardwareHandshake == eComHardwareHandshakeType.None
-				                  ? SerialConfiguration.eFlowControl.None
-				                  : SerialConfiguration.eFlowControl.Hardware
-		    };
+			SerialConfiguration config = new SerialConfiguration
+			{
+				BaudRate = ComSpecUtils.BaudRateToRate(comSpec.BaudRate).ToString(),
+				Parity = s_ParityToSerialConfiguration.GetValue(comSpec.ParityType),
+				FlowControl = comSpec.HardwareHandshake == eComHardwareHandshakeType.None
+					              ? SerialConfiguration.eFlowControl.None
+					              : SerialConfiguration.eFlowControl.Hardware
+			};
+
+			string result;
 
 			try
 			{
-				flexDevice.Post(localUrl, config.Serialize());
+				result = flexDevice.Post(localUrl, JsonConvert.SerializeObject(config));
 			}
 			catch (Exception e)
 			{
 				Log(eSeverity.Error, e, "Failed to set comspec");
+				return;
 			}
+
+			SerialConfiguration current = JsonConvert.DeserializeObject<SerialConfiguration>(result);
+			UpdateComSpec(current);
 		}
 
-	    /// <summary>
+		/// <summary>
 		/// Sets the parent device.
 		/// </summary>
 		/// <param name="device"></param>
@@ -152,38 +218,60 @@ namespace ICD.Connect.Misc.GlobalCache.Ports.ComPort
 
 		#endregion
 
-	    /// <summary>
-	    /// Sets the configuration for the module.
-	    /// </summary>
-	    /// <param name="id"></param>
-	    /// <param name="class"></param>
-	    /// <param name="type"></param>
-	    private void SetModuleType(Module.eId id, Module.eClass @class, Module.eType type)
-	    {
-		    GcITachFlexDevice flexDevice = m_Device as GcITachFlexDevice;
-		    if (flexDevice == null)
-			    return;
+		#region Private Methods
 
-		    Module module = new Module
-		    {
-			    Id = id,
-			    Class = @class,
-			    Type = type
-		    };
+		/// <summary>
+		/// Updates the known comspec details.
+		/// </summary>
+		/// <param name="current"></param>
+		private void UpdateComSpec(SerialConfiguration current)
+		{
+			if (current.BaudRate != null)
+			{
+				int rate = int.Parse(current.BaudRate);
+				m_ComSpec.BaudRate = ComSpecUtils.BaudRateFromRate(rate);
+			}
 
-		    string localUrl = string.Format("api/host/modules/{0}", m_Module);
+			m_ComSpec.ParityType = s_ParityToSerialConfiguration.GetKey(current.Parity);
 
-		    try
-		    {
-			    flexDevice.Post(localUrl, module.Serialize());
-		    }
-		    catch (Exception e)
-		    {
-			    Log(eSeverity.Error, e, "Failed to set module type");
-		    }
-	    }
+			m_ComSpec.HardwareHandshake =
+				current.FlowControl == SerialConfiguration.eFlowControl.None
+					? eComHardwareHandshakeType.None
+					: eComHardwareHandshakeType.RtsCts;
+		}
 
-	    protected override bool GetIsConnectedState()
+		/// <summary>
+		/// Sets the configuration for the module.
+		/// </summary>
+		/// <param name="id"></param>
+		/// <param name="class"></param>
+		/// <param name="type"></param>
+		private void SetModuleType(Module.eId id, Module.eClass @class, Module.eType type)
+		{
+			GcITachFlexDevice flexDevice = m_Device as GcITachFlexDevice;
+			if (flexDevice == null)
+				return;
+
+			Module module = new Module
+			{
+				Id = id,
+				Class = @class,
+				Type = type
+			};
+
+			string localUrl = string.Format("api/host/modules/{0}", m_Module);
+
+			try
+			{
+				flexDevice.Post(localUrl, module.Serialize());
+			}
+			catch (Exception e)
+			{
+				Log(eSeverity.Error, e, "Failed to set module type");
+			}
+		}
+
+		protected override bool GetIsConnectedState()
 		{
 			return m_Client != null && m_Client.IsConnected;
 		}
@@ -192,6 +280,8 @@ namespace ICD.Connect.Misc.GlobalCache.Ports.ComPort
 		{
 			return m_Client != null && m_Client.IsOnline;
 		}
+
+		#endregion
 
 		#region TCP Client Callbacks
 
@@ -262,6 +352,7 @@ namespace ICD.Connect.Misc.GlobalCache.Ports.ComPort
 			SetDevice(null);
 
 			m_ComSpecProperties.Clear();
+			m_ComSpec.Copy(s_DefaultComSpec);
 		}
 
 		protected override void CopySettingsFinal(GcITachComPortSettings settings)

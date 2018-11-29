@@ -1,82 +1,32 @@
-﻿using ICD.Common.Utils.Json;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace ICD.Connect.Misc.GlobalCache.FlexApi.RestApi
 {
     public sealed class SerialConfiguration
     {
-		public enum eGender
-		{
-			Male,
-			Female
-		}
-
 		public enum eParity
 		{
-			None,
-			Odd,
-			Even
+			None = 0,
+			Even = 1,
+			Odd = 2
 		}
 
 		public enum eFlowControl
 		{
-			None,
-			Hardware
-		}
-
-		public enum eDuplex
-		{
-			Half,
-			Full
+			None = 0,
+			Hardware = 1
 		}
 
 	    #region Properties
 
-	    public eGender Gender { get; set; }
+	    [JsonProperty("baudrate")]
+	    public string BaudRate { get; set; }
 
-		public int BaudRate { get; set; }
+		[JsonProperty("parity")]
+	    public eParity Parity { get; set; }
 
-		public eParity Parity { get; set; }
-
-		public int StopBits { get; set; }
-
-		public eFlowControl FlowControl { get; set; }
-
-		public eDuplex Duplex { get; set; }
-
-	    #endregion
-
-	    #region Methods
-
-	    public string Serialize()
-		{
-			return JsonUtils.Serialize(Serialize);
-		}
-
-	    public void Serialize(JsonWriter writer)
-	    {
-			writer.WriteStartObject();
-			{
-				writer.WritePropertyName("gender");
-				writer.WriteValue(Gender.ToString());
-
-				writer.WritePropertyName("baudrate");
-				writer.WriteValue(Gender.ToString());
-
-				writer.WritePropertyName("parity");
-				writer.WriteValue(Parity.ToString());
-
-				writer.WritePropertyName("stopbits");
-				writer.WriteValue(StopBits.ToString());
-
-				writer.WritePropertyName("flowcontrol");
-				writer.WriteValue(FlowControl.ToString());
-
-				writer.WritePropertyName("duplex");
-				writer.WriteValue(Duplex.ToString());
-			}
-			writer.WriteEndObject();
-	    }
+	    [JsonProperty("flowcontrol")]
+	    public eFlowControl FlowControl { get; set; }
 
 	    #endregion
     }
