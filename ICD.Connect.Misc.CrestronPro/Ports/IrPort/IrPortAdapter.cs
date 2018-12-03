@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using ICD.Common.Properties;
 using ICD.Common.Utils;
 using ICD.Common.Utils.Extensions;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Common.Utils.Timers;
-using ICD.Connect.API.Commands;
-using ICD.Connect.API.Nodes;
 using ICD.Connect.Devices.Extensions;
 using ICD.Connect.Misc.CrestronPro.Devices;
 using ICD.Connect.Protocol.Ports.IrPort;
@@ -38,6 +37,8 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 
 		private readonly SafeCriticalSection m_PressSection;
 
+		private string m_LoadedDriverPath;
+
 		// Used with settings
 		private int? m_Device;
 		private int m_Address;
@@ -45,27 +46,24 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		#region Properties
 
 		/// <summary>
+		/// Gets the IR Driver configuration properties.
+		/// </summary>
+		public override IIrDriverProperties IrDriverProperties { get { return m_IrDriverProperties; } }
+
+		/// <summary>
+		/// Gets the path to the loaded IR driver.
+		/// </summary>
+		public override string DriverPath { get { return m_LoadedDriverPath; } }
+
+		/// <summary>
 		/// Gets/sets the default pulse time in milliseconds for a PressAndRelease.
 		/// </summary>
-		public override ushort PulseTime
-		{
-			get { return m_IrDriverProperties.IrPulseTime ?? DEFAULT_PULSE_TIME; }
-			set { m_IrDriverProperties.IrPulseTime = value == 0 ? DEFAULT_PULSE_TIME : value; }
-		}
+		public override ushort PulseTime { get; set; }
 
 		/// <summary>
 		/// Gets/sets the default time in milliseconds between PressAndRelease commands.
 		/// </summary>
-		public override ushort BetweenTime
-		{
-			get { return m_IrDriverProperties.IrBetweenTime ?? DEFAULT_BETWEEN_TIME; }
-			set { m_IrDriverProperties.IrBetweenTime = value == 0 ? DEFAULT_BETWEEN_TIME : value; }
-		}
-
-		/// <summary>
-		/// Gets the IR Driver configuration properties.
-		/// </summary>
-		protected override IIrDriverProperties IrDriverProperties { get { return m_IrDriverProperties; } }
+		public override ushort BetweenTime { get; set; }
 
 		#endregion
 
@@ -80,6 +78,9 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 
 			m_Queue = new Queue<IrPulse>();
 			m_PressSection = new SafeCriticalSection();
+
+			PulseTime = DEFAULT_PULSE_TIME;
+			BetweenTime = DEFAULT_BETWEEN_TIME;
 
 			m_PulseTimer = SafeTimer.Stopped(PulseElapseCallback);
 		}
@@ -161,8 +162,6 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		public override void LoadDriver(string path)
 		{
 #if SIMPLSHARP
-			m_IrDriverProperties.IrDriverPath = path;
-
 			if (m_Port == null)
 			{
 				Log(eSeverity.Error, "Unable to load driver - internal port is null");
@@ -175,13 +174,30 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 			{
 				m_Port.UnloadAllIRDrivers();
 				m_Port.LoadIRDriver(fullPath);
+
+				m_LoadedDriverPath = fullPath;
 			}
 			catch (FileNotFoundException)
 			{
+				m_LoadedDriverPath = null;
+
 				Log(eSeverity.Error, "Unable to load driver - file does not exist: {0}", fullPath);
 			}
 #else
             throw new NotSupportedException();
+#endif
+		}
+
+		/// <summary>
+		/// Gets the loaded IR commands.
+		/// </summary>
+		/// <returns></returns>
+		public override IEnumerable<string> GetCommands()
+		{
+#if SIMPLSHARP
+			return m_Port == null ? Enumerable.Empty<string>() : m_Port.AvailableIRCmds();
+#else
+			throw new NotSupportedException();
 #endif
 		}
 
@@ -304,6 +320,8 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 #if SIMPLSHARP
 			SetIrPort(null, 0);
 #endif
+			PulseTime = DEFAULT_PULSE_TIME;
+			BetweenTime = DEFAULT_BETWEEN_TIME;
 
 			m_IrDriverProperties.Clear();
 		}
@@ -477,57 +495,6 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		private static string GetIrDriversPath(string localPath)
 		{
 			return PathUtils.GetDefaultConfigPath(new[] {"IRDrivers", localPath});
-		}
-
-		#endregion
-
-		#region Console
-
-		/// <summary>
-		/// Calls the delegate for each console status item.
-		/// </summary>
-		/// <param name="addRow"></param>
-		public override void BuildConsoleStatus(AddStatusRowDelegate addRow)
-		{
-			base.BuildConsoleStatus(addRow);
-
-			addRow("Driver", m_IrDriverProperties.IrDriverPath);
-		}
-
-		/// <summary>
-		/// Gets the child console commands.
-		/// </summary>
-		/// <returns></returns>
-		public override IEnumerable<IConsoleCommand> GetConsoleCommands()
-		{
-			foreach (IConsoleCommand consoleCommand in GetBaseConsoleCommands())
-				yield return consoleCommand;
-
-			yield return new ConsoleCommand("PrintCommands", "Prints the available commands", () => PrintCommands());
-		}
-
-		/// <summary>
-		/// Workaround for "unverifiable code" warning.
-		/// </summary>
-		/// <returns></returns>
-		private IEnumerable<IConsoleCommand> GetBaseConsoleCommands()
-		{
-			return base.GetConsoleCommands();
-		}
-
-		private string PrintCommands()
-		{
-			TableBuilder builder = new TableBuilder("Command");
-
-#if SIMPLSHARP
-			if (m_Port != null)
-			{
-				foreach (var command in m_Port.AvailableIRCmds())
-					builder.AddRow(command);
-			}
-#endif
-
-			return builder.ToString();
 		}
 
 		#endregion
