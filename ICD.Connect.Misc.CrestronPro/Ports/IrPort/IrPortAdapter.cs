@@ -304,8 +304,6 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 
 			settings.Device = m_Device;
 			settings.Address = m_Address;
-			
-			settings.Copy(m_IrDriverProperties);
 		}
 
 		/// <summary>
@@ -322,8 +320,6 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 #endif
 			PulseTime = DEFAULT_PULSE_TIME;
 			BetweenTime = DEFAULT_BETWEEN_TIME;
-
-			m_IrDriverProperties.Clear();
 		}
 
 		/// <summary>
@@ -336,8 +332,6 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 			base.ApplySettingsFinal(settings, factory);
 
 			m_Device = settings.Device;
-
-			m_IrDriverProperties.Copy(settings);
 
 #if SIMPLSHARP
 			IROutputPort port = null;
@@ -375,8 +369,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 
 			SetIrPort(port, settings.Address);
 
-			if (!string.IsNullOrEmpty(settings.IrDriverPath))
-				LoadDriver(settings.IrDriverPath);
+			ApplyConfiguration();
 #endif
 		}
 

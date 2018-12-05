@@ -362,15 +362,11 @@ namespace ICD.Connect.Misc.GlobalCache.Ports.ComPort
 			settings.Module = m_Module;
 			settings.Address = m_Address;
 			settings.Device = m_Device == null ? (int?)null : m_Device.Id;
-
-			settings.Copy(m_ComSpecProperties);
 		}
 
 		protected override void ApplySettingsFinal(GcITachComPortSettings settings, IDeviceFactory factory)
 		{
 			base.ApplySettingsFinal(settings, factory);
-
-			m_ComSpecProperties.Copy(settings);
 
 			m_Module = settings.Module;
 			m_Address = settings.Address;
@@ -390,6 +386,8 @@ namespace ICD.Connect.Misc.GlobalCache.Ports.ComPort
 			}
 
 			SetDevice(device);
+
+			ApplyConfiguration();
 		}
 
 		#endregion

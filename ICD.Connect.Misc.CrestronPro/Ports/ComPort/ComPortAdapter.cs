@@ -387,8 +387,6 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 
 			settings.Device = m_Device;
 			settings.Address = m_Address;
-
-			settings.Copy(m_ComSpecProperties);
 		}
 
 		/// <summary>
@@ -403,8 +401,6 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 #if SIMPLSHARP
 			SetComPort(null, 0);
 #endif
-
-			m_ComSpecProperties.Clear();
 		}
 
 		/// <summary>
@@ -415,8 +411,6 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 		protected override void ApplySettingsFinal(ComPortAdapterSettings settings, IDeviceFactory factory)
 		{
 			base.ApplySettingsFinal(settings, factory);
-
-			m_ComSpecProperties.Copy(settings);
 
 #if SIMPLSHARP
 			m_Device = settings.Device;
@@ -457,6 +451,8 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 				Log(eSeverity.Error, "No Com Port at {0} address {1}", m_Device, settings.Address);
 
 			SetComPort(port, settings.Address);
+
+			ApplyConfiguration();
 #endif
 		}
 
