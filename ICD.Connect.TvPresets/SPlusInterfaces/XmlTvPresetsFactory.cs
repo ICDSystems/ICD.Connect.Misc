@@ -17,8 +17,6 @@ namespace ICD.Connect.TvPresets.SPlusInterfaces
 	{
 		private const string SUBDIR = "TV Presets";
 		private const string EXT = ".xml";
-		private const int LOAD_EVENT_TIMEOUT = 1 * 1000;
-
 
 #if SIMPLSHARP
 		public delegate void StationParsedDelegate(ushort index, SimplSharpString channel, SimplSharpString name,
