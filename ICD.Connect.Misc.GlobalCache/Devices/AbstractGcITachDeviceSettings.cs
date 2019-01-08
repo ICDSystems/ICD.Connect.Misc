@@ -58,6 +58,7 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 		protected AbstractGcITachDeviceSettings()
 		{
 			m_NetworkProperties = new NetworkProperties();
+			UpdateNetworkDefaults();
 		}
 
 		/// <summary>
@@ -84,6 +85,16 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 			Port = XmlUtils.TryReadChildElementContentAsInt(xml, PORT_ELEMENT);
 
 			m_NetworkProperties.ParseXml(xml);
+
+			UpdateNetworkDefaults();
+		}
+
+		/// <summary>
+		/// Sets default values for unconfigured network properties.
+		/// </summary>
+		private void UpdateNetworkDefaults()
+		{
+			m_NetworkProperties.ApplyDefaultValues(null, 4998);
 		}
 	}
 }

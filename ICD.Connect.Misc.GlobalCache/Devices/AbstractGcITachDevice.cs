@@ -5,7 +5,9 @@ using ICD.Connect.Devices;
 using ICD.Connect.Misc.GlobalCache.FlexApi;
 using ICD.Connect.Protocol;
 using ICD.Connect.Protocol.Extensions;
+using ICD.Connect.Protocol.Network.Ports;
 using ICD.Connect.Protocol.Network.Ports.Tcp;
+using ICD.Connect.Protocol.Network.Settings;
 using ICD.Connect.Protocol.Ports;
 using ICD.Connect.Protocol.SerialBuffers;
 using ICD.Connect.Settings;
@@ -15,7 +17,7 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 	public abstract class AbstractGcITachDevice<TSettings> : AbstractDevice<TSettings>, IGcITachDevice
 		where TSettings : IGcITachDeviceSettings, new()
 	{
-		private const ushort TCP_PORT = 4998;
+		private readonly NetworkProperties m_NetworkProperties;
 
 		private readonly ConnectionStateManager m_ConnectionStateManager;
 		private readonly DelimiterSerialBuffer m_TcpBuffer;
@@ -37,6 +39,8 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 		/// </summary>
 		protected AbstractGcITachDevice()
 		{
+			m_NetworkProperties = new NetworkProperties();
+
 			m_TcpBuffer = new DelimiterSerialBuffer(FlexData.NEWLINE);
 			Subscribe(m_TcpBuffer);
 
@@ -94,9 +98,9 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 
 		private void ConfigurePort(ISerialPort port)
 		{
-			AsyncTcpClient client = port as AsyncTcpClient;
-			if (client != null)
-				client.Port = TCP_PORT;
+			// TCP
+			if (port is INetworkPort)
+				(port as INetworkPort).ApplyDeviceConfiguration(m_NetworkProperties);
 		}
 
 		/// <summary>
@@ -183,6 +187,8 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 		{
 			base.ClearSettingsFinal();
 
+			m_NetworkProperties.Clear();
+
 			SetPort(null);
 		}
 
@@ -195,6 +201,8 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 			base.CopySettingsFinal(settings);
 
 			settings.Port = m_ConnectionStateManager.PortNumber;
+
+			settings.Copy(m_NetworkProperties);
 		}
 
 		/// <summary>
@@ -205,6 +213,8 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 		protected override void ApplySettingsFinal(TSettings settings, IDeviceFactory factory)
 		{
 			base.ApplySettingsFinal(settings, factory);
+
+			m_NetworkProperties.Copy(settings);
 
 			AsyncTcpClient port = null;
 
