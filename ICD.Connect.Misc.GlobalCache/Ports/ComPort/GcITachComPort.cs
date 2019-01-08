@@ -351,7 +351,7 @@ namespace ICD.Connect.Misc.GlobalCache.Ports.ComPort
 
 			SetDevice(null);
 
-			m_ComSpecProperties.Clear();
+			m_ComSpecProperties.ClearComSpecProperties();
 			m_ComSpec.Copy(s_DefaultComSpec);
 		}
 

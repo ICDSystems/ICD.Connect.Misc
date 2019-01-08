@@ -187,7 +187,7 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 		{
 			base.ClearSettingsFinal();
 
-			m_NetworkProperties.Clear();
+			m_NetworkProperties.ClearNetworkProperties();
 
 			SetPort(null);
 		}
