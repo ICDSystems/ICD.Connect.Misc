@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [6.0.1] - 2019-01-10
+### Changed
+ - Small utils compatibility changes
+
 ## [6.0.0] - 2018-10-30
 ### Added
  - Added ControlPortParentSettingsProperty to port settings parent properties
