@@ -7,8 +7,8 @@ using ICD.Connect.Misc.CrestronPro.Devices;
 using ICD.Connect.Misc.CrestronPro.Utils;
 using ICD.Connect.Protocol.Ports;
 using ICD.Connect.Protocol.Ports.RelayPort;
+using ICD.Connect.Settings;
 using ICD.Connect.Protocol.Utils;
-using ICD.Connect.Settings.Core;
 #if SIMPLSHARP
 using Crestron.SimplSharpPro;
 #endif

@@ -1,6 +1,6 @@
 ﻿using ICD.Connect.Devices;
 using ICD.Connect.Misc.GlobalCache.FlexApi;
-using ICD.Connect.Protocol.Network.Tcp;
+using ICD.Connect.Protocol.Network.Ports.Tcp;
 
 namespace ICD.Connect.Misc.GlobalCache.Devices
 {

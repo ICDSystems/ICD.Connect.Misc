@@ -1,4 +1,5 @@
-﻿#if SIMPLSHARP
+﻿using ICD.Connect.Settings;
+#if SIMPLSHARP
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.DeviceSupport;
 using Crestron.SimplSharpPro.GeneralIO;
@@ -6,7 +7,6 @@ using Crestron.SimplSharpPro.GeneralIO;
 using System.Collections.Generic;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.Devices;
-using ICD.Connect.Settings.Core;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 {

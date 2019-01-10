@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.Misc.CrestronPro.Utils;
 using ICD.Connect.Protocol.Ports.DigitalInput;
-using ICD.Connect.Settings.Core;
+using ICD.Connect.Settings;
 #if SIMPLSHARP
 using Crestron.SimplSharpPro;
 using ICD.Common.Properties;

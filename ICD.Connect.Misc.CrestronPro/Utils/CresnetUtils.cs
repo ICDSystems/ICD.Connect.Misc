@@ -1,16 +1,16 @@
-﻿#if SIMPLSHARP
+﻿using ICD.Connect.Settings;
+#if SIMPLSHARP
 using System;
 using System.Linq;
 using Crestron.SimplSharpPro.DeviceSupport;
 using ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge;
-using ICD.Connect.Settings.Core;
 
 namespace ICD.Connect.Misc.CrestronPro.Utils
 {
 	public static class CresnetUtils
 	{
-		public const byte MIN_ID = 0x03;
-		public const byte MAX_ID = 0xFE;
+		private const byte MIN_ID = 0x03;
+		private const byte MAX_ID = 0xFE;
 
 		/// <summary>
 		/// Returns true if the given cresnet id is in a valid range.

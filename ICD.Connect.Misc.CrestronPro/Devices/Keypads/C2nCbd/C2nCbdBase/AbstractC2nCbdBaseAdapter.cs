@@ -1,11 +1,11 @@
 ﻿using System;
+using ICD.Connect.Settings;
 #if SIMPLSHARP
 using Crestron.SimplSharpPro.DeviceSupport;
 using ICD.Connect.Misc.CrestronPro.Utils;
 #endif
 using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.Misc.CrestronPro.Devices.Keypads.InetCbdex;
-using ICD.Connect.Settings.Core;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.C2nCbd.C2nCbdBase
 {
