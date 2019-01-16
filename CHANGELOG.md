@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
  - Added port configuration features to devices and ports
 
+## [6.0.2] - 2019-01-16
+### Changed
+ - Less obnoxious RelayPortAdapter error when failing to get the internal port
+
 ## [6.0.1] - 2019-01-10
 ### Changed
  - Small utils compatibility changes
