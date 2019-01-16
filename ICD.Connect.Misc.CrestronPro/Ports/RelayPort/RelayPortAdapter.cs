@@ -239,8 +239,8 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 				}
 				catch (Exception e)
 				{
-					Log(eSeverity.Error, "Unable to get Relay Port from device {0} at address {1}:{2}", m_Device,
-					                settings.Address, e);
+					Log(eSeverity.Error, "Unable to get Relay Port from device {0} at address {1} - {2}", m_Device,
+					                settings.Address, e.Message);
 				}
 			}
 
