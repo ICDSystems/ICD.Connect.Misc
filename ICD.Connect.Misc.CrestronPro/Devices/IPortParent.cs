@@ -1,10 +1,18 @@
-﻿#if SIMPLSHARP
+﻿
+#if SIMPLSHARP
 using Crestron.SimplSharpPro;
+using Crestron.SimplSharpPro.DM;
 #endif
 using ICD.Common.Properties;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices
 {
+	public enum eInputOuptut
+	{
+		Input,
+		Output
+	}
+
 	/// <summary>
 	/// IPortParent simply provides methods for accessing the hardware ports on a device.
 	/// </summary>
@@ -51,6 +59,14 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 		/// <returns></returns>
 		[PublicAPI]
 		DigitalInput GetDigitalInputPort(int address);
+
+		/// <summary>
+		/// Gets the port at the given address.
+		/// </summary>
+		/// <param name="io"></param>
+		/// <param name="address"></param>
+		/// <returns></returns>
+		Cec GetCecPort(eInputOuptut io, int address);
 #endif
 	}
 }
