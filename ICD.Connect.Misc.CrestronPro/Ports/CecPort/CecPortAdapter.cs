@@ -51,7 +51,11 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.CecPort
 		/// <returns></returns>
 		protected override bool GetIsConnectedState()
 		{
+#if SIMPLSHARP
 			return m_Port != null;
+#else
+			return false;
+#endif
 		}
 
 		/// <summary>
@@ -75,6 +79,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.CecPort
 #endif
 		}
 
+#if SIMPLSHARP
 		private void ReceiveMessage()
 		{
 			string data;
@@ -87,6 +92,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.CecPort
 				Receive(data);
 			}
 		}
+#endif
 
 		/// <summary>
 		/// Release resources.
