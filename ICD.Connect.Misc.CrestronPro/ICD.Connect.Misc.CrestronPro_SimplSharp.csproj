@@ -162,6 +162,8 @@
     <Compile Include="Extensions\ComSpecExtensions.cs" />
     <Compile Include="Extensions\SigExtensions.cs" />
     <Compile Include="ICresnetDeviceSettings.cs" />
+    <Compile Include="Ports\CecPort\CecPortAdapter.cs" />
+    <Compile Include="Ports\CecPort\CecPortAdapterSettings.cs" />
     <Compile Include="Ports\DigitalInput\DigitalInputAdapter.cs" />
     <Compile Include="Ports\DigitalInput\DigitalInputAdapterSettings.cs" />
     <Compile Include="KrangPlugin.cs" />
