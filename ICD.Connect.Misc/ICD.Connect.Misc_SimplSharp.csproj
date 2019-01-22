@@ -79,8 +79,6 @@
     <Compile Include="Occupancy\MockOccupancySensorDevice.cs" />
     <Compile Include="Occupancy\MockOccupancySensorDeviceSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SerialPortServerDevice\SerialPortServerDevice.cs" />
-    <Compile Include="SerialPortServerDevice\SerialPortServerDeviceSettings.cs" />
     <None Include="Properties\ControlSystem.cfg" />
   </ItemGroup>
   <ItemGroup>

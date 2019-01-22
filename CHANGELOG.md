@@ -7,7 +7,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 ### Added
  - Cec Port support for Crestron devices
- - SerialPortServerDevice to make a ISerialPort avaliable over a TCP Server
 
 ## [7.0.0] - 2019-01-10
 ### Added
