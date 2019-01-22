@@ -175,7 +175,8 @@ namespace ICD.Connect.Misc.SerialPortServerDevice
 
 			SetPort(null);
 
-			m_TcpServer.Stop();
+			if (m_TcpServer != null)
+				m_TcpServer.Stop();
 			Unsubscribe(m_TcpServer);
 			m_TcpServer = null;
 
