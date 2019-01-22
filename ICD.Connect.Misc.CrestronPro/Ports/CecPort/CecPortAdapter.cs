@@ -34,6 +34,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.CecPort
 		/// </summary>
 		public override void Connect()
 		{
+			UpdateIsConnectedState();
 		}
 
 		/// <summary>
@@ -41,6 +42,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.CecPort
 		/// </summary>
 		public override void Disconnect()
 		{
+			UpdateIsConnectedState();
 		}
 
 		/// <summary>
@@ -109,6 +111,9 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.CecPort
 			m_Port = port;
 
 			Subscribe(m_Port);
+
+			UpdateCachedOnlineStatus();
+			UpdateIsConnectedState();
 		}
 
 		private void Subscribe(Cec port)
