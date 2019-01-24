@@ -12,6 +12,7 @@ namespace ICD.Connect.Misc.CrestronPro.Extensions
 		private static readonly BiDictionary<eComBaudRates, ComPort.eComBaudRates> s_BaudRateMap =
 			new BiDictionary<eComBaudRates, ComPort.eComBaudRates>
 			{
+				{default(eComBaudRates), default(ComPort.eComBaudRates)},
 				{eComBaudRates.BaudRate300, ComPort.eComBaudRates.ComspecBaudRate300},
 				{eComBaudRates.BaudRate600, ComPort.eComBaudRates.ComspecBaudRate600},
 				{eComBaudRates.BaudRate1200, ComPort.eComBaudRates.ComspecBaudRate1200},
@@ -32,6 +33,7 @@ namespace ICD.Connect.Misc.CrestronPro.Extensions
 		private static readonly BiDictionary<eComDataBits, ComPort.eComDataBits> s_DataBitsMap =
 			new BiDictionary<eComDataBits, ComPort.eComDataBits>
 			{
+				{default(eComDataBits), default(ComPort.eComDataBits)},
 				{eComDataBits.DataBits7, ComPort.eComDataBits.ComspecDataBits7},
 				{eComDataBits.DataBits8, ComPort.eComDataBits.ComspecDataBits8}
 			};
@@ -48,6 +50,7 @@ namespace ICD.Connect.Misc.CrestronPro.Extensions
 		private static readonly BiDictionary<eComStopBits, ComPort.eComStopBits> s_StopBitsMap =
 			new BiDictionary<eComStopBits, ComPort.eComStopBits>
 			{
+				{default(eComStopBits), default(ComPort.eComStopBits)},
 				{eComStopBits.StopBits1, ComPort.eComStopBits.ComspecStopBits1},
 				{eComStopBits.StopBits2, ComPort.eComStopBits.ComspecStopBits2}
 			};
