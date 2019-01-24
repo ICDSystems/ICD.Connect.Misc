@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 ### Added
  - Cec Port support for Crestron devices
+ 
+### Changed
+ - Fixed KeyNotFound exceptions when converting Crestron ComSpec default values
 
 ## [7.0.0] - 2019-01-10
 ### Added
