@@ -1,15 +1,16 @@
 ﻿using System;
+using Crestron.SimplSharpPro;
+using Crestron.SimplSharpPro.DM;
+using Crestron.SimplSharpPro.GeneralIO;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.Devices;
+using ICD.Connect.Misc.CrestronPro.Utils;
 using ICD.Connect.Settings;
 #if SIMPLSHARP
-using Crestron.SimplSharpPro;
-using Crestron.SimplSharpPro.GeneralIO;
-using Crestron.SimplSharpPro.DM;
-using ICD.Connect.Misc.CrestronPro.Utils;
+
 #endif
 
-namespace ICD.Connect.Misc.CrestronPro.Devices
+namespace ICD.Connect.Misc.CrestronPro.Devices.Io.DinIo
 {
 #if SIMPLSHARP
 	public sealed class DinIo8Adapter : AbstractDevice<DinIo8AdapterSettings>, IPortParent
@@ -194,16 +195,14 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 			base.ApplySettingsFinal(settings, factory);
 
 #if SIMPLSHARP
-			if (settings.CresnetId == null ||!CresnetUtils.IsValidId(settings.CresnetId.Value))
+			DinIo8 device = null;
+
+			if (settings.CresnetId == null || !CresnetUtils.IsValidId(settings.CresnetId.Value))
 			{
 				Logger.AddEntry(eSeverity.Error, "{0} failed to instantiate {1} - CresnetId {2} is out of range",
 				                this, typeof(DinIo8).Name, settings.CresnetId);
-				return;
 			}
-
-			DinIo8 device = null;
-
-			if (settings.CresnetId != null)
+			else
 			{
 				try
 				{
@@ -218,13 +217,11 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 				{
 					string message = string.Format("{0} failed to instantiate {1} with Cresnet ID {2} - {3}",
 					                               this, typeof(DinIo8).Name, settings.CresnetId, e.Message);
-					Logger.AddEntry(eSeverity.Error, e, message);
+					Log(eSeverity.Error, e, message);
 				}
 			}
 
 			SetDevice(device);
-#else
-            throw new NotImplementedException();
 #endif
 		}
 

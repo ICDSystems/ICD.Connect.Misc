@@ -6,7 +6,7 @@ using ICD.Connect.Misc.CrestronPro.Utils;
 using ICD.Connect.Settings.Attributes;
 using ICD.Connect.Settings.Attributes.SettingsProperties;
 
-namespace ICD.Connect.Misc.CrestronPro.Devices
+namespace ICD.Connect.Misc.CrestronPro.Devices.Io.DinIo
 {
 	[KrangSettings("DinIo8", typeof(DinIo8Adapter))]
 	public sealed class DinIo8AdapterSettings : AbstractDeviceSettings, ICresnetDeviceSettings
