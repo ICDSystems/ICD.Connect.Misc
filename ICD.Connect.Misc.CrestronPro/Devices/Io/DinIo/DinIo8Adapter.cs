@@ -1,7 +1,9 @@
 ﻿using System;
+#if SIMPLSHARP
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.DM;
 using Crestron.SimplSharpPro.GeneralIO;
+#endif
 using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.Devices;
 using ICD.Connect.Misc.CrestronPro.Utils;
@@ -22,7 +24,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Io.DinIo
 		private DinIo8 m_PortsDevice;
 #endif
 
-		#region Methods
+#region Methods
 
 #if SIMPLSHARP
 		/// <summary>
@@ -154,9 +156,9 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Io.DinIo
 		}
 #endif
 
-		#endregion
+#endregion
 
-		#region Settings
+#region Settings
 
 		/// <summary>
 		/// Override to apply properties to the settings instance.
@@ -225,9 +227,9 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Io.DinIo
 #endif
 		}
 
-		#endregion
+#endregion
 
-		#region Device Callbacks
+#region Device Callbacks
 
 #if SIMPLSHARP
 		/// <summary>
@@ -265,6 +267,6 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Io.DinIo
 		}
 #endif
 
-		#endregion
+#endregion
 	}
 }

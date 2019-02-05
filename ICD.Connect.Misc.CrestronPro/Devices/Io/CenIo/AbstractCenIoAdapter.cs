@@ -9,15 +9,19 @@ using ICD.Connect.Devices;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.Io.CenIo
 {
+#if SIMPLSHARP
 	public abstract class AbstractCenIoAdapter<TDevice, TSettings> : AbstractDevice<TSettings>, ICenIoAdapter
 		where TDevice : GenericDevice
+#else
+	public abstract class AbstractCenIoAdapter<TSettings> : AbstractDevice<TSettings>, ICenIoAdapter
+#endif
 		where TSettings : ICenIoAdapterSettings, new()
 	{
 #if SIMPLSHARP
 		public TDevice Device { get; private set; }
 #endif
 
-		#region Methods
+#region Methods
 
 #if SIMPLSHARP
 		/// <summary>
@@ -143,9 +147,9 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Io.CenIo
 		}
 #endif
 
-		#endregion
+#endregion
 
-		#region Settings
+#region Settings
 
 		/// <summary>
 		/// Override to apply properties to the settings instance.
@@ -198,9 +202,9 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Io.CenIo
 		protected abstract TDevice InstantiateDevice(TSettings settings);
 #endif
 
-		#endregion
+#endregion
 
-		#region Device Callbacks
+#region Device Callbacks
 
 #if SIMPLSHARP
 		/// <summary>
@@ -238,6 +242,6 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Io.CenIo
 		}
 #endif
 
-		#endregion
+#endregion
 	}
 }
