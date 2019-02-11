@@ -16,19 +16,16 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.CecPort
 	/// </summary>
 	public sealed class CecPortAdapter : AbstractSerialPort<CecPortAdapterSettings>
 	{
-
 #if SIMPLSHARP
 		private Cec m_Port;
 #endif
-		//Used with settings
+		// Used with settings
 		private int? m_Device;
 		private int m_Address;
 		private eInputOuptut m_Io;
 
-
-
-
 		#region Methods
+
 		/// <summary>
 		/// Connects to the end point.
 		/// </summary>
@@ -82,15 +79,13 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.CecPort
 #if SIMPLSHARP
 		private void ReceiveMessage()
 		{
-			string data;
+			string data = m_Port.Received.StringValue;
 
-			data = m_Port.Received.StringValue;
+			if (string.IsNullOrEmpty(data))
+				return;
 
-			if (!String.IsNullOrEmpty(data))
-			{
-				PrintRx(data);      
-				Receive(data);
-			}
+			PrintRx(data);      
+			Receive(data);
 		}
 #endif
 
@@ -141,9 +136,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.CecPort
 		private void PortOnCecChange(Cec cecDevice, CecEventArgs args)
 		{
 			if (args.EventId == CecEventIds.CecMessageReceivedEventId)
-			{
 				ReceiveMessage();
-			}
 		}
 
 #endif
