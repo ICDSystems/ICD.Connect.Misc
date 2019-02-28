@@ -2,6 +2,7 @@
 using ICD.Common.Utils.EventArguments;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.API.Nodes;
+using ICD.Connect.Partitioning.Controls;
 using ICD.Connect.Partitioning.Devices;
 using ICD.Connect.Protocol.FeedbackDebounce;
 using ICD.Connect.Settings;
@@ -20,6 +21,13 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 #endif
 
 		private readonly FeedbackDebounce<bool> m_Debounce;
+
+		/// <summary>
+		/// Returns the mask for the type of feedback that is supported,
+		/// I.e. if we can set the open state of the partition, and if the partition
+		/// gives us feedback for the current open state.
+		/// </summary>
+		public override ePartitionFeedback SupportsFeedback { get { return ePartitionFeedback.Get; } }
 
 		/// <summary>
 		/// Constructor.
@@ -65,9 +73,10 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 			{
 				if (Name != null)
 					m_PartitionDevice.Description = Name;
+
 				eDeviceRegistrationUnRegistrationResponse result = m_PartitionDevice.Register();
 				if (result != eDeviceRegistrationUnRegistrationResponse.Success)
-					Logger.AddEntry(eSeverity.Error, "Unable to register {0} - {1}", m_PartitionDevice.GetType().Name, result);
+					Log(eSeverity.Error, "Unable to register {0} - {1}", m_PartitionDevice.GetType().Name, result);
 
 				// Actually enable feedback from the device!
 				m_PartitionDevice.Enable.BoolValue = true;
