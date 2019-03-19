@@ -26,7 +26,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 		{
 			base.WriteElements(writer);
 
-			writer.WriteElementString(IPID_ELEMENT, IcdXmlConvert.ToString(CardId));
+			writer.WriteElementString(CARD_ID_ELEMENT, IcdXmlConvert.ToString(CardId));
 			writer.WriteElementString(CARD_FRAME_ELEMENT, IcdXmlConvert.ToString(CardFrame));
 		}
 
@@ -40,7 +40,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 
 			// Simple migration check, used to (mistakenly) call the CardId "IPID"
 			CardId = XmlUtils.TryReadChildElementContentAsUInt(xml, CARD_ID_ELEMENT) ??
-			         XmlUtils.TryReadChildElementContentAsUInt(xml, IPID_ELEMENT);
+			         XmlUtils.TryReadChildElementContentAsByte(xml, IPID_ELEMENT);
 
 			CardFrame = XmlUtils.TryReadChildElementContentAsInt(xml, CARD_FRAME_ELEMENT);
 		}
