@@ -2,6 +2,7 @@
 using ICD.Common.Utils.EventArguments;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.API.Nodes;
+using ICD.Connect.Misc.CrestronPro.Extensions;
 using ICD.Connect.Partitioning.Devices;
 using ICD.Connect.Protocol.FeedbackDebounce;
 using ICD.Connect.Settings.Core;
@@ -131,7 +132,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 			settings.CresnetId = m_PartitionDevice == null ? (byte)0 : (byte)m_PartitionDevice.ID;
 			settings.Sensitivity = m_PartitionDevice == null
 									   ? (ushort)0
-									   : m_PartitionDevice.SensitivityFeedback.UShortValue;
+									   : m_PartitionDevice.SensitivityFeedback.GetUShortValueOrDefault();
 #else
             settings.CresnetId = 0;
 			settings.Sensitivity = 0;
@@ -255,7 +256,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 		/// </summary>
 		private void UpdateStatus()
 		{
-			bool open = m_PartitionDevice != null && m_PartitionDevice.PartitionNotSensedFeedback.BoolValue;
+			bool open = m_PartitionDevice != null && m_PartitionDevice.PartitionNotSensedFeedback.GetBoolValueOrDefault();
 			m_Debounce.Enqueue(open);
 		}
 #endif
@@ -279,7 +280,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 			base.BuildConsoleStatus(addRow);
 
 #if SIMPLSHARP
-			addRow("Sensitivity", m_PartitionDevice == null ? 0 : m_PartitionDevice.SensitivityFeedback.UShortValue);
+			addRow("Sensitivity", m_PartitionDevice == null ? 0 : m_PartitionDevice.SensitivityFeedback.GetUShortValueOrDefault());
 #endif
 		}
 
