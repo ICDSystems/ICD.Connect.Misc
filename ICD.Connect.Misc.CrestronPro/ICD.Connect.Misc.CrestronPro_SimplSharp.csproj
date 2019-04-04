@@ -193,9 +193,9 @@
     <Compile Include="Utils\CresnetSettingsUtils.cs" />
     <Compile Include="Utils\CresnetUtils.cs" />
     <Compile Include="Utils\DmUtils.cs" />
-    <Compile Include="Utils\Extensions\DmOutputExtensions.cs" />
-    <Compile Include="Utils\Extensions\GenericBaseExtensions.cs" />
-    <Compile Include="Utils\Extensions\GenericDeviceExtensions.cs" />
+    <Compile Include="Extensions\DmOutputExtensions.cs" />
+    <Compile Include="Extensions\GenericBaseExtensions.cs" />
+    <Compile Include="Extensions\GenericDeviceExtensions.cs" />
     <Compile Include="Utils\PortDeviceUtils.cs" />
     <None Include="Properties\ControlSystem.cfg" />
   </ItemGroup>

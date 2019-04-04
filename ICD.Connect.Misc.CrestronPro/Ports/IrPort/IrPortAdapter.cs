@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using ICD.Common.Properties;
 using ICD.Common.Utils;
-using ICD.Common.Utils.Extensions;
-using ICD.Common.Utils.Services.Logging;
 using ICD.Common.Utils.Timers;
 using ICD.Connect.API.Commands;
 using ICD.Connect.API.Nodes;
-using ICD.Connect.Devices.Extensions;
-using ICD.Connect.Misc.CrestronPro.Devices;
 using ICD.Connect.Protocol.Ports.IrPort;
 using ICD.Connect.Settings.Core;
 #if SIMPLSHARP
+using ICD.Common.Properties;
 using Crestron.SimplSharp.CrestronIO;
+using ICD.Common.Utils.Extensions;
+using ICD.Common.Utils.Services.Logging;
 using Crestron.SimplSharpPro;
-using ICD.Connect.Misc.CrestronPro.Utils.Extensions;
+using ICD.Connect.Devices.Extensions;
+using ICD.Connect.Misc.CrestronPro.Devices;
+using ICD.Connect.Misc.CrestronPro.Extensions;
 #endif
 
 namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
