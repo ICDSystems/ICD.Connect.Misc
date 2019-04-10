@@ -1,6 +1,7 @@
 ﻿using System;
 using ICD.Common.Utils.EventArguments;
 using ICD.Connect.Devices.Controls;
+using ICD.Connect.Telemetry.Attributes;
 
 namespace ICD.Connect.Misc.Occupancy
 {
@@ -18,6 +19,7 @@ namespace ICD.Connect.Misc.Occupancy
 		/// True = occupied
 		/// False = unoccupied/vacant
 		/// </summary>
+		[EventTelemetry(OccupancyTelemetryNames.OCCUPANCY_STATE_CHANGED)]
 		event EventHandler<GenericEventArgs<eOccupancyState>> OnOccupancyStateChanged;
 
 		/// <summary>
@@ -25,6 +27,7 @@ namespace ICD.Connect.Misc.Occupancy
 		/// True = occupied
 		/// False = unoccupied/vacant
 		/// </summary>
+		[DynamicPropertyTelemetry(OccupancyTelemetryNames.OCCUPANCY_STATE, OccupancyTelemetryNames.OCCUPANCY_STATE_CHANGED)]
 		eOccupancyState OccupancyState { get; }
 	}
 }

@@ -78,6 +78,7 @@
     <Compile Include="Occupancy\MockOccupancySensorControl.cs" />
     <Compile Include="Occupancy\MockOccupancySensorDevice.cs" />
     <Compile Include="Occupancy\MockOccupancySensorDeviceSettings.cs" />
+    <Compile Include="Occupancy\OccupancyTelemetryNames.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="Properties\ControlSystem.cfg" />
   </ItemGroup>
