@@ -169,6 +169,16 @@
     <Compile Include="Devices\Keypads\C2nCbd\C2nCbdP\C2nCbdPAdapter.cs" />
     <Compile Include="Devices\Keypads\KeypadBase\IKeypadBaseAdapter.cs" />
     <Compile Include="Devices\Keypads\KeypadBase\IKeypadBaseAdapterSettings.cs" />
+    <Compile Include="Devices\OccupancySensors\AbstractCresnetOccupancySensorAdapter.cs" />
+    <Compile Include="Devices\OccupancySensors\AbstractCresnetOccupancySensorAdapterSettings.cs" />
+    <Compile Include="Devices\OccupancySensors\CresnetOccupancySensorControl.cs" />
+    <Compile Include="Devices\OccupancySensors\GlsOdtCCnAdapter.cs" />
+    <Compile Include="Devices\OccupancySensors\GlsOdtCCnAdapterSettings.cs" />
+    <Compile Include="Devices\OccupancySensors\GlsOirCCnAdapter.cs" />
+    <Compile Include="Devices\OccupancySensors\GlsOirCCnAdapterSettings.cs" />
+    <Compile Include="Devices\OccupancySensors\GlsOirLclCCnAdapter.cs" />
+    <Compile Include="Devices\OccupancySensors\GlsOirLclCCnAdapterSettings.cs" />
+    <Compile Include="Devices\OccupancySensors\ICresnetOccupancySensorAdapter.cs" />
     <Compile Include="Devices\Partitioning\GlsPartCnAdapter.cs" />
     <Compile Include="Devices\Partitioning\GlsPartCnAdapterSettings.cs" />
     <Compile Include="Extensions\ComSpecExtensions.cs" />
