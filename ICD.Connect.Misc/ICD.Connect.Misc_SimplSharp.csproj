@@ -74,6 +74,7 @@
     <Compile Include="Keypads\MockKeypad\MockKeypadSettings.cs" />
     <Compile Include="KrangPlugin.cs" />
     <Compile Include="Occupancy\AbstractOccupancySensorControl.cs" />
+    <Compile Include="Occupancy\ICresnetOccupancySensorAdapter.cs" />
     <Compile Include="Occupancy\IOccupancySensorControl.cs" />
     <Compile Include="Occupancy\MockOccupancySensorControl.cs" />
     <Compile Include="Occupancy\MockOccupancySensorDevice.cs" />
