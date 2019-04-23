@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+ - Fixed bug that was preventing IR command between-time from working correctly
+
 ## [7.2.0] - 2019-03-26
 ### Added
  - Added Crestron Ethernet IO devices CEN-IO-COM-102, CEN-IO-DI-104, CEN-IO-IR-104, CEN-IO-RY-104

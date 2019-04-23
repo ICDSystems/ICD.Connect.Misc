@@ -96,11 +96,6 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		{
 			m_PulseTimer.Dispose();
 
-#if SIMPLSHARP
-			// Unregister.
-			SetIrPort(null, 0);
-#endif
-
 			base.DisposeFinal(disposing);
 		}
 
@@ -292,6 +287,128 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 
 		#endregion
 
+		#region Private Methods
+
+		/// <summary>
+		/// Gets the current online status of the device.
+		/// </summary>
+		/// <returns></returns>
+		protected override bool GetIsOnlineStatus()
+		{
+#if SIMPLSHARP
+			return m_Port != null;
+#else
+            return false;
+#endif
+		}
+
+		/// <summary>
+		/// Releases the current command and clears the queued commands.
+		/// </summary>
+		private void Clear()
+		{
+#if SIMPLSHARP
+			m_PressSection.Enter();
+
+			try
+			{
+				m_PulseTimer.Stop();
+				m_Queue.Clear();
+
+				if (m_Port != null)
+					m_Port.Release();
+			}
+			finally
+			{
+				m_PressSection.Leave();
+			}
+#else
+            throw new NotSupportedException();
+#endif
+		}
+
+		/// <summary>
+		/// Sends the next pulse in the queue.
+		/// </summary>
+		private void SendNext()
+		{
+#if SIMPLSHARP
+			m_PressSection.Enter();
+
+			try
+			{
+				IrPulse pulse;
+				if (!m_Queue.Peek(out pulse))
+					return;
+
+				if (m_Port == null)
+				{
+					Log(eSeverity.Error, "Unable to send command - internal port is null");
+					Clear();
+					return;
+				}
+
+				if (!m_Port.IsIRCommandAvailable(pulse.Command))
+				{
+					m_Queue.Dequeue();
+					Log(eSeverity.Error, "Unable to send command - No command {0}", StringUtils.ToRepresentation(pulse.Command));
+					SendNext();
+					return;
+				}
+
+				PrintTx(pulse.Command);
+				m_Port.PressAndRelease(pulse.Command, pulse.PulseTime);
+
+				m_PulseTimer.Reset(pulse.Duration);
+			}
+			finally
+			{
+				m_PressSection.Leave();
+			}
+#else
+            throw new NotSupportedException();
+#endif
+		}
+
+		/// <summary>
+		/// Called when the pulse timer elapses.
+		/// </summary>
+		private void PulseElapseCallback()
+		{
+#if SIMPLSHARP
+			m_PressSection.Enter();
+
+			try
+			{
+
+				if (m_Queue.Count == 0)
+					return;
+
+				m_Queue.Dequeue();
+				SendNext();
+			}
+			finally
+			{
+				m_PressSection.Leave();
+			}
+#else
+            throw new NotSupportedException();
+#endif
+		}
+
+		/// <summary>
+		/// Searches the application path, program config path and common config path to
+		/// find the first IR driver that exists with the given local path.
+		/// </summary>
+		/// <param name="localPath"></param>
+		/// <returns></returns>
+		private static string GetIrDriversPath(string localPath)
+		{
+			return PathUtils.GetDefaultConfigPath(new[] {"IRDrivers", localPath});
+		}
+
+		#endregion
+
 		#region Settings
 
 		/// <summary>
@@ -371,123 +488,6 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 
 			ApplyConfiguration();
 #endif
-		}
-
-		#endregion
-
-		#region Private Methods
-
-		/// <summary>
-		/// Gets the current online status of the device.
-		/// </summary>
-		/// <returns></returns>
-		protected override bool GetIsOnlineStatus()
-		{
-#if SIMPLSHARP
-			return m_Port != null;
-#else
-            return false;
-#endif
-		}
-
-		/// <summary>
-		/// Releases the current command and clears the queued commands.
-		/// </summary>
-		private void Clear()
-		{
-#if SIMPLSHARP
-			m_PressSection.Enter();
-
-			try
-			{
-				if (m_Port != null)
-					m_Port.Release();
-
-				m_PulseTimer.Stop();
-				m_Queue.Clear();
-			}
-			finally
-			{
-				m_PressSection.Leave();
-			}
-#else
-            throw new NotSupportedException();
-#endif
-		}
-
-		/// <summary>
-		/// Sends the next pulse in the queue.
-		/// </summary>
-		private void SendNext()
-		{
-#if SIMPLSHARP
-			m_PressSection.Enter();
-
-			try
-			{
-				IrPulse pulse;
-				if (!m_Queue.Dequeue(out pulse))
-					return;
-
-				if (m_Port == null)
-				{
-					Log(eSeverity.Error, "Unable to send command - internal port is null");
-					Clear();
-					return;
-				}
-
-				if (!m_Port.IsIRCommandAvailable(pulse.Command))
-				{
-					Log(eSeverity.Error, "Unable to send command - No command {0}", StringUtils.ToRepresentation(pulse.Command));
-					SendNext();
-					return;
-				}
-
-				PrintTx(pulse.Command);
-				m_Port.PressAndRelease(pulse.Command, pulse.PulseTime);
-
-				m_PulseTimer.Reset(pulse.Duration);
-			}
-			finally
-			{
-				m_PressSection.Leave();
-			}
-#else
-            throw new NotSupportedException();
-#endif
-		}
-
-		/// <summary>
-		/// Called when the pulse timer elapses.
-		/// </summary>
-		private void PulseElapseCallback()
-		{
-#if SIMPLSHARP
-			m_PressSection.Enter();
-
-			try
-			{
-				if (m_Queue.Count > 0)
-					SendNext();
-			}
-			finally
-			{
-				m_PressSection.Leave();
-			}
-#else
-            throw new NotSupportedException();
-#endif
-		}
-
-		/// <summary>
-		/// Searches the application path, program config path and common config path to
-		/// find the first IR driver that exists with the given local path.
-		/// </summary>
-		/// <param name="localPath"></param>
-		/// <returns></returns>
-		private static string GetIrDriversPath(string localPath)
-		{
-			return PathUtils.GetDefaultConfigPath(new[] {"IRDrivers", localPath});
 		}
 
 		#endregion
