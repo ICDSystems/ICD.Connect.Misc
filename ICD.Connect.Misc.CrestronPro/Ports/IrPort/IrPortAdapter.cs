@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using ICD.Common.Properties;
 using ICD.Common.Utils;
-using ICD.Common.Utils.Extensions;
-using ICD.Common.Utils.Services.Logging;
 using ICD.Common.Utils.Timers;
 using ICD.Connect.Devices.Extensions;
 using ICD.Connect.Misc.CrestronPro.Devices;
@@ -13,8 +11,10 @@ using ICD.Connect.Protocol.Settings;
 using ICD.Connect.Settings;
 #if SIMPLSHARP
 using Crestron.SimplSharp.CrestronIO;
+using ICD.Common.Utils.Extensions;
+using ICD.Common.Utils.Services.Logging;
 using Crestron.SimplSharpPro;
-using ICD.Connect.Misc.CrestronPro.Utils.Extensions;
+using ICD.Connect.Misc.CrestronPro.Extensions;
 #endif
 
 namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort

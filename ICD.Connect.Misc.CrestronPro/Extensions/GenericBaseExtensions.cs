@@ -2,7 +2,7 @@
 using System;
 using Crestron.SimplSharpPro;
 
-namespace ICD.Connect.Misc.CrestronPro.Utils.Extensions
+namespace ICD.Connect.Misc.CrestronPro.Extensions
 {
 	public static class GenericBaseExtensions
 	{

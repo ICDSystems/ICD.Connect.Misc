@@ -79,6 +79,58 @@ namespace ICD.Connect.Misc.CrestronPro.Extensions
 					throw new ArgumentOutOfRangeException();
 			}
 		}
+
+		/// <summary>
+		/// Returns null if the sig is a nullsig.
+		/// </summary>
+		/// <param name="extends"></param>
+		/// <returns></returns>
+		public static string GetSerialValueOrDefault(this StringOutputSig extends)
+		{
+			if (extends == null)
+				throw new ArgumentNullException("extends");
+
+			return extends.Type == Crestron.SimplSharpPro.eSigType.NA ? null : extends.StringValue;
+		}
+
+		/// <summary>
+		/// Returns false if the sig is a nullsig.
+		/// </summary>
+		/// <param name="extends"></param>
+		/// <returns></returns>
+		public static bool GetBoolValueOrDefault(this BoolOutputSig extends)
+		{
+			if (extends == null)
+				throw new ArgumentNullException("extends");
+
+			return extends.Type != Crestron.SimplSharpPro.eSigType.NA && extends.BoolValue;
+		}
+
+		/// <summary>
+		/// Returns 0 if the sig is a nullsig.
+		/// </summary>
+		/// <param name="extends"></param>
+		/// <returns></returns>
+		public static short GetShortValueOrDefault(this UShortOutputSig extends)
+		{
+			if (extends == null)
+				throw new ArgumentNullException("extends");
+
+			return extends.Type == Crestron.SimplSharpPro.eSigType.NA ? (short)0 : extends.ShortValue;
+		}
+
+		/// <summary>
+		/// Returns 0 if the sig is a nullsig.
+		/// </summary>
+		/// <param name="extends"></param>
+		/// <returns></returns>
+		public static ushort GetUShortValueOrDefault(this UShortOutputSig extends)
+		{
+			if (extends == null)
+				throw new ArgumentNullException("extends");
+
+			return extends.Type == Crestron.SimplSharpPro.eSigType.NA ? (ushort)0 : extends.UShortValue;
+		}
 	}
 }
 

@@ -21,6 +21,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
  - Added port configuration features to devices and ports
 
+## [6.2.0] - 2019-05-16
+### Added
+ - Added occupancy telemetry
+
+### Changed
+ - Combined extensions directories
+ - Checking for nullsigs before getting sig values
+
 ## [6.1.0] - 2019-04-19
 ### Added
  - Cresnet Occupancy Sensor Adapters - GLS-ODT-C-CN, GLS-OIR-C-CN, and GLS-OIRLCL-C-CN

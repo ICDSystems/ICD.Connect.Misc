@@ -3,7 +3,7 @@ using System;
 using Crestron.SimplSharpPro.DM;
 using ICD.Common.Properties;
 
-namespace ICD.Connect.Misc.CrestronPro.Utils.Extensions
+namespace ICD.Connect.Misc.CrestronPro.Extensions
 {
 	/// <summary>
 	/// Extension methods for use with DMOutputs.
