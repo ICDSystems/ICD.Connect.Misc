@@ -144,9 +144,9 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 			base.CopySettingsFinal(settings);
 
 #if SIMPLSHARP
-			settings.CardId = Card == null ? 0 : Card.ID;
+			settings.CardId = Card == null ? null : (uint?)Card.ID;
 #else
-            settings.CardId = 0;
+            settings.CardId = null;
 #endif
 			settings.CardFrame = m_ParentId;
 		}
@@ -208,21 +208,22 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 			}
 
 			// If an IPID is specified the CardFrame has multiple slots
-			if (cardId.HasValue)
+			if (cardFrame is CenCi33Adapter)
 			{
 				CenCi33Adapter ci33 = cardFrame as CenCi33Adapter;
-				if (ci33 != null)
+				if (cardId.HasValue)
 					return InstantiateCard(cardId.Value, ci33.CardFrame);
-				Log(eSeverity.Error, "Device {0} is not a {1}.", cardFrameId, typeof(CenCi33Adapter).Name);
-			}
-			else
-			{
-				CenCi31Adapter ci31 = cardFrame as CenCi31Adapter;
-				if (ci31 != null)
-					return InstantiateCard(ci31.CardFrame);
-				Log(eSeverity.Error, "Device {0} is not a {1}.", cardFrameId, typeof(CenCi31Adapter).Name);
+				Log(eSeverity.Error, "Missing value for CardId");
+				return null;
 			}
 
+			if (cardFrame is CenCi31Adapter)
+			{
+				CenCi31Adapter ci31 = cardFrame as CenCi31Adapter;
+				return InstantiateCard(ci31.CardFrame);
+			}
+
+			Log(eSeverity.Error, "Device {0} is not a {1} or {2}.", cardFrameId, typeof(CenCi33Adapter).Name, typeof(CenCi31Adapter).Name);
 			return null;
 		}
 
