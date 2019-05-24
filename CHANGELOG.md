@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [6.1.1] - 2019-05-24
 ### Added
  - Adding Card Parent and Card Address attributes to C3 card settings.
 
