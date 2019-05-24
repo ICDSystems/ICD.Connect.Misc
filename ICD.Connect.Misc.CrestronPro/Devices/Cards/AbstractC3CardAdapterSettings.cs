@@ -13,9 +13,10 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 		private const string CARD_ID_ELEMENT = "CardId";
 		private const string CARD_FRAME_ELEMENT = "CardFrame";
 
+		[CardAddressSettingsProperty]
 		public uint? CardId { get; set; }
 
-		[OriginatorIdSettingsProperty(typeof(ICardFrameDevice))]
+		[CardParentSettingsProperty(typeof(ICardFrameDevice))]
 		public int? CardFrame { get; set; }
 
 		/// <summary>
