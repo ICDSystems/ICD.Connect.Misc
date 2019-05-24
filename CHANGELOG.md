@@ -21,6 +21,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
  - Added port configuration features to devices and ports
 
+## [6.2.2] - 2019-05-24
+### Changed
+ - Treating crestron sigs that are actually NULL as null sigs
+
 ## [6.2.1] - 2019-05-22
 ### Changed
  - Better handling of Crestron C3 CardIds when using single card cage vs three card cage
