@@ -55,8 +55,9 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CardFrames
 					CardFrame.Description = Name;
 
 				eDeviceRegistrationUnRegistrationResponse result = CardFrame.Register();
-				if (result != eDeviceRegistrationUnRegistrationResponse.Success)
-					Logger.AddEntry(eSeverity.Error, "Unable to register {0} - {1}", CardFrame.GetType().Name, result);
+				if (result != eDeviceRegistrationUnRegistrationResponse.Success &&
+				    result != eDeviceRegistrationUnRegistrationResponse.NoAttempt)
+					Log(eSeverity.Error, "Unable to register {0} - {1}", CardFrame.GetType().Name, result);
 			}
 
 			Subscribe(CardFrame);
