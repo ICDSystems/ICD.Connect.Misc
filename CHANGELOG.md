@@ -24,6 +24,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
  - Added port configuration features to devices and ports
 
+## [6.2.3] - 2019-06-27
+### Changed
+ - No longer logging an error when CEN card frames report NoAttempt for registration
+
 ## [6.2.2] - 2019-05-24
 ### Changed
  - Treating crestron sigs that are actually NULL as null sigs
