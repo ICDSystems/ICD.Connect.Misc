@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [7.2.1] - 2019-06-27
+### Changed
+ - Fixed bug that was preventing IR command between-time from working correctly
+
 ## [7.2.0] - 2019-03-26
 ### Added
  - Added Crestron Ethernet IO devices CEN-IO-COM-102, CEN-IO-DI-104, CEN-IO-IR-104, CEN-IO-RY-104
@@ -20,6 +24,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [7.0.0] - 2019-01-10
 ### Added
  - Added port configuration features to devices and ports
+
+## [6.2.3] - 2019-06-27
+### Changed
+ - No longer logging an error when CEN card frames report NoAttempt for registration
 
 ## [6.2.2] - 2019-05-24
 ### Changed
