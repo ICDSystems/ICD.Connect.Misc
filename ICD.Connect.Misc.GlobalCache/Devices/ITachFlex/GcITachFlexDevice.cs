@@ -1,4 +1,5 @@
 ﻿using System;
+using ICD.Common.Utils;
 using ICD.Connect.Protocol.Network.Ports.Web;
 
 namespace ICD.Connect.Misc.GlobalCache.Devices.ITachFlex
@@ -41,7 +42,7 @@ namespace ICD.Connect.Misc.GlobalCache.Devices.ITachFlex
 			string result;
 
 			m_HttpClient.Uri = new Uri(Address, UriKind.RelativeOrAbsolute);
-			m_HttpClient.Post(localUrl, data, out result);
+			m_HttpClient.Post(localUrl, StringUtils.ToBytes(data), out result);
 
 			return result;
 		}
