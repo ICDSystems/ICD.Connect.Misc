@@ -25,6 +25,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
  - Added port configuration features to devices and ports
 
+## [6.3.0] - 2019-07-11
+### Added
+ - IC2nCbdPBaseWithVersiportAdapter is an IPortParent
+ - AbstractC2nCbdPBaseWithVersiportAdapter exposes VersiPorts
+
 ## [6.2.4] - 2019-07-11
 ### Changed
  - Fixed a bug where C2N-CBD-P settings were not properly constrained to a Cresnet Bridge parent device
