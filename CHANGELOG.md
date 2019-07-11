@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [6.3.0] - 2019-07-11
 ### Added
  - IC2nCbdPBaseWithVersiportAdapter is an IPortParent
  - AbstractC2nCbdPBaseWithVersiportAdapter exposes VersiPorts
