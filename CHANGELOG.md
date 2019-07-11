@@ -25,6 +25,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
  - Added port configuration features to devices and ports
 
+## [6.2.4] - 2019-07-11
+### Changed
+ - Fixed a bug where C2N-CBD-P settings were not properly constrained to a Cresnet Bridge parent device
+
 ## [6.2.3] - 2019-06-27
 ### Changed
  - No longer logging an error when CEN card frames report NoAttempt for registration
