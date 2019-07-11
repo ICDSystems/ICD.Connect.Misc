@@ -35,8 +35,8 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.C2nCbd.C2nCbdBase
 #if SIMPLSHARP
 			if (settings.CresnetId == null || !CresnetUtils.IsValidId(settings.CresnetId.Value))
 			{
-				Logger.AddEntry(eSeverity.Error, "{0} failed to instantiate {1} - CresnetId {2} is out of range",
-								this, typeof(TKeypad).Name, settings.CresnetId);
+				Log(eSeverity.Error, "Failed to instantiate {0} - CresnetId {1} is out of range",
+				    typeof(TKeypad).Name, settings.CresnetId);
 				return;
 			}
 
@@ -53,7 +53,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.C2nCbd.C2nCbdBase
 			}
 			catch (ArgumentException e)
 			{
-				string message = string.Format("{0} failed to instantiate {1} with Cresnet ID {2} - {3}",
+				string message = string.Format("{0} - Failed to instantiate {1} with Cresnet ID {2} - {3}",
 											   this, typeof(TKeypad).Name, settings.CresnetId, e.Message);
 				Logger.AddEntry(eSeverity.Error, e, message);
 			}
