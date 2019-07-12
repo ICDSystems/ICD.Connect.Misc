@@ -1,6 +1,7 @@
 ﻿using System;
 #if SIMPLSHARP
 using Crestron.SimplSharpPro;
+using Crestron.SimplSharpPro.DM;
 #endif
 using ICD.Connect.Misc.CrestronPro.Devices.Keypads.C2nCbd.C2nCbdPBase;
 
@@ -74,6 +75,18 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.C2nCbd.C2nCbdPBaseWithVer
 		public DigitalInput GetDigitalInputPort(int address)
 		{
 			string message = string.Format("{0} has no {1}", this, typeof(DigitalInput).Name);
+			throw new ArgumentOutOfRangeException("address", message);
+		}
+
+		/// <summary>
+		/// Gets the port at the given address.
+		/// </summary>
+		/// <param name="io"></param>
+		/// <param name="address"></param>
+		/// <returns></returns>
+		public Cec GetCecPort(eInputOuptut io, int address)
+		{
+			string message = string.Format("{0} has no {1}", this, typeof(Cec).Name);
 			throw new ArgumentOutOfRangeException("address", message);
 		}
 #endif
