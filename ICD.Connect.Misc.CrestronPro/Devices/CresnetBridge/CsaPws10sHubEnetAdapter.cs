@@ -7,27 +7,24 @@ using Crestron.SimplSharpPro.GeneralIO;
 #endif
 using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.Devices;
-using ICD.Connect.Misc.CrestronPro.Utils;
 using ICD.Connect.Settings.Core;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 {
-	public sealed class CsaPws10sHubEnetAdapter : AbstractDevice<CsaPws10sHubEnetAdapterSettings>, ICsaPws10sHubEnetAdapter
+	public sealed class CsaPws10sHubEnetAdapter : AbstractDevice<CsaPws10sHubEnetAdapterSettings>, ICsaPws10sHubEnetAdapter, ICresnetBridgeAdapter
 	{
 #if SIMPLSHARP
-		private CsaPws10sHubEnetBase m_Device;
+		private CsaPws10sHubEnet m_Device;
 #endif
-		private int? m_ParentId;
-		private int? m_BranchId;
+
 #if SIMPLSHARP
 		public IEnumerable<CresnetBranch> Branches
 		{
 			get
 			{
-				CsaPws10sHubEnet master = m_Device as CsaPws10sHubEnet;
-				if (master != null)
+				if (m_Device != null)
 				{
-					foreach (var branch in master.Branches.Cast<CresnetBranch>())
+					foreach (var branch in m_Device.Branches.Cast<CresnetBranch>())
 					{
 						yield return branch;
 					}
@@ -35,8 +32,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 			}
 		}
 
-
-		private void SetDevice(CsaPws10sHubEnetBase device, int? parentId, int? branchId)
+		private void SetDevice(CsaPws10sHubEnet device)
 		{
 			if (device == m_Device)
 				return;
@@ -44,8 +40,6 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 			m_Device.UnRegister();
 
 			m_Device = device;
-			m_ParentId = parentId;
-			m_BranchId = branchId;
 
 			m_Device.Register();
 		}
@@ -71,16 +65,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 		{
 			base.CopySettingsFinal(settings);
 #if SIMPLSHARP
-			if (m_Device is CsaPws10sHubEnet)
-			{
-				settings.Ipid = (byte)m_Device.ID;
-			}
-			else if (m_Device is CsaPws10sHubEnetSlave)
-			{
-				settings.CresnetId = (byte)m_Device.ID;
-				settings.BranchId = m_BranchId;
-				settings.ParentId = m_ParentId;
-			}
+			settings.Ipid = m_Device == null ? (byte?)null : (byte)m_Device.ID;
 #endif
 		}
 
@@ -93,35 +78,23 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 		{
 			base.ApplySettingsFinal(settings, factory);
 #if SIMPLSHARP
-			CsaPws10sHubEnetBase device = null;
+			CsaPws10sHubEnet device = null;
 			try
 			{
-				byte? id = settings.Ipid ?? settings.CresnetId;
-
-				if (!id.HasValue)
-				{
-					string message = string.Format("{0} failed to instantiate {1}, settings requires either an IPID or CresnetID",
-													this, typeof(CsaPws10sHubEnetBase).Name);
-					Logger.AddEntry(eSeverity.Error, message);
-					return;
-				}
-
-				device = CresnetUtils.InstantiateCresnetDevice<CsaPws10sHubEnetBase>(id.Value,
-															   settings.BranchId,
-															   settings.ParentId,
-															   factory,
-															   ipid => new CsaPws10sHubEnet(ipid, ProgramInfo.ControlSystem),
-															   (cresnetId, branchId) => new CsaPws10sHubEnetSlave(cresnetId, branchId));
+				if (settings.Ipid.HasValue)
+					device = new CsaPws10sHubEnet(settings.Ipid.Value, ProgramInfo.ControlSystem);
+				else
+					Log(eSeverity.Error, "Failed to instantiate {0} - Settings requires an IPID", typeof(CsaPws10sHubEnetBase).Name);
 			}
 			catch (ArgumentException e)
 			{
-				string message = string.Format("{0} failed to instantiate {1} with Cresnet ID {2} - {3}",
-											   this, typeof(CsaPws10sHubEnet).Name, settings.CresnetId, e.Message);
+				string message = string.Format("{0} - Failed to instantiate {1} with IPID {2} - {3}",
+											   this, typeof(CsaPws10sHubEnet).Name, settings.Ipid, e.Message);
 				Logger.AddEntry(eSeverity.Error, e, message);
 			}
 			finally
 			{
-				SetDevice(device, settings.ParentId, settings.BranchId);
+				SetDevice(device);
 			}
 #endif
 		}
