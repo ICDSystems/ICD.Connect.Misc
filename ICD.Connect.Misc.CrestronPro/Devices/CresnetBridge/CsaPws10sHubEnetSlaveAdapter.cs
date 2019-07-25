@@ -1,11 +1,11 @@
 ﻿using System;
+using ICD.Connect.Settings;
 #if SIMPLSHARP
 using Crestron.SimplSharpPro.GeneralIO;
 #endif
 using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.Devices;
 using ICD.Connect.Misc.CrestronPro.Utils;
-using ICD.Connect.Settings.Core;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 {
