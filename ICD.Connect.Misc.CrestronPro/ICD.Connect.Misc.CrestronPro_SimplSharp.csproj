@@ -99,6 +99,8 @@
     <Compile Include="Devices\CresnetBridge\CsaPws10sHubEnetAdapterSettings.cs" />
     <Compile Include="Devices\CresnetBridge\AbstractDinCenCn2Adapter.cs" />
     <Compile Include="Devices\CresnetBridge\AbstractDinCenCn2AdapterSettings.cs" />
+    <Compile Include="Devices\CresnetBridge\CsaPws10sHubEnetSlaveAdapter.cs" />
+    <Compile Include="Devices\CresnetBridge\CsaPws10sHubEnetSlaveAdapterSettings.cs" />
     <Compile Include="Devices\CresnetBridge\DinCenCn2Adapter.cs" />
     <Compile Include="Devices\CresnetBridge\DinCenCn2AdapterSettings.cs" />
     <Compile Include="Devices\CresnetBridge\DinCenCn2PoeAdapter.cs" />
