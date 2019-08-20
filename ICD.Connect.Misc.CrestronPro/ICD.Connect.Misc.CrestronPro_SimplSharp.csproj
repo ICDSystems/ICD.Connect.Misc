@@ -212,6 +212,7 @@
     <Compile Include="Extensions\DmOutputExtensions.cs" />
     <Compile Include="Extensions\GenericBaseExtensions.cs" />
     <Compile Include="Extensions\GenericDeviceExtensions.cs" />
+    <Compile Include="Utils\GenericBaseUtils.cs" />
     <Compile Include="Utils\PortDeviceUtils.cs" />
     <None Include="Properties\ControlSystem.cfg" />
   </ItemGroup>
