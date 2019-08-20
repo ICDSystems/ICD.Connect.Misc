@@ -1,5 +1,6 @@
 ﻿using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.Devices;
+using ICD.Connect.Misc.CrestronPro.Utils;
 using ICD.Connect.Settings;
 #if SIMPLSHARP
 using Crestron.SimplSharpPro;
@@ -34,31 +35,13 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CardFrames
 			Unsubscribe(CardFrame);
 
 			if (CardFrame != null)
-			{
-				if (CardFrame.Registered)
-					CardFrame.UnRegister();
-
-				try
-				{
-					CardFrame.Dispose();
-				}
-				catch
-				{
-				}
-			}
+				GenericBaseUtils.TearDown(CardFrame);
 
 			CardFrame = device;
 
-			if (CardFrame != null && !CardFrame.Registered)
-			{
-				if (Name != null)
-					CardFrame.Description = Name;
-
-				eDeviceRegistrationUnRegistrationResponse result = CardFrame.Register();
-				if (result != eDeviceRegistrationUnRegistrationResponse.Success &&
-				    result != eDeviceRegistrationUnRegistrationResponse.NoAttempt)
-					Log(eSeverity.Error, "Unable to register {0} - {1}", CardFrame.GetType().Name, result);
-			}
+			eDeviceRegistrationUnRegistrationResponse result;
+			if (CardFrame != null && !GenericBaseUtils.SetUp(CardFrame, this, out result))
+				Log(eSeverity.Error, "Unable to register {0} - {1}", CardFrame.GetType().Name, result);
 
 			Subscribe(CardFrame);
 			UpdateCachedOnlineStatus();

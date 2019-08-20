@@ -1,4 +1,5 @@
 ﻿using System;
+using ICD.Connect.Misc.CrestronPro.Utils;
 #if SIMPLSHARP
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.DeviceSupport;
@@ -38,29 +39,13 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.KeypadBase
 			Unsubscribe(Keypad);
 
 			if (Keypad != null)
-			{
-				if (Keypad.Registered)
-					Keypad.UnRegister();
-
-				try
-				{
-					Keypad.Dispose();
-				}
-				catch
-				{
-				}
-			}
+				GenericBaseUtils.TearDown(Keypad);
 
 			Keypad = device;
 
-			if (Keypad != null && !Keypad.Registered)
-			{
-				if (Name != null)
-					Keypad.Description = Name;
-				eDeviceRegistrationUnRegistrationResponse result = Keypad.Register();
-				if (result != eDeviceRegistrationUnRegistrationResponse.Success)
-					Log(eSeverity.Error, "Unable to register {0} - {1}", Keypad.GetType().Name, result);
-			}
+			eDeviceRegistrationUnRegistrationResponse result;
+			if (Keypad != null && !GenericBaseUtils.SetUp(Keypad, this, out result))
+				Log(eSeverity.Error, "Unable to register {0} - {1}", Keypad.GetType().Name, result);
 
 			Subscribe(Keypad);
 			UpdateCachedOnlineStatus();

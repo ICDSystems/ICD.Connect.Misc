@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+ - Added GenericBaseUtils class for setup and teardown of Crestron devices
+
+### Changed
+ - Crestron device description contains originator ID and combine name
+
 ## [7.2.1] - 2019-06-27
 ### Changed
  - Fixed bug that was preventing IR command between-time from working correctly

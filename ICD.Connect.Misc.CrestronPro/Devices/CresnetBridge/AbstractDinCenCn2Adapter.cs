@@ -1,4 +1,5 @@
-﻿using ICD.Connect.Settings;
+﻿using ICD.Connect.Misc.CrestronPro.Utils;
+using ICD.Connect.Settings;
 #if SIMPLSHARP
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.DeviceSupport;
@@ -35,29 +36,14 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 				return;
 
 			if (Bridge != null)
-			{
-				if (Bridge.Registered)
-					Bridge.UnRegister();
-
-				try
-				{
-					Bridge.Dispose();
-				}
-				catch
-				{
-				}
-			}
+				GenericBaseUtils.TearDown(Bridge);
 
 			Bridge = bridge;
 
-			if (Bridge != null && !Bridge.Registered)
-			{
-				if (Name != null)
-					Bridge.Description = Name;
-				eDeviceRegistrationUnRegistrationResponse result = Bridge.Register();
-				if (result != eDeviceRegistrationUnRegistrationResponse.Success)
-					Logger.AddEntry(eSeverity.Error, "Unable to register {0} - {1}", Bridge.GetType().Name, result);
-			}
+			eDeviceRegistrationUnRegistrationResponse result;
+			if (Bridge != null && !GenericBaseUtils.SetUp(Bridge, this, out result))
+				Log(eSeverity.Error, "Unable to register {0} - {1}", Bridge.GetType().Name, result);
+
 			UpdateCachedOnlineStatus();
 		}
 

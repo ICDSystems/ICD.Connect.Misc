@@ -55,33 +55,17 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 			Unsubscribe(m_PartitionDevice);
 
 			if (m_PartitionDevice != null)
-			{
-				if (m_PartitionDevice.Registered)
-					m_PartitionDevice.UnRegister();
-
-				try
-				{
-					m_PartitionDevice.Dispose();
-				}
-				catch
-				{
-				}
-			}
+				GenericBaseUtils.TearDown(m_PartitionDevice);
 
 			m_PartitionDevice = device;
 
-			if (m_PartitionDevice != null && !m_PartitionDevice.Registered)
-			{
-				if (Name != null)
-					m_PartitionDevice.Description = Name;
+			eDeviceRegistrationUnRegistrationResponse result;
+			if (m_PartitionDevice != null && !GenericBaseUtils.SetUp(m_PartitionDevice, this, out result))
+				Log(eSeverity.Error, "Unable to register {0} - {1}", m_PartitionDevice.GetType().Name, result);
 
-				eDeviceRegistrationUnRegistrationResponse result = m_PartitionDevice.Register();
-				if (result != eDeviceRegistrationUnRegistrationResponse.Success)
-					Log(eSeverity.Error, "Unable to register {0} - {1}", m_PartitionDevice.GetType().Name, result);
-
-				// Actually enable feedback from the device!
+			// Actually enable feedback from the device!
+			if (m_PartitionDevice != null)
 				m_PartitionDevice.Enable.BoolValue = true;
-			}
 
 			Subscribe(m_PartitionDevice);
 			UpdateCachedOnlineStatus();

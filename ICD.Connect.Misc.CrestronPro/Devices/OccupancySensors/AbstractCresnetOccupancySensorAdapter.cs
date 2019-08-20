@@ -84,29 +84,13 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 			Unsubscribe(m_Sensor);
 
 			if (m_Sensor != null)
-			{
-				if (m_Sensor.Registered)
-					m_Sensor.UnRegister();
-
-				try
-				{
-					m_Sensor.Dispose();
-				}
-				catch
-				{
-				}
-			}
+				GenericBaseUtils.TearDown(m_Sensor);
 
 			m_Sensor = device;
 
-			if (m_Sensor != null && !m_Sensor.Registered)
-			{
-				if (Name != null)
-					m_Sensor.Description = Name;
-				eDeviceRegistrationUnRegistrationResponse result = m_Sensor.Register();
-				if (result != eDeviceRegistrationUnRegistrationResponse.Success)
-					Log(eSeverity.Error, "Unable to register {0} - {1}", m_Sensor.GetType().Name, result);
-			}
+			eDeviceRegistrationUnRegistrationResponse result;
+			if (m_Sensor != null && !GenericBaseUtils.SetUp(m_Sensor, this, out result))
+				Log(eSeverity.Error, "Unable to register {0} - {1}", m_Sensor.GetType().Name, result);
 
 			Subscribe(m_Sensor);
 			UpdateCachedOnlineStatus();

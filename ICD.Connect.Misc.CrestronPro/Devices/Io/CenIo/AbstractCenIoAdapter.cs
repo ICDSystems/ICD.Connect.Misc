@@ -1,4 +1,5 @@
 using System;
+using ICD.Connect.Misc.CrestronPro.Utils;
 using ICD.Connect.Settings;
 #if SIMPLSHARP
 using Crestron.SimplSharpPro;
@@ -36,29 +37,13 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Io.CenIo
 			Unsubscribe(Device);
 
 			if (Device != null)
-			{
-				if (Device.Registered)
-					Device.UnRegister();
-
-				try
-				{
-					Device.Dispose();
-				}
-				catch
-				{
-				}
-			}
+				GenericBaseUtils.TearDown(Device);
 
 			Device = device;
 
-			if (Device != null && !Device.Registered)
-			{
-				if (Name != null)
-					Device.Description = Name;
-				eDeviceRegistrationUnRegistrationResponse result = Device.Register();
-				if (result != eDeviceRegistrationUnRegistrationResponse.Success)
-					Log(eSeverity.Error, "{0} failed to register {1} - {2}", this, Device.GetType().Name, result);
-			}
+			eDeviceRegistrationUnRegistrationResponse result;
+			if (Device != null && !GenericBaseUtils.SetUp(Device, this, out result))
+				Log(eSeverity.Error, "Unable to register {0} - {1}", Device.GetType().Name, result);
 
 			Subscribe(Device);
 			UpdateCachedOnlineStatus();

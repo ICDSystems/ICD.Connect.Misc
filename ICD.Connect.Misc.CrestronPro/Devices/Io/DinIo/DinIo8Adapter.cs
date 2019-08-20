@@ -39,29 +39,13 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Io.DinIo
 			Unsubscribe(m_PortsDevice);
 
 			if (m_PortsDevice != null)
-			{
-				if (m_PortsDevice.Registered)
-					m_PortsDevice.UnRegister();
-
-				try
-				{
-					m_PortsDevice.Dispose();
-				}
-				catch
-				{
-				}
-			}
+				GenericBaseUtils.TearDown(m_PortsDevice);
 
 			m_PortsDevice = device;
 
-			if (m_PortsDevice != null && !m_PortsDevice.Registered)
-			{
-				if (Name != null)
-					m_PortsDevice.Description = Name;
-				eDeviceRegistrationUnRegistrationResponse result = m_PortsDevice.Register();
-				if (result != eDeviceRegistrationUnRegistrationResponse.Success)
-					Logger.AddEntry(eSeverity.Error, "{0} failed to register {1} - {2}", this, m_PortsDevice.GetType().Name, result);
-			}
+			eDeviceRegistrationUnRegistrationResponse result;
+			if (m_PortsDevice != null && !GenericBaseUtils.SetUp(m_PortsDevice, this, out result))
+				Log(eSeverity.Error, "Unable to register {0} - {1}", m_PortsDevice.GetType().Name, result);
 
 			Subscribe(m_PortsDevice);
 			UpdateCachedOnlineStatus();
