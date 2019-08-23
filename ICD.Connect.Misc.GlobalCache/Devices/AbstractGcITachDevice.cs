@@ -29,7 +29,7 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 		{
 			get
 			{
-				AsyncTcpClient client = m_ConnectionStateManager.Port as AsyncTcpClient;
+				IcdTcpClient client = m_ConnectionStateManager.Port as IcdTcpClient;
 				return client == null ? null : client.Address;
 			}
 		}
@@ -69,7 +69,7 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 		/// Sets the TCP client for communication with the device.
 		/// </summary>
 		/// <param name="port"></param>
-		public void SetPort(AsyncTcpClient port)
+		public void SetPort(IcdTcpClient port)
 		{
 			m_ConnectionStateManager.SetPort(port);
 		}
@@ -216,17 +216,17 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 
 			m_NetworkProperties.Copy(settings);
 
-			AsyncTcpClient port = null;
+			IcdTcpClient port = null;
 
 			if (settings.Port != null)
 			{
 				try
 				{
-					port = factory.GetPortById((int)settings.Port) as AsyncTcpClient;
+					port = factory.GetPortById((int)settings.Port) as IcdTcpClient;
 				}
 				catch (KeyNotFoundException)
 				{
-					Log(eSeverity.Error, "No AsyncTcpClient with id {0}", settings.Port);
+					Log(eSeverity.Error, "No {0} with id {1}", typeof(IcdTcpClient), settings.Port);
 				}
 			}
 

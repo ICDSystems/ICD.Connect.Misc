@@ -17,7 +17,7 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 		/// <summary>
 		/// The port id.
 		/// </summary>
-		[OriginatorIdSettingsProperty(typeof(AsyncTcpClient))]
+		[OriginatorIdSettingsProperty(typeof(IcdTcpClient))]
 		public int? Port { get; set; }
 
 		#endregion

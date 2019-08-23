@@ -15,7 +15,7 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 		/// Sets the TCP client for communication with the device.
 		/// </summary>
 		/// <param name="port"></param>
-		void SetPort(AsyncTcpClient port);
+		void SetPort(IcdTcpClient port);
 
 		/// <summary>
 		/// Sends the command to the device.
