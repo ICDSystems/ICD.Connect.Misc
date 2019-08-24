@@ -94,11 +94,13 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		{
 			m_Address = address;
 
+			Unsubscribe(m_Port);
 			Unregister(m_Port);
 			Clear();
 
 			m_Port = port;
 			Register(m_Port);
+			Subscribe(m_Port);
 
 			UpdateCachedOnlineStatus();
 		}
@@ -256,6 +258,45 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 
 		#endregion
 
+		#region Port Callbacks
+
+#if SIMPLSHARP
+		/// <summary>
+		/// Subscribe to the port events.
+		/// </summary>
+		/// <param name="port"></param>
+		private void Subscribe(IROutputPort port)
+		{
+			if (port == null)
+				return;
+
+			GenericBase parent = port.Parent as GenericBase;
+			if (parent != null)
+				parent.OnlineStatusChange += ParentOnOnlineStatusChange;
+		}
+
+		/// <summary>
+		/// Unsubscribe from the port events.
+		/// </summary>
+		/// <param name="port"></param>
+		private void Unsubscribe(IROutputPort port)
+		{
+			if (port == null)
+				return;
+
+			GenericBase parent = port.Parent as GenericBase;
+			if (parent != null)
+				parent.OnlineStatusChange -= ParentOnOnlineStatusChange;
+		}
+
+		private void ParentOnOnlineStatusChange(GenericBase currentDevice, OnlineOfflineEventArgs args)
+		{
+			UpdateCachedOnlineStatus();
+		}
+#endif
+
+		#endregion
+
 		#region Settings
 
 		/// <summary>
@@ -356,7 +397,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		protected override bool GetIsOnlineStatus()
 		{
 #if SIMPLSHARP
-			return m_Port != null;
+			return m_Port != null && m_Port.GetIsRegisteredAndParentOnline();
 #else
             return false;
 #endif

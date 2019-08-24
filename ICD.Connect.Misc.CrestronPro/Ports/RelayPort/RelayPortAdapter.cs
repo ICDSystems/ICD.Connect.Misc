@@ -4,6 +4,7 @@ using ICD.Common.Properties;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.Devices.Extensions;
 using ICD.Connect.Misc.CrestronPro.Devices;
+using ICD.Connect.Misc.CrestronPro.Extensions;
 using ICD.Connect.Misc.CrestronPro.Utils;
 using ICD.Connect.Protocol.Ports;
 using ICD.Connect.Protocol.Ports.RelayPort;
@@ -147,6 +148,10 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 				return;
 
 			port.StateChange += PortOnStateChange;
+
+			GenericBase parent = port.Parent as GenericBase;
+			if (parent != null)
+				parent.OnlineStatusChange += ParentOnOnlineStatusChange;
 		}
 
 		/// <summary>
@@ -159,6 +164,10 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 				return;
 
 			port.StateChange -= PortOnStateChange;
+
+			GenericBase parent = port.Parent as GenericBase;
+			if (parent != null)
+				parent.OnlineStatusChange -= ParentOnOnlineStatusChange;
 		}
 
 		/// <summary>
@@ -169,6 +178,11 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 		private void PortOnStateChange(Relay relay, RelayEventArgs args)
 		{
 			Closed = args.State == Relay.Relay_State.Closed;
+		}
+
+		private void ParentOnOnlineStatusChange(GenericBase currentDevice, OnlineOfflineEventArgs args)
+		{
+			UpdateCachedOnlineStatus();
 		}
 #endif
 
@@ -262,7 +276,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 		protected override bool GetIsOnlineStatus()
 		{
 #if SIMPLSHARP
-			return m_Port != null;
+			return m_Port != null && m_Port.GetIsRegisteredAndParentOnline();
 #else
             return false;
 #endif
