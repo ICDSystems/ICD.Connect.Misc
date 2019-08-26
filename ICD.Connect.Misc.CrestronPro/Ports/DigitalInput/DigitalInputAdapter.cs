@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ICD.Common.Utils.Services.Logging;
+using ICD.Connect.Misc.CrestronPro.Extensions;
 using ICD.Connect.Misc.CrestronPro.Utils;
 using ICD.Connect.Protocol.Ports.DigitalInput;
 using ICD.Connect.Settings;
@@ -129,6 +130,10 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.DigitalInput
 				return;
 
 			port.StateChange += PortOnStateChange;
+
+			GenericBase parent = port.Parent as GenericBase;
+			if (parent != null)
+				parent.OnlineStatusChange += ParentOnOnlineStatusChange;
 		}
 
 		/// <summary>
@@ -141,6 +146,10 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.DigitalInput
 				return;
 
 			port.StateChange -= PortOnStateChange;
+
+			GenericBase parent = port.Parent as GenericBase;
+			if (parent != null)
+				parent.OnlineStatusChange -= ParentOnOnlineStatusChange;
 		}
 
 		/// <summary>
@@ -151,6 +160,11 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.DigitalInput
 		private void PortOnStateChange(Crestron.SimplSharpPro.DigitalInput port, DigitalInputEventArgs args)
 		{
 			State = args.State;
+		}
+
+		private void ParentOnOnlineStatusChange(GenericBase currentDevice, OnlineOfflineEventArgs args)
+		{
+			UpdateCachedOnlineStatus();
 		}
 #endif
 
@@ -244,7 +258,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.DigitalInput
 		protected override bool GetIsOnlineStatus()
 		{
 #if SIMPLSHARP
-			return m_Port != null;
+			return m_Port != null && m_Port.GetIsRegisteredAndParentOnline();
 #else
 			return false;
 #endif
