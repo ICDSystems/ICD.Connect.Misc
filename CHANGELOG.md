@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [6.5.0] - 2019-08-26
 ### Changed
  - Fixed a mistake that was preventing Occupancy Sensors from being instantiated
  - Crestron port online state is driven by the online state of the parent device
