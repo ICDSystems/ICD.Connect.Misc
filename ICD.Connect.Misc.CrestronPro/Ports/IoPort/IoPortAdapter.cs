@@ -5,6 +5,7 @@ using ICD.Common.Utils.Services.Logging;
 using ICD.Common.Utils.Timers;
 using ICD.Connect.API.Commands;
 using ICD.Connect.API.Nodes;
+using ICD.Connect.Misc.CrestronPro.Extensions;
 using ICD.Connect.Misc.CrestronPro.Utils;
 using ICD.Connect.Protocol.Ports;
 using ICD.Connect.Protocol.Ports.IoPort;
@@ -329,6 +330,10 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 				return;
 
 			port.VersiportChange += PortOnVersiportChange;
+
+			GenericBase parent = port.Parent as GenericBase;
+			if (parent != null)
+				parent.OnlineStatusChange += ParentOnOnlineStatusChange;
 		}
 
 		/// <summary>
@@ -341,6 +346,10 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 				return;
 
 			port.VersiportChange -= PortOnVersiportChange;
+
+			GenericBase parent = port.Parent as GenericBase;
+			if (parent != null)
+				parent.OnlineStatusChange -= ParentOnOnlineStatusChange;
 		}
 
 		/// <summary>
@@ -372,6 +381,11 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 					Configuration = GetConfiguration(m_Port);
 					break;
 			}
+		}
+
+		private void ParentOnOnlineStatusChange(GenericBase currentDevice, OnlineOfflineEventArgs args)
+		{
+			UpdateCachedOnlineStatus();
 		}
 #endif
 
@@ -465,7 +479,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 		protected override bool GetIsOnlineStatus()
 		{
 #if SIMPLSHARP
-			return m_Port != null;
+			return m_Port != null && m_Port.GetIsRegisteredAndParentOnline();
 #else
 			return false;
 #endif

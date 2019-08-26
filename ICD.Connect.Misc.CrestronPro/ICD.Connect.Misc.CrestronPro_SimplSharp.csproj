@@ -184,6 +184,7 @@
     <Compile Include="Devices\Partitioning\GlsPartCnAdapter.cs" />
     <Compile Include="Devices\Partitioning\GlsPartCnAdapterSettings.cs" />
     <Compile Include="Extensions\ComSpecExtensions.cs" />
+    <Compile Include="Extensions\PortDeviceExtensions.cs" />
     <Compile Include="Extensions\SigExtensions.cs" />
     <Compile Include="ICresnetDeviceSettings.cs" />
     <Compile Include="Ports\CecPort\CecPortAdapter.cs" />
