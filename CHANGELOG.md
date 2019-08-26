@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [7.3.0] - 2019-08-26
+### Added
+ - GlsPartCnAdapter has SupportsFeedback property 
+
+### Changed
+ - HTTP/S port no longer accepts a string body
+
 ## [7.2.1] - 2019-06-27
 ### Changed
  - Fixed bug that was preventing IR command between-time from working correctly
