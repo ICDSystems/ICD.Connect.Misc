@@ -12,6 +12,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
  - Crestron device description contains originator ID and combine name
 
+## [7.3.0] - 2019-08-26
+### Added
+ - GlsPartCnAdapter has SupportsFeedback property 
+
+### Changed
+ - HTTP/S port no longer accepts a string body
+
 ## [7.2.1] - 2019-06-27
 ### Changed
  - Fixed bug that was preventing IR command between-time from working correctly
@@ -30,6 +37,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [7.0.0] - 2019-01-10
 ### Added
  - Added port configuration features to devices and ports
+
+## [6.5.0] - 2019-08-26
+### Changed
+ - Fixed a mistake that was preventing Occupancy Sensors from being instantiated
+ - Crestron port online state is driven by the online state of the parent device
 
 ## [6.4.0] - 2019-07-25
 ### Changed

@@ -130,12 +130,18 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 #if SIMPLSHARP
 		private void Subscribe(TSensor sensor)
 		{
+			if (sensor == null)
+				return;
+
 			sensor.OnlineStatusChange += SensorOnLineStatusChange;
 			sensor.BaseEvent += SensorOnBaseEvent;
 		}
 
 		private void Unsubscribe(TSensor sensor)
 		{
+			if (sensor == null)
+				return;
+
 			sensor.OnlineStatusChange -= SensorOnLineStatusChange;
 			sensor.BaseEvent -= SensorOnBaseEvent;
 		}

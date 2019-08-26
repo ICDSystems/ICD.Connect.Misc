@@ -327,7 +327,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 		protected override bool GetIsOnlineStatus()
 		{
 #if SIMPLSHARP
-			return m_Port != null;
+			return m_Port != null && m_Port.GetIsRegisteredAndParentOnline();
 #else
             return false;
 #endif
@@ -347,6 +347,10 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 				return;
 
 			port.SerialDataReceived += PortSerialDataReceived;
+
+			GenericBase parent = port.Parent as GenericBase;
+			if (parent != null)
+				parent.OnlineStatusChange += ParentOnOnlineStatusChange;
 		}
 
 		/// <summary>
@@ -359,6 +363,10 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 				return;
 
 			port.SerialDataReceived -= PortSerialDataReceived;
+
+			GenericBase parent = port.Parent as GenericBase;
+			if (parent != null)
+				parent.OnlineStatusChange -= ParentOnOnlineStatusChange;
 		}
 
 		/// <summary>
@@ -370,6 +378,11 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 		{
 			PrintRx(args.SerialData);
 			Receive(args.SerialData);
+		}
+
+		private void ParentOnOnlineStatusChange(GenericBase currentDevice, OnlineOfflineEventArgs args)
+		{
+			UpdateCachedOnlineStatus();
 		}
 #endif
 
