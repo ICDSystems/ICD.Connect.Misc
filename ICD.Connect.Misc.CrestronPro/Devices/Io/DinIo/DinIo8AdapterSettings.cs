@@ -1,5 +1,4 @@
-﻿using ICD.Common.Utils;
-using ICD.Common.Utils.Xml;
+﻿using ICD.Common.Utils.Xml;
 using ICD.Connect.Devices;
 using ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge;
 using ICD.Connect.Misc.CrestronPro.Utils;
@@ -27,9 +26,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Io.DinIo
 		{
 			base.WriteElements(writer);
 
-			writer.WriteElementString(CresnetSettingsUtils.CRESNET_ID_ELEMENT, CresnetId == null ? null : StringUtils.ToIpIdString((byte)CresnetId));
-			writer.WriteElementString(CresnetSettingsUtils.PARENT_ID_ELEMENT, ParentId == null ? null : ParentId.Value.ToString());
-			writer.WriteElementString(CresnetSettingsUtils.BRANCH_ID_ELEMENT, BranchId == null ? null : BranchId.Value.ToString());
+			CresnetSettingsUtils.WritePropertiesToXml(this, writer);
 		}
 
 		/// <summary>
@@ -40,9 +37,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Io.DinIo
 		{
 			base.ParseXml(xml);
 
-			CresnetId = XmlUtils.TryReadChildElementContentAsByte(xml, CresnetSettingsUtils.CRESNET_ID_ELEMENT);
-			ParentId = XmlUtils.TryReadChildElementContentAsInt(xml, CresnetSettingsUtils.PARENT_ID_ELEMENT);
-			BranchId = XmlUtils.TryReadChildElementContentAsInt(xml, CresnetSettingsUtils.BRANCH_ID_ELEMENT);
+			CresnetSettingsUtils.ReadPropertiesFromXml(this, xml);
 		}
 	}
 }

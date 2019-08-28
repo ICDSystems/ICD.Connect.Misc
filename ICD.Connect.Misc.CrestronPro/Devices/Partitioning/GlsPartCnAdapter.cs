@@ -156,8 +156,8 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 #if SIMPLSHARP
 			if (settings.CresnetId == null || !CresnetUtils.IsValidId(settings.CresnetId.Value))
 			{
-				Logger.AddEntry(eSeverity.Error, "{0} failed to instantiate {1} - CresnetId {2} is out of range",
-								this, typeof(GlsPartCnAdapter).Name, settings.CresnetId);
+				Log(eSeverity.Error, "Failed to instantiate {0} - CresnetId {1} is out of range",
+				    typeof(GlsPartCn).Name, settings.CresnetId == null ? "NULL" : settings.CresnetId.ToString());
 				return;
 			}
 
@@ -183,7 +183,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 			SetDevice(device);
 			SetSensitivity(settings.Sensitivity);
 #else
-            throw new NotImplementedException();
+            throw new NotSupportedException();
 #endif
 		}
 

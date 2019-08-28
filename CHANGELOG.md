@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
  - Crestron device description contains originator ID and combine name
+ - Using CresnetSettingsUtils to standardize cresnet settings serialization
 
 ## [7.3.0] - 2019-08-26
 ### Added
