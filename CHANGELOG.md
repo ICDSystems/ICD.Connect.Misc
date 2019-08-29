@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+ - Fixed a bug where Crestron ControlSystem IR Ports were not being registered
+
 ## [6.5.0] - 2019-08-26
 ### Changed
  - Fixed a mistake that was preventing Occupancy Sensors from being instantiated
