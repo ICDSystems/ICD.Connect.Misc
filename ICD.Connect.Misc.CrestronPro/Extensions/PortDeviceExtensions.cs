@@ -20,12 +20,12 @@ namespace ICD.Connect.Misc.CrestronPro.Extensions
 			if (extends == null)
 				throw new ArgumentNullException("extends");
 
-			if (!extends.Registered)
-				return false;
-
 			CrestronControlSystem controlSystem = extends.Parent as CrestronControlSystem;
 			if (controlSystem != null)
 				return true;
+
+			if (!extends.Registered)
+				return false;
 
 			GenericBase parent = extends.Parent as GenericBase;
 			return parent != null && parent.IsOnline;
