@@ -395,7 +395,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		protected override bool GetIsOnlineStatus()
 		{
 #if SIMPLSHARP
-			return m_Port != null && m_Port.GetIsRegisteredAndParentOnline();
+			return m_Port != null && m_Port.GetParentOnline();
 #else
             return false;
 #endif
