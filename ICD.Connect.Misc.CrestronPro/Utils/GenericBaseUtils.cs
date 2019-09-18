@@ -62,12 +62,10 @@ namespace ICD.Connect.Misc.CrestronPro.Utils
 			if (parent == null)
 				throw new ArgumentNullException("parent");
 
-			if (preRegistration == null)
-				throw new ArgumentNullException("preRegistration");
-
 			SetDescription(device, parent);
 
-			preRegistration(device);
+			if (preRegistration != null)
+				preRegistration(device);
 
 			return Register(device, out result);
 		}
@@ -165,9 +163,6 @@ namespace ICD.Connect.Misc.CrestronPro.Utils
 
 			if (parent == null)
 				throw new ArgumentNullException("parent");
-
-			if (device.Registered)
-				throw new InvalidOperationException("Unable to set device description after registration");
 
 			device.Description = GetDescription(parent);
 		}
