@@ -6,6 +6,7 @@ using ICD.Common.Utils;
 using ICD.Common.Utils.Timers;
 using ICD.Connect.Devices.Extensions;
 using ICD.Connect.Misc.CrestronPro.Devices;
+using ICD.Connect.Misc.CrestronPro.Utils;
 using ICD.Connect.Protocol.Ports.IrPort;
 using ICD.Connect.Protocol.Settings;
 using ICD.Connect.Settings;
@@ -127,10 +128,8 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		/// <param name="port"></param>
 		private void Unregister(IROutputPort port)
 		{
-			if (port == null || !port.Registered)
-				return;
-
-			port.UnRegister();
+			if (port != null)
+				PortDeviceUtils.Unregister(port);
 		}
 
 		/// <summary>
@@ -139,16 +138,15 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		/// <param name="port"></param>
 		private void Register(IROutputPort port)
 		{
-			if (port == null)
-				return;
-
-			GenericDevice parent = port.Parent as GenericDevice;
-			if (parent == null)
-				return;
-
-			eDeviceRegistrationUnRegistrationResponse parentResult = parent.ReRegister();
-			if (parentResult != eDeviceRegistrationUnRegistrationResponse.Success)
-				Log(eSeverity.Error, "Unable to register parent {0} - {1}", parent.GetType().Name, parentResult);
+			try
+			{
+				if (port != null)
+					PortDeviceUtils.Register(port);
+			}
+			catch (InvalidOperationException e)
+			{
+				Log(eSeverity.Error, "Error registering port - {0}", e.Message);
+			}
 		}
 #endif
 
@@ -337,7 +335,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		protected override bool GetIsOnlineStatus()
 		{
 #if SIMPLSHARP
-			return m_Port != null && m_Port.GetIsRegisteredAndParentOnline();
+			return m_Port != null && m_Port.GetParentOnline();
 #else
             return false;
 #endif
