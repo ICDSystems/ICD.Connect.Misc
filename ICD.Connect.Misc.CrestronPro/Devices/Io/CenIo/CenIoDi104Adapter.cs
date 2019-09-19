@@ -7,9 +7,9 @@ using Crestron.SimplSharpPro.GeneralIO;
 namespace ICD.Connect.Misc.CrestronPro.Devices.Io.CenIo
 {
 #if SIMPLSHARP
-	public sealed class CenIoDi104Adapter : AbstractCenIoAdapter<CenIoDi104, CenIoDi104AdapterSettings>
+	public sealed class CenIoDi104Adapter : AbstractCenIoDiAdapter<CenIoDi104, CenIoDi104AdapterSettings>
 #else
-	public sealed class CenIoDi104Adapter : AbstractCenIoAdapter<CenIoDi104AdapterSettings>
+	public sealed class CenIoDi104Adapter : AbstractCenIoDiAdapter<CenIoDi104AdapterSettings>
 #endif
 	{
 #if SIMPLSHARP
