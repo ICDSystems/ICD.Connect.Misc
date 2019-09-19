@@ -20,8 +20,13 @@ namespace ICD.Connect.Misc.CrestronPro.Extensions
 			if (extends == null)
 				throw new ArgumentNullException("extends");
 
-			if (!extends.Registered)
-				return false;
+			return extends.Registered && extends.GetParentOnline();
+		}
+
+		public static bool GetParentOnline(this PortDevice extends)
+		{
+			if (extends == null)
+				throw new ArgumentNullException("extends");
 
 			CrestronControlSystem controlSystem = extends.Parent as CrestronControlSystem;
 			if (controlSystem != null)
