@@ -479,7 +479,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 		protected override bool GetIsOnlineStatus()
 		{
 #if SIMPLSHARP
-			return m_Port != null && m_Port.GetIsRegisteredAndParentOnline();
+			return m_Port != null && m_Port.GetParentOnline();
 #else
 			return false;
 #endif
