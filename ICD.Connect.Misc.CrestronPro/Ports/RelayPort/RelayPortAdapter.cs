@@ -6,10 +6,8 @@ using ICD.Connect.Devices.Extensions;
 using ICD.Connect.Misc.CrestronPro.Devices;
 using ICD.Connect.Misc.CrestronPro.Extensions;
 using ICD.Connect.Misc.CrestronPro.Utils;
-using ICD.Connect.Protocol.Ports;
 using ICD.Connect.Protocol.Ports.RelayPort;
 using ICD.Connect.Settings;
-using ICD.Connect.Protocol.Utils;
 #if SIMPLSHARP
 using Crestron.SimplSharpPro;
 #endif
@@ -103,8 +101,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 				return;
 			}
 
-			if (DebugTx != eDebugMode.Off)
-				DebugUtils.PrintTx(this, DebugTx, "Relay Open");
+			PrintTx("Opening Relay");
 
 			m_Port.Open();
 #else
@@ -124,8 +121,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 				return;
 			}
 
-			if (DebugTx != eDebugMode.Off)
-				DebugUtils.PrintTx(this, DebugTx, "Relay Closed");
+			PrintTx("Closing Relay");
 
 			m_Port.Close();
 #else
@@ -177,6 +173,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 		/// <param name="args"></param>
 		private void PortOnStateChange(Relay relay, RelayEventArgs args)
 		{
+			PrintRx("Relay state changed to " + args.State);
 			Closed = args.State == Relay.Relay_State.Closed;
 		}
 
