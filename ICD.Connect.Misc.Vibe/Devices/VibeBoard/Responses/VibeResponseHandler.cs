@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using ICD.Common.Utils.Extensions;
+using Newtonsoft.Json;
 
 namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Responses
 {
@@ -12,6 +14,9 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Responses
 
 	public sealed class VibeResponseHandler
 	{
+		private const string REGEX_RESPONSE =
+			"\"type\"\\s*:\\s*\"(?'type'[^\"\\\\]*(?:\\\\.[^\"\\\\]*)*)\"(?:\\s*,.*\"resultId\"\\s*:\\s*\"(?'resultId'[^\"\\\\]*(?:\\\\.[^\"\\\\]*)*)\")?";
+
 		private class CallbackPair
 		{
 			public VibeResponseCallback WrappedCallback { get; set; }
@@ -61,7 +66,7 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Responses
 
 			string typeString = match.Groups["type"].Value;
 			Type type = Type.GetType(typeString);
-			IVibeResponse response = (IVibeResponse)JsonConvert.DeserializeObject(args.Response, type);
+			IVibeResponse response = (IVibeResponse)JsonConvert.DeserializeObject(data, type);
 		}
 
 		private static VibeResponseCallback WrapCallback<T>(VibeResponseCallback<T> callback) where T : IVibeResponse

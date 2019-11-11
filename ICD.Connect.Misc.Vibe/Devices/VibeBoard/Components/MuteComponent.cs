@@ -1,7 +1,12 @@
-﻿namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
+﻿using System;
+using ICD.Common.Utils.EventArguments;
+
+namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 {
 	public sealed class MuteComponent : AbstractVibeComponent
 	{
+		public event EventHandler<MuteChangedEventArgs> OnMuteChanged;
+
 		private const string COMMAND = "mute";
 		private const string PARAM_GET_MUTE = "-l";
 		private const string PARAM_MUTE_ON = "on";
@@ -29,6 +34,13 @@
 		public void MuteOff()
 		{
 			SetMute(false);
+		}
+	}
+
+	public sealed class MuteChangedEventArgs : GenericEventArgs<bool>
+	{
+		public MuteChangedEventArgs(bool data) : base(data)
+		{
 		}
 	}
 }

@@ -32,15 +32,17 @@
     <None Remove="Properties\ControlSystem.cfg" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\ICD.Common.Utils\ICD.Common.Utils\ICD.Common.Utils_NetStandard.csproj" />
     <ProjectReference Include="..\..\ICD.Connect.API\ICD.Connect.API\ICD.Connect.API_NetStandard.csproj" />
     <ProjectReference Include="..\..\ICD.Connect.Devices\ICD.Connect.Devices\ICD.Connect.Devices_NetStandard.csproj" />
     <ProjectReference Include="..\..\ICD.Connect.Displays\ICD.Connect.Displays\ICD.Connect.Displays_NetStandard.csproj" />
+    <ProjectReference Include="..\..\ICD.Connect.Panels\ICD.Connect.Panels.Server\ICD.Connect.Panels.Server_NetStandard.csproj" />
     <ProjectReference Include="..\..\ICD.Connect.Protocol\ICD.Connect.Protocol.Network\ICD.Connect.Protocol.Network_NetStandard.csproj" />
     <ProjectReference Include="..\..\ICD.Connect.Protocol\ICD.Connect.Protocol\ICD.Connect.Protocol_NetStandard.csproj" />
+    <ProjectReference Include="..\..\ICD.Connect.Routing\ICD.Connect.Routing.Mock\ICD.Connect.Routing.Mock_NetStandard.csproj" />
     <ProjectReference Include="..\..\ICD.Connect.Settings\ICD.Connect.Settings\ICD.Connect.Settings_NetStandard.csproj" />
   </ItemGroup>
 
