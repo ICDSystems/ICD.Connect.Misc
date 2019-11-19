@@ -6,8 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [8.0.1] - 2019-11-19
+### Changed
+ - Improvements to IO port debugging
+
 ## [8.0.0] - 2019-10-07
-### Fixed
+### Changed
  - Fixed issue with CEN-IO ports not being avaliable due to inheritance issues
 
 ### Removed
