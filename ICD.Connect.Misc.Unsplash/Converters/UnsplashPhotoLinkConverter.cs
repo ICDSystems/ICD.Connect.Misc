@@ -19,16 +19,16 @@ namespace ICD.Connect.Misc.Unsplash_NetStandard.Converters
 			switch (property)
 			{
 				case ATTRIBUTE_SELF:
-					instance.Self = new Uri(reader.GetValueAsString());
+					instance.Self = reader.GetValueAsString();
 					break;
 				case ATTRIBUTE_HTML:
-					instance.Html = new Uri(reader.GetValueAsString());
+					instance.Html = reader.GetValueAsString();
 					break;
 				case ATTRIBUTE_DOWNLOAD:
-					instance.Download = new Uri(reader.GetValueAsString());
+					instance.Download = reader.GetValueAsString();
 					break;
 				case ATTRIBUTE_DOWNLOAD_LOCATION:
-					instance.DownloadLocation = new Uri(reader.GetValueAsString());
+					instance.DownloadLocation = reader.GetValueAsString();
 					break;
 				default:
 					base.ReadProperty(property, reader, instance, serializer);

@@ -16,19 +16,14 @@ namespace ICD.Connect.Misc.Unsplash_NetStandard.Responses
 	public sealed class UnsplashPhotoResponse
 	{
 		public string Id { get; set; }
-		public DateTime CreatedAt { get; set; }
-		public DateTime UpdatedAt { get; set; }
-		public DateTime PromotedAt { get; set; }
-		public double Width { get; set; }
-		public double Height { get; set; }
+		public string Width { get; set; }
+		public string Height { get; set; }
 		public string Color { get; set; }
 		public string Description { get; set; }
 		public string AltDescrption { get; set; }
 		public UnsplashPhotoUrlResponse Urls { get; set; }
 		public UnsplashPhotoLinkResponse Links { get; set; }
 		public UnsplashPhotoCategoryResponse[] Categories { get; set; }
-		public double Likes { get; set; }
-		public bool LikesByUser { get; set; }
 		public UnsplashPhotoUserResponse User { get; set; }
 	}
 
@@ -53,10 +48,10 @@ namespace ICD.Connect.Misc.Unsplash_NetStandard.Responses
 	[JsonConverter(typeof(UnsplashPhotoLinkConverter))]
 	public sealed class UnsplashPhotoLinkResponse
 	{
-		public Uri Self { get; set; }
-		public Uri Html { get; set; }
-		public Uri Download { get; set; }
-		public Uri DownloadLocation { get; set; }
+		public string Self { get; set; }
+		public string Html { get; set; }
+		public string Download { get; set; }
+		public string DownloadLocation { get; set; }
 	}
 
 	[JsonConverter(typeof(UnsplashPhotoCategoryConverter))]
