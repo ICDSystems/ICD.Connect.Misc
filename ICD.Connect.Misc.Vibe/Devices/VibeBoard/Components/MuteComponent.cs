@@ -1,5 +1,7 @@
 ﻿using System;
 using ICD.Common.Utils.EventArguments;
+using ICD.Common.Utils.Extensions;
+using ICD.Connect.Misc.Vibe.Devices.VibeBoard.Responses;
 
 namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 {
@@ -11,6 +13,21 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 		private const string PARAM_GET_MUTE = "-l";
 		private const string PARAM_MUTE_ON = "on";
 		private const string PARAM_MUTE_OFF = "off";
+
+		private bool m_Mute;
+
+		public bool Mute
+		{
+			get { return m_Mute; }
+			private set
+			{
+				if (m_Mute == value)
+					return;
+
+				m_Mute = value;
+				OnMuteChanged.Raise(this, new MuteChangedEventArgs(value));
+			}
+		}
 
 		public MuteComponent(VibeBoard parent) : base(parent)
 		{
@@ -35,6 +52,17 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 		{
 			SetMute(false);
 		}
+
+		#region Parent Callbacks
+
+		protected override void Subscribe(VibeBoard vibe)
+		{
+			base.Subscribe(vibe);
+
+			vibe.ResponseHandler.RegisterResponseCallback<MuteResponse>(response => Mute = response.Value.IsMute);
+		}
+
+		#endregion
 	}
 
 	public sealed class MuteChangedEventArgs : GenericEventArgs<bool>

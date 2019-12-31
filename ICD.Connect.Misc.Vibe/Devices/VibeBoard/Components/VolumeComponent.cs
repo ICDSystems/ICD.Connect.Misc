@@ -2,6 +2,7 @@
 using ICD.Common.Utils.EventArguments;
 using ICD.Common.Utils.Extensions;
 using ICD.Connect.API.Nodes;
+using ICD.Connect.Misc.Vibe.Devices.VibeBoard.Responses;
 
 namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 {
@@ -57,6 +58,29 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 		{
 			Parent.SendCommand(new VibeCommand(COMMAND, PARAM_RAMP_DOWN));
 		}
+
+		#region Parent Callbacks
+
+		protected override void Subscribe(VibeBoard vibe)
+		{
+			base.Subscribe(vibe);
+
+			vibe.ResponseHandler.RegisterResponseCallback<VolumeResponse>(VolumeResponseCallback);
+		}
+
+		protected override void Unsubscribe(VibeBoard vibe)
+		{
+			base.Unsubscribe(vibe);
+
+			vibe.ResponseHandler.UnregisterResponseCallback<VolumeResponse>(VolumeResponseCallback);
+		}
+
+		private void VolumeResponseCallback(VolumeResponse response)
+		{
+			Volume = response.Value.Volume;
+		}
+
+		#endregion
 
 		#region Console
 

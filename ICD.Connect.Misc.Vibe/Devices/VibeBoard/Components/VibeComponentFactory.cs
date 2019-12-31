@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using ICD.Common.Utils;
+using ICD.Connect.API.Nodes;
 
 namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 {
 	/// <summary>
 	/// VibeComponentFactory provides a facility for lazy-loading components.
 	/// </summary>
-	public sealed class VibeComponentFactory : IDisposable
+	public sealed class VibeComponentFactory : IDisposable, IConsoleNodeGroup
 	{
 		private static readonly Dictionary<Type, Func<VibeBoard, IVibeComponent>> s_Factories =
 			new Dictionary<Type, Func<VibeBoard, IVibeComponent>>
@@ -126,6 +127,32 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 		public IEnumerable<IVibeComponent> GetComponents()
 		{
 			return m_ComponentsSection.Execute(() => m_Components.Values.OrderBy(c => c.GetType().Name).ToArray());
+		}
+
+		#endregion
+
+		#region Console 
+
+		public string ConsoleName
+		{
+			get { return "Components"; }
+		}
+
+		public string ConsoleHelp
+		{
+			get { return "Vibe Board components"; }
+		}
+
+		public IDictionary<uint, IConsoleNodeBase> GetConsoleNodes()
+		{
+			return m_ComponentsSection.Execute(() =>
+				ConsoleNodeGroup.IndexNodeMap("Components", "Vibe Board Components", m_Components.Values).GetConsoleNodes()
+			);
+		}
+
+		IEnumerable<IConsoleNodeBase> IConsoleNodeBase.GetConsoleNodes()
+		{
+			return GetConsoleNodes().Select(kvp => kvp.Value);
 		}
 
 		#endregion
