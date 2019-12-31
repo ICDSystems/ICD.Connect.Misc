@@ -51,9 +51,6 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Controls
 				return;
 			
 			m_VolumeComponent.SetVolume((int)volume);
-			// Todo only a test
-			m_VolumeLevel = (int)volume;
-			VolumeFeedback(volume);
 		}
 		
 
@@ -63,8 +60,6 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Controls
 				return;
 
 			m_MuteComponent.SetMute(!VolumeIsMuted);
-			// TODO only a test
-			VolumeIsMuted = !VolumeIsMuted;
 		}
 
 		public void SetVolumeMute(bool mute)
@@ -73,8 +68,6 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Controls
 				return;
 
 			m_MuteComponent.SetMute(mute);
-			// TODO only a test
-			VolumeIsMuted = mute;
 		}
 
 		#region Component Callbacks
