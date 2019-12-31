@@ -5,7 +5,7 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 	public struct VibeCommand : ISerialData
 	{
 		private const string COMMAND_FORMAT = "vm {0} {1}\n";
-		private const string COMMAND_WITH_RESULTID_FORMAT = "vm {0} {1} resultId=\"{2}\"";
+		private const string COMMAND_WITH_RESULTID_FORMAT = "vm {0} {1} resultId=\"{2}\"\n";
 
 		private readonly string m_Command;
 		private readonly string m_Parameters;

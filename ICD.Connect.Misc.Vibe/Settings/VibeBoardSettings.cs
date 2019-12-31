@@ -1,10 +1,9 @@
 ﻿using ICD.Common.Utils.Xml;
 using ICD.Connect.Misc.Vibe.Devices.VibeBoard;
 using ICD.Connect.Protocol.Network.Settings;
-using ICD.Connect.Protocol.Settings;
 using ICD.Connect.Settings.Attributes;
 using ICD.Connect.Panels.Server;
-using ICD.Connect.Protocol.Ports;
+using ICD.Connect.Protocol.Network.Ports;
 using ICD.Connect.Settings.Attributes.SettingsProperties;
 
 namespace ICD.Connect.Misc.Vibe.Settings
@@ -12,14 +11,17 @@ namespace ICD.Connect.Misc.Vibe.Settings
 	[KrangSettings("VibeBoard", typeof(VibeBoard))]
 	public class VibeBoardSettings : AbstractPanelServerDeviceSettings, INetworkProperties
 	{
-		private const string PORT_ELEMENT = "Port";
+		private const string KRANG_PORT_ELEMENT = "KrangPort";
 
 		private readonly SecureNetworkProperties m_NetworkProperties;
 
 		#region Properties
-		
-		[OriginatorIdSettingsProperty(typeof(ISerialPort))]
-		public int? Port { get; set; }
+
+		/// <summary>
+		/// Krang Port originator id to connect to Vibe API
+		/// </summary>
+		[OriginatorIdSettingsProperty(typeof(ISecureNetworkPort))]
+		public int? KrangPort { get; set; }
 
 		#endregion
 
@@ -75,9 +77,7 @@ namespace ICD.Connect.Misc.Vibe.Settings
 		{
 			m_NetworkProperties = new SecureNetworkProperties();
 		}
-
 		
-
 		/// <summary>
 		/// Write settings elements to xml.
 		/// </summary>
@@ -86,7 +86,7 @@ namespace ICD.Connect.Misc.Vibe.Settings
 		{
 			base.WriteElements(writer);
 
-			writer.WriteElementString(PORT_ELEMENT, Port == null ? null : IcdXmlConvert.ToString((int)Port));
+			writer.WriteElementString(KRANG_PORT_ELEMENT, KrangPort == null ? null : IcdXmlConvert.ToString(KrangPort));
 
 			m_NetworkProperties.WriteElements(writer);
 		}
@@ -99,7 +99,7 @@ namespace ICD.Connect.Misc.Vibe.Settings
 		{
 			base.ParseXml(xml);
 
-			Port = XmlUtils.TryReadChildElementContentAsInt(xml, PORT_ELEMENT);
+			KrangPort = XmlUtils.TryReadChildElementContentAsInt(xml, KRANG_PORT_ELEMENT);
 
 			m_NetworkProperties.ParseXml(xml);
 			
