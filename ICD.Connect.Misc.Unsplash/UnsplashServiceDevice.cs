@@ -18,6 +18,7 @@ namespace ICD.Connect.Misc.Unsplash_NetStandard
 	public sealed class UnsplashServiceDevice : AbstractDevice<UnsplashServiceDeviceSettings>
 	{
 		private readonly UriProperties m_UriProperties;
+		private readonly WebProxyProperties m_WebProxyProperties;
 
 		private IWebPort m_Port;
 
@@ -33,6 +34,7 @@ namespace ICD.Connect.Misc.Unsplash_NetStandard
 		public UnsplashServiceDevice()
 		{
 			m_UriProperties = new UriProperties();
+			m_WebProxyProperties = new WebProxyProperties();
 		}
 
 		/// <summary>
@@ -79,6 +81,7 @@ namespace ICD.Connect.Misc.Unsplash_NetStandard
 			// URI
 			if (port != null)
 				port.ApplyDeviceConfiguration(m_UriProperties);
+				port.ApplyDeviceConfiguration(m_WebProxyProperties);
 		}
 
 		#endregion
@@ -141,6 +144,9 @@ namespace ICD.Connect.Misc.Unsplash_NetStandard
 		{
 			base.ApplySettingsFinal(settings, factory);
 
+			m_UriProperties.Copy(settings);
+			m_WebProxyProperties.Copy(settings);
+
 			ClientId = settings.ClientId;
 
 			IWebPort port = null;
@@ -169,7 +175,8 @@ namespace ICD.Connect.Misc.Unsplash_NetStandard
 
 			ClientId = null;
 
-			m_UriProperties.Clear();
+			m_UriProperties.ClearUriProperties();
+			m_WebProxyProperties.ClearProxyProperties();
 		}
 
 		/// <summary>
@@ -185,6 +192,7 @@ namespace ICD.Connect.Misc.Unsplash_NetStandard
 			settings.PortId = m_Port == null ? (int?)null : m_Port.Id;
 
 			settings.Copy(m_UriProperties);
+			settings.Copy(m_WebProxyProperties);
 		}
 
 		#endregion

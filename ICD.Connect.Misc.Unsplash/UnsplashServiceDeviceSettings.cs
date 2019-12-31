@@ -8,12 +8,13 @@ using ICD.Connect.Settings.Attributes.SettingsProperties;
 namespace ICD.Connect.Misc.Unsplash_NetStandard
 {
 	[KrangSettings("Unsplash", typeof(UnsplashServiceDevice))]
-	public sealed class UnsplashServiceDeviceSettings : AbstractDeviceSettings, IUriSettings
+	public sealed class UnsplashServiceDeviceSettings : AbstractDeviceSettings, IUriSettings, IWebProxySettings
 	{
 		private const string PORT_ELEMENT = "Port";
 		private const string CLIENT_ID = "client_id";
 
 		private readonly UriProperties m_UriProperties;
+		private readonly WebProxyProperties m_WebProxyProperties;
 
 		#region Properties
 
@@ -68,11 +69,55 @@ namespace ICD.Connect.Misc.Unsplash_NetStandard
 		/// <summary>
 		/// Clears the configured values.
 		/// </summary>
-		void IUriProperties.Clear()
+		void IUriProperties.ClearUriProperties()
 		{
-			m_UriProperties.Clear();
+			m_UriProperties.ClearUriProperties();
 		}
-		
+
+		#endregion
+
+		#region Proxy
+		/// <summary>
+		/// Gets/sets the configurable proxy username.
+		/// </summary>
+		public string ProxyUsername { get { return m_WebProxyProperties.ProxyUsername; } set { m_WebProxyProperties.ProxyUsername = value; } }
+
+		/// <summary>
+		/// Gets/sets the configurable proxy password.
+		/// </summary>
+		public string ProxyPassword { get { return m_WebProxyProperties.ProxyPassword; } set { m_WebProxyProperties.ProxyPassword = value; } }
+
+		/// <summary>
+		/// Gets/sets the configurable proxy host.
+		/// </summary>
+		public string ProxyHost { get { return m_WebProxyProperties.ProxyHost; } set { m_WebProxyProperties.ProxyHost = value; } }
+
+		/// <summary>
+		/// Gets/sets the configurable proxy port.
+		/// </summary>
+		public ushort? ProxyPort { get { return m_WebProxyProperties.ProxyPort; } set { m_WebProxyProperties.ProxyPort = value; } }
+
+		/// <summary>
+		/// Gets/sets the configurable proxy scheme.
+		/// </summary>
+		public string ProxyScheme { get { return m_WebProxyProperties.ProxyScheme; } set { m_WebProxyProperties.ProxyScheme = value; } }
+
+		/// <summary>
+		/// Gets/sets the configurable proxy authentication method.
+		/// </summary>
+		public eProxyAuthenticationMethod? ProxyAuthenticationMethod
+		{
+			get { return m_WebProxyProperties.ProxyAuthenticationMethod; }
+			set { m_WebProxyProperties.ProxyAuthenticationMethod = value; }
+		}
+
+		/// <summary>
+		/// Clears the configured values.
+		/// </summary>
+		public void ClearProxyProperties()
+		{
+			m_WebProxyProperties.ClearProxyProperties();
+		}
 		#endregion
 
 		/// <summary>
