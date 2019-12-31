@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 {
 	/// <summary>
-	/// AbstractCiscoComponent is a base class for Cisco modules.
+	/// AbstractVibeComponent is a base class for Vibe modules.
 	/// </summary>
 	public abstract class AbstractVibeComponent : IVibeComponent
 	{
@@ -101,29 +101,29 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 		#region Protected Methods
 
 		/// <summary>
-		/// Subscribes to the codec events.
+		/// Subscribes to the vibe events.
 		/// </summary>
-		/// <param name="codec"></param>
-		protected virtual void Subscribe(VibeBoard codec)
+		/// <param name="vibe"></param>
+		protected virtual void Subscribe(VibeBoard vibe)
 		{
-			if (codec == null)
+			if (vibe == null)
 				return;
 
-			codec.OnInitializedChanged += CodecOnInitializedChanged;
-			codec.OnConnectedStateChanged += CodecOnConnectionStateChanged;
+			vibe.OnInitializedChanged += CodecOnInitializedChanged;
+			vibe.OnConnectedStateChanged += CodecOnConnectionStateChanged;
 		}
 
 		/// <summary>
-		/// Unsubscribes from the codec events.
+		/// Unsubscribes from the vibe events.
 		/// </summary>
-		/// <param name="codec"></param>
-		protected virtual void Unsubscribe(VibeBoard codec)
+		/// <param name="vibe"></param>
+		protected virtual void Unsubscribe(VibeBoard vibe)
 		{
-			if (codec == null)
+			if (vibe == null)
 				return;
 
-			codec.OnInitializedChanged -= CodecOnInitializedChanged;
-			codec.OnConnectedStateChanged -= CodecOnConnectionStateChanged;
+			vibe.OnInitializedChanged -= CodecOnInitializedChanged;
+			vibe.OnConnectedStateChanged -= CodecOnConnectionStateChanged;
 		}
 
 		/// <summary>
@@ -134,7 +134,7 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 		}
 
 		/// <summary>
-		/// Called when the component connects/disconnects to the codec.
+		/// Called when the component connects/disconnects to the vibe.
 		/// </summary>
 		protected virtual void ConnectionStatusChanged(bool state)
 		{
@@ -145,7 +145,7 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 		#region Private Methods
 
 		/// <summary>
-		/// Called when the codec initializes.
+		/// Called when the vibe initializes.
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="args"></param>
@@ -156,7 +156,7 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 		}
 
 		/// <summary>
-		/// Called when the codec connects/disconnects
+		/// Called when the vibe connects/disconnects
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="args"></param>
