@@ -5,15 +5,15 @@ using Newtonsoft.Json;
 namespace ICD.Connect.Misc.Unsplash_NetStandard.Responses
 {
 	[JsonConverter(typeof(UnsplashPhotoListViewConverter))]
-	public sealed class UnsplashPhotoListViewResponse : UnsplashAbstractResponse
+	public sealed class UnsplashPhotoListViewResponse : AbstractUnsplashResponse
 	{
 		public double Total { get; set; }
 		public double TotalPages { get; set; }
-		public UnsplashPhotoResponse[] Results { get; set; }
+		public UnsplashPhotoResult[] Results { get; set; }
 	}
 
 	[JsonConverter(typeof(UnsplashPhotoResponseConverter))]
-	public sealed class UnsplashPhotoResponse
+	public sealed class UnsplashPhotoResult
 	{
 		public string Id { get; set; }
 		public string Width { get; set; }
@@ -21,14 +21,14 @@ namespace ICD.Connect.Misc.Unsplash_NetStandard.Responses
 		public string Color { get; set; }
 		public string Description { get; set; }
 		public string AltDescrption { get; set; }
-		public UnsplashPhotoUrlResponse Urls { get; set; }
-		public UnsplashPhotoLinkResponse Links { get; set; }
-		public UnsplashPhotoCategoryResponse[] Categories { get; set; }
-		public UnsplashPhotoUserResponse User { get; set; }
+		public UnsplashPhotoUrls Urls { get; set; }
+		public UnsplashPhotoLinks Links { get; set; }
+		public UnsplashPhotoCategory[] Categories { get; set; }
+		public UnsplashPhotoUser User { get; set; }
 	}
 
 	[JsonConverter(typeof(UnsplashPhotoUserConverter))]
-	public sealed class UnsplashPhotoUserResponse
+	public sealed class UnsplashPhotoUser
 	{
 		public string UserId { get; set; }
 		public string UserName { get; set; }
@@ -36,7 +36,7 @@ namespace ICD.Connect.Misc.Unsplash_NetStandard.Responses
 	}
 
 	[JsonConverter(typeof(UnsplashPhotoUrlConverter))]
-	public sealed class UnsplashPhotoUrlResponse
+	public sealed class UnsplashPhotoUrls
 	{
 		public string Raw { get; set; }
 		public string Full { get; set; }
@@ -46,7 +46,7 @@ namespace ICD.Connect.Misc.Unsplash_NetStandard.Responses
 	}
 
 	[JsonConverter(typeof(UnsplashPhotoLinkConverter))]
-	public sealed class UnsplashPhotoLinkResponse
+	public sealed class UnsplashPhotoLinks
 	{
 		public string Self { get; set; }
 		public string Html { get; set; }
@@ -55,7 +55,7 @@ namespace ICD.Connect.Misc.Unsplash_NetStandard.Responses
 	}
 
 	[JsonConverter(typeof(UnsplashPhotoCategoryConverter))]
-	public sealed class UnsplashPhotoCategoryResponse
+	public sealed class UnsplashPhotoCategory
 	{
 
 	}

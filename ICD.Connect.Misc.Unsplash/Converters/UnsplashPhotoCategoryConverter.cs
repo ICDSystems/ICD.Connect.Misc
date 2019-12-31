@@ -3,7 +3,7 @@ using ICD.Connect.Misc.Unsplash_NetStandard.Responses;
 
 namespace ICD.Connect.Misc.Unsplash_NetStandard.Converters
 {
-	public sealed class UnsplashPhotoCategoryConverter : AbstractGenericJsonConverter<UnsplashPhotoCategoryResponse>
+	public sealed class UnsplashPhotoCategoryConverter : AbstractGenericJsonConverter<UnsplashPhotoCategory>
 	{
 	}
 }

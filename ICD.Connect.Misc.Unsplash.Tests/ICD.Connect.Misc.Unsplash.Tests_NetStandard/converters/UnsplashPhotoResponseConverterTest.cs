@@ -2,7 +2,7 @@ using ICD.Connect.Misc.Unsplash_NetStandard.Responses;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
-namespace ICD.Connect.Misc.Unsplash.Tests_NetStandard
+namespace ICD.Connect.Misc.Unsplash.Tests_NetStandard.converters
 {
 	[TestFixture]
 	public sealed class UnsplashPhotoResponseConverterTest
@@ -39,7 +39,7 @@ namespace ICD.Connect.Misc.Unsplash.Tests_NetStandard
 			}
 		}";
 
-			UnsplashPhotoResponse photo = JsonConvert.DeserializeObject<UnsplashPhotoResponse>(data);
+			UnsplashPhotoResult photo = JsonConvert.DeserializeObject<UnsplashPhotoResult>(data);
 
 			Assert.AreEqual("7_TTPznVIQI", photo.Id);
 			Assert.AreEqual("2588", photo.Width);

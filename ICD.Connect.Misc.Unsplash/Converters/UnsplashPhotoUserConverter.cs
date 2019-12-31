@@ -5,13 +5,13 @@ using Newtonsoft.Json;
 
 namespace ICD.Connect.Misc.Unsplash_NetStandard.Converters
 {
-	public sealed class UnsplashPhotoUserConverter : AbstractGenericJsonConverter<UnsplashPhotoUserResponse>
+	public sealed class UnsplashPhotoUserConverter : AbstractGenericJsonConverter<UnsplashPhotoUser>
 	{
 		private const string ATTRIBUTE_USER_ID = "id";
 		private const string ATTRIBUTE_USER_NAME = "username";
 		private const string ATTRIBUTE_NAME = "name";
 
-		protected override void ReadProperty(string property, JsonReader reader, UnsplashPhotoUserResponse instance,
+		protected override void ReadProperty(string property, JsonReader reader, UnsplashPhotoUser instance,
 		                                     JsonSerializer serializer)
 		{
 			switch (property)

@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace ICD.Connect.Misc.Unsplash_NetStandard.Converters
 {
-	public sealed class UnsplashPhotoUrlConverter : AbstractGenericJsonConverter<UnsplashPhotoUrlResponse>
+	public sealed class UnsplashPhotoUrlConverter : AbstractGenericJsonConverter<UnsplashPhotoUrls>
 	{
 		private const string ATTRIBUTE_RAW = "raw";
 		private const string ATTRIBUTE_FULL = "full";
@@ -14,7 +14,7 @@ namespace ICD.Connect.Misc.Unsplash_NetStandard.Converters
 		private const string ATTRIBUTE_SMALL = "small";
 		private const string ATTRIBUTE_THUMB = "thumb";
 
-		protected override void ReadProperty(string property, JsonReader reader, UnsplashPhotoUrlResponse instance,
+		protected override void ReadProperty(string property, JsonReader reader, UnsplashPhotoUrls instance,
 		                                     JsonSerializer serializer)
 		{
 			switch (property)

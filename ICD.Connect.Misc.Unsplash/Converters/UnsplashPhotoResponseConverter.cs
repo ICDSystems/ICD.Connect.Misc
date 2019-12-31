@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 
 namespace ICD.Connect.Misc.Unsplash_NetStandard.Converters
 {
-	public sealed class UnsplashPhotoResponseConverter : AbstractGenericJsonConverter<UnsplashPhotoResponse>
+	public sealed class UnsplashPhotoResponseConverter : AbstractGenericJsonConverter<UnsplashPhotoResult>
 	{
 		private const string ATTRIBUTE_ID = "id";
 		private const string ATTRIBUTE_WIDTH = "width";
@@ -22,7 +22,7 @@ namespace ICD.Connect.Misc.Unsplash_NetStandard.Converters
 		private const string ATTRIBUTE_CATEGORIES = "categories";
 		private const string ATTRIBUTE_USER = "user";
 
-		protected override void ReadProperty(string property, JsonReader reader, UnsplashPhotoResponse instance,
+		protected override void ReadProperty(string property, JsonReader reader, UnsplashPhotoResult instance,
 		                                     JsonSerializer serializer)
 		{
 			switch (property)
@@ -46,16 +46,16 @@ namespace ICD.Connect.Misc.Unsplash_NetStandard.Converters
 					instance.AltDescrption = reader.GetValueAsString();
 					break;
 				case ATTRIBUTE_URLS:
-					instance.Urls = serializer.Deserialize<UnsplashPhotoUrlResponse>(reader);
+					instance.Urls = serializer.Deserialize<UnsplashPhotoUrls>(reader);
 					break;
 				case ATTRIBUTE_LINKS:
-					instance.Links = serializer.Deserialize<UnsplashPhotoLinkResponse>(reader);
+					instance.Links = serializer.Deserialize<UnsplashPhotoLinks>(reader);
 					break;
 				case ATTRIBUTE_CATEGORIES:
-					instance.Categories = serializer.DeserializeArray<UnsplashPhotoCategoryResponse>(reader).ToArray();
+					instance.Categories = serializer.DeserializeArray<UnsplashPhotoCategory>(reader).ToArray();
 					break;
 				case ATTRIBUTE_USER:
-					instance.User = serializer.Deserialize<UnsplashPhotoUserResponse>(reader);
+					instance.User = serializer.Deserialize<UnsplashPhotoUser>(reader);
 					break;
 				default:
 					base.ReadProperty(property, reader, instance, serializer);

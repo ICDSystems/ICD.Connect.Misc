@@ -6,14 +6,14 @@ using Newtonsoft.Json;
 
 namespace ICD.Connect.Misc.Unsplash_NetStandard.Converters
 {
-	public sealed class UnsplashPhotoLinkConverter : AbstractGenericJsonConverter<UnsplashPhotoLinkResponse>
+	public sealed class UnsplashPhotoLinkConverter : AbstractGenericJsonConverter<UnsplashPhotoLinks>
 	{
 		private const string ATTRIBUTE_SELF = "self";
 		private const string ATTRIBUTE_HTML = "html";
 		private const string ATTRIBUTE_DOWNLOAD = "download";
 		private const string ATTRIBUTE_DOWNLOAD_LOCATION = "download_location";
 
-		protected override void ReadProperty(string property, JsonReader reader, UnsplashPhotoLinkResponse instance,
+		protected override void ReadProperty(string property, JsonReader reader, UnsplashPhotoLinks instance,
 		                                     JsonSerializer serializer)
 		{
 			switch (property)
