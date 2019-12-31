@@ -1,5 +1,6 @@
 ﻿using ICD.Connect.Devices.Controls;
 using ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components;
+using ICD.Connect.Misc.Vibe.Devices.VibeBoard.Responses;
 
 namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Controls
 {
@@ -35,15 +36,26 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Controls
 
 			if (parent == null)
 				return;
-
+			
 			m_ScreenComponent = parent.Components.GetComponent<ScreenComponent>();
+
+			if (m_ScreenComponent != null)
+				m_ScreenComponent.OnScreenStateChanged += ScreenComponentOnOnScreenStateChanged;
 		}
 
 		protected override void Unsubscribe(VibeBoard parent)
 		{
 			base.Unsubscribe(parent);
 
+			if (m_ScreenComponent != null)
+				m_ScreenComponent.OnScreenStateChanged -= ScreenComponentOnOnScreenStateChanged;
+
 			m_ScreenComponent = null;
+		}
+		
+		private void ScreenComponentOnOnScreenStateChanged(object sender, PowerStateEventArgs e)
+		{
+			PowerState = e.Data;
 		}
 
 		#endregion
