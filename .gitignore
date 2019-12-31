@@ -45,3 +45,5 @@ bld/
 # ======================= # 
 *.projectinfo
 SimplSharpLogs*/
+
+ICD.Connect.Misc.Vibe/Properties/ControlSystem.cfg
