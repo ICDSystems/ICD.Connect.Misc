@@ -39,12 +39,9 @@ namespace ICD.Connect.Misc.GlobalCache.Devices.ITachFlex
 		/// <param name="data"></param>
 		public string Post(string localUrl, string data)
 		{
-			string result;
-
 			m_HttpClient.Uri = new Uri(Address, UriKind.RelativeOrAbsolute);
-			m_HttpClient.Post(localUrl, StringUtils.ToBytes(data), out result);
-
-			return result;
+			WebPortResponse response = m_HttpClient.Post(localUrl, StringUtils.ToBytes(data));
+			return response.DataAsString;
 		}
 
 		#endregion

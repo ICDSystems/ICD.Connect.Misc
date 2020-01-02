@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+ - Fixed web requests to use new web port response.
+
 ## [8.0.1] - 2019-11-19
 ### Changed
  - Improvements to IO port debugging
