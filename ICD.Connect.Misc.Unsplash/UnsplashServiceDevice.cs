@@ -80,8 +80,10 @@ namespace ICD.Connect.Misc.Unsplash_NetStandard
 		{
 			// URI
 			if (port != null)
+			{
 				port.ApplyDeviceConfiguration(m_UriProperties);
 				port.ApplyDeviceConfiguration(m_WebProxyProperties);
+			}
 		}
 
 		#endregion
@@ -151,15 +153,15 @@ namespace ICD.Connect.Misc.Unsplash_NetStandard
 
 			IWebPort port = null;
 
-			if (settings.PortId != null)
+			if (settings.Port != null)
 			{
 				try
 				{
-					port = factory.GetPortById((int)settings.PortId) as IWebPort;
+					port = factory.GetPortById((int)settings.Port) as IWebPort;
 				}
 				catch (KeyNotFoundException)
 				{
-					Log(eSeverity.Error, "No web port with id {0}", settings.PortId);
+					Log(eSeverity.Error, "No web port with id {0}", settings.Port);
 				}
 			}
 
@@ -189,7 +191,7 @@ namespace ICD.Connect.Misc.Unsplash_NetStandard
 
 			settings.ClientId = ClientId;
 
-			settings.PortId = m_Port == null ? (int?)null : m_Port.Id;
+			settings.Port = m_Port == null ? (int?)null : m_Port.Id;
 
 			settings.Copy(m_UriProperties);
 			settings.Copy(m_WebProxyProperties);
@@ -201,7 +203,7 @@ namespace ICD.Connect.Misc.Unsplash_NetStandard
 
 		public IEnumerable<UnsplashPhotoResult> GetPictureList(string query)
 		{
-			string url = string.Format("https://api.unsplash.com/search/photos?query={0}", query);
+			string url = string.Format("https://api.unsplash.com/search/photos?query={0}&client_id={1}", query, ClientId);
 
 			string response;
 			return m_Port.Get(url, out response)

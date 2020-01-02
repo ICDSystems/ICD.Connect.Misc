@@ -11,7 +11,7 @@ namespace ICD.Connect.Misc.Unsplash_NetStandard
 	public sealed class UnsplashServiceDeviceSettings : AbstractDeviceSettings, IUriSettings, IWebProxySettings
 	{
 		private const string PORT_ELEMENT = "Port";
-		private const string CLIENT_ID = "client_id";
+		private const string CLIENT_ID_ELEMENT = "ClientId";
 
 		private readonly UriProperties m_UriProperties;
 		private readonly WebProxyProperties m_WebProxyProperties;
@@ -19,7 +19,7 @@ namespace ICD.Connect.Misc.Unsplash_NetStandard
 		#region Properties
 
 		[OriginatorIdSettingsProperty(typeof(IWebPort))]
-		public int? PortId { get; set; }
+		public int? Port { get; set; }
 		public string ClientId { get; set; }
 
 		#endregion
@@ -126,6 +126,7 @@ namespace ICD.Connect.Misc.Unsplash_NetStandard
 		public UnsplashServiceDeviceSettings()
 		{
 			m_UriProperties = new UriProperties();
+			m_WebProxyProperties = new WebProxyProperties();
 
 			UpdateUriDefaults();
 		}
@@ -139,8 +140,8 @@ namespace ICD.Connect.Misc.Unsplash_NetStandard
 		{
 			base.WriteElements(writer);
 
-			writer.WriteElementString(PORT_ELEMENT, IcdXmlConvert.ToString(PortId));
-			writer.WriteElementString(CLIENT_ID, ClientId);
+			writer.WriteElementString(PORT_ELEMENT, IcdXmlConvert.ToString(Port));
+			writer.WriteElementString(CLIENT_ID_ELEMENT, ClientId);
 
 			m_UriProperties.WriteElements(writer);
 		}
@@ -154,8 +155,8 @@ namespace ICD.Connect.Misc.Unsplash_NetStandard
 		{
 			base.ParseXml(xml);
 
-			PortId = XmlUtils.TryReadChildElementContentAsInt(xml, PORT_ELEMENT);
-			ClientId = XmlUtils.TryReadChildElementContentAsString(xml, CLIENT_ID);
+			Port = XmlUtils.TryReadChildElementContentAsInt(xml, PORT_ELEMENT);
+			ClientId = XmlUtils.TryReadChildElementContentAsString(xml, CLIENT_ID_ELEMENT);
 
 			m_UriProperties.ParseXml(xml);
 
