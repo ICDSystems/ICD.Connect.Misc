@@ -5,7 +5,7 @@ using ICD.Connect.Protocol.Network.Settings;
 using ICD.Connect.Settings.Attributes;
 using ICD.Connect.Settings.Attributes.SettingsProperties;
 
-namespace ICD.Connect.Misc.Unsplash_NetStandard
+namespace ICD.Connect.Misc.Unsplash
 {
 	[KrangSettings("Unsplash", typeof(UnsplashServiceDevice))]
 	public sealed class UnsplashServiceDeviceSettings : AbstractDeviceSettings, IUriSettings, IWebProxySettings

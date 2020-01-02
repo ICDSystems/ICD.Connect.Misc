@@ -1,13 +1,10 @@
-﻿using System;
-using System.Globalization;
-using System.Linq;
+﻿using System.Linq;
 using ICD.Common.Utils.Extensions;
-using ICD.Common.Utils.Globalization;
 using ICD.Common.Utils.Json;
-using ICD.Connect.Misc.Unsplash_NetStandard.Responses;
+using ICD.Connect.Misc.Unsplash.Responses;
 using Newtonsoft.Json;
 
-namespace ICD.Connect.Misc.Unsplash_NetStandard.Converters
+namespace ICD.Connect.Misc.Unsplash.Converters
 {
 	public sealed class UnsplashPhotoResponseConverter : AbstractGenericJsonConverter<UnsplashPhotoResult>
 	{

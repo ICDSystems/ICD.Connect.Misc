@@ -1,7 +1,7 @@
 ﻿using ICD.Common.Utils.Json;
-using ICD.Connect.Misc.Unsplash_NetStandard.Responses;
+using ICD.Connect.Misc.Unsplash.Responses;
 
-namespace ICD.Connect.Misc.Unsplash_NetStandard.Converters
+namespace ICD.Connect.Misc.Unsplash.Converters
 {
 	public sealed class UnsplashPhotoCategoryConverter : AbstractGenericJsonConverter<UnsplashPhotoCategory>
 	{

@@ -6,14 +6,14 @@ using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.API.Commands;
 using ICD.Connect.Devices;
 using ICD.Connect.Devices.EventArguments;
-using ICD.Connect.Misc.Unsplash_NetStandard.Responses;
+using ICD.Connect.Misc.Unsplash.Responses;
 using ICD.Connect.Protocol.Extensions;
 using ICD.Connect.Protocol.Network.Ports.Web;
 using ICD.Connect.Protocol.Network.Settings;
 using ICD.Connect.Settings;
 using Newtonsoft.Json;
 
-namespace ICD.Connect.Misc.Unsplash_NetStandard
+namespace ICD.Connect.Misc.Unsplash
 {
 	public sealed class UnsplashServiceDevice : AbstractDevice<UnsplashServiceDeviceSettings>
 	{
@@ -205,10 +205,12 @@ namespace ICD.Connect.Misc.Unsplash_NetStandard
 		{
 			string url = string.Format("https://api.unsplash.com/search/photos?query={0}&client_id={1}", query, ClientId);
 
-			string response;
-			return m_Port.Get(url, out response)
-				       ? JsonConvert.DeserializeObject<UnsplashPhotoListViewResponse>(response).Results
-				       : Enumerable.Empty<UnsplashPhotoResult>();
+			WebPortResponse portResponse = m_Port.Get(url);
+
+			if (portResponse.Success)
+				return JsonConvert.DeserializeObject<UnsplashPhotoListViewResponse>(portResponse.DataAsString).Results;
+			
+			return Enumerable.Empty<UnsplashPhotoResult>();
 		}
 
 		/// <summary>
@@ -237,6 +239,11 @@ namespace ICD.Connect.Misc.Unsplash_NetStandard
 		{
 			// TODO - IWebPort needs to return byte array and headers, not just a string
 
+			/*string url = string.Format("https://unsplash.com/photos/{0}/download",id);
+
+			
+			m_Port.Accept = "image/jpeg";
+			return m_Port.Get();*/
 			throw new NotImplementedException();
 		}
 #endregion

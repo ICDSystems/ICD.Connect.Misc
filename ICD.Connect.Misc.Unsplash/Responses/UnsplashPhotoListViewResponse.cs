@@ -1,8 +1,7 @@
-﻿using System;
-using ICD.Connect.Misc.Unsplash_NetStandard.Converters;
+﻿using ICD.Connect.Misc.Unsplash.Converters;
 using Newtonsoft.Json;
 
-namespace ICD.Connect.Misc.Unsplash_NetStandard.Responses
+namespace ICD.Connect.Misc.Unsplash.Responses
 {
 	[JsonConverter(typeof(UnsplashPhotoListViewConverter))]
 	public sealed class UnsplashPhotoListViewResponse : AbstractUnsplashResponse

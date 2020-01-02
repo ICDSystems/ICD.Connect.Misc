@@ -1,4 +1,4 @@
-﻿namespace ICD.Connect.Misc.Unsplash_NetStandard.Responses
+﻿namespace ICD.Connect.Misc.Unsplash.Responses
 {
 	public abstract class AbstractUnsplashResponse
 	{

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Linq;
 using ICD.Common.Utils.Extensions;
-using ICD.Connect.Misc.Unsplash_NetStandard.Responses;
+using ICD.Connect.Misc.Unsplash.Responses;
 using Newtonsoft.Json;
 
-namespace ICD.Connect.Misc.Unsplash_NetStandard.Converters
+namespace ICD.Connect.Misc.Unsplash.Converters
 {
 	public sealed class UnsplashPhotoListViewConverter : AbstractUnsplashResponseConverter<UnsplashPhotoListViewResponse>
 	{

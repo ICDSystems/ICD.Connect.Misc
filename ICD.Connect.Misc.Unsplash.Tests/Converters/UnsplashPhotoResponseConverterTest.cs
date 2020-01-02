@@ -1,8 +1,8 @@
-using ICD.Connect.Misc.Unsplash_NetStandard.Responses;
+using ICD.Connect.Misc.Unsplash.Responses;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
-namespace ICD.Connect.Misc.Unsplash.Tests_NetStandard.converters
+namespace ICD.Connect.Misc.Unsplash.Tests.converters
 {
 	[TestFixture]
 	public sealed class UnsplashPhotoResponseConverterTest
