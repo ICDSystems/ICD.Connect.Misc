@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This configuration is generated automatically. Only change this file if you know what you are doing. Any invalid data, whitespace, and comments will be deleted the next time this is generated. -->
+<IcdConfig id="1" type="Krang">
+	<Ports>
+		<Port type="HTTP" id="1000">
+			<Name>HTTP Port 1 for Unsplash</Name>
+			<CombineName>HTTP Port 1 for Unsplash</CombineName>
+			<Description/>
+			<Hide>false</Hide>
+		</Port>
+	</Ports>
+	<Devices>
+		<Device type="Unsplash" id="2000">
+			<Name>Unsplash Service Device</Name>
+			<ClientId>ef93729deb2a20cd67f31062b1ea5c73955ea6c21dc1e60c524c0052662bea5b</ClientId>
+			<BaseQuery>HD</BaseQuery>
+			<Height>1080</Height>
+			<Width>1920</Width>
+			<Port>1000</Port>
+		</Device>
+	</Devices>
+	<Rooms />
+	<VolumePoints />
+	<ConferencePoints />
+	<Hide>false</Hide>
+</IcdConfig>
