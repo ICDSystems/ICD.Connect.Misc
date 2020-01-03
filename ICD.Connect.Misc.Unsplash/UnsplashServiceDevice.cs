@@ -93,8 +93,19 @@ namespace ICD.Connect.Misc.Unsplash
 
 		public IEnumerable<UnsplashPhotoResult> GetPictureList(params string[] query)
 		{
+			IEnumerable<string> baseQuery =
+				BaseQuery == null
+					? Enumerable.Empty<string>()
+					: BaseQuery.Split();
+
+			query = baseQuery.Concat(query).ToArray();
 			string queryString = string.Join("-", query);
-			string url = string.Format("https://api.unsplash.com/search/photos?query={0}&client_id={1}", queryString, ClientId);
+
+			UriQueryBuilder builder = new UriQueryBuilder();
+			builder.Append("query", queryString);
+			builder.Append("client_id", ClientId);
+			
+			string url = "https://api.unsplash.com/search/photos" + builder;
 
 			WebPortResponse response = m_Port.Get(url);
 
@@ -123,24 +134,40 @@ namespace ICD.Connect.Misc.Unsplash
 		/// <returns></returns>
 		public string DownloadPicture(string id)
 		{
-			//Get the photo result for the id
-			string url = GetPicture(id).Links.Download;
+			// Get the photo result for the id
+			UnsplashPhotoResult picture = GetPicture(id);
+			string url = picture.Urls.Raw;
 
+			// Replace the query
+			url = url.Split('?').First();
+			UriQueryBuilder builder = new UriQueryBuilder();
+
+			if (Width.HasValue)
+				builder.Append("w", Width.ToString());
+			if (Height.HasValue)
+				builder.Append("h", Height.ToString());
+			if (Width.HasValue || Height.HasValue)
+			{ 
+				builder.Append("fit", "crop");
+				builder.Append("crop", "entropy");
+			}
+
+			url += builder;
+
+			// Get the byte array for the photo
 			WebPortResponse response = m_Port.Get(url);
-			
 			if (!response.Success)
 				throw new Exception(string.Format("Failed to download picture - {0}", response.DataAsString));
-
-			//Get the byte array for the photo
+			
 			byte[] photo = response.Data;
 
-			//Write the byte array to /HTML/Unsplash/<id>.jpeg
+			// Write the byte array to /HTML/Unsplash/<id>.jpeg
 			string path = PathUtils.GetWebServerPath("Unsplash", string.Format("{0}.jpeg", id));
 			string directory = IcdPath.GetDirectoryName(path);
 			IcdDirectory.CreateDirectory(directory);
 			IcdFile.WriteAllBytes(path, photo);
 
-			//Return the path to <host>/Unsplash/<id>.jpeg
+			// Return the path to <host>/Unsplash/<id>.jpeg
 			return PathUtils.GetUrl(path);
 		}
 
