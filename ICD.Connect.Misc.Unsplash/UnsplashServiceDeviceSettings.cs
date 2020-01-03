@@ -12,6 +12,9 @@ namespace ICD.Connect.Misc.Unsplash
 	{
 		private const string PORT_ELEMENT = "Port";
 		private const string CLIENT_ID_ELEMENT = "ClientId";
+		private const string BASE_QUERY_ELEMENT = "BaseQuery";
+		private const string WIDTH_ELEMENT = "Width";
+		private const string HEIGHT_ELEMENT = "Height";
 
 		private readonly UriProperties m_UriProperties;
 		private readonly WebProxyProperties m_WebProxyProperties;
@@ -21,6 +24,9 @@ namespace ICD.Connect.Misc.Unsplash
 		[OriginatorIdSettingsProperty(typeof(IWebPort))]
 		public int? Port { get; set; }
 		public string ClientId { get; set; }
+		public string BaseQuery { get; set; }
+		public int? Width { get; set; }
+		public int? Height { get; set; }
 
 		#endregion
 
@@ -142,6 +148,9 @@ namespace ICD.Connect.Misc.Unsplash
 
 			writer.WriteElementString(PORT_ELEMENT, IcdXmlConvert.ToString(Port));
 			writer.WriteElementString(CLIENT_ID_ELEMENT, ClientId);
+			writer.WriteElementString(BASE_QUERY_ELEMENT, BaseQuery);
+			writer.WriteElementString(WIDTH_ELEMENT, IcdXmlConvert.ToString(Width));
+			writer.WriteElementString(HEIGHT_ELEMENT, IcdXmlConvert.ToString(Height));
 
 			m_UriProperties.WriteElements(writer);
 		}
@@ -157,6 +166,9 @@ namespace ICD.Connect.Misc.Unsplash
 
 			Port = XmlUtils.TryReadChildElementContentAsInt(xml, PORT_ELEMENT);
 			ClientId = XmlUtils.TryReadChildElementContentAsString(xml, CLIENT_ID_ELEMENT);
+			BaseQuery = XmlUtils.TryReadChildElementContentAsString(xml, BASE_QUERY_ELEMENT);
+			Width = XmlUtils.TryReadChildElementContentAsInt(xml, WIDTH_ELEMENT);
+			Height = XmlUtils.TryReadChildElementContentAsInt(xml, HEIGHT_ELEMENT);
 
 			m_UriProperties.ParseXml(xml);
 

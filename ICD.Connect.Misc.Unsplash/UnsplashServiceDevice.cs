@@ -27,6 +27,9 @@ namespace ICD.Connect.Misc.Unsplash
 		#region Properties
 
 		public string ClientId { get; set; }
+		public string BaseQuery { get; set; }
+		public int? Width { get; set; }
+		public int? Height { get; set; }
 
 		#endregion
 
@@ -205,6 +208,9 @@ namespace ICD.Connect.Misc.Unsplash
 			m_WebProxyProperties.Copy(settings);
 
 			ClientId = settings.ClientId;
+			BaseQuery = settings.BaseQuery;
+			Width = settings.Width;
+			Height = settings.Height;
 
 			IWebPort port = null;
 
@@ -231,6 +237,9 @@ namespace ICD.Connect.Misc.Unsplash
 			base.ClearSettingsFinal();
 
 			ClientId = null;
+			BaseQuery = null;
+			Width = null;
+			Height = null;
 
 			m_UriProperties.ClearUriProperties();
 			m_WebProxyProperties.ClearProxyProperties();
@@ -245,6 +254,9 @@ namespace ICD.Connect.Misc.Unsplash
 			base.CopySettingsFinal(settings);
 
 			settings.ClientId = ClientId;
+			settings.BaseQuery = BaseQuery;
+			settings.Width = Width;
+			settings.Height = Height;
 
 			settings.Port = m_Port == null ? (int?)null : m_Port.Id;
 
