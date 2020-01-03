@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using ICD.Common.Properties;
+using ICD.Common.Utils;
+using ICD.Common.Utils.IO;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.API.Commands;
 using ICD.Connect.Devices;
@@ -84,6 +86,59 @@ namespace ICD.Connect.Misc.Unsplash
 				port.ApplyDeviceConfiguration(m_UriProperties);
 				port.ApplyDeviceConfiguration(m_WebProxyProperties);
 			}
+		}
+
+		public IEnumerable<UnsplashPhotoResult> GetPictureList(params string[] query)
+		{
+			string queryString = string.Join("-", query);
+			string url = string.Format("https://api.unsplash.com/search/photos?query={0}&client_id={1}", queryString, ClientId);
+
+			WebPortResponse response = m_Port.Get(url);
+
+			if (response.Success)
+				return JsonConvert.DeserializeObject<UnsplashPhotoListViewResponse>(response.DataAsString).Results;
+
+			throw new Exception(string.Format("Failed to get picture list - {0}", response.DataAsString));
+		}
+
+		public UnsplashPhotoResult GetPicture(string id)
+		{
+			string url = string.Format("http://api.unsplash.com/photos/{0}?client_id={1}", id, ClientId);
+
+			WebPortResponse response = m_Port.Get(url);
+
+			if (!response.Success)
+				throw new Exception(string.Format("Failed to find picture - {0}", response.DataAsString));
+
+			return JsonConvert.DeserializeObject<UnsplashPhotoResult>(response.DataAsString);
+		}
+
+		/// <summary>
+		/// Downloads the image with the given id to the web server directory and returns the new URL.
+		/// </summary>
+		/// <param name="id"></param>
+		/// <returns></returns>
+		public string DownloadPicture(string id)
+		{
+			//Get the photo result for the id
+			string url = GetPicture(id).Links.Download;
+
+			WebPortResponse response = m_Port.Get(url);
+			
+			if (!response.Success)
+				throw new Exception(string.Format("Failed to download picture - {0}", response.DataAsString));
+
+			//Get the byte array for the photo
+			byte[] photo = response.Data;
+
+			//Write the byte array to /HTML/Unsplash/<id>.jpeg
+			string path = PathUtils.GetWebServerPath("Unsplash", string.Format("{0}.jpeg", id));
+			string directory = IcdPath.GetDirectoryName(path);
+			IcdDirectory.CreateDirectory(directory);
+			IcdFile.WriteAllBytes(path, photo);
+
+			//Return the path to <host>/Unsplash/<id>.jpeg
+			return PathUtils.GetUrl(path);
 		}
 
 		#endregion
@@ -201,18 +256,6 @@ namespace ICD.Connect.Misc.Unsplash
 		#region Console
 		public override string ConsoleHelp { get { return "The Unsplash service device"; } }
 
-		public IEnumerable<UnsplashPhotoResult> GetPictureList(string query)
-		{
-			string url = string.Format("https://api.unsplash.com/search/photos?query={0}&client_id={1}", query, ClientId);
-
-			WebPortResponse portResponse = m_Port.Get(url);
-
-			if (portResponse.Success)
-				return JsonConvert.DeserializeObject<UnsplashPhotoListViewResponse>(portResponse.DataAsString).Results;
-			
-			return Enumerable.Empty<UnsplashPhotoResult>();
-		}
-
 		/// <summary>
 		/// Gets the child console commands.
 		/// </summary>
@@ -223,6 +266,9 @@ namespace ICD.Connect.Misc.Unsplash
 				yield return command;
 
 			yield return new GenericConsoleCommand<string>("GetPictureList", "", q => string.Join(", ", GetPictureList(q).Select(p => p.Id).ToArray()));
+			yield return new GenericConsoleCommand<string>("GetPicture", "Returns information of specific picture.", q => GetPicture(q));
+			yield return new GenericConsoleCommand<string>("DownloadPicture", "Downloads a specific picture.", q => DownloadPicture(q));
+			
 		}
 
 		private IEnumerable<IConsoleCommand> GetBaseConsoleCommands()
@@ -230,23 +276,7 @@ namespace ICD.Connect.Misc.Unsplash
 			return base.GetConsoleCommands();
 		}
 
-		/// <summary>
-		/// Downloads the image with the given id and returns the path to the image on disk.
-		/// </summary>
-		/// <param name="id"></param>
-		/// <returns></returns>
-		public string DownloadPicture(string id)
-		{
-			// TODO - IWebPort needs to return byte array and headers, not just a string
-
-			/*string url = string.Format("https://unsplash.com/photos/{0}/download",id);
-
-			
-			m_Port.Accept = "image/jpeg";
-			return m_Port.Get();*/
-			throw new NotImplementedException();
-		}
-#endregion
+		#endregion
 
 	}
 }
