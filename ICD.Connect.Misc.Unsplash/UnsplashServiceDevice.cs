@@ -117,7 +117,7 @@ namespace ICD.Connect.Misc.Unsplash
 
 		public UnsplashPhotoResult GetPicture(string id)
 		{
-			string url = string.Format("http://api.unsplash.com/photos/{0}?client_id={1}", id, ClientId);
+			string url = string.Format("https://api.unsplash.com/photos/{0}?client_id={1}", id, ClientId);
 
 			WebPortResponse response = m_Port.Get(url);
 
