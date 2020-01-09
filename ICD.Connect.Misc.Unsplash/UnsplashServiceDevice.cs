@@ -91,7 +91,7 @@ namespace ICD.Connect.Misc.Unsplash
 			}
 		}
 
-		public IEnumerable<UnsplashPhotoResult> GetPictureList(params string[] query)
+		public IEnumerable<UnsplashPhotoResult> GetPictureList(int pageNum, int numPerPage, params string[] query)
 		{
 			IEnumerable<string> baseQuery =
 				BaseQuery == null
@@ -99,11 +99,16 @@ namespace ICD.Connect.Misc.Unsplash
 					: BaseQuery.Split();
 
 			query = baseQuery.Concat(query).ToArray();
+			
 			string queryString = string.Join("-", query);
+			string page = pageNum.ToString();
+			string perPage = numPerPage.ToString();
 
 			UriQueryBuilder builder = new UriQueryBuilder();
 			builder.Append("query", queryString);
 			builder.Append("client_id", ClientId);
+			builder.Append("page", page);
+			builder.Append("per_page", perPage);
 			
 			string url = "https://api.unsplash.com/search/photos" + builder;
 
@@ -304,7 +309,7 @@ namespace ICD.Connect.Misc.Unsplash
 			foreach (IConsoleCommand command in GetBaseConsoleCommands())
 				yield return command;
 
-			yield return new GenericConsoleCommand<string>("GetPictureList", "", q => string.Join(", ", GetPictureList(q).Select(p => p.Id).ToArray()));
+			yield return new GenericConsoleCommand<int, int, string>("GetPictureList", "Takes page number, number of pictures per page, and the query. Returns the list of pictures.", (q, t, k) => string.Join(", ", GetPictureList(q, t, k).Select(r => r.Id).ToArray()));
 			yield return new GenericConsoleCommand<string>("GetPicture", "Returns information of specific picture.", q => GetPicture(q));
 			yield return new GenericConsoleCommand<string>("DownloadPicture", "Downloads a specific picture.", q => DownloadPicture(q));
 			
