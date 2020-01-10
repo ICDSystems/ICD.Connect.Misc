@@ -1,68 +1,111 @@
 ﻿using System;
-using ICD.Common.Utils;
-using ICD.Common.Utils.Extensions;
-using ICD.Connect.Audio.Controls.Mute;
 using ICD.Connect.Audio.Controls.Volume;
-using ICD.Connect.Audio.EventArguments;
 using ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components;
 
 namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Controls
 {
-	public sealed class VibeBoardVolumeControl : AbstractVolumeLevelDeviceControl<VibeBoard>, IVolumeMuteFeedbackDeviceControl
+	public sealed class VibeBoardVolumeControl : AbstractVolumeDeviceControl<VibeBoard>
 	{
-		public event EventHandler<MuteDeviceMuteStateChangedApiEventArgs> OnMuteStateChanged;
-
 		private VolumeComponent m_VolumeComponent;
 		private MuteComponent m_MuteComponent;
 
-		private int m_VolumeLevel;
-		private bool m_IsMuted;
-
 		#region Properties
 
-		public override float VolumeLevel { get { return m_VolumeLevel; } }
+		/// <summary>
+		/// Gets the minimum supported volume level.
+		/// </summary>
+		public override float VolumeLevelMin { get { return 0; } }
 
-		public bool VolumeIsMuted
-		{
-			get { return m_IsMuted; }
-			private set
-			{
-				if (m_IsMuted == value)
-					return;
-
-				m_IsMuted = value;
-				OnMuteStateChanged.Raise(this, new MuteDeviceMuteStateChangedApiEventArgs(value));
-			}
-		}
-
-		protected override float VolumeRawMinAbsolute { get { return 0; } }
-
-		protected override float VolumeRawMaxAbsolute { get { return 100; } }
+		/// <summary>
+		/// Gets the maximum supported volume level.
+		/// </summary>
+		public override float VolumeLevelMax { get { return 100; } }
 
 		#endregion
 
-		public VibeBoardVolumeControl(VibeBoard parent, int id) : base(parent, id)
+		/// <summary>
+		/// Constructor.
+		/// </summary>
+		/// <param name="parent"></param>
+		/// <param name="id"></param>
+		public VibeBoardVolumeControl(VibeBoard parent, int id)
+			: base(parent, id)
 		{
+			SupportedVolumeFeatures = eVolumeFeatures.Mute |
+			                          eVolumeFeatures.MuteAssignment |
+			                          eVolumeFeatures.MuteFeedback |
+			                          eVolumeFeatures.Volume |
+			                          eVolumeFeatures.VolumeAssignment |
+			                          eVolumeFeatures.VolumeFeedback;
 		}
 
-		public override void SetVolumeLevel(float volume)
+		#region Methods
+
+		/// <summary>
+		/// Sets the raw volume. This will be clamped to the min/max and safety min/max.
+		/// </summary>
+		/// <param name="level"></param>
+		public override void SetVolumeLevel(float level)
 		{
 			if (m_VolumeComponent == null)
 				return;
-			
-			m_VolumeComponent.SetVolume((int)volume);
-		}
-		
 
-		public void VolumeMuteToggle()
+			m_VolumeComponent.SetVolume((int)Math.Round(level));
+		}
+
+		/// <summary>
+		/// Raises the volume one time
+		/// Amount of the change varies between implementations - typically "1" raw unit
+		/// </summary>
+		public override void VolumeIncrement()
+		{
+			SetVolumeLevel(VolumeLevel + 1);
+		}
+
+		/// <summary>
+		/// Lowers the volume one time
+		/// Amount of the change varies between implementations - typically "1" raw unit
+		/// </summary>
+		public override void VolumeDecrement()
+		{
+			SetVolumeLevel(VolumeLevel - 1);
+		}
+
+		/// <summary>
+		/// Starts ramping the volume, and continues until stop is called or the timeout is reached.
+		/// If already ramping the current timeout is updated to the new timeout duration.
+		/// </summary>
+		/// <param name="increment">Increments the volume if true, otherwise decrements.</param>
+		/// <param name="timeout"></param>
+		public override void VolumeRamp(bool increment, long timeout)
+		{
+			throw new NotSupportedException();
+		}
+
+		/// <summary>
+		/// Stops any current ramp up/down in progress.
+		/// </summary>
+		public override void VolumeRampStop()
+		{
+			throw new NotSupportedException();
+		}
+
+		/// <summary>
+		/// Toggles the current mute state.
+		/// </summary>
+		public override void ToggleIsMuted()
 		{
 			if (m_MuteComponent == null)
 				return;
 
-			m_MuteComponent.SetMute(!VolumeIsMuted);
+			m_MuteComponent.SetMute(!IsMuted);
 		}
 
-		public void SetVolumeMute(bool mute)
+		/// <summary>
+		/// Sets the mute state.
+		/// </summary>
+		/// <param name="mute"></param>
+		public override void SetIsMuted(bool mute)
 		{
 			if (m_MuteComponent == null)
 				return;
@@ -70,7 +113,10 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Controls
 			m_MuteComponent.SetMute(mute);
 		}
 
+		#endregion
+
 		#region Component Callbacks
+
 		protected override void Subscribe(VibeBoard parent)
 		{
 			base.Subscribe(parent);
@@ -99,13 +145,12 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Controls
 
 		private void VolumeComponentOnVolumeChanged(object sender, VolumeChangedEventArgs e)
 		{
-			m_VolumeLevel = e.Data;
-			VolumeFeedback(m_VolumeLevel);
+			VolumeLevel = e.Data;
 		}
 
 		private void MuteComponentOnMuteChanged(object sender, MuteChangedEventArgs e)
 		{
-			VolumeIsMuted = e.Data;
+			IsMuted = e.Data;
 		}
 
 		#endregion
