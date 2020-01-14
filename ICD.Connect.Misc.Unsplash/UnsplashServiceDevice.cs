@@ -99,7 +99,7 @@ namespace ICD.Connect.Misc.Unsplash
 					: BaseQuery.Split();
 
 			query = baseQuery.Concat(query).ToArray();
-			
+
 			string queryString = string.Join("-", query);
 			string page = pageNum.ToString();
 			string perPage = numPerPage.ToString();
@@ -109,7 +109,7 @@ namespace ICD.Connect.Misc.Unsplash
 			builder.Append("client_id", ClientId);
 			builder.Append("page", page);
 			builder.Append("per_page", perPage);
-			
+
 			string url = "https://api.unsplash.com/search/photos" + builder;
 
 			WebPortResponse response = m_Port.Get(url);
@@ -130,6 +130,43 @@ namespace ICD.Connect.Misc.Unsplash
 				throw new Exception(string.Format("Failed to find picture - {0}", response.DataAsString));
 
 			return JsonConvert.DeserializeObject<UnsplashPhotoResult>(response.DataAsString);
+		}
+
+		public IEnumerable<UnsplashCollectionResult> GetCollectionList(int pageNum, int numPerPage, params string[] query)
+		{
+			string queryString = string.Join("-", query);
+			string page = pageNum.ToString();
+			string perPage = numPerPage.ToString();
+
+			UriQueryBuilder builder = new UriQueryBuilder();
+			builder.Append("query", queryString);
+			builder.Append("client_id", ClientId);
+			builder.Append("page", page);
+			builder.Append("per_page", perPage);
+
+			string url = "https://api.unsplash.com/search/collections" + builder;
+
+			WebPortResponse response = m_Port.Get(url);
+
+			if (response.Success)
+				return JsonConvert.DeserializeObject<UnsplashCollectionListViewResponse>(response.DataAsString).Results;
+
+			throw new Exception(string.Format("Failed to get Collection list - {0}", response.DataAsString));
+		}
+
+		public IEnumerable<UnsplashPhotoResult> GetCollectionPictureList(int pageNum, int numPerPage, string id)
+		{
+			string page = pageNum.ToString();
+			string perPage = numPerPage.ToString();
+
+			string url = string.Format("https://api.unsplash.com/collections/{0}/photos?client_id={1}&page={2}&per_page={3}", id, ClientId, page, perPage);
+
+			WebPortResponse response = m_Port.Get(url);
+
+			if (response.Success)
+				return JsonConvert.DeserializeObject<UnsplashPhotoResult[]>(response.DataAsString);
+
+			throw new Exception(string.Format("Failed to get pictures from Collection - {0}", response.DataAsString));
 		}
 
 		/// <summary>
@@ -297,7 +334,9 @@ namespace ICD.Connect.Misc.Unsplash
 		}
 
 		#endregion
+
 		#region Console
+
 		public override string ConsoleHelp { get { return "The Unsplash service device"; } }
 
 		/// <summary>
@@ -311,6 +350,8 @@ namespace ICD.Connect.Misc.Unsplash
 
 			yield return new GenericConsoleCommand<int, int, string>("GetPictureList", "Takes page number, number of pictures per page, and the query. Returns the list of pictures.", (q, t, k) => string.Join(", ", GetPictureList(q, t, k).Select(r => r.Id).ToArray()));
 			yield return new GenericConsoleCommand<string>("GetPicture", "Returns information of specific picture.", q => GetPicture(q));
+			yield return new GenericConsoleCommand<int, int,string>("GetCollectionList", "Returns the List of collections", (q, t, k) => string.Join(", ", GetCollectionList(q, t, k).Select(p=>p.Id).ToArray()));
+			yield return new GenericConsoleCommand<int, int,string>("GetCollectionPictureList", "Get the pictures form desired collection", (q, t, k) => string.Join(", ", GetCollectionPictureList(q, t, k).Select(p => p.Id).ToArray()));
 			yield return new GenericConsoleCommand<string>("DownloadPicture", "Downloads a specific picture.", q => DownloadPicture(q));
 			
 		}
