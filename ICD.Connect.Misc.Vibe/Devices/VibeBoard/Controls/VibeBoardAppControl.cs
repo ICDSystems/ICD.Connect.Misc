@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using ICD.Common.Utils.Extensions;
-using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.Devices.Controls;
 using ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components;
-using ICD.Connect.Misc.Vibe.Devices.VibeBoard.Responses;
 
 namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Controls
 {
@@ -21,19 +18,32 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Controls
 		{
 			{eVibeApps.Chrome, "com.android.chrome"},
 			{eVibeApps.Youtube, "com.google.android.youtube"},
-			{eVibeApps.Slack, "com.Slack"}
+			{eVibeApps.Slack, "com.Slack"},
+			// todo add whiteboard app
 		};
 		private static readonly Dictionary<eVibeApps, string> m_AppActivityNames = new Dictionary<eVibeApps, string>()
 		{
 			{eVibeApps.Chrome, "com.google.android.apps.chrome.Main"},
 			{eVibeApps.Youtube, ".app.honeycomb.Shell$HomeActivity"},
-			{eVibeApps.Slack, ".ui.HomeActivity"}
+			{eVibeApps.Slack, ".ui.HomeActivity"},
+			// todo add whiteboard app
 		};
 
 		public VibeBoardAppControl(VibeBoard parent, int id) : base(parent, id)
 		{
 			m_PackageComponent = parent.Components.GetComponent<PackageComponent>();
+			Subscribe(m_PackageComponent);
+
 			m_StartComponent = parent.Components.GetComponent<StartComponent>();
+			Subscribe(m_StartComponent);
+		}
+
+		protected override void DisposeFinal(bool disposing)
+		{
+			Unsubscribe(m_PackageComponent);
+			Unsubscribe(m_StartComponent);
+
+			base.DisposeFinal(disposing);
 		}
 
 		public void LaunchApp(eVibeApps app)
@@ -67,28 +77,46 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Controls
 			return m_AppActivityNames[app];
 		}
 
-		protected override void Subscribe(VibeBoard parent)
-		{
-			base.Subscribe(parent);
+		#region Component Callbacks
 
-			parent.ResponseHandler.RegisterResponseCallback<StartActivityResponse>(StartActivityResponseCallback);
+		private void Subscribe(StartComponent component)
+		{
+			component.OnAppLaunched += ComponentOnAppLaunched;
+			component.OnAppLaunchFailed += ComponentOnAppLaunchFailed;
 		}
 
-		protected override void Unsubscribe(VibeBoard parent)
+		private void Unsubscribe(StartComponent component)
 		{
-			base.Unsubscribe(parent);
-			
-			parent.ResponseHandler.UnregisterResponseCallback<StartActivityResponse>(StartActivityResponseCallback);
+			component.OnAppLaunched -= ComponentOnAppLaunched;
+			component.OnAppLaunchFailed -= ComponentOnAppLaunchFailed;
 		}
 
-		private void StartActivityResponseCallback(StartActivityResponse response)
+		private void ComponentOnAppLaunched(object sender, EventArgs e)
 		{
-			if (response.Value != null && response.Value.Success)
-				OnAppLaunched.Raise(this);
-
-			if (response.Error != null)
-				Log(eSeverity.Error, response.Error.Message);
+			OnAppLaunched.Raise(this);
 		}
+
+		private void ComponentOnAppLaunchFailed(object sender, EventArgs e)
+		{
+			OnAppLaunchFailed.Raise(this);
+		}
+
+		private void Subscribe(PackageComponent component)
+		{
+			component.OnPackagesUpdated += ComponentOnPackagesUpdated;
+		}
+
+		private void Unsubscribe(PackageComponent component)
+		{
+			component.OnPackagesUpdated -= ComponentOnPackagesUpdated;
+		}
+
+		private void ComponentOnPackagesUpdated(object sender, EventArgs e)
+		{
+			// todo do something eventually
+		}
+
+		#endregion
 	}
 
 	public enum eVibeApps

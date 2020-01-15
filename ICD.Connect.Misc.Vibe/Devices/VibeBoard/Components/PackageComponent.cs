@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using ICD.Common.Utils.Extensions;
 using ICD.Connect.Misc.Vibe.Devices.VibeBoard.Responses;
 
 namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
@@ -8,6 +10,8 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 	{
 		private const string COMMAND = "packages";
 		private const string PARAM_LIST = "list";
+
+		public event EventHandler OnPackagesUpdated;
 
 		private readonly List<PackageData> m_Packages;
 
@@ -68,6 +72,7 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 
 			m_Packages.Clear();
 			m_Packages.AddRange(response.Value);
+			OnPackagesUpdated.Raise(this);
 		}
 
 		#endregion
