@@ -1,6 +1,5 @@
 ﻿using ICD.Connect.Devices.Controls;
 using ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components;
-using ICD.Connect.Misc.Vibe.Devices.VibeBoard.Responses;
 
 namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Controls
 {
@@ -8,7 +7,8 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Controls
 	{
 		private ScreenComponent m_ScreenComponent;
 
-		public VibeBoardPowerControl(VibeBoard parent, int id) : base(parent, id)
+		public VibeBoardPowerControl(VibeBoard parent, int id)
+			: base(parent, id)
 		{
 		}
 
@@ -17,7 +17,14 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Controls
 			if (m_ScreenComponent == null)
 				return;
 
-			m_ScreenComponent.ScreenOn();
+			switch (m_ScreenComponent.ScreenState)
+			{
+				case ePowerState.Unknown:
+				case ePowerState.PowerOff:
+				case ePowerState.Cooling:
+					m_ScreenComponent.ScreenOn();
+					break;
+			}
 		}
 
 		protected override void PowerOffFinal()
@@ -25,7 +32,14 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Controls
 			if (m_ScreenComponent == null)
 				return;
 
-			m_ScreenComponent.ScreenOff();
+			switch (m_ScreenComponent.ScreenState)
+			{
+				case ePowerState.Unknown:
+				case ePowerState.PowerOn:
+				case ePowerState.Warming:
+					m_ScreenComponent.ScreenOff();
+					break;
+			}
 		}
 
 		#region Parent

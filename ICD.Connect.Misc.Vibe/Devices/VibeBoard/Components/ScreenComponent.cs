@@ -15,15 +15,51 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 		private const string PARAM_SCREEN_OFF = "off";
 
 		private ePowerState m_RequestedState;
+		private ePowerState m_ScreenState;
 
-		public ScreenComponent(VibeBoard parent) : base(parent)
+		public ePowerState ScreenState
+		{
+			get { return m_ScreenState; }
+			private set
+			{
+				if (value == m_ScreenState)
+					return;
+				
+				m_ScreenState = value;
+
+				OnScreenStateChanged.Raise(this, new PowerStateEventArgs(m_ScreenState));
+			}
+		}
+
+		/// <summary>
+		/// Constructor.
+		/// </summary>
+		/// <param name="parent"></param>
+		public ScreenComponent(VibeBoard parent)
+			: base(parent)
 		{
 		}
 
+		#region Methods
+
 		public void SetScreenState(ePowerState state)
 		{
+			string param;
+
+			switch (state)
+			{
+				case ePowerState.PowerOff:
+					param = PARAM_SCREEN_OFF;
+					break;
+				case ePowerState.PowerOn:
+					param = PARAM_SCREEN_ON;
+					break;
+				default:
+					throw new ArgumentOutOfRangeException("state");
+			}
+
 			m_RequestedState = state;
-			Parent.SendCommand(new VibeCommand(COMMAND, state == ePowerState.PowerOn ? PARAM_SCREEN_ON : PARAM_SCREEN_OFF));
+			Parent.SendCommand(new VibeCommand(COMMAND, param));
 		}
 
 		public void ScreenOn()
@@ -35,6 +71,10 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 		{
 			SetScreenState(ePowerState.PowerOff);
 		}
+
+		#endregion
+
+		#region Parent Callbacks
 
 		protected override void Subscribe(VibeBoard vibe)
 		{
@@ -53,13 +93,16 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 		private void ScreenResponseCallback(ScreenResponse response)
 		{
 			if (response.Value.Success)
-				OnScreenStateChanged.Raise(this, new PowerStateEventArgs(m_RequestedState));
+				ScreenState = m_RequestedState;
 		}
+
+		#endregion
 	}
 
-	public class PowerStateEventArgs : GenericEventArgs<ePowerState>
+	public sealed class PowerStateEventArgs : GenericEventArgs<ePowerState>
 	{
-		public PowerStateEventArgs(ePowerState data) : base(data)
+		public PowerStateEventArgs(ePowerState data)
+			: base(data)
 		{
 		}
 	}
