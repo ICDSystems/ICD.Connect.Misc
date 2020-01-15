@@ -13,8 +13,7 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 		private const string COMMAND = "screen";
 		private const string PARAM_SCREEN_ON = "on";
 		private const string PARAM_SCREEN_OFF = "off";
-
-		private ePowerState m_RequestedState;
+		
 		private ePowerState m_ScreenState;
 
 		public ePowerState ScreenState
@@ -57,8 +56,7 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 				default:
 					throw new ArgumentOutOfRangeException("state");
 			}
-
-			m_RequestedState = state;
+			
 			Parent.SendCommand(new VibeCommand(COMMAND, param));
 		}
 
@@ -92,8 +90,7 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 
 		private void ScreenResponseCallback(ScreenResponse response)
 		{
-			if (response.Value.Success)
-				ScreenState = m_RequestedState;
+			ScreenState = response.Value.State ? ePowerState.PowerOn : ePowerState.PowerOff;
 		}
 
 		#endregion
