@@ -16,21 +16,49 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 			get { return m_Packages.ToList(); }
 		}
 
-		public PackageComponent(VibeBoard parent) : base(parent)
+		public PackageComponent(VibeBoard parent)
+			: base(parent)
 		{
 			m_Packages = new List<PackageData>();
 		}
+
+		/// <summary>
+		/// Called to initialize the component.
+		/// </summary>
+		protected override void Initialize()
+		{
+			base.Initialize();
+
+			ListPackages();
+		}
+
+		#region Methods
 
 		public void ListPackages()
 		{
 			Parent.SendCommand(new VibeCommand(COMMAND, PARAM_LIST));
 		}
 
+		#endregion
+
+		#region Parent Callbacks
+
 		protected override void Subscribe(VibeBoard vibe)
 		{
 			base.Subscribe(vibe);
 
 			vibe.ResponseHandler.RegisterResponseCallback<ListPackageResponse>(ListPackageResponseCallback);
+		}
+
+		/// <summary>
+		/// Unsubscribes from the vibe events.
+		/// </summary>
+		/// <param name="vibe"></param>
+		protected override void Unsubscribe(VibeBoard vibe)
+		{
+			base.Unsubscribe(vibe);
+
+			vibe.ResponseHandler.UnregisterResponseCallback<ListPackageResponse>(ListPackageResponseCallback);
 		}
 
 		private void ListPackageResponseCallback(ListPackageResponse response)
@@ -41,5 +69,7 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 			m_Packages.Clear();
 			m_Packages.AddRange(response.Value);
 		}
+
+		#endregion
 	}
 }

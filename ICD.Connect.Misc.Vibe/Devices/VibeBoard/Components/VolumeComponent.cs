@@ -31,9 +31,22 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 			}
 		}
 
-		public VolumeComponent(VibeBoard parent) : base(parent)
+		public VolumeComponent(VibeBoard parent)
+			: base(parent)
 		{
 		}
+
+		/// <summary>
+		/// Called to initialize the component.
+		/// </summary>
+		protected override void Initialize()
+		{
+			base.Initialize();
+
+			GetCurrentVolume();
+		}
+
+		#region Methods
 
 		public void GetCurrentVolume()
 		{
@@ -43,7 +56,7 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 		public void SetVolume(int volume)
 		{
 			if (volume < 0 || volume > 100)
-				throw new ArgumentException(string.Format("Invalid argument: {0}. Volume must be between 0 and 100.", volume));
+				throw new ArgumentOutOfRangeException("volume", string.Format("Invalid argument: {0}. Volume must be between 0 and 100.", volume));
 
 			string param = string.Format(PARAM_SET_VOLUME, volume);
 			Parent.SendCommand(new VibeCommand(COMMAND, param));
@@ -58,6 +71,8 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 		{
 			Parent.SendCommand(new VibeCommand(COMMAND, PARAM_RAMP_DOWN));
 		}
+
+		#endregion
 
 		#region Parent Callbacks
 

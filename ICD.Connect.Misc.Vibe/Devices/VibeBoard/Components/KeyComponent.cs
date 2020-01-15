@@ -4,7 +4,8 @@
 	{
 		private const string COMMAND = "key";
 
-		public KeyComponent(VibeBoard parent) : base(parent)
+		public KeyComponent(VibeBoard parent)
+			: base(parent)
 		{
 		}
 

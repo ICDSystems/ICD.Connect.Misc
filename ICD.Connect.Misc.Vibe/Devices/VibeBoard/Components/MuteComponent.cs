@@ -29,14 +29,27 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 			}
 		}
 
-		public MuteComponent(VibeBoard parent) : base(parent)
+		public MuteComponent(VibeBoard parent)
+			: base(parent)
 		{
+		}
+
+		/// <summary>
+		/// Called to initialize the component.
+		/// </summary>
+		protected override void Initialize()
+		{
+			base.Initialize();
+
+			GetCurrentMute();
 		}
 
 		public void GetCurrentMute()
 		{
 			Parent.SendCommand(new VibeCommand(COMMAND, PARAM_GET_MUTE));
 		}
+
+		#region Methods
 
 		public void SetMute(bool mute)
 		{
@@ -53,13 +66,31 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 			SetMute(false);
 		}
 
+		#endregion
+
 		#region Parent Callbacks
 
 		protected override void Subscribe(VibeBoard vibe)
 		{
 			base.Subscribe(vibe);
 
-			vibe.ResponseHandler.RegisterResponseCallback<MuteResponse>(response => Mute = response.Value.IsMute);
+			vibe.ResponseHandler.RegisterResponseCallback<MuteResponse>(MuteCallback);
+		}
+
+		/// <summary>
+		/// Unsubscribes from the vibe events.
+		/// </summary>
+		/// <param name="vibe"></param>
+		protected override void Unsubscribe(VibeBoard vibe)
+		{
+			base.Unsubscribe(vibe);
+
+			vibe.ResponseHandler.UnregisterResponseCallback<MuteResponse>(MuteCallback);
+		}
+
+		private void MuteCallback(MuteResponse response)
+		{
+			Mute = response.Value.IsMute;
 		}
 
 		#endregion

@@ -26,11 +26,5 @@
 			string param = string.Format(PARAM_TASKS_SWITCH, task);
 			Parent.SendCommand(new VibeCommand(COMMAND, param));
 		}
-
-		#region Console
-
-
-
-		#endregion
 	}
 }
