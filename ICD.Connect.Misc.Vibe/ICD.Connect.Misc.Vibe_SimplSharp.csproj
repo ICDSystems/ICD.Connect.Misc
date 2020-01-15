@@ -90,6 +90,7 @@
     <Compile Include="Devices\VibeBoard\Responses\Converters\KeyInputResponseConverter.cs" />
     <Compile Include="Devices\VibeBoard\Responses\Converters\ListPackageResponseConverter.cs" />
     <Compile Include="Devices\VibeBoard\Responses\Converters\MuteResponseConverter.cs" />
+    <Compile Include="Devices\VibeBoard\Responses\Converters\ScreenDataConverter.cs" />
     <Compile Include="Devices\VibeBoard\Responses\Converters\ScreenResponseConverter.cs" />
     <Compile Include="Devices\VibeBoard\Responses\Converters\StartActivityResponseConverter.cs" />
     <Compile Include="Devices\VibeBoard\Responses\Converters\SuccessDataConverter.cs" />
