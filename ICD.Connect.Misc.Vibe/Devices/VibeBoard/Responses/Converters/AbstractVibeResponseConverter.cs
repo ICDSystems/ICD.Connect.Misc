@@ -4,7 +4,8 @@ using Newtonsoft.Json;
 
 namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Responses.Converters
 {
-	public class AbstractVibeResponseConverter<TResponse, TData> : AbstractGenericJsonConverter<TResponse> where TResponse : AbstractVibeResponse<TData>
+	public class AbstractVibeResponseConverter<TResponse, TData> : AbstractGenericJsonConverter<TResponse>
+		where TResponse : AbstractVibeResponse<TData>
 	{
 		private const string PROP_TYPE = "type";
 		private const string PROP_RESULT_ID = "resultId";

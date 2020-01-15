@@ -11,6 +11,7 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 		public event EventHandler<PowerStateEventArgs> OnScreenStateChanged;
 
 		private const string COMMAND = "screen";
+		private const string PARAM_GET_SCREEN = "-l";
 		private const string PARAM_SCREEN_ON = "on";
 		private const string PARAM_SCREEN_OFF = "off";
 		
@@ -39,7 +40,22 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 		{
 		}
 
+		/// <summary>
+		/// Called to initialize the component.
+		/// </summary>
+		protected override void Initialize()
+		{
+			base.Initialize();
+
+			GetScreenState();
+		}
+
 		#region Methods
+
+		public void GetScreenState()
+		{
+			Parent.SendCommand(new VibeCommand(COMMAND, PARAM_GET_SCREEN));
+		}
 
 		public void SetScreenState(ePowerState state)
 		{
