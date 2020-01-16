@@ -24,6 +24,7 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 			: base(parent)
 		{
 			m_Packages = new List<PackageData>();
+			Subscribe(parent);
 		}
 
 		/// <summary>

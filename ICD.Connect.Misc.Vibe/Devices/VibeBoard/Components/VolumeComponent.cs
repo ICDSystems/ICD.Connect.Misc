@@ -34,6 +34,7 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 		public VolumeComponent(VibeBoard parent)
 			: base(parent)
 		{
+			Subscribe(parent);
 		}
 
 		/// <summary>

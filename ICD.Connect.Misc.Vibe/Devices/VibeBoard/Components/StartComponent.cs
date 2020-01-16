@@ -15,6 +15,7 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 
 		public StartComponent(VibeBoard parent) : base(parent)
 		{
+			Subscribe(parent);
 		}
 		
 		public void StartActivity(string packageName, string activityName)

@@ -32,6 +32,7 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 		public MuteComponent(VibeBoard parent)
 			: base(parent)
 		{
+			Subscribe(parent);
 		}
 
 		/// <summary>

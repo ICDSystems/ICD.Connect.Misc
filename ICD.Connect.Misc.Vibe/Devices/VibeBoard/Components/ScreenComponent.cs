@@ -38,6 +38,7 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 		public ScreenComponent(VibeBoard parent)
 			: base(parent)
 		{
+			Subscribe(parent);
 		}
 
 		/// <summary>
