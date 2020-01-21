@@ -15,6 +15,7 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 		private const string PARAM_SET_VOLUME = "-s {0}";
 		private const string PARAM_RAMP_UP = "up";
 		private const string PARAM_RAMP_DOWN = "down";
+		private const string PARAM_SUBSCRIBE = "subscribe";
 
 		private int m_Volume;
 
@@ -45,6 +46,7 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 			base.Initialize();
 
 			GetCurrentVolume();
+			SubscribeVolumeChanges();
 		}
 
 		#region Methods
@@ -61,6 +63,11 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 
 			string param = string.Format(PARAM_SET_VOLUME, volume);
 			Parent.SendCommand(new VibeCommand(COMMAND, param));
+		}
+
+		public void SubscribeVolumeChanges()
+		{
+			Parent.SendCommand(new VibeCommand(COMMAND, PARAM_SUBSCRIBE));
 		}
 
 		public void VolumeUp()
