@@ -35,7 +35,6 @@
     <ProjectReference Include="..\..\ICD.Common.Utils\ICD.Common.Utils\ICD.Common.Utils_NetStandard.csproj" />
     <ProjectReference Include="..\..\ICD.Connect.Devices\ICD.Connect.Devices\ICD.Connect.Devices_NetStandard.csproj" />
     <ProjectReference Include="..\..\ICD.Connect.Protocol\ICD.Connect.Protocol.Network\ICD.Connect.Protocol.Network_NetStandard.csproj" />
-    <ProjectReference Include="..\ICD.Connect.Misc.Unsplash\ICD.Connect.Misc.Unsplash_NetStandard.csproj" />
   </ItemGroup>
 
 </Project>
