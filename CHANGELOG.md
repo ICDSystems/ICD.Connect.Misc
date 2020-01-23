@@ -5,9 +5,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
 ### Added
  - Created Unsplash Service Device.
  - Added Vibe Board device
+ - Added YKUP USB switcher device
 
 ### Changed
  - Fixed web requests to use new web port response.
