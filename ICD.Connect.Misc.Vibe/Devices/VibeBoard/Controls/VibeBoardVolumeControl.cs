@@ -50,7 +50,12 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Controls
 			if (m_VolumeComponent == null)
 				return;
 
-			m_VolumeComponent.SetVolume((int)Math.Round(level));
+			// Avoid showing the Android volume popup
+			int levelInt = (int)Math.Round(level);
+			if (levelInt == m_VolumeComponent.Volume)
+				return;
+
+			m_VolumeComponent.SetVolume(levelInt);
 		}
 
 		/// <summary>
@@ -95,10 +100,7 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Controls
 		/// </summary>
 		public override void ToggleIsMuted()
 		{
-			if (m_MuteComponent == null)
-				return;
-
-			m_MuteComponent.SetMute(!IsMuted);
+			SetIsMuted(!IsMuted);
 		}
 
 		/// <summary>
@@ -108,6 +110,10 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Controls
 		public override void SetIsMuted(bool mute)
 		{
 			if (m_MuteComponent == null)
+				return;
+
+			// Avoid showing the Android volume popup
+			if (mute == m_MuteComponent.Mute)
 				return;
 
 			m_MuteComponent.SetMute(mute);
