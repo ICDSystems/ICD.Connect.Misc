@@ -7,8 +7,8 @@ namespace ICD.Connect.Misc.Unsplash.Responses
 	[JsonConverter(typeof(UnsplashCollectionListViewConverter))]
 	public sealed class UnsplashCollectionListViewResponse : AbstractUnsplashResponse
 	{
-		public double Total { get; set; }
-		public double TotalPages { get; set; }
+		public int Total { get; set; }
+		public int TotalPages { get; set; }
 		public UnsplashCollectionResult[] Results { get; set; }
 
 	}
@@ -16,12 +16,12 @@ namespace ICD.Connect.Misc.Unsplash.Responses
 	[JsonConverter(typeof(UnsplashCollectionResultConverter))]
 	public sealed class UnsplashCollectionResult
 	{
-		public double Id { get; set; }
+		public int Id { get; set; }
 		public string Title { get; set; }
 		public string Description { get; set; }
 		public bool Curated { get; set; }
 		public bool Features { get; set; }
-		public double TotalPhotos { get; set; }
+		public int TotalPhotos { get; set; }
 		public bool Private { get; set; }
 		public string ShareKey { get; set; }
 		public UnsplashCollectionLinks Links { get; set; }

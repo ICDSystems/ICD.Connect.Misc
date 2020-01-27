@@ -6,8 +6,8 @@ namespace ICD.Connect.Misc.Unsplash.Responses
 	[JsonConverter(typeof(UnsplashPhotoListViewConverter))]
 	public sealed class UnsplashPhotoListViewResponse : AbstractUnsplashResponse
 	{
-		public double Total { get; set; }
-		public double TotalPages { get; set; }
+		public int Total { get; set; }
+		public int TotalPages { get; set; }
 		public UnsplashPhotoResult[] Results { get; set; }
 	}
 

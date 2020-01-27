@@ -18,10 +18,10 @@ namespace ICD.Connect.Misc.Unsplash.Converters
 			switch (property)
 			{
 				case ATTRIBUTE_TOTAL:
-					instance.Total = Convert.ToDouble(reader.GetValueAsString());
+					instance.Total = reader.GetValueAsInt();
 					break;
 				case ATTRIBUTE_TOTAL_PAGES:
-					instance.TotalPages = Convert.ToDouble(reader.GetValueAsString());
+					instance.TotalPages = reader.GetValueAsInt();
 					break;
 				case ATTRIBUTE_RESULTS:
 					instance.Results = serializer.DeserializeArray<UnsplashCollectionResult>(reader).ToArray();

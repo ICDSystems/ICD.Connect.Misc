@@ -69,6 +69,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Converters\AbstractUnsplashResponseConverter.cs" />
+    <Compile Include="Converters\UnsplashCollectionLinksConverter.cs" />
+    <Compile Include="Converters\UnsplashCollectionListViewConverter.cs" />
+    <Compile Include="Converters\UnsplashCollectionResultConverter.cs" />
+    <Compile Include="Converters\UnsplashCollectionUserConverter.cs" />
     <Compile Include="Converters\UnsplashPhotoCategoryConverter.cs" />
     <Compile Include="Converters\UnsplashPhotoLinkConverter.cs" />
     <Compile Include="Converters\UnsplashPhotoListViewConverter.cs" />
@@ -77,6 +81,7 @@
     <Compile Include="Converters\UnsplashPhotoUserConverter.cs" />
     <Compile Include="KrangPlugin.cs" />
     <Compile Include="Responses\AbstractUnsplashResponse.cs" />
+    <Compile Include="Responses\UnsplashCollectionListViewResponse.cs" />
     <Compile Include="Responses\UnsplashPhotoListViewResponse.cs" />
     <Compile Include="UnsplashServiceDevice.cs" />
     <Compile Include="UnsplashServiceDeviceSettings.cs" />
@@ -105,6 +110,10 @@
     <ProjectReference Include="..\..\ICD.Connect.Settings\ICD.Connect.Settings\ICD.Connect.Settings_SimplSharp.csproj">
       <Project>{5B84EB3C-1C3A-4C4D-98C2-69F67CF51D5A}</Project>
       <Name>ICD.Connect.Settings_SimplSharp</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ICD.Connect.Telemetry\ICD.Connect.Telemetry\ICD.Connect.Telemetry_SimplSharp.csproj">
+      <Project>{9512C0A5-F966-4AC6-9668-62C6F343B0CD}</Project>
+      <Name>ICD.Connect.Telemetry_SimplSharp</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

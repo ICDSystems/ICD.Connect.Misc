@@ -25,7 +25,7 @@ namespace ICD.Connect.Misc.Unsplash.Converters
 			switch (property)
 			{
 				case ATTRIBUTE_ID:
-					instance.Id = Convert.ToDouble(reader.GetValueAsString());
+					instance.Id = reader.GetValueAsInt();
 					break;
 				case ATTRIBUTE_TITLE:
 					instance.Title = reader.GetValueAsString();
@@ -40,7 +40,7 @@ namespace ICD.Connect.Misc.Unsplash.Converters
 					instance.Features = reader.GetValueAsBool();
 					break;
 				case ATTRIBUTE_TOTAL_PHOTOS:
-					instance.TotalPhotos = Convert.ToDouble(reader.GetValueAsString());
+					instance.TotalPhotos = reader.GetValueAsInt();
 					break;
 				case ATTRIBUTE_PRIVATE:
 					instance.Private = reader.GetValueAsBool();

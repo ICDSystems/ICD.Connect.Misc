@@ -350,7 +350,7 @@ namespace ICD.Connect.Misc.Unsplash
 
 			yield return new GenericConsoleCommand<int, int, string>("GetPictureList", "Takes page number, number of pictures per page, and the query. Returns the list of pictures.", (q, t, k) => string.Join(", ", GetPictureList(q, t, k).Select(r => r.Id).ToArray()));
 			yield return new GenericConsoleCommand<string>("GetPicture", "Returns information of specific picture.", q => GetPicture(q));
-			yield return new GenericConsoleCommand<int, int,string>("GetCollectionList", "Returns the List of collections", (q, t, k) => string.Join(", ", GetCollectionList(q, t, k).Select(p=>p.Id).ToArray()));
+			yield return new GenericConsoleCommand<int, int,string>("GetCollectionList", "Returns the List of collections", (q, t, k) => string.Join(", ", GetCollectionList(q, t, k).Select(p=>p.Id.ToString()).ToArray()));
 			yield return new GenericConsoleCommand<int, int,string>("GetCollectionPictureList", "Get the pictures form desired collection", (q, t, k) => string.Join(", ", GetCollectionPictureList(q, t, k).Select(p => p.Id).ToArray()));
 			yield return new GenericConsoleCommand<string>("DownloadPicture", "Downloads a specific picture.", q => DownloadPicture(q));
 			
