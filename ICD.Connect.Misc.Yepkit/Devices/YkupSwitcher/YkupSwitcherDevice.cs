@@ -17,7 +17,7 @@ using ICD.Connect.Settings;
 namespace ICD.Connect.Misc.Yepkit.Devices.YkupSwitcher
 {
 	/// <summary>
-	/// YkupSwitcherDevice is a 1 input to 2 USB switcher that is switched by two relays:
+	/// YkupSwitcherDevice is a 1 input to 2 output USB switcher that is switched by two relays:
 	/// Power Relay - Toggling cycles the device power and resets back to output 1
 	/// Switch Relay - Toggling switches the output back and forth
 	/// 
@@ -26,9 +26,27 @@ namespace ICD.Connect.Misc.Yepkit.Devices.YkupSwitcher
 	public sealed class YkupSwitcherDevice : AbstractRouteSwitcherDevice<YkupSwitcherDeviceSettings>
 	{
 		/// <summary>
-		/// How long to wait, in milliseconds, after power cycling the device
+		/// How long to wait, in milliseconds, after power cycling the device.
 		/// </summary>
-		private const long POWER_TIME = 1000;
+		private const long POWER_TIME = 500;
+
+		/// <summary>
+		/// How long to wait, in milliseconds, before powering back on.
+		/// </summary>
+		private const long POWER_RELAY_PULSE_TIME = 1000;
+
+		/// <summary>
+		/// How long to wait between toggling the switch relay.
+		/// </summary>
+		private const long SWITCH_RELAY_PULSE_TIME = 100;
+
+		/// <summary>
+		/// How long it takes to complete a switch from one output to another.
+		/// </summary>
+		public const long TOTAL_SWITCH_TIME =
+			POWER_RELAY_PULSE_TIME +
+			POWER_TIME +
+			SWITCH_RELAY_PULSE_TIME;
 
 		private const int INPUT_ADDRESS = 1;
 		private const int OUTPUT_1_ADDRESS = 1;
@@ -276,16 +294,15 @@ namespace ICD.Connect.Misc.Yepkit.Devices.YkupSwitcher
 
 			// No change
 			if (GetInput(output, eConnectionType.Video) != null)
-				return true;
+				return false;
 
 			m_ExpectedOutput = output;
 
 			// Cycle power
-			m_PowerPort.Open();
-			m_PowerPort.Close();
+			m_PowerPort.PulseClose(POWER_RELAY_PULSE_TIME);
 
 			// Wait for warmup before selecting output
-			m_PowerTimer.Reset(POWER_TIME);
+			m_PowerTimer.Reset(POWER_TIME + POWER_RELAY_PULSE_TIME);
 
 			return true;
 		}
@@ -331,8 +348,7 @@ namespace ICD.Connect.Misc.Yepkit.Devices.YkupSwitcher
 
 				case OUTPUT_2_ADDRESS:
 					// Toggle the button to switch to the second output
-					SwitchPort.Close();
-					SwitchPort.Open();
+					SwitchPort.PulseOpen(SWITCH_RELAY_PULSE_TIME);
 					break;
 
 				default:
