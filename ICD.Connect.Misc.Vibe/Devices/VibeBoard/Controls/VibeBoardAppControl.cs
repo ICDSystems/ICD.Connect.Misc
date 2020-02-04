@@ -19,14 +19,14 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Controls
 			{eVibeApps.Chrome, "com.android.chrome"},
 			{eVibeApps.Youtube, "com.google.android.youtube"},
 			{eVibeApps.Slack, "com.Slack"},
-			// todo add whiteboard app
+			{eVibeApps.Whiteboard, "ai.inlight.board.app" }
 		};
 		private static readonly Dictionary<eVibeApps, string> m_AppActivityNames = new Dictionary<eVibeApps, string>()
 		{
 			{eVibeApps.Chrome, "com.google.android.apps.chrome.Main"},
 			{eVibeApps.Youtube, ".app.honeycomb.Shell$HomeActivity"},
 			{eVibeApps.Slack, ".ui.HomeActivity"},
-			// todo add whiteboard app
+			{eVibeApps.Whiteboard, "ai.inlight.board.app.MainActivity" }
 		};
 
 		public VibeBoardAppControl(VibeBoard parent, int id) : base(parent, id)
