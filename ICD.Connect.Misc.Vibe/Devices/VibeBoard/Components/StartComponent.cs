@@ -48,8 +48,14 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 
 			if (response.Error != null)
 			{
-				Log(eSeverity.Error, response.Error.Message);
-				OnAppLaunchFailed.Raise(this);
+				// launch "failed" cause app is already launched, but it should have also switched to it
+				if (response.Error.Message.Equals("Start activity failed. result: 2"))
+					OnAppLaunched.Raise(this);
+				else
+				{
+					Log(eSeverity.Error, response.Error.Message);
+					OnAppLaunchFailed.Raise(this);
+				}
 			}
 		}
 	}
