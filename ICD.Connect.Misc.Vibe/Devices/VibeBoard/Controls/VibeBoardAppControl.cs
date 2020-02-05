@@ -19,14 +19,18 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Controls
 			{eVibeApps.Chrome, "com.android.chrome"},
 			{eVibeApps.Youtube, "com.google.android.youtube"},
 			{eVibeApps.Slack, "com.Slack"},
-			{eVibeApps.Whiteboard, "ai.inlight.board.app" }
+			{eVibeApps.Whiteboard, "ai.inlight.board.app"},
+			{eVibeApps.Teams, "com.microsoft.teams"},
+			{eVibeApps.WebEx, "com.cisco.webex.meetings"}
 		};
 		private static readonly Dictionary<eVibeApps, string> m_AppActivityNames = new Dictionary<eVibeApps, string>()
 		{
 			{eVibeApps.Chrome, "com.google.android.apps.chrome.Main"},
 			{eVibeApps.Youtube, ".app.honeycomb.Shell$HomeActivity"},
 			{eVibeApps.Slack, ".ui.HomeActivity"},
-			{eVibeApps.Whiteboard, "ai.inlight.board.app.MainActivity" }
+			{eVibeApps.Whiteboard, "ai.inlight.board.app.MainActivity" },
+			{eVibeApps.Teams, "com.microsoft.skype.teams.views.activities.SplashActivity"},
+			{eVibeApps.WebEx, "com.cisco.webex.meetings.ui.premeeting.welcome.WebExMeeting"}
 		};
 
 		public VibeBoardAppControl(VibeBoard parent, int id) : base(parent, id)
@@ -125,5 +129,7 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Controls
 		Youtube,
 		Slack,
 		Whiteboard,
+		Teams,
+		WebEx
 	}
 }
