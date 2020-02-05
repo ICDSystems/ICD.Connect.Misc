@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ICD.Common.Utils;
 using ICD.Common.Utils.Extensions;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Common.Utils.Timers;
@@ -123,6 +124,11 @@ namespace ICD.Connect.Misc.Yepkit.Devices.YkupSwitcher
 				UpdateCachedOnlineStatus();
 			}
 		}
+
+		/// <summary>
+		/// Gets the UTC time that the switcher was last switched.
+		/// </summary>
+		public DateTime LastSwitchTime { get; private set; }
 
 		#endregion
 
@@ -296,6 +302,7 @@ namespace ICD.Connect.Misc.Yepkit.Devices.YkupSwitcher
 			if (GetInput(output, eConnectionType.Video) != null)
 				return false;
 
+			LastSwitchTime = IcdEnvironment.GetUtcTime();
 			m_ExpectedOutput = output;
 
 			// Cycle power
