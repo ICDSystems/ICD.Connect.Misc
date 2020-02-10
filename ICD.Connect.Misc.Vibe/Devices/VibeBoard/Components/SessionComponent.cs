@@ -30,6 +30,7 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 
 		public void EndSession()
 		{
+			Log(eSeverity.Debug, "Ending session");
 			Parent.SendCommand(new VibeCommand(COMMAND, PARAM_END));
 		}
 

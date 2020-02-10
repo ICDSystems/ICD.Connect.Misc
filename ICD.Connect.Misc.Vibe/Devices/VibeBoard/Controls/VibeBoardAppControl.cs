@@ -97,6 +97,11 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Controls
 			return m_PackageComponent.Packages.Any(p => p.PackageName.Equals(packageName, StringComparison.OrdinalIgnoreCase));
 		}
 
+		public void EndSession()
+		{
+			m_SessionComponent.EndSession();
+		}
+
 		#region Component Callbacks
 
 		private void Subscribe(StartComponent component)
