@@ -74,8 +74,10 @@
     <Compile Include="Devices\VibeBoard\Components\IVibeComponent.cs" />
     <Compile Include="Devices\VibeBoard\Components\KeyComponent.cs" />
     <Compile Include="Devices\VibeBoard\Components\MuteComponent.cs" />
+    <Compile Include="Devices\VibeBoard\Components\OTAComponent.cs" />
     <Compile Include="Devices\VibeBoard\Components\PackageComponent.cs" />
     <Compile Include="Devices\VibeBoard\Components\ScreenComponent.cs" />
+    <Compile Include="Devices\VibeBoard\Components\SessionComponent.cs" />
     <Compile Include="Devices\VibeBoard\Components\StartComponent.cs" />
     <Compile Include="Devices\VibeBoard\Components\TaskComponent.cs" />
     <Compile Include="Devices\VibeBoard\Components\VibeCommand.cs" />
@@ -90,8 +92,10 @@
     <Compile Include="Devices\VibeBoard\Responses\Converters\KeyInputResponseConverter.cs" />
     <Compile Include="Devices\VibeBoard\Responses\Converters\ListPackageResponseConverter.cs" />
     <Compile Include="Devices\VibeBoard\Responses\Converters\MuteResponseConverter.cs" />
+    <Compile Include="Devices\VibeBoard\Responses\Converters\OTAResponseConverter.cs" />
     <Compile Include="Devices\VibeBoard\Responses\Converters\ScreenDataConverter.cs" />
     <Compile Include="Devices\VibeBoard\Responses\Converters\ScreenResponseConverter.cs" />
+    <Compile Include="Devices\VibeBoard\Responses\Converters\SessionResponseConverter.cs" />
     <Compile Include="Devices\VibeBoard\Responses\Converters\StartActivityResponseConverter.cs" />
     <Compile Include="Devices\VibeBoard\Responses\Converters\SuccessDataConverter.cs" />
     <Compile Include="Devices\VibeBoard\Responses\Converters\TaskDataConverter.cs" />
@@ -104,7 +108,9 @@
     <Compile Include="Devices\VibeBoard\Responses\KeyInputResponse.cs" />
     <Compile Include="Devices\VibeBoard\Responses\ListPackageResponse.cs" />
     <Compile Include="Devices\VibeBoard\Responses\MuteResponse.cs" />
+    <Compile Include="Devices\VibeBoard\Responses\OTAResponse.cs" />
     <Compile Include="Devices\VibeBoard\Responses\ScreenResponse.cs" />
+    <Compile Include="Devices\VibeBoard\Responses\SessionResponse.cs" />
     <Compile Include="Devices\VibeBoard\Responses\StartActivityResponse.cs" />
     <Compile Include="Devices\VibeBoard\Responses\SuccessData.cs" />
     <Compile Include="Devices\VibeBoard\Responses\TaskListResponse.cs" />

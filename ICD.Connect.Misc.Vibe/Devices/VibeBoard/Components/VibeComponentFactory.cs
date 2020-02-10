@@ -133,7 +133,7 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 
 		#endregion
 
-		#region Console 
+		#region Console
 
 		public string ConsoleName
 		{

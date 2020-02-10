@@ -20,7 +20,10 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 
 		#region Properties
 
-		public IEnumerable<UsbDeviceData> UsbDevices => m_UsbDeviceList.AsReadOnly();
+		public IEnumerable<UsbDeviceData> UsbDevices
+		{
+			get { return m_UsbDeviceList.AsReadOnly(); }
+		}
 
 		#endregion
 
