@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using ICD.Common.Utils.Extensions;
 using ICD.Common.Utils.Services.Logging;
+using ICD.Connect.API.Commands;
 using ICD.Connect.Misc.Vibe.Devices.VibeBoard.Responses;
 
 namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
@@ -11,52 +13,89 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 		public event EventHandler OnAppLaunchFailed;
 
 		private const string COMMAND = "start";
-		private const string PARAMS = "-n {0}/{1}";
+		private const string PARAM_START_ACTIVITY = "-n {0}/{1}";
+		private const string PARAM_SCREEN_SWITCHER = "ss";
 
 		public StartComponent(VibeBoard parent) : base(parent)
 		{
 			Subscribe(parent);
 		}
+
+		protected override void Dispose(bool disposing)
+		{
+			Unsubscribe(Parent);
+
+			base.Dispose(disposing);
+		}
+
+		#region API Methods
 		
 		public void StartActivity(string packageName, string activityName)
 		{
-			string param = string.Format(PARAMS, packageName, activityName);
+			string param = string.Format(PARAM_START_ACTIVITY, packageName, activityName);
 			Parent.SendCommand(new VibeCommand(COMMAND, param));
 		}
 
-		protected override void Subscribe(VibeBoard parent)
+		public void StartScreenSwitcher()
 		{
-			base.Subscribe(parent);
-
-			parent.ResponseHandler.RegisterResponseCallback<StartActivityResponse>(StartActivityResponseCallback);
+			Parent.SendCommand(new VibeCommand(COMMAND, PARAM_SCREEN_SWITCHER));
 		}
 
-		protected override void Unsubscribe(VibeBoard parent)
+		#endregion
+
+		#region Parent Callbacks
+
+		protected override void Subscribe(VibeBoard vibe)
 		{
-			base.Unsubscribe(parent);
+			base.Subscribe(vibe);
+
+			if (vibe == null)
+				return;
+
+			vibe.ResponseHandler.RegisterResponseCallback<StartActivityResponse>(StartActivityResponseCallback);
+		}
+
+		protected override void Unsubscribe(VibeBoard vibe)
+		{
+			base.Unsubscribe(vibe);
+
+			if (vibe == null)
+				return;
 			
-			parent.ResponseHandler.UnregisterResponseCallback<StartActivityResponse>(StartActivityResponseCallback);
+			vibe.ResponseHandler.UnregisterResponseCallback<StartActivityResponse>(StartActivityResponseCallback);
 		}
 
 		private void StartActivityResponseCallback(StartActivityResponse response)
 		{
-			if (response.Value != null && response.Value.Success)
+			// if launch "failed" cause app is already launched, don't count it as fail. It should have switched to it, so still counts
+			if (response.Error != null && !response.Error.Message.Equals("Start activity failed. result: 2"))
 			{
-				OnAppLaunched.Raise(this);
+				Log(eSeverity.Error, response.Error.Message);
+				OnAppLaunchFailed.Raise(this);
 				return;
 			}
 
-			if (response.Error != null)
-			{
-				// launch "failed" cause app is already launched, but it should have also switched to it
-				if (response.Error.Message.Equals("Start activity failed. result: 2"))
-					OnAppLaunched.Raise(this);
-				else
-				{
-					Log(eSeverity.Error, response.Error.Message);
-					OnAppLaunchFailed.Raise(this);
-				}
-			}
+			Log(eSeverity.Informational, "App successfully launched");
+			OnAppLaunched.Raise(this);
 		}
+
+		#endregion
+
+		#region Console
+
+		public override IEnumerable<IConsoleCommand> GetConsoleCommands()
+		{
+			foreach (var command in base.GetConsoleCommands())
+				yield return command;
+
+			yield return new GenericConsoleCommand<string, string>("StartActivity",
+				"StartActivity <PackageName> <ActivityName>",
+				(p, a) => StartActivity(p, a));
+
+			yield return new ConsoleCommand("StartScreenSwitcher", "Launches the screen switcher",
+				() => StartScreenSwitcher());
+		}
+
+		#endregion
 	}
 }

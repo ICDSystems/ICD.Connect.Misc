@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using ICD.Common.Utils.Extensions;
 using ICD.Connect.Devices.Controls;
 using ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components;
@@ -11,10 +12,7 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Controls
 		public event EventHandler OnAppLaunchFailed;
 		public event EventHandler OnAppLaunched;
 
-		private readonly PackageComponent m_PackageComponent;
-		private readonly StartComponent m_StartComponent;
-
-		private static readonly Dictionary<eVibeApps, string> m_AppPackageNames = new Dictionary<eVibeApps, string>()
+		private static readonly Dictionary<eVibeApps, string> s_AppPackageNames = new Dictionary<eVibeApps, string>()
 		{
 			{eVibeApps.Chrome, "com.android.chrome"},
 			{eVibeApps.Youtube, "com.google.android.youtube"},
@@ -23,7 +21,7 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Controls
 			{eVibeApps.Teams, "com.microsoft.teams"},
 			{eVibeApps.WebEx, "com.cisco.webex.meetings"}
 		};
-		private static readonly Dictionary<eVibeApps, string> m_AppActivityNames = new Dictionary<eVibeApps, string>()
+		private static readonly Dictionary<eVibeApps, string> s_AppActivityNames = new Dictionary<eVibeApps, string>()
 		{
 			{eVibeApps.Chrome, "com.google.android.apps.chrome.Main"},
 			{eVibeApps.Youtube, ".app.honeycomb.Shell$HomeActivity"},
@@ -32,6 +30,11 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Controls
 			{eVibeApps.Teams, "com.microsoft.skype.teams.views.activities.SplashActivity"},
 			{eVibeApps.WebEx, "com.cisco.webex.meetings.ui.premeeting.welcome.WebExMeeting"}
 		};
+		
+		private readonly PackageComponent m_PackageComponent;
+		private readonly StartComponent m_StartComponent;
+		private readonly KeyComponent m_KeyComponent;
+		private readonly SessionComponent m_SessionComponent;
 
 		public VibeBoardAppControl(VibeBoard parent, int id) : base(parent, id)
 		{
@@ -40,6 +43,10 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Controls
 
 			m_StartComponent = parent.Components.GetComponent<StartComponent>();
 			Subscribe(m_StartComponent);
+
+			m_KeyComponent = parent.Components.GetComponent<KeyComponent>();
+
+			m_SessionComponent = parent.Components.GetComponent<SessionComponent>();
 		}
 
 		protected override void DisposeFinal(bool disposing)
@@ -52,33 +59,42 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Controls
 
 		public void LaunchApp(eVibeApps app)
 		{
+			if (!IsInstalled(app))
+			{
+				OnAppLaunchFailed.Raise(this);
+				return;
+			}
+
 			string packageName = GetPackageName(app);
-
-			// TODO check if app is actually installed
-			//if (!IsInstalled(packageName))
-			//{
-			//	OnAppLaunchFailed.Raise(this);
-			//	return;
-			//}
-
 			string activityName = GetActivityName(app);
 			m_StartComponent.StartActivity(packageName, activityName);
 		}
 
+		public void PressKey(eVibeKey key)
+		{
+			m_KeyComponent.KeyPress(key);
+		}
+
 		public string GetPackageName(eVibeApps app)
 		{
-			if (!m_AppPackageNames.ContainsKey(app))
+			if (!s_AppPackageNames.ContainsKey(app))
 				throw new InvalidOperationException(string.Format("No package name exists for app {0}", app));
 
-			return m_AppPackageNames[app];
+			return s_AppPackageNames[app];
 		}
 
 		public string GetActivityName(eVibeApps app)
 		{
-			if (!m_AppActivityNames.ContainsKey(app))
+			if (!s_AppActivityNames.ContainsKey(app))
 				throw new InvalidOperationException(string.Format("No activity name exists for app {0}", app));
 
-			return m_AppActivityNames[app];
+			return s_AppActivityNames[app];
+		}
+
+		public bool IsInstalled(eVibeApps app)
+		{
+			string packageName = GetPackageName(app);
+			return m_PackageComponent.Packages.Any(p => p.PackageName.Equals(packageName, StringComparison.OrdinalIgnoreCase));
 		}
 
 		#region Component Callbacks
@@ -107,17 +123,12 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Controls
 
 		private void Subscribe(PackageComponent component)
 		{
-			component.OnPackagesUpdated += ComponentOnPackagesUpdated;
+			// nothing for now
 		}
 
 		private void Unsubscribe(PackageComponent component)
 		{
-			component.OnPackagesUpdated -= ComponentOnPackagesUpdated;
-		}
-
-		private void ComponentOnPackagesUpdated(object sender, EventArgs e)
-		{
-			// todo do something eventually
+			// nothing for now
 		}
 
 		#endregion

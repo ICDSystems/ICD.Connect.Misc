@@ -22,6 +22,8 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 				{typeof(PackageComponent), vibe => new PackageComponent(vibe)},
 				{typeof(StartComponent), vibe => new StartComponent(vibe)},
 				{typeof(MuteComponent), vibe => new MuteComponent(vibe)},
+				{typeof(OTAComponent), vibe => new OTAComponent(vibe)},
+				{typeof(SessionComponent), vibe => new SessionComponent(vibe)}
 			};
 
 		private readonly Dictionary<Type, IVibeComponent> m_Components;

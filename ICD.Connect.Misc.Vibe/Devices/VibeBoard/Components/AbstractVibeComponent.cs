@@ -50,7 +50,7 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 		}
 
 		/// <summary>
-		/// Deconstructor.
+		/// Destructor.
 		/// </summary>
 		~AbstractVibeComponent()
 		{
@@ -150,7 +150,7 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 
 		protected void Log(eSeverity severity, string message)
 		{
-			Logger.AddEntry(severity, "{0} - {1}", this, message);
+			Logger.AddEntry(severity, "{0} - {1} - {2}", Parent, GetType().Name, message);
 		}
 
 		protected void Log(eSeverity severity, string message, params object[] args)

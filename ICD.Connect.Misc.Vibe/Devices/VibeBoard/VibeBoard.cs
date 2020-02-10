@@ -197,7 +197,10 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard
 			IsConnected = m_ConnectionStateManager.IsConnected;
 
 			if (args.Data)
+			{
+				Initialized = true;
 				return;
+			}
 
 			Log(eSeverity.Critical, "Lost connection");
 			Initialized = false;

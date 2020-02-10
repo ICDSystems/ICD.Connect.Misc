@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using ICD.Common.Utils.EventArguments;
 using ICD.Common.Utils.Extensions;
+using ICD.Common.Utils.Services.Logging;
+using ICD.Connect.API.Commands;
 using ICD.Connect.API.Nodes;
 using ICD.Connect.Misc.Vibe.Devices.VibeBoard.Responses;
 
@@ -19,6 +22,8 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 
 		private int m_Volume;
 
+		#region Properties
+
 		public int Volume 
 		{ 
 			get { return m_Volume; }
@@ -32,21 +37,19 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 			}
 		}
 
+		#endregion
+
 		public VolumeComponent(VibeBoard parent)
 			: base(parent)
 		{
 			Subscribe(parent);
 		}
 
-		/// <summary>
-		/// Called to initialize the component.
-		/// </summary>
-		protected override void Initialize()
+		protected override void Dispose(bool disposing)
 		{
-			base.Initialize();
+			Unsubscribe(Parent);
 
-			GetCurrentVolume();
-			SubscribeVolumeChanges();
+			base.Dispose(disposing);
 		}
 
 		#region Methods
@@ -82,6 +85,21 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 
 		#endregion
 
+		#region Private Methods
+
+		/// <summary>
+		/// Called to initialize the component.
+		/// </summary>
+		protected override void Initialize()
+		{
+			base.Initialize();
+
+			GetCurrentVolume();
+			SubscribeVolumeChanges();
+		}
+
+		#endregion
+
 		#region Parent Callbacks
 
 		protected override void Subscribe(VibeBoard vibe)
@@ -100,6 +118,12 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 
 		private void VolumeResponseCallback(VolumeResponse response)
 		{
+			if (response.Error != null)
+			{
+				Log(eSeverity.Error, "Failed to get/set volume - {0}", response.Error.Message);
+				return;
+			}
+
 			Volume = response.Value.Volume;
 		}
 
@@ -112,6 +136,17 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 			base.BuildConsoleStatus(addRow);
 
 			addRow("Volume", Volume);
+		}
+
+		public override IEnumerable<IConsoleCommand> GetConsoleCommands()
+		{
+			foreach (var command in base.GetConsoleCommands())
+				yield return command;
+
+			yield return new ConsoleCommand("GetVolume", "Gets the current volume", () => GetCurrentVolume());
+			yield return new GenericConsoleCommand<int>("SetVolume", "Sets the current volume", (v) => SetVolume(v));
+			yield return new ConsoleCommand("VolumeUp", "Increments the volume", () => VolumeUp());
+			yield return new ConsoleCommand("VolumeDown", "Decrements the volume", () => VolumeDown());
 		}
 
 		#endregion

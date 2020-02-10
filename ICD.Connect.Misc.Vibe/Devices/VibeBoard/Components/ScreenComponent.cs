@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using ICD.Common.Utils.EventArguments;
 using ICD.Common.Utils.Extensions;
+using ICD.Common.Utils.Services.Logging;
+using ICD.Connect.API.Commands;
+using ICD.Connect.API.Nodes;
 using ICD.Connect.Devices.Controls;
 using ICD.Connect.Misc.Vibe.Devices.VibeBoard.Responses;
 
@@ -17,6 +21,8 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 		
 		private ePowerState m_ScreenState;
 
+		#region Properties
+
 		public ePowerState ScreenState
 		{
 			get { return m_ScreenState; }
@@ -30,6 +36,8 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 				OnScreenStateChanged.Raise(this, new PowerStateEventArgs(m_ScreenState));
 			}
 		}
+
+		#endregion
 
 		/// <summary>
 		/// Constructor.
@@ -94,6 +102,9 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 		protected override void Subscribe(VibeBoard vibe)
 		{
 			base.Subscribe(vibe);
+
+			if (vibe == null)
+				return;
 			
 			vibe.ResponseHandler.RegisterResponseCallback<ScreenResponse>(ScreenResponseCallback);
 		}
@@ -101,13 +112,44 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 		protected override void Unsubscribe(VibeBoard vibe)
 		{
 			base.Unsubscribe(vibe);
+
+			if (vibe == null)
+				return;
 			
 			vibe.ResponseHandler.UnregisterResponseCallback<ScreenResponse>(ScreenResponseCallback);
 		}
 
 		private void ScreenResponseCallback(ScreenResponse response)
 		{
+			if (response.Error != null)
+			{
+				Log(eSeverity.Error, "Failed to get/set screen state - {0}", response.Error.Message);
+				return;
+			}
+
 			ScreenState = response.Value.State ? ePowerState.PowerOn : ePowerState.PowerOff;
+			Log(eSeverity.Informational, "Screen state updated: {0}", response.Value.State ? "On" : "Off");
+		}
+
+		#endregion
+
+		#region Console
+
+		public override void BuildConsoleStatus(AddStatusRowDelegate addRow)
+		{
+			base.BuildConsoleStatus(addRow);
+
+			addRow("Screen State", ScreenState);
+		}
+
+		public override IEnumerable<IConsoleCommand> GetConsoleCommands()
+		{
+			foreach (var command in base.GetConsoleCommands())
+				yield return command;
+
+			yield return new ConsoleCommand("GetScreen", "Gets the current screen state", () => GetScreenState());
+			yield return new ConsoleCommand("ScreenOn", "Turns the screen on", () => ScreenOn());
+			yield return new ConsoleCommand("ScreenOff", "Turns the screen off", () => ScreenOff());
 		}
 
 		#endregion

@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using ICD.Common.Utils.EventArguments;
 using ICD.Common.Utils.Extensions;
+using ICD.Common.Utils.Services.Logging;
+using ICD.Connect.API.Commands;
+using ICD.Connect.API.Nodes;
 using ICD.Connect.Misc.Vibe.Devices.VibeBoard.Responses;
 
 namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
@@ -16,6 +20,8 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 
 		private bool m_Mute;
 
+		#region Properties
+
 		public bool Mute
 		{
 			get { return m_Mute; }
@@ -29,28 +35,27 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 			}
 		}
 
+		#endregion
+
 		public MuteComponent(VibeBoard parent)
 			: base(parent)
 		{
 			Subscribe(parent);
 		}
 
-		/// <summary>
-		/// Called to initialize the component.
-		/// </summary>
-		protected override void Initialize()
+		protected override void Dispose(bool disposing)
 		{
-			base.Initialize();
+			Unsubscribe(Parent);
 
-			GetCurrentMute();
+			base.Dispose(disposing);
 		}
+
+		#region API Methods
 
 		public void GetCurrentMute()
 		{
 			Parent.SendCommand(new VibeCommand(COMMAND, PARAM_GET_MUTE));
 		}
-
-		#region Methods
 
 		public void SetMute(bool mute)
 		{
@@ -69,11 +74,28 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 
 		#endregion
 
+		#region Private Methods
+
+		/// <summary>
+		/// Called to initialize the component.
+		/// </summary>
+		protected override void Initialize()
+		{
+			base.Initialize();
+
+			GetCurrentMute();
+		}
+
+		#endregion
+
 		#region Parent Callbacks
 
 		protected override void Subscribe(VibeBoard vibe)
 		{
 			base.Subscribe(vibe);
+
+			if (vibe == null)
+				return;
 
 			vibe.ResponseHandler.RegisterResponseCallback<MuteResponse>(MuteCallback);
 		}
@@ -86,12 +108,43 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 		{
 			base.Unsubscribe(vibe);
 
+			if (vibe == null)
+				return;
+
 			vibe.ResponseHandler.UnregisterResponseCallback<MuteResponse>(MuteCallback);
 		}
 
 		private void MuteCallback(MuteResponse response)
 		{
+			if (response.Error != null)
+			{
+				Log(eSeverity.Error, "Failed to get/set mute - {0}", response.Error.Message);
+				return;
+			}
+
 			Mute = response.Value.IsMute;
+		}
+
+		#endregion
+
+		#region Console
+
+		public override void BuildConsoleStatus(AddStatusRowDelegate addRow)
+		{
+			base.BuildConsoleStatus(addRow);
+
+			addRow("Mute", Mute);
+		}
+
+		public override IEnumerable<IConsoleCommand> GetConsoleCommands()
+		{
+			foreach (var command in base.GetConsoleCommands())
+				yield return command;
+
+			yield return new ConsoleCommand("GetMute", "Gets the current mute state", () => GetCurrentMute());
+			yield return new ConsoleCommand("MuteOn", "Sets mute on", () => MuteOn());
+			yield return new ConsoleCommand("MuteOff", "Sets mute off", () => MuteOff());
+			yield return new GenericConsoleCommand<bool>("SetMute", "SetMute <true/false>", (m) => SetMute(m));
 		}
 
 		#endregion
