@@ -1,4 +1,5 @@
-﻿using ICD.Common.Utils.Extensions;
+﻿using ICD.Common.Utils;
+using ICD.Common.Utils.Extensions;
 using ICD.Common.Utils.Json;
 using Newtonsoft.Json;
 using System;
@@ -42,7 +43,7 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Responses.Converters
 					break;
 
 				case PROP_LAST_ACTIVE_TIME:
-					instance.LastActiveTime = reader.GetValueAsDateTime();
+					instance.LastActiveTime = DateTimeUtils.FromEpochMilliseconds(reader.GetValueAsLong());
 					break;
 
 				case PROP_TOP_ACTIVITY:
