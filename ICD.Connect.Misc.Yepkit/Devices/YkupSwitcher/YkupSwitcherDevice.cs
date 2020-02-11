@@ -19,35 +19,73 @@ namespace ICD.Connect.Misc.Yepkit.Devices.YkupSwitcher
 {
 	/// <summary>
 	/// YkupSwitcherDevice is a 1 input to 2 output USB switcher that is switched by two relays:
-	/// Power Relay - Toggling cycles the device power and resets back to output 1
-	/// Switch Relay - Toggling switches the output back and forth
+	///		Power Relay - Open powers off, closed powers on
+	///		Switch Relay - Close followed by Open toggles the output while powered
 	/// 
-	/// Power is cycled so we can be sure we are synchronized with the device.
+	/// In order to consistently land on input 1:
+	///		1 - Close the switch relay, wait
+	///		2 - Open the power relay, wait
+	///		3 - Close the power relay, wait
+	///		4 - Open the switch relay, wait
+	/// 
+	/// Then to switch to input 2:
+	///		1 - Close the switch relay, wait
+	///		2 - Open the switch relay, wait
+	/// 
+	/// Power is cycled when switching so we can be sure we are always synchronized with the device.
 	/// </summary>
 	public sealed class YkupSwitcherDevice : AbstractRouteSwitcherDevice<YkupSwitcherDeviceSettings>
 	{
-		/// <summary>
-		/// How long to wait, in milliseconds, after power cycling the device.
-		/// </summary>
-		private const long POWER_TIME = 500;
+		private enum eState
+		{
+			None,
 
-		/// <summary>
-		/// How long to wait, in milliseconds, before powering back on.
-		/// </summary>
-		private const long POWER_RELAY_PULSE_TIME = 1000;
+			// Power Cycle (switch to output 1)
+			PrePowerOff,
+			PowerOff,
+			PowerOn,
+			PostPowerOff,
 
-		/// <summary>
-		/// How long to wait between toggling the switch relay.
-		/// </summary>
-		private const long SWITCH_RELAY_PULSE_TIME = 100;
+			// Toggle output
+			PreSwitch,
+			Switch
+		}
 
-		/// <summary>
-		/// How long it takes to complete a switch from one output to another.
-		/// </summary>
-		public const long TOTAL_SWITCH_TIME =
-			POWER_RELAY_PULSE_TIME +
-			POWER_TIME +
-			SWITCH_RELAY_PULSE_TIME;
+		private static readonly Dictionary<eState, long> s_StateToDuration =
+			new Dictionary<eState, long>
+			{
+				{eState.PrePowerOff, 100},
+				{eState.PowerOff, 500},
+				{eState.PowerOn, 100},
+				{eState.PostPowerOff, 100},
+
+				{eState.PreSwitch, 100},
+				{eState.Switch, 100}
+			};
+
+		private static readonly Dictionary<eState, eState> s_StateTransitions =
+			new Dictionary<eState, eState>
+			{
+				{eState.PrePowerOff, eState.PowerOff},
+				{eState.PowerOff, eState.PowerOn},
+				{eState.PowerOn, eState.PostPowerOff},
+				{eState.PostPowerOff, eState.None},
+
+				{eState.PreSwitch, eState.Switch},
+				{eState.Switch, eState.None}
+			};
+
+		private static readonly Dictionary<eState, Action<YkupSwitcherDevice>> s_StateActions =
+			new Dictionary<eState, Action<YkupSwitcherDevice>>
+			{
+				{eState.PrePowerOff, s => s.SwitchPort.Close()},
+				{eState.PowerOff, s => s.PowerPort.Open()},
+				{eState.PowerOn, s => s.PowerPort.Close()},
+				{eState.PostPowerOff, s => s.SwitchPort.Open()},
+
+				{eState.PreSwitch, s => s.SwitchPort.Close()},
+				{eState.Switch, s => s.SwitchPort.Open()}
+			};
 
 		private const int INPUT_ADDRESS = 1;
 		private const int OUTPUT_1_ADDRESS = 1;
@@ -79,11 +117,12 @@ namespace ICD.Connect.Misc.Yepkit.Devices.YkupSwitcher
 		public override event EventHandler<TransmissionStateEventArgs> OnActiveTransmissionStateChanged;
 
 		private readonly SwitcherCache m_Cache;
-		private readonly SafeTimer m_PowerTimer;
+		private readonly SafeTimer m_StateTimer;
 
 		private IRelayPort m_PowerPort;
 		private IRelayPort m_SwitchPort;
 		private int m_ExpectedOutput;
+		private eState m_State;
 
 		#region Properties
 
@@ -143,9 +182,19 @@ namespace ICD.Connect.Misc.Yepkit.Devices.YkupSwitcher
 			m_Cache.OnRouteChange += CacheOnRouteChange;
 			m_Cache.OnSourceDetectionStateChange += CacheOnSourceDetectionStateChange;
 
-			m_PowerTimer = SafeTimer.Stopped(PowerTimerCallback);
+			m_StateTimer = SafeTimer.Stopped(AdvanceToNextState);
 			
 			Controls.Add(new RouteSwitcherControl(this, 0));
+		}
+
+		/// <summary>
+		/// Release resources.
+		/// </summary>
+		protected override void DisposeFinal(bool disposing)
+		{
+			m_StateTimer.Dispose();
+
+			base.DisposeFinal(disposing);
 		}
 
 		#region Methods
@@ -305,11 +354,8 @@ namespace ICD.Connect.Misc.Yepkit.Devices.YkupSwitcher
 			LastSwitchTime = IcdEnvironment.GetUtcTime();
 			m_ExpectedOutput = output;
 
-			// Cycle power
-			m_PowerPort.PulseClose(POWER_RELAY_PULSE_TIME);
-
-			// Wait for warmup before selecting output
-			m_PowerTimer.Reset(POWER_TIME + POWER_RELAY_PULSE_TIME);
+			// Start the state machine
+			SetState(eState.PrePowerOff);
 
 			return true;
 		}
@@ -343,27 +389,73 @@ namespace ICD.Connect.Misc.Yepkit.Devices.YkupSwitcher
 		}
 
 		/// <summary>
-		/// Called after the device powers on.
+		/// Sets the current state.
+		/// Performs the action for the state and resets the timer for the interval.
 		/// </summary>
-		private void PowerTimerCallback()
+		/// <param name="state"></param>
+		private void SetState(eState state)
 		{
-			switch (m_ExpectedOutput)
+			if (state == m_State)
+				return;
+
+			m_State = state;
+
+			// Execute the action for this state
+			Action<YkupSwitcherDevice> stateAction = s_StateActions.GetDefault(m_State, s => { });
+			stateAction(this);
+
+			// Set up the timer
+			long duration;
+			if (s_StateToDuration.TryGetValue(m_State, out duration))
+				m_StateTimer.Reset(duration);
+			else
+				m_StateTimer.Stop();
+		}
+
+		/// <summary>
+		/// Called after a state has completed.
+		/// Advances to the next state.
+		/// </summary>
+		private void AdvanceToNextState()
+		{
+            eState nextState = s_StateTransitions.GetDefault(m_State);
+			bool updateCache = false;
+
+			// Edge cases
+			switch (m_State)
 			{
-				case OUTPUT_1_ADDRESS:
-					// We should be on output 1 already
+				case eState.PostPowerOff:
+					switch (m_ExpectedOutput)
+					{
+						case OUTPUT_1_ADDRESS:
+							// Done switching
+							updateCache = true;
+							break;
+
+						case OUTPUT_2_ADDRESS:
+							// Switch to the second output
+							nextState = eState.PreSwitch;
+							break;
+					}
 					break;
 
-				case OUTPUT_2_ADDRESS:
-					// Toggle the button to switch to the second output
-					SwitchPort.PulseOpen(SWITCH_RELAY_PULSE_TIME);
+				case eState.Switch:
+					updateCache = true;
 					break;
-
-				default:
-					throw new InvalidOperationException(string.Format("Unexpected output {0}", m_ExpectedOutput));
 			}
 
-			m_Cache.SetInputForOutput(OUTPUT_1_ADDRESS, m_ExpectedOutput == OUTPUT_1_ADDRESS ? INPUT_ADDRESS : (int?)null, CONNECTION_TYPE);
-			m_Cache.SetInputForOutput(OUTPUT_2_ADDRESS, m_ExpectedOutput == OUTPUT_2_ADDRESS ? INPUT_ADDRESS : (int?)null, CONNECTION_TYPE);
+			// Update the cache to reflect the current routing state
+			if (updateCache)
+			{
+				m_Cache.SetInputForOutput(OUTPUT_1_ADDRESS,
+				                          m_ExpectedOutput == OUTPUT_1_ADDRESS ? INPUT_ADDRESS : (int?)null,
+				                          CONNECTION_TYPE);
+				m_Cache.SetInputForOutput(OUTPUT_2_ADDRESS,
+				                          m_ExpectedOutput == OUTPUT_2_ADDRESS ? INPUT_ADDRESS : (int?)null,
+				                          CONNECTION_TYPE);
+			}
+
+			SetState(nextState);
 		}
 
 		#endregion
