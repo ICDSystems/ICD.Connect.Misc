@@ -1,4 +1,6 @@
-﻿using ICD.Common.Utils.Services.Logging;
+﻿using System.Collections.Generic;
+using ICD.Common.Utils.Services.Logging;
+using ICD.Connect.API.Commands;
 using ICD.Connect.Misc.Vibe.Devices.VibeBoard.Responses;
 
 namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
@@ -61,6 +63,19 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 			}
 
 			Log(eSeverity.Debug, "Key successfully pressed");
+		}
+
+		#endregion
+
+		#region Console
+
+		public override IEnumerable<IConsoleCommand> GetConsoleCommands()
+		{
+			foreach (var command in base.GetConsoleCommands())
+				yield return command;
+
+			yield return new GenericConsoleCommand<eVibeKey>("Press", "Press <Back, Home, Task, Up, Down, Left, Right>",
+				key => KeyPress(key));
 		}
 
 		#endregion
