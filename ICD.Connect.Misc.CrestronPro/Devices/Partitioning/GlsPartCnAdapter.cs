@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using ICD.Common.Utils.EventArguments;
 using ICD.Common.Utils.Services.Logging;
+using ICD.Connect.API.Commands;
 using ICD.Connect.API.Nodes;
 using ICD.Connect.Partitioning.Controls;
 using ICD.Connect.Partitioning.Devices;
@@ -287,6 +289,27 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 #if SIMPLSHARP
 			addRow("Sensitivity", m_PartitionDevice == null ? (ushort?)null : m_PartitionDevice.SensitivityFeedback.GetUShortValueOrDefault());
 #endif
+		}
+
+		/// <summary>
+		/// Gets the child console commands.
+		/// </summary>
+		/// <returns></returns>
+		public override IEnumerable<IConsoleCommand> GetConsoleCommands()
+		{
+			foreach (IConsoleCommand command in GetBaseConsoleCommands())
+				yield return command;
+
+			yield return new GenericConsoleCommand<ushort>("SetSensitivity", "SetSensitivity <USHORT>", u => SetSensitivity(u));
+		}
+
+		/// <summary>
+		/// Workaround for "unverifiable code" warning.
+		/// </summary>
+		/// <returns></returns>
+		private IEnumerable<IConsoleCommand> GetBaseConsoleCommands()
+		{
+			return base.GetConsoleCommands();
 		}
 
 		#endregion
