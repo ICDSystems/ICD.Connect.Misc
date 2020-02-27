@@ -10,10 +10,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
  - Created Unsplash Service Device.
  - Added Vibe Board device
  - Added YKUP USB switcher device
- - Added console command for setting GlsPartCn sensitivity
 
 ### Changed
  - Fixed web requests to use new web port response.
+
+## [8.1.0] - 2020-02-27
+### Added
+ - Added console command to GlsPartCn for setting sensitivity
+
+### Changed
+ - GlsPartCn sensitivity is now optional
 
 ## [8.0.1] - 2019-11-19
 ### Changed
