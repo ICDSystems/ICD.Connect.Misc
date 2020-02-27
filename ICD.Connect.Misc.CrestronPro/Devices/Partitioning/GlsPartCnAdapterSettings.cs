@@ -20,7 +20,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 		[OriginatorIdSettingsProperty(typeof(ICresnetBridgeAdapter))]
 		public int? ParentId { get; set; }
 
-		public ushort Sensitivity { get; set; }
+		public ushort? Sensitivity { get; set; }
 
 		/// <summary>
 		/// Writes property elements to xml.
@@ -45,7 +45,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 
 			CresnetSettingsUtils.ReadPropertiesFromXml(this, xml);
 
-			Sensitivity = XmlUtils.TryReadChildElementContentAsUShort(xml, SENSITIVITY_ELEMENT) ?? 1;
+			Sensitivity = XmlUtils.TryReadChildElementContentAsUShort(xml, SENSITIVITY_ELEMENT);
 		}
 	}
 }

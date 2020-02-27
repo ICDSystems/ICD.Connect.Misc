@@ -79,6 +79,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 		/// </summary>
 		public override void Open()
 		{
+			throw new NotSupportedException();
 		}
 
 		/// <summary>
@@ -86,8 +87,13 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 		/// </summary>
 		public override void Close()
 		{
+			throw new NotSupportedException();
 		}
 
+		/// <summary>
+		/// Sets the sensitivity of the sensor.
+		/// </summary>
+		/// <param name="sensitivity"></param>
 		public void SetSensitivity(ushort sensitivity)
 		{
 #if SIMPLSHARP
@@ -124,7 +130,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 #if SIMPLSHARP
 			settings.CresnetId = m_PartitionDevice == null ? (byte)0 : (byte)m_PartitionDevice.ID;
 			settings.Sensitivity = m_PartitionDevice == null
-									   ? (ushort)0
+									   ? (ushort?)null
 									   : m_PartitionDevice.SensitivityFeedback.GetUShortValueOrDefault();
 #else
             settings.CresnetId = 0;
@@ -175,13 +181,15 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 			}
 			catch (ArgumentException e)
 			{
-				string message = string.Format("{0} failed to instantiate {1} with Cresnet ID {2} - {3}",
-											   this, typeof(GlsPartCnAdapter).Name, settings.CresnetId, e.Message);
-				Logger.AddEntry(eSeverity.Error, e, message);
+				string message = string.Format("Failed to instantiate {1} with Cresnet ID {2}",
+											   typeof(GlsPartCnAdapter).Name, settings.CresnetId);
+				Log(eSeverity.Error, e, message);
 			}
 
 			SetDevice(device);
-			SetSensitivity(settings.Sensitivity);
+
+			if (settings.Sensitivity.HasValue)
+				SetSensitivity(settings.Sensitivity.Value);
 #else
             throw new NotSupportedException();
 #endif
@@ -268,12 +276,16 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 
 		#region Console
 
+		/// <summary>
+		/// Calls the delegate for each console status item.
+		/// </summary>
+		/// <param name="addRow"></param>
 		public override void BuildConsoleStatus(AddStatusRowDelegate addRow)
 		{
 			base.BuildConsoleStatus(addRow);
 
 #if SIMPLSHARP
-			addRow("Sensitivity", m_PartitionDevice == null ? 0 : m_PartitionDevice.SensitivityFeedback.GetUShortValueOrDefault());
+			addRow("Sensitivity", m_PartitionDevice == null ? (ushort?)null : m_PartitionDevice.SensitivityFeedback.GetUShortValueOrDefault());
 #endif
 		}
 
