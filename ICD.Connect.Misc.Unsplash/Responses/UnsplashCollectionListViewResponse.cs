@@ -1,5 +1,4 @@
-﻿using System;
-using ICD.Connect.Misc.Unsplash.Converters;
+﻿using ICD.Connect.Misc.Unsplash.Converters;
 using Newtonsoft.Json;
 
 namespace ICD.Connect.Misc.Unsplash.Responses

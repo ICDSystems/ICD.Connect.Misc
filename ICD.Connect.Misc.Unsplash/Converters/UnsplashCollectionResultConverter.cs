@@ -1,5 +1,4 @@
-﻿using System;
-using ICD.Common.Utils.Extensions;
+﻿using ICD.Common.Utils.Extensions;
 using ICD.Common.Utils.Json;
 using ICD.Connect.Misc.Unsplash.Responses;
 using Newtonsoft.Json;

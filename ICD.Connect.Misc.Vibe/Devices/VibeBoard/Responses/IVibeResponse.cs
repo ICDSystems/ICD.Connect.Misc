@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Responses
+﻿namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Responses
 {
 	public interface IVibeResponse
 	{
