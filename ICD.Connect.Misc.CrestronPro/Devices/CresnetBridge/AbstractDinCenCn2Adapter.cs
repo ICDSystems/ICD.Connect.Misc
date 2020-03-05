@@ -21,7 +21,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 		where TSettings : IDeviceSettings, new()
 #endif
 	{
-		
+
 #if SIMPLSHARP
 		private byte m_Ipid;
 
@@ -33,6 +33,8 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 		{
 			if (bridge == Bridge)
 				return;
+
+			Unsubscribe(Bridge);
 
 			if (Bridge != null)
 			{
@@ -58,6 +60,8 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 				if (result != eDeviceRegistrationUnRegistrationResponse.Success)
 					Logger.AddEntry(eSeverity.Error, "Unable to register {0} - {1}", Bridge.GetType().Name, result);
 			}
+
+			Subscribe(Bridge);
 			UpdateCachedOnlineStatus();
 		}
 
@@ -65,7 +69,46 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 		{
 			get { return Bridge.Branches; }
 		}
+
+		#region Bridge Callbacks      
+
+		private void Subscribe(TBridge bridge)
+		{
+			if (bridge == null)
+				return;
+
+			bridge.OnlineStatusChange += BridgeOnlineStatusChange;
+		}
+
+		private void Unsubscribe(TBridge bridge)
+		{
+			if (bridge == null)
+				return;
+
+			bridge.OnlineStatusChange -= BridgeOnlineStatusChange;
+		}
+
+		private void BridgeOnlineStatusChange(GenericBase currentDevice, OnlineOfflineEventArgs args)
+		{
+			UpdateCachedOnlineStatus();
+		}
+
+		#endregion
+
 #endif
+		/// <summary>
+		/// Gets the current online status of the device.
+		/// </summary>
+		/// <returns></returns>
+		protected override bool GetIsOnlineStatus()
+		{
+#if SIMPLSHARP
+			return Bridge != null && Bridge.IsOnline;
+#else
+            return false;
+#endif
+		}
+
 
 		#region Settings
 
@@ -110,18 +153,5 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 		}
 
 		#endregion
-
-		/// <summary>
-		/// Gets the current online status of the device.
-		/// </summary>
-		/// <returns></returns>
-		protected override bool GetIsOnlineStatus()
-		{
-#if SIMPLSHARP
-			return Bridge != null && Bridge.IsOnline;
-#else
-            return false;
-#endif
-		}
 	}
 }

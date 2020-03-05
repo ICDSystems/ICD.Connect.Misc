@@ -2,6 +2,7 @@
 using ICD.Common.Utils.EventArguments;
 using ICD.Common.Utils.Extensions;
 using ICD.Common.Utils.Services.Logging;
+using ICD.Connect.API.Nodes;
 using ICD.Connect.Devices;
 using ICD.Connect.Misc.CrestronPro.Utils;
 using ICD.Connect.Misc.Occupancy;
@@ -29,6 +30,9 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 #if SIMPLSHARP
 		private TSensor m_Sensor;
 #endif
+
+		private int? m_CresnetBranchId;
+		private int? m_CresnetParentId;
 
 		private eOccupancyState m_OccupancyState;
 
@@ -118,6 +122,13 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 		private void UpdateStatus()
 		{
 #if SIMPLSHARP
+
+			if (m_Sensor == null)
+			{
+				OccupancyState = eOccupancyState.Unknown;
+				return;
+			}
+
 			if(m_Sensor.OccupancyDetectedFeedback.BoolValue)
 				OccupancyState = eOccupancyState.Occupied;
 			else if (m_Sensor.VacancyDetectedFeedback.BoolValue)
@@ -217,12 +228,71 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 			{
 				string message = string.Format("{0} failed to instantiate {1} with Cresnet ID {2} - {3}",
 											   this, typeof(TSensor).Name, settings.CresnetId, e.Message);
-				Logger.AddEntry(eSeverity.Error, e, message);
+				Log(eSeverity.Error, message);
 			}
+
+			m_CresnetBranchId = settings.BranchId;
+			m_CresnetParentId = settings.ParentId;
 
 			SetDevice(device);
 #else
             throw new NotImplementedException();
+#endif
+		}
+
+		/// <summary>
+		/// Override to apply properties to the settings instance.
+		/// </summary>
+		/// <param name="settings"></param>
+		protected override void CopySettingsFinal(TSettings settings)
+		{
+			base.CopySettingsFinal(settings);
+#if SIMPLSHARP
+			settings.CresnetId = m_Sensor == null ? null : (byte?)m_Sensor.ID;
+			settings.ParentId = m_CresnetParentId;
+			settings.BranchId = m_CresnetBranchId;
+#else
+			throw new NotImplementedException();
+#endif
+		}
+
+		/// <summary>
+		/// Override to clear the instance settings.
+		/// </summary>
+		protected override void ClearSettingsFinal()
+		{
+			base.ClearSettingsFinal();
+#if SIMPLSHARP
+			m_CresnetParentId = null;
+			m_CresnetBranchId = null;
+			SetDevice(null);
+#else
+			throw new NotImplementedException();
+#endif
+		}
+
+		#endregion
+
+		#region Console
+
+		/// <summary>
+		/// Calls the delegate for each console status item.
+		/// </summary>
+		/// <param name="addRow"></param>
+		public override void BuildConsoleStatus(AddStatusRowDelegate addRow)
+		{
+			base.BuildConsoleStatus(addRow);
+
+#if SIMPLSHARP
+			if (m_Sensor != null)
+			{
+				addRow("CresnetId", m_Sensor.ID);
+				addRow("ParentId", m_CresnetParentId);
+				addRow("BranchId", m_CresnetBranchId);
+				addRow("Occupancy Detected", m_Sensor.OccupancyDetectedFeedback.BoolValue);
+			}
+
+
 #endif
 		}
 
