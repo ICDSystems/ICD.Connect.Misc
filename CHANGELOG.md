@@ -47,6 +47,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
  - Added port configuration features to devices and ports
 
+## [6.5.2] - 2020-03-05
+### Changed
+ - Fixed a bug where CENCN adapters don't upated online/offline correctly
+
 ## [6.5.1] - 2019-09-19
 ### Changed
  - Fixed a bug where Crestron ControlSystem IR Ports were not being registered
