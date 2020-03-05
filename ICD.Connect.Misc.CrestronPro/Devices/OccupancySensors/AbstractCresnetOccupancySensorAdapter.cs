@@ -122,6 +122,13 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 		private void UpdateStatus()
 		{
 #if SIMPLSHARP
+
+			if (m_Sensor == null)
+			{
+				OccupancyState = eOccupancyState.Unknown;
+				return;
+			}
+
 			if(m_Sensor.OccupancyDetectedFeedback.BoolValue)
 				OccupancyState = eOccupancyState.Occupied;
 			else if (m_Sensor.VacancyDetectedFeedback.BoolValue)
