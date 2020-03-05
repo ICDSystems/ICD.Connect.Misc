@@ -21,7 +21,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 		where TSettings : IDeviceSettings, new()
 #endif
 	{
-		
+
 #if SIMPLSHARP
 		private byte m_Ipid;
 
@@ -93,8 +93,9 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 			UpdateCachedOnlineStatus();
 		}
 
-#endregion
+		#endregion
 
+#endif
 		/// <summary>
 		/// Gets the current online status of the device.
 		/// </summary>
@@ -107,8 +108,6 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
             return false;
 #endif
 		}
-
-#endif
 
 
 		#region Settings
