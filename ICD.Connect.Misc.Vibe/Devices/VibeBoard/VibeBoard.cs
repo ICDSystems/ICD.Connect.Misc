@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using ICD.Common.Properties;
 using ICD.Common.Utils.Extensions;
 using ICD.Common.Utils.Services.Logging;
+using ICD.Common.Utils.Timers;
 using ICD.Connect.API.Nodes;
 using ICD.Connect.Misc.Vibe.Devices.VibeBoard.Controls;
 using ICD.Connect.Misc.Vibe.Devices.VibeBoard.Responses;
@@ -29,12 +30,14 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard
 		public event EventHandler<BoolEventArgs> OnInitializedChanged;
 
 		private const char CLIENT_DELIMITER = (char)0xFF;
+		private const long STAY_ALIVE_TIME = 60000L;
 
 		private readonly ConnectionStateManager m_ConnectionStateManager;
 		private readonly DelimiterSerialBuffer m_SerialBuffer;
 		private readonly VibeComponentFactory m_ComponentFactory;
 		private readonly VibeResponseHandler m_ResponseHandler;
 		private readonly SecureNetworkProperties m_NetworkProperties;
+		private readonly SafeTimer m_StayAliveTimer;
 
 		private bool m_Initialized;
 		private bool m_IsConnected;
@@ -104,6 +107,13 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard
 			Controls.Add(new VibeBoardVolumeControl(this, Controls.Count));
 			Controls.Add(new VibeBoardPowerControl(this, Controls.Count));
 			Controls.Add(new VibeBoardAppControl(this, Controls.Count));
+
+			m_StayAliveTimer = SafeTimer.Stopped(StayAlive);
+		}
+
+		private void StayAlive()
+		{
+			Components.GetComponent<VolumeComponent>().GetCurrentVolume();
 		}
 
 		protected override void DisposeFinal(bool disposing)
@@ -198,10 +208,12 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard
 
 			if (args.Data)
 			{
+				m_StayAliveTimer.Reset(STAY_ALIVE_TIME, STAY_ALIVE_TIME);
 				Initialized = true;
 				return;
 			}
 
+			m_StayAliveTimer.Stop();
 			Log(eSeverity.Critical, "Lost connection");
 			Initialized = false;
 		}
