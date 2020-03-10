@@ -21,6 +21,15 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 	/// </summary>
 	public sealed class ComPortAdapter : AbstractComPort<ComPortAdapterSettings>
 	{
+		private const eComBaudRates DEFAULT_BAUD_RATE = eComBaudRates.BaudRate9600;
+		private const eComDataBits DEFAULT_DATA_BITS = eComDataBits.DataBits8;
+		private const eComParityType DEFAULT_PARITY_TYPE = eComParityType.None;
+		private const eComStopBits DEFAULT_STOP_BITS = eComStopBits.StopBits1;
+		private const eComProtocolType DEFAULT_PROTOCOL_TYPE = eComProtocolType.Rs232;
+		private const eComHardwareHandshakeType DEFAULT_HARDWARE_HANDSHAKE_TYPE = eComHardwareHandshakeType.None;
+		private const eComSoftwareHandshakeType DEFAULT_SOFTWARE_HANDSHAKE_TYPE = eComSoftwareHandshakeType.None;
+		private const bool DEFAULT_REPORT_CTS_CHANGES = false;
+
 		private readonly ComSpecProperties m_ComSpecProperties;
 
 #if SIMPLSHARP
@@ -51,9 +60,9 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 			get
 			{
 #if SIMPLSHARP
-				return m_Port == null ? default(eComBaudRates) : m_Port.BaudRate.FromCrestron();
+				return m_Port == null ? DEFAULT_BAUD_RATE : m_Port.BaudRate.FromCrestron();
 #else
-				return default(eComBaudRates);
+				return DEFAULT_BAUD_RATE;
 #endif
 			}
 		}
@@ -66,9 +75,9 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 			get
 			{
 #if SIMPLSHARP
-				return m_Port == null ? default(eComDataBits) : m_Port.DataBits.FromCrestron();
+				return m_Port == null ? DEFAULT_DATA_BITS : m_Port.DataBits.FromCrestron();
 #else
-				return default(eComDataBits);
+				return DEFAULT_DATA_BITS;
 #endif
 			}
 		}
@@ -81,9 +90,9 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 			get
 			{
 #if SIMPLSHARP
-				return m_Port == null ? default(eComParityType) : m_Port.Parity.FromCrestron();
+				return m_Port == null ? DEFAULT_PARITY_TYPE : m_Port.Parity.FromCrestron();
 #else
-				return default(eComParityType);
+				return DEFAULT_PARITY_TYPE;
 #endif
 			}
 		}
@@ -96,9 +105,9 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 			get
 			{
 #if SIMPLSHARP
-				return m_Port == null ? default(eComStopBits) : m_Port.StopBits.FromCrestron();
+				return m_Port == null ? DEFAULT_STOP_BITS : m_Port.StopBits.FromCrestron();
 #else
-				return default(eComStopBits);
+				return DEFAULT_STOP_BITS;
 #endif
 			}
 		}
@@ -111,9 +120,9 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 			get
 			{
 #if SIMPLSHARP
-				return m_Port == null ? default(eComProtocolType) : m_Port.Protocol.FromCrestron();
+				return m_Port == null ? DEFAULT_PROTOCOL_TYPE : m_Port.Protocol.FromCrestron();
 #else
-				return default(eComProtocolType);
+				return DEFAULT_PROTOCOL_TYPE;
 #endif
 			}
 		}
@@ -126,9 +135,9 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 			get
 			{
 #if SIMPLSHARP
-				return m_Port == null ? default(eComHardwareHandshakeType) : m_Port.HwHandShake.FromCrestron();
+				return m_Port == null ? DEFAULT_HARDWARE_HANDSHAKE_TYPE : m_Port.HwHandShake.FromCrestron();
 #else
-				return default(eComHardwareHandshakeType);
+				return DEFAULT_HARDWARE_HANDSHAKE_TYPE;
 #endif
 			}
 		}
@@ -141,9 +150,9 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 			get
 			{
 #if SIMPLSHARP
-				return m_Port == null ? default(eComSoftwareHandshakeType) : m_Port.SwHandShake.FromCrestron();
+				return m_Port == null ? DEFAULT_SOFTWARE_HANDSHAKE_TYPE : m_Port.SwHandShake.FromCrestron();
 #else
-				return default(eComSoftwareHandshakeType);
+				return DEFAULT_SOFTWARE_HANDSHAKE_TYPE;
 #endif
 			}
 		}
@@ -156,9 +165,9 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 			get
 			{
 #if SIMPLSHARP
-				return m_Port != null && m_Port.ReportCTSChanges;
+				return m_Port == null ? DEFAULT_REPORT_CTS_CHANGES : m_Port.ReportCTSChanges;
 #else
-				return false;
+				return DEFAULT_REPORT_CTS_CHANGES;
 #endif
 			}
 		}

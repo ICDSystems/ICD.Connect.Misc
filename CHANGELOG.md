@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
  - Fixed web requests to use new web port response.
+ - Crestron ComPorts are instantiated with more appropriate default comspec values
 
 ## [8.1.0] - 2020-02-27
 ### Added
