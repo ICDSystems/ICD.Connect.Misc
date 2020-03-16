@@ -268,15 +268,10 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 			base.BuildConsoleStatus(addRow);
 
 #if SIMPLSHARP
-			if (m_Sensor != null)
-			{
-				addRow("CresnetId", m_Sensor.ID);
-				addRow("ParentId", m_CresnetParentId);
-				addRow("BranchId", m_CresnetBranchId);
-				addRow("Occupancy Detected", m_Sensor.OccupancyDetectedFeedback.BoolValue);
-			}
-
-
+			addRow("Cresnet ID", m_Sensor == null ? (uint?)null : m_Sensor.ID);
+			addRow("Parent ID", m_CresnetParentId);
+			addRow("Branch ID", m_CresnetBranchId);
+			addRow("Occupancy State", OccupancyState);
 #endif
 		}
 
