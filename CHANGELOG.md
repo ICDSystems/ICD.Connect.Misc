@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [8.2.0] - 2020-03-20
 ### Added
  - Created Unsplash Service Device.
  - Added Vibe Board device
