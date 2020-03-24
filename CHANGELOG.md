@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+ - Removed duplicate comspec entries from the console
+
 ## [8.2.1] - 2020-03-24
 ### Changed
  - Fixed an issue where Cresnet Occupancy Sensors weren't using an Occupancy Sensor Control

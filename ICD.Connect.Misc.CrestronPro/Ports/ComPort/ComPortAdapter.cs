@@ -482,7 +482,6 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 
 		#region Console Commands
 
-#if SIMPLSHARP
 		/// <summary>
 		/// Calls the delegate for each console status item.
 		/// </summary>
@@ -493,16 +492,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 
 			addRow("Device", m_Device);
 			addRow("Address", m_Address);
-			addRow("Baud Rate", m_Port.BaudRate);
-			addRow("Data Bits", m_Port.DataBits);
-			addRow("Parity Type", m_Port.Parity);
-			addRow("Stop Bits", m_Port.StopBits);
-			addRow("Protocol Type", m_Port.Protocol);
-			addRow("Hardware Handshake", m_Port.HwHandShake);
-			addRow("Software Handshake", m_Port.SwHandShake);
-			addRow("Report CTS Changes", m_Port.ReportCTSChanges);
 		}
-#endif
 
 		#endregion
 	}
