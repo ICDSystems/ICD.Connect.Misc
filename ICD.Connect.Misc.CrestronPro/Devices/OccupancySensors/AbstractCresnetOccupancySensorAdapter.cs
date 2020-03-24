@@ -24,6 +24,11 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 		where TSettings : AbstractCresnetOccupancySensorAdapterSettings, new()
 #endif
 	{
+		#region Events
+
+		public event EventHandler<GenericEventArgs<eOccupancyState>> OnOccupancyStateChanged;
+
+		#endregion
 
 		#region Fields
 
@@ -56,11 +61,10 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 
 		#endregion
 
-		#region Events
-
-		public event EventHandler<GenericEventArgs<eOccupancyState>> OnOccupancyStateChanged;
-
-		#endregion
+		protected AbstractCresnetOccupancySensorAdapter()
+		{
+			Controls.Add(new CresnetOccupancySensorControl(this, 0));
+		}
 
 		/// <summary>
 		/// Gets the current online status of the device.
