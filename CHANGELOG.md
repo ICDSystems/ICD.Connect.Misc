@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Changed
+ - Fixed an issue where Cresnet Occupancy Sensors weren't using an Occupancy Sensor Control
 
 ## [8.2.0] - 2020-03-20
 ### Added
