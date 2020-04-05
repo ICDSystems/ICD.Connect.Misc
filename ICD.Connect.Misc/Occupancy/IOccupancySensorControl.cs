@@ -27,7 +27,7 @@ namespace ICD.Connect.Misc.Occupancy
 		/// True = occupied
 		/// False = unoccupied/vacant
 		/// </summary>
-		[DynamicPropertyTelemetry(OccupancyTelemetryNames.OCCUPANCY_STATE, OccupancyTelemetryNames.OCCUPANCY_STATE_CHANGED)]
+		[DynamicPropertyTelemetry(OccupancyTelemetryNames.OCCUPANCY_STATE, null, OccupancyTelemetryNames.OCCUPANCY_STATE_CHANGED)]
 		eOccupancyState OccupancyState { get; }
 	}
 }
