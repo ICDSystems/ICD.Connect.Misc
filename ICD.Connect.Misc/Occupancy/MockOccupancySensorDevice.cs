@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using ICD.Common.Properties;
 using ICD.Connect.API.Commands;
-using ICD.Connect.Devices;
+using ICD.Connect.Devices.Mock;
 
 namespace ICD.Connect.Misc.Occupancy
 {
-	public sealed class MockOccupancySensorDevice : AbstractDevice<MockOccupancySensorDeviceSettings>
+	public sealed class MockOccupancySensorDevice : AbstractMockDevice<MockOccupancySensorDeviceSettings>
 	{
 		/// <summary>
 		/// Constructor.
@@ -16,15 +16,6 @@ namespace ICD.Connect.Misc.Occupancy
 		}
 
 		#region Methods
-
-		/// <summary>
-		/// Gets the current online status of the device.
-		/// </summary>
-		/// <returns></returns>
-		protected override bool GetIsOnlineStatus()
-		{
-			return true;
-		}
 
 		/// <summary>
 		/// Adds a control with the given id.
