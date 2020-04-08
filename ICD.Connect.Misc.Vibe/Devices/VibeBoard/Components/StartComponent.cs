@@ -70,12 +70,12 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 			// if launch "failed" cause app is already launched, don't count it as fail. It should have switched to it, so still counts
 			if (response.Error != null && !response.Error.Message.Equals("Start activity failed. result: 2"))
 			{
-				Log(eSeverity.Error, response.Error.Message);
+				Parent.Logger.Log(eSeverity.Error, response.Error.Message);
 				OnAppLaunchFailed.Raise(this);
 				return;
 			}
 
-			Log(eSeverity.Informational, "App successfully launched");
+			Parent.Logger.Log(eSeverity.Informational, "App successfully launched");
 			OnAppLaunched.Raise(this);
 		}
 

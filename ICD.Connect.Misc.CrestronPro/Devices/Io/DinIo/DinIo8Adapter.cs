@@ -1,4 +1,5 @@
 ﻿using System;
+using ICD.Common.Logging.LoggingContexts;
 #if SIMPLSHARP
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.DM;
@@ -45,7 +46,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Io.DinIo
 
 			eDeviceRegistrationUnRegistrationResponse result;
 			if (m_PortsDevice != null && !GenericBaseUtils.SetUp(m_PortsDevice, this, out result))
-				Log(eSeverity.Error, "Unable to register {0} - {1}", m_PortsDevice.GetType().Name, result);
+				Logger.Log(eSeverity.Error, "Unable to register {0} - {1}", m_PortsDevice.GetType().Name, result);
 
 			Subscribe(m_PortsDevice);
 			UpdateCachedOnlineStatus();
@@ -185,8 +186,8 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Io.DinIo
 
 			if (settings.CresnetId == null || !CresnetUtils.IsValidId(settings.CresnetId.Value))
 			{
-				Logger.AddEntry(eSeverity.Error, "{0} failed to instantiate {1} - CresnetId {2} is out of range",
-				                this, typeof(DinIo8).Name, settings.CresnetId);
+				Logger.Log(eSeverity.Error, "Failed to instantiate {0} - CresnetId {1} is out of range",
+				           typeof(DinIo8).Name, settings.CresnetId);
 			}
 			else
 			{
@@ -201,9 +202,8 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Io.DinIo
 				}
 				catch (ArgumentException e)
 				{
-					string message = string.Format("{0} failed to instantiate {1} with Cresnet ID {2} - {3}",
-					                               this, typeof(DinIo8).Name, settings.CresnetId, e.Message);
-					Log(eSeverity.Error, e, message);
+					Logger.Log(eSeverity.Error, e, "Failed to instantiate {0} with Cresnet ID {1} - {2}",
+					           typeof(DinIo8).Name, settings.CresnetId, e.Message);
 				}
 			}
 

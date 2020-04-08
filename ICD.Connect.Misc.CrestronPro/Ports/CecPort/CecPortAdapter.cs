@@ -63,7 +63,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.CecPort
 #if SIMPLSHARP
 			if (m_Port == null)
 			{
-				Log(eSeverity.Error, "Unable to send - internal port is null");
+				Logger.Log(eSeverity.Error, "Unable to send data - internal port is null");
 				return false;
 			}
 
@@ -197,29 +197,29 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.CecPort
 				}
 				catch (KeyNotFoundException)
 				{
-					Log(eSeverity.Error, "No device with id {0}", m_Device);
+					Logger.Log(eSeverity.Error, "No device with id {0}", m_Device);
 				}
 			}
 
 			if (provider == null)
-				Log(eSeverity.Error, "{0} is not a {1}", m_Device, typeof(IPortParent).Name);
+				Logger.Log(eSeverity.Error, "{0} is not a {1}", m_Device, typeof(IPortParent).Name);
 			else
 			{
 				try
 				{
 					port = provider.GetCecPort(settings.Io, settings.Address);
 					if (port == null)
-						Log(eSeverity.Error, "No Cec Port at {0} address {1}:{2}", m_Device, settings.Io, settings.Address);
+						Logger.Log(eSeverity.Error, "No Cec Port at {0} address {1}:{2}", m_Device, settings.Io, settings.Address);
 				}
 				catch (Exception e)
 				{
-					Log(eSeverity.Error, "Unable to get CecPort from device {0} at address {1}:{2} - {3}", m_Device, settings.Io,
+					Logger.Log(eSeverity.Error, "Unable to get CecPort from device {0} at address {1}:{2} - {3}", m_Device, settings.Io,
 						settings.Address, e.Message);
 				}
 			}
 
 			if (provider != null && port == null)
-				Log(eSeverity.Error, "No Cec Port at {0} address {1}:{2}", m_Device, settings.Io, settings.Address);
+				Logger.Log(eSeverity.Error, "No Cec Port at {0} address {1}:{2}", m_Device, settings.Io, settings.Address);
 
 			m_Io = settings.Io;
 			m_Address = settings.Address;

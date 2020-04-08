@@ -202,7 +202,7 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard
 				return;
 			}
 
-			Log(eSeverity.Critical, "Lost connection");
+			Logger.Log(eSeverity.Critical, "Lost connection");
 			Initialized = false;
 		}
 
@@ -269,7 +269,7 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard
 				}
 				catch (KeyNotFoundException)
 				{
-					Log(eSeverity.Error, "No serial port with id {0}", settings.KrangPort);
+					Logger.Log(eSeverity.Error, "No serial port with id {0}", settings.KrangPort);
 				}
 			}
 

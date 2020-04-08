@@ -58,10 +58,10 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 		{
 			if (response.Error != null)
 			{
-				Log(eSeverity.Error, "Failed to update OTA host(s) - {0}", response.Error.Message);
+				Parent.Logger.Log(eSeverity.Error, "Failed to update OTA host(s) - {0}", response.Error.Message);
 			}
 
-			Log(eSeverity.Informational, "OTA host(s) updated");
+			Parent.Logger.Log(eSeverity.Informational, "OTA host(s) updated");
 		}
 
 		#endregion

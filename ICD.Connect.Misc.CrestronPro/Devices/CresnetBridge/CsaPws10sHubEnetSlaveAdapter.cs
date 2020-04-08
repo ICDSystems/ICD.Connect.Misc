@@ -1,4 +1,5 @@
 ﻿using System;
+using ICD.Common.Logging.LoggingContexts;
 using ICD.Connect.Settings;
 #if SIMPLSHARP
 using Crestron.SimplSharpPro.GeneralIO;
@@ -85,14 +86,13 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 				}
 				else
 				{
-					Log(eSeverity.Error, "Failed to instantiate {0} - Settings requires a CresnetID", typeof(CsaPws10sHubEnetSlave).Name);
+					Logger.Log(eSeverity.Error, "Failed to instantiate {0} - Settings requires a CresnetID", typeof(CsaPws10sHubEnetSlave).Name);
 				}
 			}
 			catch (ArgumentException e)
 			{
-				string message = string.Format("{0} - Failed to instantiate {1} with Cresnet ID {2} - {3}",
-											   this, typeof(CsaPws10sHubEnetSlave).Name, settings.CresnetId, e.Message);
-				Logger.AddEntry(eSeverity.Error, e, message);
+				Logger.Log(eSeverity.Error, e, "Failed to instantiate {0} with Cresnet ID {1} - {2}",
+				           typeof(CsaPws10sHubEnetSlave).Name, settings.CresnetId, e.Message);
 			}
 			finally
 			{

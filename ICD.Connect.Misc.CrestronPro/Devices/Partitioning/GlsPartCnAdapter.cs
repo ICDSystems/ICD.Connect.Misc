@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ICD.Common.Logging.LoggingContexts;
 using ICD.Common.Utils.EventArguments;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.API.Commands;
@@ -63,7 +64,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 
 			eDeviceRegistrationUnRegistrationResponse result;
 			if (m_PartitionDevice != null && !GenericBaseUtils.SetUp(m_PartitionDevice, this, out result))
-				Log(eSeverity.Error, "Unable to register {0} - {1}", m_PartitionDevice.GetType().Name, result);
+				Logger.Log(eSeverity.Error, "Unable to register {0} - {1}", m_PartitionDevice.GetType().Name, result);
 
 			// Actually enable feedback from the device!
 			if (m_PartitionDevice != null)
@@ -164,8 +165,8 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 #if SIMPLSHARP
 			if (settings.CresnetId == null || !CresnetUtils.IsValidId(settings.CresnetId.Value))
 			{
-				Log(eSeverity.Error, "Failed to instantiate {0} - CresnetId {1} is out of range",
-				    typeof(GlsPartCn).Name, settings.CresnetId == null ? "NULL" : settings.CresnetId.ToString());
+				Logger.Log(eSeverity.Error, "Failed to instantiate {0} - CresnetId {1} is out of range",
+				           typeof(GlsPartCn).Name, settings.CresnetId == null ? "NULL" : settings.CresnetId.ToString());
 				return;
 			}
 
@@ -183,9 +184,8 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 			}
 			catch (ArgumentException e)
 			{
-				string message = string.Format("Failed to instantiate {1} with Cresnet ID {2}",
-											   typeof(GlsPartCnAdapter).Name, settings.CresnetId);
-				Log(eSeverity.Error, e, message);
+				Logger.Log(eSeverity.Error, e, "Failed to instantiate {0} with Cresnet ID {1}",
+				           typeof(GlsPartCnAdapter).Name, settings.CresnetId);
 			}
 
 			SetDevice(device);

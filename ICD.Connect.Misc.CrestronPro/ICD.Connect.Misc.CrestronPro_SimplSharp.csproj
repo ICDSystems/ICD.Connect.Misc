@@ -218,6 +218,10 @@
     <None Include="Properties\ControlSystem.cfg" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\ICD.Common.Logging\ICD.Common.Logging\ICD.Common.Logging_SimplSharp.csproj">
+      <Project>{8093AE94-7250-411E-9C55-68AB2B5D705A}</Project>
+      <Name>ICD.Common.Logging_SimplSharp</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\ICD.Common.Utils\ICD.Common.Utils\ICD.Common.Utils_SimplSharp.csproj">
       <Project>{CB4055C6-D59E-479E-9C56-2C92335A7D9A}</Project>
       <Name>ICD.Common.Utils_SimplSharp</Name>

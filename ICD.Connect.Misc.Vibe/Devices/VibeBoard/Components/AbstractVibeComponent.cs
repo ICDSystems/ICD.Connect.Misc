@@ -1,10 +1,8 @@
-﻿using System;
-using ICD.Common.Utils.EventArguments;
+﻿using ICD.Common.Utils.EventArguments;
 using ICD.Common.Utils.Extensions;
 using ICD.Connect.API.Commands;
 using ICD.Connect.API.Nodes;
 using System.Collections.Generic;
-using ICD.Common.Utils.Services.Logging;
 
 namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 {
@@ -29,12 +27,6 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 		/// Gets the help information for the node.
 		/// </summary>
 		public virtual string ConsoleHelp { get { return string.Empty; } }
-
-		/// <summary>
-		/// Gets the logger for the control.
-		/// </summary>
-		[Obsolete]
-		public ILoggerService Logger { get { return Parent.Logger; } }
 
 		#endregion
 
@@ -146,17 +138,6 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 		/// </summary>
 		protected virtual void ConnectionStatusChanged(bool state)
 		{
-		}
-
-		protected void Log(eSeverity severity, string message)
-		{
-			Logger.AddEntry(severity, "{0} - {1} - {2}", Parent, GetType().Name, message);
-		}
-
-		protected void Log(eSeverity severity, string message, params object[] args)
-		{
-			message = string.Format(message, args);
-			Log(severity, message);
 		}
 
 		#endregion

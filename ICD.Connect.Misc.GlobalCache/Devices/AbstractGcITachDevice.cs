@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using ICD.Common.Utils.EventArguments;
 using ICD.Common.Utils.Services.Logging;
-using ICD.Connect.API.Commands;
 using ICD.Connect.API.Nodes;
 using ICD.Connect.Devices;
 using ICD.Connect.Misc.GlobalCache.FlexApi;
@@ -228,7 +227,7 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 				}
 				catch (KeyNotFoundException)
 				{
-					Log(eSeverity.Error, "No {0} with id {1}", typeof(IcdTcpClient), settings.Port);
+					Logger.Log(eSeverity.Error, "No {0} with id {1}", typeof(IcdTcpClient), settings.Port);
 				}
 			}
 

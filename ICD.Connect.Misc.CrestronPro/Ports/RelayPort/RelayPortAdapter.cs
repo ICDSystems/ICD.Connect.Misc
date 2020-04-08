@@ -84,7 +84,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 			}
 			catch (InvalidOperationException e)
 			{
-				Log(eSeverity.Error, "Error registering port - {0}", e.Message);
+				Logger.Log(eSeverity.Error, "Error registering port - {0}", e.Message);
 			}
 		}
 #endif
@@ -97,7 +97,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 #if SIMPLSHARP
 			if (m_Port == null)
 			{
-				Log(eSeverity.Error, "Unable to open relay - internal port is null");
+				Logger.Log(eSeverity.Error, "Unable to open relay - internal port is null");
 				return;
 			}
 
@@ -117,7 +117,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 #if SIMPLSHARP
 			if (m_Port == null)
 			{
-				Log(eSeverity.Error, "Unable to close relay - internal port is null");
+				Logger.Log(eSeverity.Error, "Unable to close relay - internal port is null");
 				return;
 			}
 
@@ -236,12 +236,12 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 				}
 				catch (KeyNotFoundException)
 				{
-					Log(eSeverity.Error, "No device with id {0}", m_Device);
+					Logger.Log(eSeverity.Error, "No device with id {0}", m_Device);
 				}
 			}
 
 			if (provider == null)
-				Log(eSeverity.Error, "{0} is not a port provider", m_Device);
+				Logger.Log(eSeverity.Error, "{0} is not a port provider", m_Device);
 			else
 			{
 				try
@@ -250,13 +250,13 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 				}
 				catch (Exception e)
 				{
-					Log(eSeverity.Error, "Unable to get Relay Port from device {0} at address {1} - {2}", m_Device,
+					Logger.Log(eSeverity.Error, "Unable to get Relay Port from device {0} at address {1} - {2}", m_Device,
 					                settings.Address, e.Message);
 				}
 			}
 
 			if (provider != null && port == null)
-				Log(eSeverity.Error, "No Relay Port at device {0} address {1}", m_Device, settings.Address);
+				Logger.Log(eSeverity.Error, "No Relay Port at device {0} address {1}", m_Device, settings.Address);
 
 			SetRelayPort(port, settings.Address);
 #endif

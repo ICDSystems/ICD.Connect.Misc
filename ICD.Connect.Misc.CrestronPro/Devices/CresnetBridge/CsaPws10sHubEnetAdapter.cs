@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ICD.Common.Logging.LoggingContexts;
 using ICD.Connect.Settings;
 #if SIMPLSHARP
 using Crestron.SimplSharpPro.DeviceSupport;
@@ -84,13 +85,12 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 				if (settings.Ipid.HasValue)
 					device = new CsaPws10sHubEnet(settings.Ipid.Value, ProgramInfo.ControlSystem);
 				else
-					Log(eSeverity.Error, "Failed to instantiate {0} - Settings requires an IPID", typeof(CsaPws10sHubEnetBase).Name);
+					Logger.Log(eSeverity.Error, "Failed to instantiate {0} - Settings requires an IPID", typeof(CsaPws10sHubEnetBase).Name);
 			}
 			catch (ArgumentException e)
 			{
-				string message = string.Format("{0} - Failed to instantiate {1} with IPID {2} - {3}",
-											   this, typeof(CsaPws10sHubEnet).Name, settings.Ipid, e.Message);
-				Logger.AddEntry(eSeverity.Error, e, message);
+				Logger.Log(eSeverity.Error, e, "Failed to instantiate {0} with IPID {1} - {2}",
+				           typeof(CsaPws10sHubEnet).Name, settings.Ipid, e.Message);
 			}
 			finally
 			{

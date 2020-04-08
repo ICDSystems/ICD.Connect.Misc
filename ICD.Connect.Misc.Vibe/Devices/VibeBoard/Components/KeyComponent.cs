@@ -24,7 +24,7 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 
 		public void KeyPress(eVibeKey key)
 		{
-			Log(eSeverity.Debug, "Pressing key {0}", key);
+			Parent.Logger.Log(eSeverity.Debug, "Pressing key {0}", key);
 			Parent.SendCommand(new VibeCommand(COMMAND, key.ToString().ToLower()));
 		}
 
@@ -56,11 +56,11 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 		{
 			if (response.Error != null)
 			{
-				Log(eSeverity.Error, "Failed to press key - {0}", response.Error.Message);
+				Parent.Logger.Log(eSeverity.Error, "Failed to press key - {0}", response.Error.Message);
 				return;
 			}
 
-			Log(eSeverity.Debug, "Key successfully pressed");
+			Parent.Logger.Log(eSeverity.Debug, "Key successfully pressed");
 		}
 
 		#endregion

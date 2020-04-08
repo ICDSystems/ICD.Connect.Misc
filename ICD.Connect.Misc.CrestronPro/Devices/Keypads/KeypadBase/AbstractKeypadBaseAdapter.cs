@@ -45,7 +45,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.KeypadBase
 
 			eDeviceRegistrationUnRegistrationResponse result;
 			if (Keypad != null && !GenericBaseUtils.SetUp(Keypad, this, out result))
-				Log(eSeverity.Error, "Unable to register {0} - {1}", Keypad.GetType().Name, result);
+				Logger.Log(eSeverity.Error, "Unable to register {0} - {1}", Keypad.GetType().Name, result);
 
 			Subscribe(Keypad);
 			UpdateCachedOnlineStatus();

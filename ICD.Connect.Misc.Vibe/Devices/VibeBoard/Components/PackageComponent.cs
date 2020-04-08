@@ -97,14 +97,14 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 		{
 			if (response.Error != null)
 			{
-				Log(eSeverity.Error, "Failed to list packages - {0}", response.Error.Message);
+				Parent.Logger.Log(eSeverity.Error, "Failed to list packages - {0}", response.Error.Message);
 				return;
 			}
 
 			m_Packages.Clear();
 			m_Packages.AddRange(response.Value);
 
-			Log(eSeverity.Informational, "Package list updated");
+			Parent.Logger.Log(eSeverity.Informational, "Package list updated");
 			OnPackagesUpdated.Raise(this);
 		}
 

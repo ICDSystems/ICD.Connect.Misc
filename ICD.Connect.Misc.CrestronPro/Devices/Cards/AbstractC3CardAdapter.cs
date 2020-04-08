@@ -54,7 +54,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 
 			eDeviceRegistrationUnRegistrationResponse result;
 			if (Card != null && !GenericBaseUtils.SetUp(Card, this, out result))
-				Log(eSeverity.Error, "Unable to register {0} - {1}", Card.GetType().Name, result);
+				Logger.Log(eSeverity.Error, "Unable to register {0} - {1}", Card.GetType().Name, result);
 
 			Subscribe(Card);
 			UpdateCachedOnlineStatus();
@@ -175,7 +175,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 			if (settings.CardFrame.HasValue)
 				card = InstantiateCard(settings.CardId, settings.CardFrame.Value, factory);
 			else
-				Log(eSeverity.Warning, "No CardFrame ID specified, unable to instantiate internal card");
+				Logger.Log(eSeverity.Warning, "No CardFrame ID specified, unable to instantiate internal card");
 
 			SetCard(card, settings.CardFrame);
 #endif
@@ -200,7 +200,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 			}
 			catch (KeyNotFoundException)
 			{
-				Log(eSeverity.Error, "No device with id {0}", cardFrameId);
+				Logger.Log(eSeverity.Error, "No device with id {0}", cardFrameId);
 				return null;
 			}
 
@@ -210,7 +210,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 				CenCi33Adapter ci33 = cardFrame as CenCi33Adapter;
 				if (cardId.HasValue)
 					return InstantiateCard(cardId.Value, ci33.CardFrame);
-				Log(eSeverity.Error, "Missing value for CardId");
+				Logger.Log(eSeverity.Error, "Missing value for CardId");
 				return null;
 			}
 
@@ -220,7 +220,8 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 				return InstantiateCard(ci31.CardFrame);
 			}
 
-			Log(eSeverity.Error, "Device {0} is not a {1} or {2}.", cardFrameId, typeof(CenCi33Adapter).Name, typeof(CenCi31Adapter).Name);
+			Logger.Log(eSeverity.Error, "Device {0} is not a {1} or {2}.", cardFrameId, typeof(CenCi33Adapter).Name,
+			           typeof(CenCi31Adapter).Name);
 			return null;
 		}
 

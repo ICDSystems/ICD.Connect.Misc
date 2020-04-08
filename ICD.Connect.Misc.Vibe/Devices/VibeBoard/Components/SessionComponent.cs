@@ -30,7 +30,7 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 
 		public void EndSession()
 		{
-			Log(eSeverity.Debug, "Ending session");
+			Parent.Logger.Log(eSeverity.Debug, "Ending session");
 			Parent.SendCommand(new VibeCommand(COMMAND, PARAM_END));
 		}
 
@@ -62,11 +62,11 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 		{
 			if (response.Error != null)
 			{
-				Log(eSeverity.Error, "Failed to end session - {0}", response.Error.Message);
+				Parent.Logger.Log(eSeverity.Error, "Failed to end session - {0}", response.Error.Message);
 				return;
 			}
 
-			Log(eSeverity.Informational, "Session ended");
+			Parent.Logger.Log(eSeverity.Informational, "Session ended");
 			OnSessionEnded.Raise(this);
 		}
 

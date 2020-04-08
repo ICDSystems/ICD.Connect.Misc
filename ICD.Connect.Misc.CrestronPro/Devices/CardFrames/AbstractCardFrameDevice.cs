@@ -41,7 +41,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CardFrames
 
 			eDeviceRegistrationUnRegistrationResponse result;
 			if (CardFrame != null && !GenericBaseUtils.SetUp(CardFrame, this, out result))
-				Log(eSeverity.Error, "Unable to register {0} - {1}", CardFrame.GetType().Name, result);
+				Logger.Log(eSeverity.Error, "Unable to register {0} - {1}", CardFrame.GetType().Name, result);
 
 			Subscribe(CardFrame);
 			UpdateCachedOnlineStatus();

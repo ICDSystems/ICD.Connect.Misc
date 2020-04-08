@@ -98,7 +98,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 
 			eDeviceRegistrationUnRegistrationResponse result;
 			if (m_Sensor != null && !GenericBaseUtils.SetUp(m_Sensor, this, out result))
-				Log(eSeverity.Error, "Unable to register {0} - {1}", m_Sensor.GetType().Name, result);
+				Logger.Log(eSeverity.Error, "Unable to register {0} - {1}", m_Sensor.GetType().Name, result);
 
 			Subscribe(m_Sensor);
 			UpdateCachedOnlineStatus();
@@ -195,8 +195,8 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 #if SIMPLSHARP
 			if (settings.CresnetId == null || !CresnetUtils.IsValidId(settings.CresnetId.Value))
 			{
-				Log(eSeverity.Error, "{0} failed to instantiate {1} - CresnetId {2} is out of range",
-								this, typeof(TSensor).Name, settings.CresnetId);
+				Logger.Log(eSeverity.Error, "Failed to instantiate {0} - CresnetId {1} is out of range",
+				           typeof(TSensor).Name, settings.CresnetId);
 				return;
 			}
 
@@ -214,9 +214,8 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 			}
 			catch (ArgumentException e)
 			{
-				string message = string.Format("{0} failed to instantiate {1} with Cresnet ID {2} - {3}",
-											   this, typeof(TSensor).Name, settings.CresnetId, e.Message);
-				Log(eSeverity.Error, message);
+				Logger.Log(eSeverity.Error, "Failed to instantiate {0} with Cresnet ID {1} - {2}",
+				           typeof(TSensor).Name, settings.CresnetId, e.Message);
 			}
 
 			m_CresnetBranchId = settings.BranchId;

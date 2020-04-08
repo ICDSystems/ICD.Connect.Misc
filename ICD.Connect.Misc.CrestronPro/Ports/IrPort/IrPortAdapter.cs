@@ -145,7 +145,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 			}
 			catch (InvalidOperationException e)
 			{
-				Log(eSeverity.Error, "Error registering port - {0}", e.Message);
+				Logger.Log(eSeverity.Error, "Error registering port - {0}", e.Message);
 			}
 		}
 #endif
@@ -159,7 +159,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 #if SIMPLSHARP
 			if (m_Port == null)
 			{
-				Log(eSeverity.Error, "Unable to load driver - internal port is null");
+				Logger.Log(eSeverity.Error, "Unable to load driver - internal port is null");
 				return;
 			}
 
@@ -176,7 +176,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 			{
 				m_LoadedDriverPath = null;
 
-				Log(eSeverity.Error, "Unable to load driver - file does not exist: {0}", fullPath);
+				Logger.Log(eSeverity.Error, "Unable to load driver - file does not exist: {0}", fullPath);
 			}
 #else
             throw new NotSupportedException();
@@ -205,7 +205,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 #if SIMPLSHARP
 			if (m_Port == null)
 			{
-				Log(eSeverity.Error, "Unable to send command - internal port is null");
+				Logger.Log(eSeverity.Error, "Unable to send command - internal port is null");
 				return;
 			}
 
@@ -217,7 +217,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 
 				if (!m_Port.IsIRCommandAvailable(command))
 				{
-					Log(eSeverity.Error, "Unable to send command - No command {0}", StringUtils.ToRepresentation(command));
+					Logger.Log(eSeverity.Error, "Unable to send command - No command {0}", StringUtils.ToRepresentation(command));
 					return;
 				}
 
@@ -382,7 +382,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 
 				if (m_Port == null)
 				{
-					Log(eSeverity.Error, "Unable to send command - internal port is null");
+					Logger.Log(eSeverity.Error, "Unable to send command - internal port is null");
 					Clear();
 					return;
 				}
@@ -390,7 +390,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 				if (!m_Port.IsIRCommandAvailable(pulse.Command))
 				{
 					m_Queue.Dequeue();
-					Log(eSeverity.Error, "Unable to send command - No command {0}", StringUtils.ToRepresentation(pulse.Command));
+					Logger.Log(eSeverity.Error, "Unable to send command - No command {0}", StringUtils.ToRepresentation(pulse.Command));
 					SendNext();
 					return;
 				}
@@ -501,12 +501,12 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 				}
 				catch (KeyNotFoundException)
 				{
-					Log(eSeverity.Error, "No device with id {0}", m_Device);
+					Logger.Log(eSeverity.Error, "No device with id {0}", m_Device);
 				}
 			}
 
 			if (provider == null)
-				Log(eSeverity.Error, "{0} is not a port provider", m_Device);
+				Logger.Log(eSeverity.Error, "{0} is not a port provider", m_Device);
 			else
 			{
 				try
@@ -515,13 +515,13 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 				}
 				catch (Exception e)
 				{
-					Log(eSeverity.Error, "Unable to get IrPort from device {0} at address {1} - {2}", m_Device,
+					Logger.Log(eSeverity.Error, "Unable to get IrPort from device {0} at address {1} - {2}", m_Device,
 					    settings.Address, e.Message);
 				}
 			}
 
 			if (provider != null && port == null)
-				Log(eSeverity.Error, "No IR Port at {0} address {1}", m_Device, settings.Address);
+				Logger.Log(eSeverity.Error, "No IR Port at {0} address {1}", m_Device, settings.Address);
 
 			SetIrPort(port, settings.Address);
 

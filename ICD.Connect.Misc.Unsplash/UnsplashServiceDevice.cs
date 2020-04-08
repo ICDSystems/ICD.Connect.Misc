@@ -291,7 +291,7 @@ namespace ICD.Connect.Misc.Unsplash
 				}
 				catch (KeyNotFoundException)
 				{
-					Log(eSeverity.Error, "No web port with id {0}", settings.Port);
+					Logger.Log(eSeverity.Error, "No web port with id {0}", settings.Port);
 				}
 			}
 

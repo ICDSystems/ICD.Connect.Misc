@@ -118,7 +118,7 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 		{
 			if (response.Error != null)
 			{
-				Log(eSeverity.Error, "Failed to get/set mute - {0}", response.Error.Message);
+				Parent.Logger.Log(eSeverity.Error, "Failed to get/set mute - {0}", response.Error.Message);
 				return;
 			}
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ICD.Common.Logging.LoggingContexts;
 using ICD.Common.Properties;
 using ICD.Common.Utils.Collections;
 using ICD.Common.Utils.EventArguments;
@@ -170,7 +171,7 @@ namespace ICD.Connect.Misc.GlobalCache.Ports.ComPort
 			GcITachFlexDevice flexDevice = m_Device as GcITachFlexDevice;
 			if (flexDevice == null)
 			{
-				Log(eSeverity.Warning, "Setting ComSpec is unsupported - Parent device must be configured manually.");
+				Logger.Log(eSeverity.Warning, "Setting ComSpec is unsupported - Parent device must be configured manually.");
 				return;
 			}
 
@@ -193,7 +194,7 @@ namespace ICD.Connect.Misc.GlobalCache.Ports.ComPort
 			}
 			catch (Exception e)
 			{
-				Log(eSeverity.Error, e, "Failed to set comspec");
+				Logger.Log(eSeverity.Error, e, "Failed to set comspec");
 				return;
 			}
 
@@ -267,7 +268,7 @@ namespace ICD.Connect.Misc.GlobalCache.Ports.ComPort
 			}
 			catch (Exception e)
 			{
-				Log(eSeverity.Error, e, "Failed to set module type");
+				Logger.Log(eSeverity.Error, e, "Failed to set module type");
 			}
 		}
 
@@ -381,7 +382,7 @@ namespace ICD.Connect.Misc.GlobalCache.Ports.ComPort
 				}
 				catch (KeyNotFoundException)
 				{
-					Log(eSeverity.Error, "No device with id {0}", m_Device);
+					Logger.Log(eSeverity.Error, "No device with id {0}", m_Device);
 				}
 			}
 

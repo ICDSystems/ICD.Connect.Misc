@@ -123,12 +123,12 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 		{
 			if (response.Error != null)
 			{
-				Log(eSeverity.Error, "Failed to get/set screen state - {0}", response.Error.Message);
+				Parent.Logger.Log(eSeverity.Error, "Failed to get/set screen state - {0}", response.Error.Message);
 				return;
 			}
 
 			ScreenState = response.Value.State ? ePowerState.PowerOn : ePowerState.PowerOff;
-			Log(eSeverity.Informational, "Screen state updated: {0}", response.Value.State ? "On" : "Off");
+			Parent.Logger.Log(eSeverity.Informational, "Screen state updated: {0}", response.Value.State ? "On" : "Off");
 		}
 
 		#endregion

@@ -544,7 +544,7 @@ namespace ICD.Connect.Misc.Yepkit.Devices.YkupSwitcher
 				}
 				catch (KeyNotFoundException)
 				{
-					Log(eSeverity.Error, "No relay port with id {0}", settings.PowerPort);
+					Logger.Log(eSeverity.Error, "No relay port with id {0}", settings.PowerPort);
 				}
 			}
 
@@ -556,7 +556,7 @@ namespace ICD.Connect.Misc.Yepkit.Devices.YkupSwitcher
 				}
 				catch (KeyNotFoundException)
 				{
-					Log(eSeverity.Error, "No relay port with id {0}", settings.SwitchPort);
+					Logger.Log(eSeverity.Error, "No relay port with id {0}", settings.SwitchPort);
 				}
 			}
 

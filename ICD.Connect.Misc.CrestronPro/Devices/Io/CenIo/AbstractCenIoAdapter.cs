@@ -43,7 +43,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Io.CenIo
 
 			eDeviceRegistrationUnRegistrationResponse result;
 			if (Device != null && !GenericBaseUtils.SetUp(Device, this, out result))
-				Log(eSeverity.Error, "Unable to register {0} - {1}", Device.GetType().Name, result);
+				Logger.Log(eSeverity.Error, "Unable to register {0} - {1}", Device.GetType().Name, result);
 
 			Subscribe(Device);
 			UpdateCachedOnlineStatus();

@@ -72,14 +72,14 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 		{
 			if (response.Error != null)
 			{
-				Log(eSeverity.Error, "Error getting usb dump info - {0}", response.Error.Message);
+				Parent.Logger.Log(eSeverity.Error, "Error getting usb dump info - {0}", response.Error.Message);
 				return;
 			}
 
 			m_UsbDeviceList.Clear();
 			m_UsbDeviceList.AddRange(response.Value);
 
-			Log(eSeverity.Informational, "USB devices updated");
+			Parent.Logger.Log(eSeverity.Informational, "USB devices updated");
 			OnUsbDevicesUpdated.Raise(this);
 		}
 

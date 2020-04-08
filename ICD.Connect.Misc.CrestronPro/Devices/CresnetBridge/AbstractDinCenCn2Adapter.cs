@@ -44,7 +44,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 
 			eDeviceRegistrationUnRegistrationResponse result;
 			if (Bridge != null && !GenericBaseUtils.SetUp(Bridge, this, out result))
-				Log(eSeverity.Error, "Unable to register {0} - {1}", Bridge.GetType().Name, result);
+				Logger.Log(eSeverity.Error, "Unable to register {0} - {1}", Bridge.GetType().Name, result);
 
 			Subscribe(Bridge);
 

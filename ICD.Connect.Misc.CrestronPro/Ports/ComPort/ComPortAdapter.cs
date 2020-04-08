@@ -242,7 +242,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 			}
 			catch (InvalidOperationException e)
 			{
-				Log(eSeverity.Error, "Error registering port - {0}", e.Message);
+				Logger.Log(eSeverity.Error, "Error registering port - {0}", e.Message);
 			}
 		}
 #endif
@@ -280,7 +280,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 #if SIMPLSHARP
 			if (m_Port == null)
 			{
-				Log(eSeverity.Error, "Unable to send - internal port is null");
+				Logger.Log(eSeverity.Error, "Unable to send data - internal port is null");
 				return false;
 			}
 
@@ -307,7 +307,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 #if SIMPLSHARP
 			if (m_Port == null)
 			{
-				Log(eSeverity.Error, "Unable to set ComSpec - internal port is null");
+				Logger.Log(eSeverity.Error, "Unable to set ComSpec - internal port is null");
 				return;
 			}
 
@@ -448,29 +448,29 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 				}
 				catch (KeyNotFoundException)
 				{
-					Log(eSeverity.Error, "No device with id {0}", m_Device);
+					Logger.Log(eSeverity.Error, "No device with id {0}", m_Device);
 				}
 			}
 
 			if (provider == null)
-				Log(eSeverity.Error, "{0} is not a {1}", m_Device, typeof(IPortParent).Name);
+				Logger.Log(eSeverity.Error, "{0} is not a {1}", m_Device, typeof(IPortParent).Name);
 			else
 			{
 				try
 				{
 					port = provider.GetComPort(settings.Address);
 					if (port == null)
-						Log(eSeverity.Error, "No Com Port at {0} address {1}", m_Device, settings.Address);
+						Logger.Log(eSeverity.Error, "No Com Port at {0} address {1}", m_Device, settings.Address);
 				}
 				catch (Exception e)
 				{
-					Log(eSeverity.Error, "Unable to get ComPort from device {0} at address {1} - {2}", m_Device,
-					    settings.Address, e.Message);
+					Logger.Log(eSeverity.Error, "Unable to get ComPort from device {0} at address {1} - {2}", m_Device,
+					           settings.Address, e.Message);
 				}
 			}
 
 			if (provider != null && port == null)
-				Log(eSeverity.Error, "No Com Port at {0} address {1}", m_Device, settings.Address);
+				Logger.Log(eSeverity.Error, "No Com Port at {0} address {1}", m_Device, settings.Address);
 
 			SetComPort(port, settings.Address);
 

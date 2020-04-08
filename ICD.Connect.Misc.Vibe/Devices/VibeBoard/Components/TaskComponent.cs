@@ -101,14 +101,14 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 		{
 			if (response.Error != null)
 			{
-				Log(eSeverity.Error, "Failed to list tasks - {0}", response.Error.Message);
+				Parent.Logger.Log(eSeverity.Error, "Failed to list tasks - {0}", response.Error.Message);
 				return;
 			}
 
 			m_RunningTasks.Clear();
 			m_RunningTasks.AddRange(response.Value);
 			
-			Log(eSeverity.Informational, "Tasks list updated");
+			Parent.Logger.Log(eSeverity.Informational, "Tasks list updated");
 			OnTasksListUpdated.Raise(this);
 		}
 
@@ -116,22 +116,22 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 		{
 			if (response.Error != null)
 			{
-				Log(eSeverity.Error, "Failed to get foreground task - {0}", response.Error.Message);
+				Parent.Logger.Log(eSeverity.Error, "Failed to get foreground task - {0}", response.Error.Message);
 			}
 
 			m_ForegroundTask = response.Value;
-			Log(eSeverity.Informational, "Task currently on top: {0}", response.Value.TopActivity);
+			Parent.Logger.Log(eSeverity.Informational, "Task currently on top: {0}", response.Value.TopActivity);
 		}
 
 		private void TaskSwitchCallback(TaskSwitchResponse response)
 		{
 			if (response.Error != null)
 			{
-				Log(eSeverity.Error, "Failed to switch task - {0}", response.Error.Message);
+				Parent.Logger.Log(eSeverity.Error, "Failed to switch task - {0}", response.Error.Message);
 				return;
 			}
 
-			Log(eSeverity.Informational, "Task switched successfully");
+			Parent.Logger.Log(eSeverity.Informational, "Task switched successfully");
 			TopTask();
 		}
 
