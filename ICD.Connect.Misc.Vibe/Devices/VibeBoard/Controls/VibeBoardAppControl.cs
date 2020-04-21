@@ -12,7 +12,7 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Controls
 		public event EventHandler OnAppLaunchFailed;
 		public event EventHandler OnAppLaunched;
 
-		private static readonly Dictionary<eVibeApps, string> s_AppPackageNames = new Dictionary<eVibeApps, string>()
+		private static readonly Dictionary<eVibeApps, string> s_AppPackageNames = new Dictionary<eVibeApps, string>
 		{
 			{eVibeApps.Chrome, "com.android.chrome"},
 			{eVibeApps.Youtube, "com.google.android.youtube"},
@@ -21,7 +21,7 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Controls
 			{eVibeApps.Teams, "com.microsoft.teams"},
 			{eVibeApps.WebEx, "com.cisco.webex.meetings"}
 		};
-		private static readonly Dictionary<eVibeApps, string> s_AppActivityNames = new Dictionary<eVibeApps, string>()
+		private static readonly Dictionary<eVibeApps, string> s_AppActivityNames = new Dictionary<eVibeApps, string>
 		{
 			{eVibeApps.Chrome, "com.google.android.apps.chrome.Main"},
 			{eVibeApps.Youtube, ".app.honeycomb.Shell$HomeActivity"},
