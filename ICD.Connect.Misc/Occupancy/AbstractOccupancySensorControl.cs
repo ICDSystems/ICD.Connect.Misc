@@ -10,7 +10,7 @@ using ICD.Connect.Devices.Controls;
 namespace ICD.Connect.Misc.Occupancy
 {
 	public abstract class AbstractOccupancySensorControl<T> : AbstractDeviceControl<T>, IOccupancySensorControl
-		where T : IDeviceBase
+		where T : IDevice
 	{
 		private eOccupancyState m_OccupancyState;
 
