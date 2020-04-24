@@ -43,11 +43,6 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 		#region Properties
 
 		/// <summary>
-		/// Returns the connection state of the port.
-		/// </summary>
-		public override bool IsConnected { get { return true; } protected set { } }
-
-		/// <summary>
 		/// Gets the Com Spec configuration properties.
 		/// </summary>
 		public override IComSpecProperties ComSpecProperties { get { return m_ComSpecProperties; } }
@@ -217,6 +212,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 			Subscribe(m_Port);
 
 			UpdateCachedOnlineStatus();
+			UpdateIsConnectedState();
 		}
 
 		/// <summary>
@@ -252,7 +248,6 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 		/// </summary>
 		public override void Connect()
 		{
-			IsConnected = true;
 		}
 
 		/// <summary>
@@ -260,16 +255,6 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 		/// </summary>
 		public override void Disconnect()
 		{
-			IsConnected = false;
-		}
-
-		/// <summary>
-		/// Returns the connection state of the port
-		/// </summary>
-		/// <returns></returns>
-		protected override bool GetIsConnectedState()
-		{
-			return IsConnected;
 		}
 
 		/// <summary>
@@ -342,6 +327,15 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 #endif
 		}
 
+		/// <summary>
+		/// Returns the connection state of the port
+		/// </summary>
+		/// <returns></returns>
+		protected override bool GetIsConnectedState()
+		{
+			return GetIsOnlineStatus();
+		}
+
 		#endregion
 
 		#region Port Callbacks
@@ -392,6 +386,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 		private void ParentOnOnlineStatusChange(GenericBase currentDevice, OnlineOfflineEventArgs args)
 		{
 			UpdateCachedOnlineStatus();
+			UpdateIsConnectedState();
 		}
 #endif
 

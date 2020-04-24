@@ -97,7 +97,7 @@ namespace ICD.Connect.Misc.GlobalCache.Devices
 
 		#region Private Methods
 
-		private void ConfigurePort(ISerialPort port)
+		private void ConfigurePort(IPort port)
 		{
 			// TCP
 			if (port is INetworkPort)
