@@ -6,6 +6,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [8.3.0] - 2020-04-28
+### Added
+ - Vibe - Added event for foreground task change
+ - Vibe - Added TouchCue to list of known apps
+ - Vibe - Added console command for key presses
+
+### Changed
+ - Vibe - Keeping connection alive by sending a command every minute
+
 ## [8.2.1] - 2020-03-24
 ### Changed
  - Fixed an issue where Cresnet Occupancy Sensors weren't using an Occupancy Sensor Control
