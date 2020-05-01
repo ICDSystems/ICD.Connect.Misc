@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using ICD.Common.Utils.Extensions;
@@ -12,34 +12,37 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Controls
 		public event EventHandler OnAppLaunchFailed;
 		public event EventHandler OnAppLaunched;
 
-		private static readonly Dictionary<eVibeApps, string> s_AppPackageNames = new Dictionary<eVibeApps, string>
+		private static readonly Dictionary<eVibeApp, string> s_AppPackageNames = new Dictionary<eVibeApp, string>()
 		{
-			{eVibeApps.Chrome, "com.android.chrome"},
-			{eVibeApps.Youtube, "com.google.android.youtube"},
-			{eVibeApps.Slack, "com.Slack"},
-			{eVibeApps.Whiteboard, "ai.inlight.board.app"},
-			{eVibeApps.Teams, "com.microsoft.teams"},
-			{eVibeApps.WebEx, "com.cisco.webex.meetings"}
+			{eVibeApp.TouchCue, "com.profound.touchcue"},
+			{eVibeApp.Chrome, "com.android.chrome"},
+			{eVibeApp.Youtube, "com.google.android.youtube"},
+			{eVibeApp.Slack, "com.Slack"},
+			{eVibeApp.Whiteboard, "ai.inlight.board.app"},
+			{eVibeApp.Teams, "com.microsoft.teams"},
+			{eVibeApp.WebEx, "com.cisco.webex.meetings"}
 		};
-		private static readonly Dictionary<eVibeApps, string> s_AppActivityNames = new Dictionary<eVibeApps, string>
+
+		private static readonly Dictionary<eVibeApp, string> s_AppActivityNames = new Dictionary<eVibeApp, string>()
 		{
-			{eVibeApps.Chrome, "com.google.android.apps.chrome.Main"},
-			{eVibeApps.Youtube, ".app.honeycomb.Shell$HomeActivity"},
-			{eVibeApps.Slack, ".ui.HomeActivity"},
-			{eVibeApps.Whiteboard, "ai.inlight.board.app.MainActivity" },
-			{eVibeApps.Teams, "com.microsoft.skype.teams.views.activities.SplashActivity"},
-			{eVibeApps.WebEx, "com.cisco.webex.meetings.ui.premeeting.welcome.WebExMeeting"}
+			{eVibeApp.TouchCue, ".ui.MainActivity" },
+			{eVibeApp.Chrome, "com.google.android.apps.chrome.Main"},
+			{eVibeApp.Youtube, ".app.honeycomb.Shell$HomeActivity"},
+			{eVibeApp.Slack, ".ui.HomeActivity"},
+			{eVibeApp.Whiteboard, ".MainActivity" },
+			{eVibeApp.Teams, "com.microsoft.skype.teams.views.activities.SplashActivity"},
+			{eVibeApp.WebEx, ".ui.premeeting.welcome.WebExMeeting"}
 		};
 		
 		private readonly PackageComponent m_PackageComponent;
 		private readonly StartComponent m_StartComponent;
 		private readonly KeyComponent m_KeyComponent;
 		private readonly SessionComponent m_SessionComponent;
+		private readonly TaskComponent m_TaskComponent;
 
 		public VibeBoardAppControl(VibeBoard parent, int id) : base(parent, id)
 		{
 			m_PackageComponent = parent.Components.GetComponent<PackageComponent>();
-			Subscribe(m_PackageComponent);
 
 			m_StartComponent = parent.Components.GetComponent<StartComponent>();
 			Subscribe(m_StartComponent);
@@ -47,17 +50,20 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Controls
 			m_KeyComponent = parent.Components.GetComponent<KeyComponent>();
 
 			m_SessionComponent = parent.Components.GetComponent<SessionComponent>();
+
+			m_TaskComponent = parent.Components.GetComponent<TaskComponent>();
+			Subscribe(m_TaskComponent);
 		}
 
 		protected override void DisposeFinal(bool disposing)
 		{
-			Unsubscribe(m_PackageComponent);
+			Unsubscribe(m_TaskComponent);
 			Unsubscribe(m_StartComponent);
 
 			base.DisposeFinal(disposing);
 		}
 
-		public void LaunchApp(eVibeApps app)
+		public void LaunchApp(eVibeApp app)
 		{
 			if (!IsInstalled(app))
 			{
@@ -75,7 +81,7 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Controls
 			m_KeyComponent.KeyPress(key);
 		}
 
-		public string GetPackageName(eVibeApps app)
+		public string GetPackageName(eVibeApp app)
 		{
 			if (!s_AppPackageNames.ContainsKey(app))
 				throw new InvalidOperationException(string.Format("No package name exists for app {0}", app));
@@ -83,7 +89,7 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Controls
 			return s_AppPackageNames[app];
 		}
 
-		public string GetActivityName(eVibeApps app)
+		public string GetActivityName(eVibeApp app)
 		{
 			if (!s_AppActivityNames.ContainsKey(app))
 				throw new InvalidOperationException(string.Format("No activity name exists for app {0}", app));
@@ -91,7 +97,7 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Controls
 			return s_AppActivityNames[app];
 		}
 
-		public bool IsInstalled(eVibeApps app)
+		public bool IsInstalled(eVibeApp app)
 		{
 			string packageName = GetPackageName(app);
 			return m_PackageComponent.Packages.Any(p => p.PackageName.Equals(packageName, StringComparison.OrdinalIgnoreCase));
@@ -118,7 +124,8 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Controls
 
 		private void ComponentOnAppLaunched(object sender, EventArgs e)
 		{
-			OnAppLaunched.Raise(this);
+			// check foreground task to confirm launch and populate OnAppLaunched event args
+			m_TaskComponent.TopTask();
 		}
 
 		private void ComponentOnAppLaunchFailed(object sender, EventArgs e)
@@ -126,21 +133,28 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Controls
 			OnAppLaunchFailed.Raise(this);
 		}
 
-		private void Subscribe(PackageComponent component)
+		private void Subscribe(TaskComponent component)
 		{
-			// nothing for now
+			component.OnForegroundTaskUpdated += ComponentOnForegroundTaskUpdated;
 		}
 
-		private void Unsubscribe(PackageComponent component)
+		private void Unsubscribe(TaskComponent component)
 		{
-			// nothing for now
+			component.OnForegroundTaskUpdated -= ComponentOnForegroundTaskUpdated;
+		}
+
+		private void ComponentOnForegroundTaskUpdated(object sender, EventArgs eventArgs)
+		{
+			if (!m_TaskComponent.ForegroundTask.TopActivity.StartsWith(GetPackageName(eVibeApp.TouchCue)))
+				OnAppLaunched.Raise(this);
 		}
 
 		#endregion
 	}
 
-	public enum eVibeApps
+	public enum eVibeApp
 	{
+		TouchCue,
 		Chrome,
 		Youtube,
 		Slack,

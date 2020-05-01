@@ -12,6 +12,7 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 	public sealed class TaskComponent : AbstractVibeComponent
 	{
 		public event EventHandler OnTasksListUpdated;
+		public event EventHandler OnForegroundTaskUpdated;
 
 		private const string COMMAND = "tasks";
 		private const string PARAM_TASKS_LIST = "list";
@@ -120,7 +121,10 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 			}
 
 			m_ForegroundTask = response.Value;
+
 			Parent.Logger.Log(eSeverity.Informational, "Task currently on top: {0}", response.Value.TopActivity);
+
+			OnForegroundTaskUpdated.Raise(this);
 		}
 
 		private void TaskSwitchCallback(TaskSwitchResponse response)
@@ -146,7 +150,7 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 
 			yield return new ConsoleCommand("ListTasks", "Gets the list of running tasks", () => ListTasks());
 			yield return new ConsoleCommand("TopTask", "Gets the foreground task", () => TopTask());
-			yield return new GenericConsoleCommand<string>("SwitchTask", "Switches to the given task", (t) => SwitchTask(t));
+			yield return new GenericConsoleCommand<string>("SwitchTask", "Switches to the given task", t => SwitchTask(t));
 		}
 
 		public override void BuildConsoleStatus(AddStatusRowDelegate addRow)
