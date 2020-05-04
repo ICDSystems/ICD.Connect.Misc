@@ -23,6 +23,7 @@ using ICD.Connect.Routing;
 using ICD.Connect.Routing.Connections;
 using ICD.Connect.Routing.Mock.Destination;
 using ICD.Connect.Settings;
+using ICD.Connect.Routing.Mock.Source;
 
 namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard
 {
@@ -322,10 +323,13 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard
 		{
 			base.AddControls(settings, factory, addControl);
 
-			MockRouteDestinationControl routingControl = new MockRouteDestinationControl(this, 0);
-			routingControl.SetInputs(new[] { new ConnectorInfo(1, eConnectionType.Video | eConnectionType.Audio) });
+			MockRouteSourceControl sourceControl = new MockRouteSourceControl(this, 0);
 
-			addControl(routingControl);
+			MockRouteDestinationControl destinationControl = new MockRouteDestinationControl(this, 1);
+			destinationControl.SetInputs(new[] { new ConnectorInfo(1, eConnectionType.Video | eConnectionType.Audio) });
+
+			addControl(sourceControl);
+			addControl(destinationControl);
 			addControl(new VibeBoardVolumeControl(this, Controls.Count));
 			addControl(new VibeBoardPowerControl(this, Controls.Count));
 			addControl(new VibeBoardAppControl(this, Controls.Count));
