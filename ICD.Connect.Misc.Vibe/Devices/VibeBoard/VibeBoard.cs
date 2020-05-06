@@ -14,6 +14,7 @@ using ICD.Connect.Panels.Server;
 using ICD.Connect.Protocol;
 using ICD.Connect.Protocol.Extensions;
 using ICD.Connect.Protocol.Network.Ports;
+using ICD.Connect.Protocol.Network.Ports.Tcp;
 using ICD.Connect.Protocol.Network.Settings;
 using ICD.Connect.Protocol.Ports;
 using ICD.Connect.Protocol.SerialBuffers;
@@ -24,7 +25,7 @@ using ICD.Connect.Settings;
 
 namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard
 {
-	public class VibeBoard : AbstractPanelServerDevice<VibeBoardSettings>
+	public class VibeBoard : AbstractPanelServerDevice<IcdTcpServer, VibeBoardSettings>
 	{
 		public event EventHandler<BoolEventArgs> OnConnectedStateChanged;
 		public event EventHandler<BoolEventArgs> OnInitializedChanged;
