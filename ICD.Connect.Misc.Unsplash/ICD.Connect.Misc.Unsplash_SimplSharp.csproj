@@ -66,6 +66,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ObfuscationSettings.cs" />
+    <None Include="Properties\ControlSystem.cfg" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Converters\AbstractUnsplashResponseConverter.cs" />
@@ -80,6 +81,7 @@
     <Compile Include="Converters\UnsplashPhotoUrlConverter.cs" />
     <Compile Include="Converters\UnsplashPhotoUserConverter.cs" />
     <Compile Include="KrangPlugin.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Responses\AbstractUnsplashResponse.cs" />
     <Compile Include="Responses\UnsplashCollectionListViewResponse.cs" />
     <Compile Include="Responses\UnsplashPhotoListViewResponse.cs" />
