@@ -36,6 +36,7 @@ namespace ICD.Connect.Misc.CrestronPro.Utils
 			switch (result)
 			{
 				case eDeviceRegistrationUnRegistrationResponse.Success:
+				case eDeviceRegistrationUnRegistrationResponse.NoAttempt:
 					break;
 
 				// If result is ParentRegistered, we have to unregister and re-register the parent after
