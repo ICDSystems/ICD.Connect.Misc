@@ -4,6 +4,7 @@ using ICD.Common.Utils.Extensions;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.API.Nodes;
 using ICD.Connect.Devices;
+using ICD.Connect.Devices.Controls;
 using ICD.Connect.Misc.CrestronPro.Utils;
 using ICD.Connect.Misc.Occupancy;
 using ICD.Connect.Settings;
@@ -60,11 +61,6 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 		}
 
 		#endregion
-
-		protected AbstractCresnetOccupancySensorAdapter()
-		{
-			Controls.Add(new CresnetOccupancySensorControl(this, 0));
-		}
 
 		/// <summary>
 		/// Gets the current online status of the device.
@@ -223,7 +219,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 
 			SetDevice(device);
 #else
-            throw new NotImplementedException();
+            throw new NotSupportedException();
 #endif
 		}
 
@@ -239,7 +235,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 			settings.ParentId = m_CresnetParentId;
 			settings.BranchId = m_CresnetBranchId;
 #else
-			throw new NotImplementedException();
+			throw new NotSupportedException();
 #endif
 		}
 
@@ -254,8 +250,21 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 			m_CresnetBranchId = null;
 			SetDevice(null);
 #else
-			throw new NotImplementedException();
+			throw new NotSupportedException();
 #endif
+		}
+
+		/// <summary>
+		/// Override to add controls to the device.
+		/// </summary>
+		/// <param name="settings"></param>
+		/// <param name="factory"></param>
+		/// <param name="addControl"></param>
+		protected override void AddControls(TSettings settings, IDeviceFactory factory, Action<IDeviceControl> addControl)
+		{
+			base.AddControls(settings, factory, addControl);
+
+			addControl(new CresnetOccupancySensorControl(this, 0));
 		}
 
 		#endregion

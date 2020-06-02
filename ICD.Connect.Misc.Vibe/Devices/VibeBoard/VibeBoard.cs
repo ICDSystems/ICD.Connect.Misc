@@ -1,4 +1,5 @@
 ﻿using ICD.Common.Utils.EventArguments;
+using ICD.Connect.Devices.Controls;
 using ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components;
 using ICD.Connect.Misc.Vibe.Settings;
 using System;
@@ -100,14 +101,6 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard
 
 			m_SerialBuffer = new DelimiterSerialBuffer(CLIENT_DELIMITER);
 			Subscribe(m_SerialBuffer);
-
-			MockRouteDestinationControl routingControl = new MockRouteDestinationControl(this, 0);
-			routingControl.SetInputs(new[] {new ConnectorInfo(1, eConnectionType.Video | eConnectionType.Audio)});
-
-			Controls.Add(routingControl);
-			Controls.Add(new VibeBoardVolumeControl(this, Controls.Count));
-			Controls.Add(new VibeBoardPowerControl(this, Controls.Count));
-			Controls.Add(new VibeBoardAppControl(this, Controls.Count));
 
 			m_StayAliveTimer = SafeTimer.Stopped(StayAlive);
 		}
@@ -266,6 +259,11 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard
 
 		#region Settings
 
+		/// <summary>
+		/// Override to apply settings to the instance.
+		/// </summary>
+		/// <param name="settings"></param>
+		/// <param name="factory"></param>
 		protected override void ApplySettingsFinal(VibeBoardSettings settings, IDeviceFactory factory)
 		{
 			base.ApplySettingsFinal(settings, factory);
@@ -289,6 +287,9 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard
 			SetPort(port);
 		}
 
+		/// <summary>
+		/// Override to clear the instance settings.
+		/// </summary>
 		protected override void ClearSettingsFinal()
 		{
 			base.ClearSettingsFinal();
@@ -298,6 +299,10 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard
 			SetPort(null);
 		}
 
+		/// <summary>
+		/// Override to apply properties to the settings instance.
+		/// </summary>
+		/// <param name="settings"></param>
 		protected override void CopySettingsFinal(VibeBoardSettings settings)
 		{
 			base.CopySettingsFinal(settings);
@@ -305,6 +310,25 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard
 			settings.KrangPort = m_ConnectionStateManager.PortNumber;
 
 			settings.Copy(m_NetworkProperties);
+		}
+
+		/// <summary>
+		/// Override to add controls to the device.
+		/// </summary>
+		/// <param name="settings"></param>
+		/// <param name="factory"></param>
+		/// <param name="addControl"></param>
+		protected override void AddControls(VibeBoardSettings settings, IDeviceFactory factory, Action<IDeviceControl> addControl)
+		{
+			base.AddControls(settings, factory, addControl);
+
+			MockRouteDestinationControl routingControl = new MockRouteDestinationControl(this, 0);
+			routingControl.SetInputs(new[] { new ConnectorInfo(1, eConnectionType.Video | eConnectionType.Audio) });
+
+			addControl(routingControl);
+			addControl(new VibeBoardVolumeControl(this, Controls.Count));
+			addControl(new VibeBoardPowerControl(this, Controls.Count));
+			addControl(new VibeBoardAppControl(this, Controls.Count));
 		}
 
 		#endregion

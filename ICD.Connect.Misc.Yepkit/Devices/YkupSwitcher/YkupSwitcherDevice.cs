@@ -183,8 +183,6 @@ namespace ICD.Connect.Misc.Yepkit.Devices.YkupSwitcher
 			m_Cache.OnSourceDetectionStateChange += CacheOnSourceDetectionStateChange;
 
 			m_StateTimer = SafeTimer.Stopped(AdvanceToNextState);
-			
-			Controls.Add(new RouteSwitcherControl(this, 0));
 		}
 
 		/// <summary>
@@ -585,6 +583,19 @@ namespace ICD.Connect.Misc.Yepkit.Devices.YkupSwitcher
 
 			settings.PowerPort = PowerPort == null ? (int?)null : PowerPort.Id;
 			settings.SwitchPort = SwitchPort == null ? (int?)null : SwitchPort.Id;
+		}
+
+		/// <summary>
+		/// Override to add controls to the device.
+		/// </summary>
+		/// <param name="settings"></param>
+		/// <param name="factory"></param>
+		/// <param name="addControl"></param>
+		protected override void AddControls(YkupSwitcherDeviceSettings settings, IDeviceFactory factory, Action<ICD.Connect.Devices.Controls.IDeviceControl> addControl)
+		{
+			base.AddControls(settings, factory, addControl);
+
+			addControl(new RouteSwitcherControl(this, 0));
 		}
 
 		#endregion

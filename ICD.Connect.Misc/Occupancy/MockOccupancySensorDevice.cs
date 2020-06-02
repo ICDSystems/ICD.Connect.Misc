@@ -1,20 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ICD.Common.Properties;
 using ICD.Connect.API.Commands;
+using ICD.Connect.Devices.Controls;
 using ICD.Connect.Devices.Mock;
+using ICD.Connect.Settings;
 
 namespace ICD.Connect.Misc.Occupancy
 {
 	public sealed class MockOccupancySensorDevice : AbstractMockDevice<MockOccupancySensorDeviceSettings>
 	{
-		/// <summary>
-		/// Constructor.
-		/// </summary>
-		public MockOccupancySensorDevice()
-		{
-			Controls.Add(new MockOccupancySensorControl(this, 0));
-		}
-
 		#region Methods
 
 		/// <summary>
@@ -42,6 +37,23 @@ namespace ICD.Connect.Misc.Occupancy
 		public bool RemoveOccupancySensorControl(int id)
 		{
 			return Controls.Remove(id);
+		}
+
+		#endregion
+
+		#region Settings
+
+		/// <summary>
+		/// Override to add controls to the device.
+		/// </summary>
+		/// <param name="settings"></param>
+		/// <param name="factory"></param>
+		/// <param name="addControl"></param>
+		protected override void AddControls(MockOccupancySensorDeviceSettings settings, IDeviceFactory factory, Action<IDeviceControl> addControl)
+		{
+			base.AddControls(settings, factory, addControl);
+
+			addControl(new MockOccupancySensorControl(this, 0));
 		}
 
 		#endregion
