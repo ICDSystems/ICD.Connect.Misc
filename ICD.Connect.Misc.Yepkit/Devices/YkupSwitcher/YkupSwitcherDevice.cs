@@ -4,6 +4,7 @@ using ICD.Common.Utils;
 using ICD.Common.Utils.Extensions;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Common.Utils.Timers;
+using ICD.Connect.Devices.Controls;
 using ICD.Connect.Devices.EventArguments;
 using ICD.Connect.Protocol.Extensions;
 using ICD.Connect.Protocol.Ports.RelayPort;
@@ -591,7 +592,7 @@ namespace ICD.Connect.Misc.Yepkit.Devices.YkupSwitcher
 		/// <param name="settings"></param>
 		/// <param name="factory"></param>
 		/// <param name="addControl"></param>
-		protected override void AddControls(YkupSwitcherDeviceSettings settings, IDeviceFactory factory, Action<ICD.Connect.Devices.Controls.IDeviceControl> addControl)
+		protected override void AddControls(YkupSwitcherDeviceSettings settings, IDeviceFactory factory, Action<IDeviceControl> addControl)
 		{
 			base.AddControls(settings, factory, addControl);
 
