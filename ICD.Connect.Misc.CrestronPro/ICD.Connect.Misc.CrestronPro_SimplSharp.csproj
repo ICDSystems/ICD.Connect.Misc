@@ -173,6 +173,8 @@
     <Compile Include="Devices\Keypads\KeypadBase\IKeypadBaseAdapterSettings.cs" />
     <Compile Include="Devices\OccupancySensors\AbstractCresnetOccupancySensorAdapter.cs" />
     <Compile Include="Devices\OccupancySensors\AbstractCresnetOccupancySensorAdapterSettings.cs" />
+    <Compile Include="Devices\OccupancySensors\CenOdtCPoeAdapter.cs" />
+    <Compile Include="Devices\OccupancySensors\CenOdtPoeAdapterSettings.cs" />
     <Compile Include="Devices\OccupancySensors\CresnetOccupancySensorControl.cs" />
     <Compile Include="Devices\OccupancySensors\GlsOdtCCnAdapter.cs" />
     <Compile Include="Devices\OccupancySensors\GlsOdtCCnAdapterSettings.cs" />
