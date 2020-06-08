@@ -73,13 +73,9 @@
     <Compile Include="Keypads\MockKeypad\MockKeypad.cs" />
     <Compile Include="Keypads\MockKeypad\MockKeypadSettings.cs" />
     <Compile Include="KrangPlugin.cs" />
-    <Compile Include="Occupancy\AbstractOccupancySensorControl.cs" />
-    <Compile Include="Occupancy\IOccupancySensorControl.cs" />
     <Compile Include="Occupancy\MockOccupancySensorControl.cs" />
     <Compile Include="Occupancy\MockOccupancySensorDevice.cs" />
     <Compile Include="Occupancy\MockOccupancySensorDeviceSettings.cs" />
-    <Compile Include="Occupancy\OccupancySensorControlConsole.cs" />
-    <Compile Include="Occupancy\OccupancyTelemetryNames.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="Properties\ControlSystem.cfg" />
   </ItemGroup>
@@ -95,6 +91,14 @@
     <ProjectReference Include="..\..\ICD.Connect.Devices\ICD.Connect.Devices\ICD.Connect.Devices_SimplSharp.csproj">
       <Project>{FD46A717-5836-4B73-ADD0-2706639DA8ED}</Project>
       <Name>ICD.Connect.Devices_SimplSharp</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ICD.Connect.Partitioning\ICD.Connect.Partitioning.Commercial\ICD.Connect.Partitioning.Commercial_SimplSharp.csproj">
+      <Project>{2501EF10-A1B8-4F3C-9ED0-D4F0E4BEE379}</Project>
+      <Name>ICD.Connect.Partitioning.Commercial_SimplSharp</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ICD.Connect.Partitioning\ICD.Connect.Partitioning\ICD.Connect.Partitioning_SimplSharp.csproj">
+      <Project>{42FB8CF0-6AE6-4C70-AFDD-DF95F07E077F}</Project>
+      <Name>ICD.Connect.Partitioning_SimplSharp</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\ICD.Connect.Settings\ICD.Connect.Settings\ICD.Connect.Settings_SimplSharp.csproj">
       <Project>{5B84EB3C-1C3A-4C4D-98C2-69F67CF51D5A}</Project>

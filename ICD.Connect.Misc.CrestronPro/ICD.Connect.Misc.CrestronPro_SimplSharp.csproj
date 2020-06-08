@@ -189,12 +189,6 @@
     <Compile Include="Extensions\PortDeviceExtensions.cs" />
     <Compile Include="Extensions\SigExtensions.cs" />
     <Compile Include="ICresnetDeviceSettings.cs" />
-    <Compile Include="OccupancyPoints.cs\AbstractOccupancyPoint.cs" />
-    <Compile Include="OccupancyPoints.cs\AbstractOccupancyPointSettings.cs" />
-    <Compile Include="OccupancyPoints.cs\IOccupancyPoint.cs" />
-    <Compile Include="OccupancyPoints.cs\IOccupancyPointSettings.cs" />
-    <Compile Include="OccupancyPoints.cs\OccupancyPoint.cs" />
-    <Compile Include="OccupancyPoints.cs\OccupancyPointSettings.cs" />
     <Compile Include="Ports\CecPort\CecPortAdapter.cs" />
     <Compile Include="Ports\CecPort\CecPortAdapterSettings.cs" />
     <Compile Include="Ports\DigitalInput\DigitalInputAdapter.cs" />
@@ -245,6 +239,10 @@
     <ProjectReference Include="..\..\ICD.Connect.Panels\ICD.Connect.Panels\ICD.Connect.Panels_SimplSharp.csproj">
       <Project>{A441FE98-6A8E-4EF3-98F0-D17041D2E118}</Project>
       <Name>ICD.Connect.Panels_SimplSharp</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ICD.Connect.Partitioning\ICD.Connect.Partitioning.Commercial\ICD.Connect.Partitioning.Commercial_SimplSharp.csproj">
+      <Project>{2501EF10-A1B8-4F3C-9ED0-D4F0E4BEE379}</Project>
+      <Name>ICD.Connect.Partitioning.Commercial_SimplSharp</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\ICD.Connect.Partitioning\ICD.Connect.Partitioning\ICD.Connect.Partitioning_SimplSharp.csproj">
       <Project>{42FB8CF0-6AE6-4C70-AFDD-DF95F07E077F}</Project>

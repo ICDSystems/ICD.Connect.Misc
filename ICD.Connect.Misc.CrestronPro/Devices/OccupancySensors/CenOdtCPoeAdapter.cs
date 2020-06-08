@@ -5,12 +5,12 @@ using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.API.Nodes;
 using ICD.Connect.Devices;
 using ICD.Connect.Devices.Controls;
-using ICD.Connect.Misc.CrestronPro.Utils;
-using ICD.Connect.Misc.Occupancy;
+using ICD.Connect.Partitioning.Commercial.Controls.Occupancy;
 using ICD.Connect.Settings;
 #if SIMPLSHARP
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.GeneralIO;
+using ICD.Connect.Misc.CrestronPro.Utils;
 #endif
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
