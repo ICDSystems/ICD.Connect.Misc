@@ -189,6 +189,12 @@
     <Compile Include="Extensions\PortDeviceExtensions.cs" />
     <Compile Include="Extensions\SigExtensions.cs" />
     <Compile Include="ICresnetDeviceSettings.cs" />
+    <Compile Include="OccupancyPoints.cs\AbstractOccupancyPoint.cs" />
+    <Compile Include="OccupancyPoints.cs\AbstractOccupancyPointSettings.cs" />
+    <Compile Include="OccupancyPoints.cs\IOccupancyPoint.cs" />
+    <Compile Include="OccupancyPoints.cs\IOccupancyPointSettings.cs" />
+    <Compile Include="OccupancyPoints.cs\OccupancyPoint.cs" />
+    <Compile Include="OccupancyPoints.cs\OccupancyPointSettings.cs" />
     <Compile Include="Ports\CecPort\CecPortAdapter.cs" />
     <Compile Include="Ports\CecPort\CecPortAdapterSettings.cs" />
     <Compile Include="Ports\DigitalInput\DigitalInputAdapter.cs" />
