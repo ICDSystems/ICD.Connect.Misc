@@ -21,9 +21,7 @@ using ICD.Connect.Protocol.Ports;
 using ICD.Connect.Protocol.SerialBuffers;
 using ICD.Connect.Routing;
 using ICD.Connect.Routing.Connections;
-using ICD.Connect.Routing.Mock.Destination;
 using ICD.Connect.Settings;
-using ICD.Connect.Routing.Mock.Source;
 
 namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard
 {
@@ -323,16 +321,13 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard
 		{
 			base.AddControls(settings, factory, addControl);
 
-			MockRouteSourceControl sourceControl = new MockRouteSourceControl(this, 0);
+			VibeBoardRoutingControl routeControl = new VibeBoardRoutingControl(this, 0);
+			routeControl.SetInputs(new[] { new ConnectorInfo(1, eConnectionType.Video | eConnectionType.Audio) });
 
-			MockRouteDestinationControl destinationControl = new MockRouteDestinationControl(this, 1);
-			destinationControl.SetInputs(new[] { new ConnectorInfo(1, eConnectionType.Video | eConnectionType.Audio) });
-
-			addControl(sourceControl);
-			addControl(destinationControl);
-			addControl(new VibeBoardVolumeControl(this, Controls.Count));
-			addControl(new VibeBoardPowerControl(this, Controls.Count));
-			addControl(new VibeBoardAppControl(this, Controls.Count));
+			Controls.Add(routeControl);
+			Controls.Add(new VibeBoardVolumeControl(this, Controls.Count));
+			Controls.Add(new VibeBoardPowerControl(this, Controls.Count));
+			Controls.Add(new VibeBoardAppControl(this, Controls.Count));
 		}
 
 		#endregion

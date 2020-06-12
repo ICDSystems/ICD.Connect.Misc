@@ -86,6 +86,7 @@
     <Compile Include="Devices\VibeBoard\Components\VolumeComponent.cs" />
     <Compile Include="Devices\VibeBoard\Controls\VibeBoardAppControl.cs" />
     <Compile Include="Devices\VibeBoard\Controls\VibeBoardPowerControl.cs" />
+    <Compile Include="Devices\VibeBoard\Controls\VibeBoardRoutingControl.cs" />
     <Compile Include="Devices\VibeBoard\Controls\VibeBoardVolumeControl.cs" />
     <Compile Include="Devices\VibeBoard\Responses\AbstractVibeResponse.cs" />
     <Compile Include="Devices\VibeBoard\Responses\Converters\AbstractVibeResponseConverter.cs" />
