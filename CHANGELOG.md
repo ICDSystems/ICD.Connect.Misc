@@ -6,11 +6,21 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [9.0.0] - 2020-06-19
+### Added
+ - Added CEN-ODT-C-POE device
+ - Added OccupancyPoint and abstractions
+
 ### Changed
- - Removed duplicate comspec entries from the console
  - IMockKeypad now implements IMockDevice
  - MockOccupancySensorDevice now inherits from AbstractMockDevice
  - Using new logging context
+ - No longer logging errors when port registration returns NoAttempt
+
+### Removed
+ - Removed duplicate comspec entries from the console
+ - Removed duplicate occupancy entries from the console
+ - Occupancy features moved to ICD.Connect.Partitioning
 
 ## [8.3.0] - 2020-04-28
 ### Added
