@@ -497,7 +497,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 			{
 				try
 				{
-					provider = factory.GetDeviceById((int)m_Device) as IPortParent;
+					provider = factory.GetOriginatorById((int)m_Device) as IPortParent;
 				}
 				catch (KeyNotFoundException)
 				{

@@ -433,7 +433,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 			{
 				try
 				{
-					provider = factory.GetDeviceById((int)m_Device) as IPortParent;
+					provider = factory.GetOriginatorById((int)m_Device) as IPortParent;
 				}
 				catch (KeyNotFoundException)
 				{
