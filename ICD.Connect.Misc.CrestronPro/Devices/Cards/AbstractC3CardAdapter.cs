@@ -7,6 +7,7 @@ using ICD.Connect.Devices.Extensions;
 using ICD.Connect.Misc.CrestronPro.Devices.CardFrames;
 using ICD.Connect.Misc.CrestronPro.Utils;
 using ICD.Connect.Settings;
+using ICD.Connect.Settings.Originators;
 #if SIMPLSHARP
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpProInternal;
@@ -192,11 +193,11 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 		[CanBeNull]
 		private TCard InstantiateCard(uint? cardId, int cardFrameId, IDeviceFactory factory)
 		{
-			IDevice cardFrame;
+			IOriginator cardFrame;
 
 			try
 			{
-				cardFrame = factory.GetDeviceById(cardFrameId);
+				cardFrame = factory.GetOriginatorById(cardFrameId);
 			}
 			catch (KeyNotFoundException)
 			{
