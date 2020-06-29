@@ -22,6 +22,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
  - Removed duplicate occupancy entries from the console
  - Occupancy features moved to ICD.Connect.Partitioning
 
+## [8.3.1] - 2020-06-29
+### Changed
+ - Changed Crestron ports to allow any IOriginator implementing IPortParent as a parent, instead of only IDevices - fixes for DGE-100/200
+ - Changed Crestron C3Cards to allow any IOriginator as a parent
+
 ## [8.3.0] - 2020-04-28
 ### Added
  - Vibe - Added event for foreground task change

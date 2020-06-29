@@ -216,7 +216,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.DigitalInput
 			{
 				try
 				{
-					provider = factory.GetDeviceById((int)m_Device) as IPortParent;
+					provider = factory.GetOriginatorById((int)m_Device) as IPortParent;
 				}
 				catch (KeyNotFoundException)
 				{
