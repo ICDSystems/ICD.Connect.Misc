@@ -78,7 +78,7 @@
     <Compile Include="FlexApi\RestApi\Module.cs" />
     <Compile Include="FlexApi\RestApi\SerialConfiguration.cs" />
     <Compile Include="KrangPlugin.cs" />
-    <None Include="ObfuscationSettings.cs" />
+    <Compile Include="ObfuscationSettings.cs" />
     <Compile Include="Ports\ComPort\GcITachComPort.cs" />
     <Compile Include="Ports\ComPort\GcITachComPortSettings.cs" />
     <Compile Include="Ports\IGcITachPort.cs" />

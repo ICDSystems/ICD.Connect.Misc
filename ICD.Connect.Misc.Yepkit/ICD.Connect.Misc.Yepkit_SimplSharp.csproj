@@ -64,7 +64,7 @@
     <Compile Include="Devices\YkupSwitcher\YkupSwitcherDevice.cs" />
     <Compile Include="Devices\YkupSwitcher\YkupSwitcherDeviceSettings.cs" />
     <Compile Include="KrangPlugin.cs" />
-    <None Include="ObfuscationSettings.cs" />
+    <Compile Include="ObfuscationSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="Properties\ControlSystem.cfg" />
   </ItemGroup>
