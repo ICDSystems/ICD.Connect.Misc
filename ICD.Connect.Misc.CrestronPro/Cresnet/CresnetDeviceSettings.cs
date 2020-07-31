@@ -41,6 +41,7 @@ namespace ICD.Connect.Misc.CrestronPro.Cresnet
 		/// <param name="xml"></param>
 		public void ParseXml(string xml)
 		{
+			// Try to read nested xml first, support non-nested settings for backwards compatibility second.
 			string innerXml;
 			if (XmlUtils.TryGetChildElementAsString(xml, CRESNET_DEVICE_SETTINGS_ELEMENT, out innerXml))
 				ParseInnerXml(innerXml);
