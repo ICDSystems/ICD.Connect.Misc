@@ -4,6 +4,5 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.C2nCbd.C2nCbdPBaseWithVer
 {
 	public abstract class AbstractC2nCbdPBaseWithVersiportAdapterSettings : AbstractC2nCbdPBaseAdapterSettings, IC2nCbdPBaseWithVersiportAdapterSettings
 	{
-		 
 	}
 }

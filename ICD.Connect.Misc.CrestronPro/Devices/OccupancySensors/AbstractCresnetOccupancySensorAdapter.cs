@@ -5,6 +5,7 @@ using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.API.Nodes;
 using ICD.Connect.Devices;
 using ICD.Connect.Devices.Controls;
+using ICD.Connect.Misc.CrestronPro.Cresnet;
 using ICD.Connect.Partitioning.Commercial.Controls.Occupancy;
 using ICD.Connect.Settings;
 #if SIMPLSHARP
@@ -17,7 +18,7 @@ using ICD.Connect.Misc.CrestronPro.Utils;
 namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 {
 #if SIMPLSHARP
-	public abstract class AbstractCresnetOccupancySensorAdapter<TSettings, TSensor> : AbstractDevice<TSettings>, ICresnetOccupancySensorAdapter
+	public abstract class AbstractCresnetOccupancySensorAdapter<TSettings, TSensor> : AbstractDevice<TSettings>, ICresnetOccupancySensorAdapter, ICresnetDevice
 		where TSensor : GlsOccupancySensorBase
 		where TSettings : AbstractCresnetOccupancySensorAdapterSettings, new()
 #else
@@ -36,15 +37,15 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 #if SIMPLSHARP
 		private TSensor m_Sensor;
 #endif
-
-		private int? m_CresnetBranchId;
-		private int? m_CresnetParentId;
-
 		private eOccupancyState m_OccupancyState;
+
+		private CresnetDeviceInfo m_CresnetDeviceInfo;
 
 		#endregion
 
 		#region Properties
+
+		public CresnetDeviceInfo CresnetDeviceInfo { get { return m_CresnetDeviceInfo; } }
 
 		public eOccupancyState OccupancyState
 		{
@@ -188,11 +189,13 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 		{
 			base.ApplySettingsFinal(settings, factory);
 
+			m_CresnetDeviceInfo = new CresnetDeviceInfo(settings);
+
 #if SIMPLSHARP
-			if (settings.CresnetId == null || !CresnetUtils.IsValidId(settings.CresnetId.Value))
+			if (m_CresnetDeviceInfo.CresnetId == null || !CresnetUtils.IsValidId(m_CresnetDeviceInfo.CresnetId.Value))
 			{
 				Logger.Log(eSeverity.Error, "Failed to instantiate {0} - CresnetId {1} is out of range",
-				           typeof(TSensor).Name, settings.CresnetId);
+						   typeof(TSensor).Name, m_CresnetDeviceInfo.CresnetId);
 				return;
 			}
 
@@ -200,9 +203,9 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 
 			try
 			{
-				device = CresnetUtils.InstantiateCresnetDevice(settings.CresnetId.Value,
-															   settings.BranchId,
-															   settings.ParentId,
+				device = CresnetUtils.InstantiateCresnetDevice(m_CresnetDeviceInfo.CresnetId.Value,
+															   m_CresnetDeviceInfo.BranchId,
+															   m_CresnetDeviceInfo.ParentId,
 															   factory,
 															   cresnetId => InstantiateControlSystem(cresnetId, ProgramInfo.ControlSystem),
 															   InstantiateCresnetBranch);
@@ -211,11 +214,8 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 			catch (ArgumentException e)
 			{
 				Logger.Log(eSeverity.Error, "Failed to instantiate {0} with Cresnet ID {1} - {2}",
-				           typeof(TSensor).Name, settings.CresnetId, e.Message);
+						   typeof(TSensor).Name, m_CresnetDeviceInfo.CresnetId, e.Message);
 			}
-
-			m_CresnetBranchId = settings.BranchId;
-			m_CresnetParentId = settings.ParentId;
 
 			SetDevice(device);
 #else
@@ -230,13 +230,8 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 		protected override void CopySettingsFinal(TSettings settings)
 		{
 			base.CopySettingsFinal(settings);
-#if SIMPLSHARP
-			settings.CresnetId = m_Sensor == null ? null : (byte?)m_Sensor.ID;
-			settings.ParentId = m_CresnetParentId;
-			settings.BranchId = m_CresnetBranchId;
-#else
-			throw new NotSupportedException();
-#endif
+
+			m_CresnetDeviceInfo.CopySettings(settings);
 		}
 
 		/// <summary>
@@ -245,12 +240,11 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 		protected override void ClearSettingsFinal()
 		{
 			base.ClearSettingsFinal();
+
+			m_CresnetDeviceInfo.ClearSettings();
+
 #if SIMPLSHARP
-			m_CresnetParentId = null;
-			m_CresnetBranchId = null;
 			SetDevice(null);
-#else
-			throw new NotSupportedException();
 #endif
 		}
 
@@ -280,9 +274,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 			base.BuildConsoleStatus(addRow);
 
 #if SIMPLSHARP
-			addRow("Cresnet ID", m_Sensor == null ? (uint?)null : m_Sensor.ID);
-			addRow("Parent ID", m_CresnetParentId);
-			addRow("Branch ID", m_CresnetBranchId);
+			CresnetDeviceConsole.BuildConsoleStatus(this, addRow);
 			addRow("Occupancy State", OccupancyState);
 #endif
 		}

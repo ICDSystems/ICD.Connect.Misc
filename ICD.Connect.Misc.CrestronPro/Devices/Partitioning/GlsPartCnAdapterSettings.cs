@@ -1,10 +1,7 @@
 ﻿using ICD.Common.Utils.Xml;
 using ICD.Connect.Misc.CrestronPro.Cresnet;
-using ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge;
-using ICD.Connect.Misc.CrestronPro.Utils;
 using ICD.Connect.Partitioning.Devices;
 using ICD.Connect.Settings.Attributes;
-using ICD.Connect.Settings.Attributes.SettingsProperties;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 {
@@ -13,15 +10,16 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 	{
 		private const string SENSITIVITY_ELEMENT = "Sensitivity";
 
-		[CrestronByteSettingsProperty]
-		public byte? CresnetId { get; set; }
+		private readonly CresnetDeviceSettings m_CresnetDeviceSettings;
 
-		public int? BranchId { get; set; }
-
-		[OriginatorIdSettingsProperty(typeof(ICresnetBridgeAdapter))]
-		public int? ParentId { get; set; }
+		public CresnetDeviceSettings CresnetDeviceSettings { get { return m_CresnetDeviceSettings; } }
 
 		public ushort? Sensitivity { get; set; }
+
+		public GlsPartCnAdapterSettings()
+		{
+			m_CresnetDeviceSettings = new CresnetDeviceSettings();
+		}
 
 		/// <summary>
 		/// Writes property elements to xml.
@@ -31,7 +29,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 		{
 			base.WriteElements(writer);
 
-			CresnetSettingsUtils.WritePropertiesToXml(this, writer);
+			m_CresnetDeviceSettings.WriteElements(writer);
 
 			writer.WriteElementString(SENSITIVITY_ELEMENT, IcdXmlConvert.ToString(Sensitivity));
 		}
@@ -44,7 +42,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 		{
 			base.ParseXml(xml);
 
-			CresnetSettingsUtils.ReadPropertiesFromXml(this, xml);
+			m_CresnetDeviceSettings.ParseXml(xml);
 
 			Sensitivity = XmlUtils.TryReadChildElementContentAsUShort(xml, SENSITIVITY_ELEMENT);
 		}

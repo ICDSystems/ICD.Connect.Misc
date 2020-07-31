@@ -1,21 +1,21 @@
 ﻿using ICD.Common.Utils.Xml;
 using ICD.Connect.Devices;
 using ICD.Connect.Misc.CrestronPro.Cresnet;
-using ICD.Connect.Misc.CrestronPro.Utils;
 using ICD.Connect.Settings.Attributes;
-using ICD.Connect.Settings.Attributes.SettingsProperties;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 {
 	[KrangSettings("CsaPws10sHubEnetSlave", typeof(CsaPws10sHubEnetSlaveAdapter))]
 	public sealed class CsaPws10sHubEnetSlaveAdapterSettings : AbstractDeviceSettings, ICsaPws10sHubEnetSettings, ICresnetDeviceSettings
 	{
-		[CrestronByteSettingsProperty]
-		public byte? CresnetId { get; set; }
+		private readonly CresnetDeviceSettings m_CresnetDeviceSettings;
 
-		public int? ParentId { get; set; }
+		public CresnetDeviceSettings CresnetDeviceSettings { get { return m_CresnetDeviceSettings; } }
 
-		public int? BranchId { get; set; }
+		public CsaPws10sHubEnetSlaveAdapterSettings()
+		{
+			m_CresnetDeviceSettings = new CresnetDeviceSettings();
+		}
 
 		/// <summary>
 		/// Writes property elements to xml.
@@ -25,7 +25,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 		{
 			base.WriteElements(writer);
 
-			CresnetSettingsUtils.WritePropertiesToXml(this, writer);
+			m_CresnetDeviceSettings.WriteElements(writer);
 		}
 
 		/// <summary>
@@ -36,7 +36,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 		{
 			base.ParseXml(xml);
 
-			CresnetSettingsUtils.ReadPropertiesFromXml(this, xml);
+			m_CresnetDeviceSettings.ParseXml(xml);
 		}
 	}
 }

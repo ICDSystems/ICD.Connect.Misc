@@ -1,23 +1,21 @@
 ﻿using ICD.Common.Utils.Xml;
 using ICD.Connect.Devices;
 using ICD.Connect.Misc.CrestronPro.Cresnet;
-using ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge;
-using ICD.Connect.Misc.CrestronPro.Utils;
 using ICD.Connect.Settings.Attributes;
-using ICD.Connect.Settings.Attributes.SettingsProperties;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.Io.DinIo
 {
 	[KrangSettings("DinIo8", typeof(DinIo8Adapter))]
 	public sealed class DinIo8AdapterSettings : AbstractDeviceSettings, ICresnetDeviceSettings
 	{
-		[CrestronByteSettingsProperty]
-		public byte? CresnetId { get; set; }
+		private readonly CresnetDeviceSettings m_CresnetDeviceSettings;
 
-		[OriginatorIdSettingsProperty(typeof(ICresnetBridgeAdapter))]
-		public int? ParentId { get; set; }
+		public CresnetDeviceSettings CresnetDeviceSettings { get { return m_CresnetDeviceSettings; } }
 
-		public int? BranchId { get; set; }
+		public DinIo8AdapterSettings()
+		{
+			m_CresnetDeviceSettings = new CresnetDeviceSettings();
+		}
 
 		/// <summary>
 		/// Writes property elements to xml.
@@ -27,7 +25,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Io.DinIo
 		{
 			base.WriteElements(writer);
 
-			CresnetSettingsUtils.WritePropertiesToXml(this, writer);
+			m_CresnetDeviceSettings.WriteElements(writer);
 		}
 
 		/// <summary>
@@ -38,7 +36,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Io.DinIo
 		{
 			base.ParseXml(xml);
 
-			CresnetSettingsUtils.ReadPropertiesFromXml(this, xml);
+			m_CresnetDeviceSettings.ParseXml(xml);
 		}
 	}
 }
