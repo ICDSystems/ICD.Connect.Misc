@@ -17,9 +17,9 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 #if SIMPLSHARP
 		private CsaPws10sHubEnetSlave m_Device;
 #endif
-		private CresnetDeviceInfo m_CresnetDeviceInfo;
+		private CresnetInfo m_CresnetInfo;
 
-		public CresnetDeviceInfo CresnetDeviceInfo { get { return m_CresnetDeviceInfo; } }
+		public CresnetInfo CresnetInfo { get { return m_CresnetInfo; } }
 #if SIMPLSHARP
 
 		private void SetDevice(CsaPws10sHubEnetSlave device, int? parentId, int? branchId)
@@ -55,7 +55,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 		{
 			base.ClearSettingsFinal();
 
-			m_CresnetDeviceInfo.ClearSettings();
+			m_CresnetInfo.ClearSettings();
 
 #if SIMPLSHARP
 			m_Device = null;
@@ -70,7 +70,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 		{
 			base.CopySettingsFinal(settings);
 
-			m_CresnetDeviceInfo.CopySettings(settings);
+			m_CresnetInfo.CopySettings(settings);
 		}
 
 		/// <summary>
@@ -82,16 +82,16 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 		{
 			base.ApplySettingsFinal(settings, factory);
 
-			m_CresnetDeviceInfo = new CresnetDeviceInfo(settings);
+			m_CresnetInfo = new CresnetInfo(settings);
 #if SIMPLSHARP
 			CsaPws10sHubEnetSlave device = null;
 			try
 			{
-				if (m_CresnetDeviceInfo.CresnetId.HasValue)
+				if (m_CresnetInfo.CresnetId.HasValue)
 				{
-					device = CresnetUtils.InstantiateCresnetDevice(m_CresnetDeviceInfo.CresnetId.Value,
-																   m_CresnetDeviceInfo.BranchId,
-																   m_CresnetDeviceInfo.ParentId,
+					device = CresnetUtils.InstantiateCresnetDevice(m_CresnetInfo.CresnetId.Value,
+																   m_CresnetInfo.BranchId,
+																   m_CresnetInfo.ParentId,
 					                                               factory,
 					                                               cresnetId =>
 					                                               new CsaPws10sHubEnetSlave(cresnetId, ProgramInfo.ControlSystem),
@@ -106,11 +106,11 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 			catch (ArgumentException e)
 			{
 				Logger.Log(eSeverity.Error, e, "Failed to instantiate {0} with Cresnet ID {1} - {2}",
-						   typeof(CsaPws10sHubEnetSlave).Name, m_CresnetDeviceInfo.CresnetId, e.Message);
+						   typeof(CsaPws10sHubEnetSlave).Name, m_CresnetInfo.CresnetId, e.Message);
 			}
 			finally
 			{
-				SetDevice(device, m_CresnetDeviceInfo.ParentId, m_CresnetDeviceInfo.BranchId);
+				SetDevice(device, m_CresnetInfo.ParentId, m_CresnetInfo.BranchId);
 			}
 #endif
 		}

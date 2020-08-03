@@ -1,6 +1,6 @@
 ﻿namespace ICD.Connect.Misc.CrestronPro.Cresnet
 {
-	public sealed class CresnetDeviceInfo
+	public sealed class CresnetInfo
 	{
 		private byte? m_CresnetId;
 		private int? m_BranchId;
@@ -31,11 +31,11 @@
 		/// Constructor.
 		/// </summary>
 		/// <param name="settings"></param>
-		public CresnetDeviceInfo(ICresnetDeviceSettings settings)
+		public CresnetInfo(ICresnetDeviceSettings settings)
 		{
-			m_CresnetId = settings.CresnetDeviceSettings.CresnetId;
-			m_BranchId = settings.CresnetDeviceSettings.BranchId;
-			m_ParentId = settings.CresnetDeviceSettings.ParentId;
+			m_CresnetId = settings.CresnetSettings.CresnetId;
+			m_BranchId = settings.CresnetSettings.BranchId;
+			m_ParentId = settings.CresnetSettings.ParentId;
 		}
 
 		#endregion
@@ -44,9 +44,9 @@
 
 		public void CopySettings(ICresnetDeviceSettings settings)
 		{
-			settings.CresnetDeviceSettings.CresnetId = CresnetId;
-			settings.CresnetDeviceSettings.BranchId = BranchId;
-			settings.CresnetDeviceSettings.ParentId = ParentId;
+			settings.CresnetSettings.CresnetId = CresnetId;
+			settings.CresnetSettings.BranchId = BranchId;
+			settings.CresnetSettings.ParentId = ParentId;
 		}
 
 		public void ClearSettings()

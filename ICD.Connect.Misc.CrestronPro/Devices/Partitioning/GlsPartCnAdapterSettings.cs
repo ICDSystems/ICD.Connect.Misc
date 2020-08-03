@@ -10,15 +10,15 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 	{
 		private const string SENSITIVITY_ELEMENT = "Sensitivity";
 
-		private readonly CresnetDeviceSettings m_CresnetDeviceSettings;
+		private readonly CresnetSettings m_CresnetSettings;
 
-		public CresnetDeviceSettings CresnetDeviceSettings { get { return m_CresnetDeviceSettings; } }
+		public CresnetSettings CresnetSettings { get { return m_CresnetSettings; } }
 
 		public ushort? Sensitivity { get; set; }
 
 		public GlsPartCnAdapterSettings()
 		{
-			m_CresnetDeviceSettings = new CresnetDeviceSettings();
+			m_CresnetSettings = new CresnetSettings();
 		}
 
 		/// <summary>
@@ -29,7 +29,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 		{
 			base.WriteElements(writer);
 
-			m_CresnetDeviceSettings.WriteElements(writer);
+			m_CresnetSettings.WriteElements(writer);
 
 			writer.WriteElementString(SENSITIVITY_ELEMENT, IcdXmlConvert.ToString(Sensitivity));
 		}
@@ -42,7 +42,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 		{
 			base.ParseXml(xml);
 
-			m_CresnetDeviceSettings.ParseXml(xml);
+			m_CresnetSettings.ParseXml(xml);
 
 			Sensitivity = XmlUtils.TryReadChildElementContentAsUShort(xml, SENSITIVITY_ELEMENT);
 		}

@@ -5,9 +5,9 @@ using ICD.Connect.Settings.Attributes.SettingsProperties;
 
 namespace ICD.Connect.Misc.CrestronPro.Cresnet
 {
-	public sealed class CresnetDeviceSettings
+	public sealed class CresnetSettings
 	{
-		private const string CRESNET_DEVICE_SETTINGS_ELEMENT = "CresnetDeviceSettings";
+		private const string CRESNET_ELEMENT = "Cresnet";
 		private const string CRESNET_ID_ELEMENT = "CresnetID";
 		private const string BRANCH_ID_ELEMENT = "BranchID";
 		private const string PARENT_ID_ELEMENT = "ParentID";
@@ -26,7 +26,7 @@ namespace ICD.Connect.Misc.CrestronPro.Cresnet
 			if (writer == null)
 				throw new ArgumentNullException("writer");
 
-			writer.WriteStartElement(CRESNET_DEVICE_SETTINGS_ELEMENT);
+			writer.WriteStartElement(CRESNET_ELEMENT);
 			{
 				writer.WriteElementString(CRESNET_ID_ELEMENT, CresnetId == null ? null : StringUtils.ToIpIdString(CresnetId.Value));
 				writer.WriteElementString(BRANCH_ID_ELEMENT, BranchId == null ? null : BranchId.Value.ToString());
@@ -43,14 +43,7 @@ namespace ICD.Connect.Misc.CrestronPro.Cresnet
 		{
 			// Try to read nested xml first, support non-nested settings for backwards compatibility second.
 			string innerXml;
-			if (XmlUtils.TryGetChildElementAsString(xml, CRESNET_DEVICE_SETTINGS_ELEMENT, out innerXml))
-				ParseInnerXml(innerXml);
-			else
-			{
-				CresnetId = XmlUtils.TryReadChildElementContentAsByte(xml, CRESNET_ID_ELEMENT);
-				BranchId = XmlUtils.TryReadChildElementContentAsInt(xml, BRANCH_ID_ELEMENT);
-				ParentId = XmlUtils.TryReadChildElementContentAsInt(xml, PARENT_ID_ELEMENT);	
-			}
+			ParseInnerXml(XmlUtils.TryGetChildElementAsString(xml, CRESNET_ELEMENT, out innerXml) ? innerXml : xml);
 		}
 
 		private void ParseInnerXml(string xml)

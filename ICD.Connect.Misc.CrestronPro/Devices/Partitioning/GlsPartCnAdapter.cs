@@ -25,9 +25,9 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 		private GlsPartCn m_PartitionDevice;
 #endif
 
-		private CresnetDeviceInfo m_CresnetDeviceInfo;
+		private CresnetInfo m_CresnetInfo;
 
-		public CresnetDeviceInfo CresnetDeviceInfo { get { return m_CresnetDeviceInfo; } }
+		public CresnetInfo CresnetInfo { get { return m_CresnetInfo; } }
 
 		private readonly FeedbackDebounce<bool> m_Debounce;
 
@@ -135,7 +135,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 		{
 			base.CopySettingsFinal(settings);
 
-			m_CresnetDeviceInfo.CopySettings(settings);
+			m_CresnetInfo.CopySettings(settings);
 
 #if SIMPLSHARP
 			settings.Sensitivity = m_PartitionDevice == null
@@ -153,7 +153,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 		{
 			base.ClearSettingsFinal();
 
-			m_CresnetDeviceInfo.ClearSettings();
+			m_CresnetInfo.ClearSettings();
 
 #if SIMPLSHARP
 			SetDevice(null);
@@ -169,13 +169,13 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 		{
 			base.ApplySettingsFinal(settings, factory);
 
-			m_CresnetDeviceInfo = new CresnetDeviceInfo(settings);
+			m_CresnetInfo = new CresnetInfo(settings);
 
 #if SIMPLSHARP
-			if (m_CresnetDeviceInfo.CresnetId == null || !CresnetUtils.IsValidId(m_CresnetDeviceInfo.CresnetId.Value))
+			if (m_CresnetInfo.CresnetId == null || !CresnetUtils.IsValidId(m_CresnetInfo.CresnetId.Value))
 			{
 				Logger.Log(eSeverity.Error, "Failed to instantiate {0} - CresnetId {1} is out of range",
-						   typeof(GlsPartCn).Name, m_CresnetDeviceInfo.CresnetId == null ? "NULL" : m_CresnetDeviceInfo.CresnetId.ToString());
+						   typeof(GlsPartCn).Name, m_CresnetInfo.CresnetId == null ? "NULL" : m_CresnetInfo.CresnetId.ToString());
 				return;
 			}
 
@@ -183,9 +183,9 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 
 			try
 			{
-				device = CresnetUtils.InstantiateCresnetDevice(m_CresnetDeviceInfo.CresnetId.Value,
-															   m_CresnetDeviceInfo.BranchId,
-															   m_CresnetDeviceInfo.ParentId, 
+				device = CresnetUtils.InstantiateCresnetDevice(m_CresnetInfo.CresnetId.Value,
+															   m_CresnetInfo.BranchId,
+															   m_CresnetInfo.ParentId, 
 															   factory, 
 															   cresnetId => new GlsPartCn(cresnetId, ProgramInfo.ControlSystem), 
 															   (cresnetId, branch) => new GlsPartCn(cresnetId, branch));
@@ -194,7 +194,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 			catch (ArgumentException e)
 			{
 				Logger.Log(eSeverity.Error, e, "Failed to instantiate {0} with Cresnet ID {1}",
-						   typeof(GlsPartCnAdapter).Name, m_CresnetDeviceInfo.CresnetId);
+						   typeof(GlsPartCnAdapter).Name, m_CresnetInfo.CresnetId);
 			}
 
 			SetDevice(device);

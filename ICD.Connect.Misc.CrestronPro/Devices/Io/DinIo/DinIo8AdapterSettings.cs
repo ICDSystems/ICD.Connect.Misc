@@ -8,13 +8,13 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Io.DinIo
 	[KrangSettings("DinIo8", typeof(DinIo8Adapter))]
 	public sealed class DinIo8AdapterSettings : AbstractDeviceSettings, ICresnetDeviceSettings
 	{
-		private readonly CresnetDeviceSettings m_CresnetDeviceSettings;
+		private readonly CresnetSettings m_CresnetSettings;
 
-		public CresnetDeviceSettings CresnetDeviceSettings { get { return m_CresnetDeviceSettings; } }
+		public CresnetSettings CresnetSettings { get { return m_CresnetSettings; } }
 
 		public DinIo8AdapterSettings()
 		{
-			m_CresnetDeviceSettings = new CresnetDeviceSettings();
+			m_CresnetSettings = new CresnetSettings();
 		}
 
 		/// <summary>
@@ -25,7 +25,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Io.DinIo
 		{
 			base.WriteElements(writer);
 
-			m_CresnetDeviceSettings.WriteElements(writer);
+			m_CresnetSettings.WriteElements(writer);
 		}
 
 		/// <summary>
@@ -36,7 +36,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Io.DinIo
 		{
 			base.ParseXml(xml);
 
-			m_CresnetDeviceSettings.ParseXml(xml);
+			m_CresnetSettings.ParseXml(xml);
 		}
 	}
 }

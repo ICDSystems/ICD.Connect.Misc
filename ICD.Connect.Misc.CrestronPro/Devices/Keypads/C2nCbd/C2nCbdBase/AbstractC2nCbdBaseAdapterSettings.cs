@@ -6,13 +6,13 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.C2nCbd.C2nCbdBase
 {
 	public abstract class AbstractC2nCbdBaseAdapterSettings : AbstractInetCbdexAdapterSettings, IC2nCbdBaseAdapterSettings
 	{
-		private readonly CresnetDeviceSettings m_CresnetDeviceSettings;
+		private readonly CresnetSettings m_CresnetSettings;
 
-		public CresnetDeviceSettings CresnetDeviceSettings { get { return m_CresnetDeviceSettings; } }
+		public CresnetSettings CresnetSettings { get { return m_CresnetSettings; } }
 
 		protected AbstractC2nCbdBaseAdapterSettings()
 		{
-			m_CresnetDeviceSettings = new CresnetDeviceSettings();
+			m_CresnetSettings = new CresnetSettings();
 		}
 
 		/// <summary>
@@ -23,7 +23,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.C2nCbd.C2nCbdBase
 		{
 			base.WriteElements(writer);
 
-			m_CresnetDeviceSettings.WriteElements(writer);
+			m_CresnetSettings.WriteElements(writer);
 		}
 
 		/// <summary>
@@ -34,7 +34,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.C2nCbd.C2nCbdBase
 		{
 			base.ParseXml(xml);
 
-			m_CresnetDeviceSettings.ParseXml(xml);
+			m_CresnetSettings.ParseXml(xml);
 		}
 	}
 }

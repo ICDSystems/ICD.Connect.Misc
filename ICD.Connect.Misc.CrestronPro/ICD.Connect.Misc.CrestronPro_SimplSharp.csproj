@@ -95,8 +95,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cresnet\CresnetDeviceConsole.cs" />
-    <Compile Include="Cresnet\CresnetDeviceInfo.cs" />
-    <Compile Include="Cresnet\CresnetDeviceSettings.cs" />
+    <Compile Include="Cresnet\CresnetInfo.cs" />
+    <Compile Include="Cresnet\CresnetSettings.cs" />
     <Compile Include="Cresnet\ICresnetDevice.cs" />
     <Compile Include="ObfuscationSettings.cs" />
     <Compile Include="Devices\CresnetBridge\CsaPws10sHubEnetAdapter.cs" />

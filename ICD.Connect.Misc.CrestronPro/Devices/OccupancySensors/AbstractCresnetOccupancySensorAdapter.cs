@@ -39,13 +39,13 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 #endif
 		private eOccupancyState m_OccupancyState;
 
-		private CresnetDeviceInfo m_CresnetDeviceInfo;
+		private CresnetInfo m_CresnetInfo;
 
 		#endregion
 
 		#region Properties
 
-		public CresnetDeviceInfo CresnetDeviceInfo { get { return m_CresnetDeviceInfo; } }
+		public CresnetInfo CresnetInfo { get { return m_CresnetInfo; } }
 
 		public eOccupancyState OccupancyState
 		{
@@ -189,13 +189,13 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 		{
 			base.ApplySettingsFinal(settings, factory);
 
-			m_CresnetDeviceInfo = new CresnetDeviceInfo(settings);
+			m_CresnetInfo = new CresnetInfo(settings);
 
 #if SIMPLSHARP
-			if (m_CresnetDeviceInfo.CresnetId == null || !CresnetUtils.IsValidId(m_CresnetDeviceInfo.CresnetId.Value))
+			if (m_CresnetInfo.CresnetId == null || !CresnetUtils.IsValidId(m_CresnetInfo.CresnetId.Value))
 			{
 				Logger.Log(eSeverity.Error, "Failed to instantiate {0} - CresnetId {1} is out of range",
-						   typeof(TSensor).Name, m_CresnetDeviceInfo.CresnetId);
+						   typeof(TSensor).Name, m_CresnetInfo.CresnetId);
 				return;
 			}
 
@@ -203,9 +203,9 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 
 			try
 			{
-				device = CresnetUtils.InstantiateCresnetDevice(m_CresnetDeviceInfo.CresnetId.Value,
-															   m_CresnetDeviceInfo.BranchId,
-															   m_CresnetDeviceInfo.ParentId,
+				device = CresnetUtils.InstantiateCresnetDevice(m_CresnetInfo.CresnetId.Value,
+															   m_CresnetInfo.BranchId,
+															   m_CresnetInfo.ParentId,
 															   factory,
 															   cresnetId => InstantiateControlSystem(cresnetId, ProgramInfo.ControlSystem),
 															   InstantiateCresnetBranch);
@@ -214,7 +214,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 			catch (ArgumentException e)
 			{
 				Logger.Log(eSeverity.Error, "Failed to instantiate {0} with Cresnet ID {1} - {2}",
-						   typeof(TSensor).Name, m_CresnetDeviceInfo.CresnetId, e.Message);
+						   typeof(TSensor).Name, m_CresnetInfo.CresnetId, e.Message);
 			}
 
 			SetDevice(device);
@@ -231,7 +231,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 		{
 			base.CopySettingsFinal(settings);
 
-			m_CresnetDeviceInfo.CopySettings(settings);
+			m_CresnetInfo.CopySettings(settings);
 		}
 
 		/// <summary>
@@ -241,7 +241,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 		{
 			base.ClearSettingsFinal();
 
-			m_CresnetDeviceInfo.ClearSettings();
+			m_CresnetInfo.ClearSettings();
 
 #if SIMPLSHARP
 			SetDevice(null);

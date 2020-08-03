@@ -25,9 +25,9 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.C2nCbd.C2nCbdBase
 		protected abstract TKeypad InstantiateKeypad(byte cresnetId, CresnetBranch branch);
 #endif
 
-		private CresnetDeviceInfo m_CresnetDeviceInfo;
+		private CresnetInfo m_CresnetInfo;
 
-		public CresnetDeviceInfo CresnetDeviceInfo { get { return m_CresnetDeviceInfo; } }
+		public CresnetInfo CresnetInfo { get { return m_CresnetInfo; } }
 
 		#region Settings
 
@@ -40,12 +40,12 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.C2nCbd.C2nCbdBase
 		{
 			base.ApplySettingsFinal(settings, factory);
 
-			m_CresnetDeviceInfo = new CresnetDeviceInfo(settings);
+			m_CresnetInfo = new CresnetInfo(settings);
 #if SIMPLSHARP
-			if (m_CresnetDeviceInfo.CresnetId == null || !CresnetUtils.IsValidId(m_CresnetDeviceInfo.CresnetId.Value))
+			if (m_CresnetInfo.CresnetId == null || !CresnetUtils.IsValidId(m_CresnetInfo.CresnetId.Value))
 			{
 				Logger.Log(eSeverity.Error, "Failed to instantiate {0} - CresnetId {1} is out of range",
-						   typeof(TKeypad).Name, m_CresnetDeviceInfo.CresnetId);
+						   typeof(TKeypad).Name, m_CresnetInfo.CresnetId);
 				return;
 			}
 
@@ -53,9 +53,9 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.C2nCbd.C2nCbdBase
 
 			try
 			{
-				device = CresnetUtils.InstantiateCresnetDevice<TKeypad>(m_CresnetDeviceInfo.CresnetId.Value,
-																		m_CresnetDeviceInfo.BranchId,
-																		m_CresnetDeviceInfo.ParentId,
+				device = CresnetUtils.InstantiateCresnetDevice<TKeypad>(m_CresnetInfo.CresnetId.Value,
+																		m_CresnetInfo.BranchId,
+																		m_CresnetInfo.ParentId,
 																		factory,
 																		InstantiateKeypad,
 																		InstantiateKeypad);
@@ -63,7 +63,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.C2nCbd.C2nCbdBase
 			catch (ArgumentException e)
 			{
 				Logger.Log(eSeverity.Error, e, "Failed to instantiate {0} with Cresnet ID {1} - {2}",
-						   typeof(TKeypad).Name, m_CresnetDeviceInfo.CresnetId, e.Message);
+						   typeof(TKeypad).Name, m_CresnetInfo.CresnetId, e.Message);
 			}
 
 			SetKeypad(device);
@@ -77,7 +77,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.C2nCbd.C2nCbdBase
 		{
 			base.ClearSettingsFinal();
 
-			m_CresnetDeviceInfo.ClearSettings();
+			m_CresnetInfo.ClearSettings();
 #if SIMPLSHARP
 			SetKeypad(null);
 #endif
@@ -91,7 +91,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.C2nCbd.C2nCbdBase
 		{
 			base.CopySettingsFinal(settings);
 
-			m_CresnetDeviceInfo.CopySettings(settings);
+			m_CresnetInfo.CopySettings(settings);
 		}
 
 		#endregion

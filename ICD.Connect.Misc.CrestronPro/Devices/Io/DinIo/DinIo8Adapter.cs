@@ -23,9 +23,9 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Io.DinIo
     public sealed class DinIo8Adapter : AbstractDevice<DinIo8AdapterSettings>
 #endif
 	{
-		private CresnetDeviceInfo m_CresnetDeviceInfo;
+		private CresnetInfo m_CresnetInfo;
 
-		public CresnetDeviceInfo CresnetDeviceInfo { get { return m_CresnetDeviceInfo; } }
+		public CresnetInfo CresnetInfo { get { return m_CresnetInfo; } }
 
 #if SIMPLSHARP
 		private DinIo8 m_PortsDevice;
@@ -159,7 +159,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Io.DinIo
 		{
 			base.CopySettingsFinal(settings);
 
-			m_CresnetDeviceInfo.CopySettings(settings);
+			m_CresnetInfo.CopySettings(settings);
 		}
 
 		/// <summary>
@@ -169,7 +169,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Io.DinIo
 		{
 			base.ClearSettingsFinal();
 
-			m_CresnetDeviceInfo.ClearSettings();
+			m_CresnetInfo.ClearSettings();
 
 #if SIMPLSHARP
 			SetDevice(null);
@@ -185,23 +185,23 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Io.DinIo
 		{
 			base.ApplySettingsFinal(settings, factory);
 
-			m_CresnetDeviceInfo = new CresnetDeviceInfo(settings);
+			m_CresnetInfo = new CresnetInfo(settings);
 
 #if SIMPLSHARP
 			DinIo8 device = null;
 
-			if (m_CresnetDeviceInfo.CresnetId == null || !CresnetUtils.IsValidId(m_CresnetDeviceInfo.CresnetId.Value))
+			if (m_CresnetInfo.CresnetId == null || !CresnetUtils.IsValidId(m_CresnetInfo.CresnetId.Value))
 			{
 				Logger.Log(eSeverity.Error, "Failed to instantiate {0} - CresnetId {1} is out of range",
-						   typeof(DinIo8).Name, m_CresnetDeviceInfo.CresnetId);
+						   typeof(DinIo8).Name, m_CresnetInfo.CresnetId);
 			}
 			else
 			{
 				try
 				{
-					device = CresnetUtils.InstantiateCresnetDevice(m_CresnetDeviceInfo.CresnetId.Value,
-																   m_CresnetDeviceInfo.BranchId,
-																   m_CresnetDeviceInfo.ParentId,
+					device = CresnetUtils.InstantiateCresnetDevice(m_CresnetInfo.CresnetId.Value,
+																   m_CresnetInfo.BranchId,
+																   m_CresnetInfo.ParentId,
 					                                               factory,
 					                                               cresnetId => new DinIo8(cresnetId, ProgramInfo.ControlSystem),
 					                                               (cresnetId, branch) => new DinIo8(cresnetId, branch));
@@ -209,7 +209,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Io.DinIo
 				catch (ArgumentException e)
 				{
 					Logger.Log(eSeverity.Error, e, "Failed to instantiate {0} with Cresnet ID {1} - {2}",
-							   typeof(DinIo8).Name, m_CresnetDeviceInfo.CresnetId, e.Message);
+							   typeof(DinIo8).Name, m_CresnetInfo.CresnetId, e.Message);
 				}
 			}
 
