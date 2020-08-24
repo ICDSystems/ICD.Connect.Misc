@@ -23,13 +23,18 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Io.DinIo
     public sealed class DinIo8Adapter : AbstractDevice<DinIo8AdapterSettings>
 #endif
 	{
-		private CresnetInfo m_CresnetInfo;
+		private readonly CresnetInfo m_CresnetInfo;
 
 		public CresnetInfo CresnetInfo { get { return m_CresnetInfo; } }
 
 #if SIMPLSHARP
 		private DinIo8 m_PortsDevice;
 #endif
+
+		public DinIo8Adapter()
+		{
+			m_CresnetInfo = new CresnetInfo();
+		}
 
 #region Methods
 
@@ -159,7 +164,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Io.DinIo
 		{
 			base.CopySettingsFinal(settings);
 
-			m_CresnetInfo.CopySettings(settings);
+			CresnetInfo.CopySettings(settings);
 		}
 
 		/// <summary>
@@ -169,7 +174,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Io.DinIo
 		{
 			base.ClearSettingsFinal();
 
-			m_CresnetInfo.ClearSettings();
+			CresnetInfo.ClearSettings();
 
 #if SIMPLSHARP
 			SetDevice(null);
@@ -185,7 +190,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Io.DinIo
 		{
 			base.ApplySettingsFinal(settings, factory);
 
-			m_CresnetInfo = new CresnetInfo(settings);
+			CresnetInfo.ApplySettings(settings);
 
 #if SIMPLSHARP
 			DinIo8 device = null;

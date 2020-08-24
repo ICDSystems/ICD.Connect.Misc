@@ -17,7 +17,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 #if SIMPLSHARP
 		private CsaPws10sHubEnetSlave m_Device;
 #endif
-		private CresnetInfo m_CresnetInfo;
+		private readonly CresnetInfo m_CresnetInfo;
 
 		public CresnetInfo CresnetInfo { get { return m_CresnetInfo; } }
 #if SIMPLSHARP
@@ -46,6 +46,11 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 #endif
 		}
 
+		public CsaPws10sHubEnetSlaveAdapter()
+		{
+			m_CresnetInfo = new CresnetInfo();
+		}
+
 		#region Settings
 
 		/// <summary>
@@ -55,7 +60,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 		{
 			base.ClearSettingsFinal();
 
-			m_CresnetInfo.ClearSettings();
+			CresnetInfo.ClearSettings();
 
 #if SIMPLSHARP
 			m_Device = null;
@@ -70,7 +75,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 		{
 			base.CopySettingsFinal(settings);
 
-			m_CresnetInfo.CopySettings(settings);
+			CresnetInfo.CopySettings(settings);
 		}
 
 		/// <summary>
@@ -82,7 +87,8 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 		{
 			base.ApplySettingsFinal(settings, factory);
 
-			m_CresnetInfo = new CresnetInfo(settings);
+			CresnetInfo.ApplySettings(settings);
+
 #if SIMPLSHARP
 			CsaPws10sHubEnetSlave device = null;
 			try

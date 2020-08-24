@@ -25,9 +25,14 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.C2nCbd.C2nCbdBase
 		protected abstract TKeypad InstantiateKeypad(byte cresnetId, CresnetBranch branch);
 #endif
 
-		private CresnetInfo m_CresnetInfo;
+		private readonly CresnetInfo m_CresnetInfo;
 
 		public CresnetInfo CresnetInfo { get { return m_CresnetInfo; } }
+
+		protected AbstractC2nCbdBaseAdapter()
+		{
+			m_CresnetInfo = new CresnetInfo();
+		}
 
 		#region Settings
 
@@ -40,7 +45,8 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.C2nCbd.C2nCbdBase
 		{
 			base.ApplySettingsFinal(settings, factory);
 
-			m_CresnetInfo = new CresnetInfo(settings);
+			CresnetInfo.ApplySettings(settings);
+
 #if SIMPLSHARP
 			if (m_CresnetInfo.CresnetId == null || !CresnetUtils.IsValidId(m_CresnetInfo.CresnetId.Value))
 			{
@@ -77,7 +83,8 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.C2nCbd.C2nCbdBase
 		{
 			base.ClearSettingsFinal();
 
-			m_CresnetInfo.ClearSettings();
+			CresnetInfo.ClearSettings();
+
 #if SIMPLSHARP
 			SetKeypad(null);
 #endif
@@ -91,7 +98,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.C2nCbd.C2nCbdBase
 		{
 			base.CopySettingsFinal(settings);
 
-			m_CresnetInfo.CopySettings(settings);
+			CresnetInfo.CopySettings(settings);
 		}
 
 		#endregion

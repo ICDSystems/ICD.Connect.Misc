@@ -39,7 +39,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 #endif
 		private eOccupancyState m_OccupancyState;
 
-		private CresnetInfo m_CresnetInfo;
+		private readonly CresnetInfo m_CresnetInfo;
 
 		#endregion
 
@@ -62,6 +62,11 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 		}
 
 		#endregion
+
+		protected AbstractCresnetOccupancySensorAdapter()
+		{
+			m_CresnetInfo = new CresnetInfo();
+		}
 
 		/// <summary>
 		/// Gets the current online status of the device.
@@ -189,7 +194,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 		{
 			base.ApplySettingsFinal(settings, factory);
 
-			m_CresnetInfo = new CresnetInfo(settings);
+			CresnetInfo.ApplySettings(settings);
 
 #if SIMPLSHARP
 			if (m_CresnetInfo.CresnetId == null || !CresnetUtils.IsValidId(m_CresnetInfo.CresnetId.Value))
@@ -231,7 +236,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 		{
 			base.CopySettingsFinal(settings);
 
-			m_CresnetInfo.CopySettings(settings);
+			CresnetInfo.CopySettings(settings);
 		}
 
 		/// <summary>
@@ -241,7 +246,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 		{
 			base.ClearSettingsFinal();
 
-			m_CresnetInfo.ClearSettings();
+			CresnetInfo.ClearSettings();
 
 #if SIMPLSHARP
 			SetDevice(null);

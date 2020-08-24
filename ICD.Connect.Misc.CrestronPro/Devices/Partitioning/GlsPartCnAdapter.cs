@@ -25,7 +25,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 		private GlsPartCn m_PartitionDevice;
 #endif
 
-		private CresnetInfo m_CresnetInfo;
+		private readonly CresnetInfo m_CresnetInfo;
 
 		public CresnetInfo CresnetInfo { get { return m_CresnetInfo; } }
 
@@ -43,6 +43,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 		/// </summary>
 		public GlsPartCnAdapter()
 		{
+			m_CresnetInfo = new CresnetInfo();
 			m_Debounce = new FeedbackDebounce<bool>();
 			m_Debounce.OnValue += DebounceOnValue;
 		}
@@ -135,7 +136,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 		{
 			base.CopySettingsFinal(settings);
 
-			m_CresnetInfo.CopySettings(settings);
+			CresnetInfo.CopySettings(settings);
 
 #if SIMPLSHARP
 			settings.Sensitivity = m_PartitionDevice == null
@@ -153,7 +154,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 		{
 			base.ClearSettingsFinal();
 
-			m_CresnetInfo.ClearSettings();
+			CresnetInfo.ClearSettings();
 
 #if SIMPLSHARP
 			SetDevice(null);
@@ -169,7 +170,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 		{
 			base.ApplySettingsFinal(settings, factory);
 
-			m_CresnetInfo = new CresnetInfo(settings);
+			CresnetInfo.ApplySettings(settings);
 
 #if SIMPLSHARP
 			if (m_CresnetInfo.CresnetId == null || !CresnetUtils.IsValidId(m_CresnetInfo.CresnetId.Value))
