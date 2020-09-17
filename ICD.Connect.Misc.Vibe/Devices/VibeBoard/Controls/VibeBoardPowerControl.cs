@@ -1,5 +1,4 @@
-﻿using ICD.Connect.Devices.Controls;
-using ICD.Connect.Devices.Controls.Power;
+﻿using ICD.Connect.Devices.Controls.Power;
 using ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components;
 
 namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Controls

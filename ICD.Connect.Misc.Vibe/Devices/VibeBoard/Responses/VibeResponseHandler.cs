@@ -145,7 +145,7 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Responses
 		private static VibeResponseCallback WrapCallback<T>(VibeResponseCallback<T> callback) where T : IVibeResponse
 		{
 			// separate static method to prevent lambda capture context wackiness
-			return (resp) => callback((T)resp);
+			return resp => callback((T)resp);
 		}
 	}
 }

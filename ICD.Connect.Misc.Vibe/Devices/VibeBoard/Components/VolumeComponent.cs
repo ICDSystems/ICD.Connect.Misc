@@ -144,7 +144,7 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 				yield return command;
 
 			yield return new ConsoleCommand("GetVolume", "Gets the current volume", () => GetCurrentVolume());
-			yield return new GenericConsoleCommand<int>("SetVolume", "Sets the current volume", (v) => SetVolume(v));
+			yield return new GenericConsoleCommand<int>("SetVolume", "Sets the current volume", v => SetVolume(v));
 			yield return new ConsoleCommand("VolumeUp", "Increments the volume", () => VolumeUp());
 			yield return new ConsoleCommand("VolumeDown", "Decrements the volume", () => VolumeDown());
 		}

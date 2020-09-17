@@ -13,7 +13,6 @@ using ICD.Connect.Settings;
 using Crestron.SimplSharpPro;
 using ICD.Common.Properties;
 using ICD.Common.Utils.Extensions;
-using ICD.Connect.Devices.Extensions;
 using ICD.Connect.Misc.CrestronPro.Devices;
 #endif
 

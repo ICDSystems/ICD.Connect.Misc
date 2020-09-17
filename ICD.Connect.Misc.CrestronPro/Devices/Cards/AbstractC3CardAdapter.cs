@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using ICD.Common.Properties;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.Devices;
-using ICD.Connect.Devices.Extensions;
 using ICD.Connect.Misc.CrestronPro.Devices.CardFrames;
 using ICD.Connect.Misc.CrestronPro.Utils;
 using ICD.Connect.Settings;
