@@ -144,7 +144,7 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 			yield return new ConsoleCommand("GetMute", "Gets the current mute state", () => GetCurrentMute());
 			yield return new ConsoleCommand("MuteOn", "Sets mute on", () => MuteOn());
 			yield return new ConsoleCommand("MuteOff", "Sets mute off", () => MuteOff());
-			yield return new GenericConsoleCommand<bool>("SetMute", "SetMute <true/false>", (m) => SetMute(m));
+			yield return new GenericConsoleCommand<bool>("SetMute", "SetMute <true/false>", m => SetMute(m));
 		}
 
 		#endregion

@@ -74,7 +74,7 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 				yield return command;
 
 			yield return new ParamsConsoleCommand("SetOTAHosts", "Sets the OTA servers",
-				(hosts) => UpdateOTAHosts(hosts));
+				hosts => UpdateOTAHosts(hosts));
 		}
 
 		#endregion

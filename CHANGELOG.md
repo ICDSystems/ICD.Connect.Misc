@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
  - Cresnet Device settings are now nested.
  - Exposed CresnetId, BranchId, & ParentId to the console status for all Cresnet Devices.
 
+## [9.0.1] - 2020-09-24
+### Changed
+ - Fixed power control namespaces
+
 ## [9.0.0] - 2020-06-19
 ### Added
  - Added CEN-ODT-C-POE device
