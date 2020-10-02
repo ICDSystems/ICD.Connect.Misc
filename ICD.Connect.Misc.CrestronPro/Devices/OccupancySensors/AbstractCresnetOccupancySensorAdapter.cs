@@ -1,4 +1,5 @@
 ﻿using System;
+using ICD.Common.Utils;
 using ICD.Common.Utils.EventArguments;
 using ICD.Common.Utils.Extensions;
 using ICD.Common.Utils.Services.Logging;
@@ -192,7 +193,10 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 			if (settings.CresnetId == null || !CresnetUtils.IsValidId(settings.CresnetId.Value))
 			{
 				Logger.Log(eSeverity.Error, "Failed to instantiate {0} - CresnetId {1} is out of range",
-				           typeof(TSensor).Name, settings.CresnetId);
+				    typeof(TSensor).Name,
+				    settings.CresnetId.HasValue
+					    ? StringUtils.ToIpIdString(settings.CresnetId.Value)
+					    : null);
 				return;
 			}
 
@@ -211,7 +215,9 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 			catch (ArgumentException e)
 			{
 				Logger.Log(eSeverity.Error, "Failed to instantiate {0} with Cresnet ID {1} - {2}",
-				           typeof(TSensor).Name, settings.CresnetId, e.Message);
+				           typeof(TSensor).Name,
+				           StringUtils.ToIpIdString(settings.CresnetId.Value),
+				           e.Message);
 			}
 
 			m_CresnetBranchId = settings.BranchId;
@@ -280,7 +286,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 			base.BuildConsoleStatus(addRow);
 
 #if SIMPLSHARP
-			addRow("Cresnet ID", m_Sensor == null ? (uint?)null : m_Sensor.ID);
+			addRow("Cresnet ID", m_Sensor == null ? null : StringUtils.ToIpIdString((byte)m_Sensor.ID));
 			addRow("Parent ID", m_CresnetParentId);
 			addRow("Branch ID", m_CresnetBranchId);
 			addRow("Occupancy State", OccupancyState);
