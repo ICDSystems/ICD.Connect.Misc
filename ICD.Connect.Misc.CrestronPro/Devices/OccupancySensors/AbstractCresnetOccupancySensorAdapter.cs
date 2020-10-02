@@ -1,4 +1,5 @@
 ﻿using System;
+using ICD.Common.Utils;
 using ICD.Common.Utils.EventArguments;
 using ICD.Common.Utils.Extensions;
 using ICD.Common.Utils.Services.Logging;
@@ -200,7 +201,10 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 			if (m_CresnetInfo.CresnetId == null || !CresnetUtils.IsValidId(m_CresnetInfo.CresnetId.Value))
 			{
 				Logger.Log(eSeverity.Error, "Failed to instantiate {0} - CresnetId {1} is out of range",
-						   typeof(TSensor).Name, m_CresnetInfo.CresnetId);
+				    typeof(TSensor).Name,
+				    m_CresnetInfo.CresnetId.HasValue
+					    ? StringUtils.ToIpIdString(m_CresnetInfo.CresnetId.Value)
+					    : null);
 				return;
 			}
 
@@ -219,7 +223,9 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 			catch (ArgumentException e)
 			{
 				Logger.Log(eSeverity.Error, "Failed to instantiate {0} with Cresnet ID {1} - {2}",
-						   typeof(TSensor).Name, m_CresnetInfo.CresnetId, e.Message);
+				           typeof(TSensor).Name,
+				           StringUtils.ToIpIdString(m_CresnetInfo.CresnetId.Value),
+				           e.Message);
 			}
 
 			SetDevice(device);
