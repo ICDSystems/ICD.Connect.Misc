@@ -29,6 +29,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
  - Removed duplicate occupancy entries from the console
  - Occupancy features moved to ICD.Connect.Partitioning
 
+## [8.4.0] - 2020-10-06
+### Changed
+ - Implemented StartSettings for GlobalCache and VibeBoard to start communications with device
+
 ## [8.3.2] - 2020-10-02
 ### Changed
  - Occupancy sensor cresnet Id will now be displayed in Hex and not Dec
