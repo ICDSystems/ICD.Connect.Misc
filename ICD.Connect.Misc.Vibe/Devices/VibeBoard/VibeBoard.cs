@@ -138,7 +138,7 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard
 		[PublicAPI]
 		public void SetPort(ISerialPort port)
 		{
-			m_ConnectionStateManager.SetPort(port);
+			m_ConnectionStateManager.SetPort(port, false);
 		}
 
 		/// <summary>
@@ -317,17 +317,29 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard
 		/// <param name="settings"></param>
 		/// <param name="factory"></param>
 		/// <param name="addControl"></param>
-		protected override void AddControls(VibeBoardSettings settings, IDeviceFactory factory, Action<IDeviceControl> addControl)
+		protected override void AddControls(VibeBoardSettings settings, IDeviceFactory factory,
+		                                    Action<IDeviceControl> addControl)
 		{
 			base.AddControls(settings, factory, addControl);
 
 			VibeBoardRoutingControl routeControl = new VibeBoardRoutingControl(this, 0);
-			routeControl.SetInputs(new[] { new ConnectorInfo(1, eConnectionType.Video | eConnectionType.Audio) });
+			routeControl.SetInputs(new[] {new ConnectorInfo(1, eConnectionType.Video | eConnectionType.Audio)});
 
 			Controls.Add(routeControl);
 			Controls.Add(new VibeBoardVolumeControl(this, Controls.Count));
 			Controls.Add(new VibeBoardPowerControl(this, Controls.Count));
 			Controls.Add(new VibeBoardAppControl(this, Controls.Count));
+		}
+
+		/// <summary>
+		/// Override to add actions on StartSettings
+		/// This should be used to start communications with devices and perform initial actions
+		/// </summary>
+		protected override void StartSettingsFinal()
+		{
+			base.StartSettingsFinal();
+
+			m_ConnectionStateManager.Start();
 		}
 
 		#endregion
