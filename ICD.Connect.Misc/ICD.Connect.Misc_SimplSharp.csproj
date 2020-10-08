@@ -65,6 +65,9 @@
     <Compile Include="Bluetooth\IBluetoothControl.cs" />
     <Compile Include="Bluetooth\IBluetoothDevice.cs" />
     <Compile Include="Bluetooth\IBluetoothDiscoverableControl.cs" />
+    <Compile Include="Bluetooth\MockBluetoothDevice\MockBluetoothControl.cs" />
+    <Compile Include="Bluetooth\MockBluetoothDevice\MockBluetoothDevice.cs" />
+    <Compile Include="Bluetooth\MockBluetoothDevice\MockBluetoothDeviceSettings.cs" />
     <Compile Include="ObfuscationSettings.cs" />
     <Compile Include="Keypads\AbstractKeypadDevice.cs" />
     <Compile Include="Keypads\AbstractKeypadDeviceSettings.cs" />
