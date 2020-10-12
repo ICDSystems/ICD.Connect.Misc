@@ -6,6 +6,7 @@ using ICD.Connect.API.Nodes;
 using ICD.Connect.Devices;
 using ICD.Connect.Devices.Controls;
 using ICD.Connect.Partitioning.Commercial.Controls.Occupancy;
+using ICD.Connect.Partitioning.Commercial.Devices.Occupancy;
 using ICD.Connect.Settings;
 #if SIMPLSHARP
 using Crestron.SimplSharpPro;
@@ -16,9 +17,9 @@ using ICD.Connect.Misc.CrestronPro.Utils;
 namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 {
 #if SIMPLSHARP
-	public sealed class CenOdtPoeAdapter : AbstractDevice<CenOdtPoeAdapterSettings>, ICresnetOccupancySensorAdapter
+	public sealed class CenOdtCPoeAdapter : AbstractDevice<CenOdtCPoeAdapterSettings>, IOccupancySensorDevice
 #else
-	public sealed class CenOdtPoeAdapter : AbstractDevice<CenOdtPoeAdapterSettings>, ICresnetOccupancySensorAdapter
+	public sealed class CenOdtCPoeAdapter : AbstractDevice<CenOdtCPoeAdapterSettings>, IOccupancySensorDevice
 #endif
 	{
 		#region Events
@@ -165,7 +166,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 		/// </summary>
 		/// <param name="settings"></param>
 		/// <param name="factory"></param>
-		protected override void ApplySettingsFinal(CenOdtPoeAdapterSettings settings, IDeviceFactory factory)
+		protected override void ApplySettingsFinal(CenOdtCPoeAdapterSettings settings, IDeviceFactory factory)
 		{
 			base.ApplySettingsFinal(settings, factory);
 
@@ -200,7 +201,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 		/// Override to apply properties to the settings instance.
 		/// </summary>
 		/// <param name="settings"></param>
-		protected override void CopySettingsFinal(CenOdtPoeAdapterSettings settings)
+		protected override void CopySettingsFinal(CenOdtCPoeAdapterSettings settings)
 		{
 			base.CopySettingsFinal(settings);
 #if SIMPLSHARP
@@ -229,11 +230,11 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 		/// <param name="settings"></param>
 		/// <param name="factory"></param>
 		/// <param name="addControl"></param>
-		protected override void AddControls(CenOdtPoeAdapterSettings settings, IDeviceFactory factory, Action<IDeviceControl> addControl)
+		protected override void AddControls(CenOdtCPoeAdapterSettings settings, IDeviceFactory factory, Action<IDeviceControl> addControl)
 		{
 			base.AddControls(settings, factory, addControl);
 
-			addControl(new CresnetOccupancySensorControl(this, 0));
+			addControl(new OccupancySensorControl(this, 0));
 		}
 
 		#endregion

@@ -6,8 +6,8 @@ using ICD.Connect.Settings.Attributes.SettingsProperties;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 {
-	[KrangSettings("CenOdtCPoe", typeof(CenOdtPoeAdapter))]
-	public sealed class CenOdtPoeAdapterSettings : AbstractDeviceSettings
+	[KrangSettings("CenOdtCPoe", typeof(CenOdtCPoeAdapter))]
+	public sealed class CenOdtCPoeAdapterSettings : AbstractDeviceSettings
 	{
 		private const string IPID_ELEMENT = "IPID";
 

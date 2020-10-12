@@ -178,15 +178,13 @@
     <Compile Include="Devices\OccupancySensors\AbstractCresnetOccupancySensorAdapter.cs" />
     <Compile Include="Devices\OccupancySensors\AbstractCresnetOccupancySensorAdapterSettings.cs" />
     <Compile Include="Devices\OccupancySensors\CenOdtCPoeAdapter.cs" />
-    <Compile Include="Devices\OccupancySensors\CenOdtPoeAdapterSettings.cs" />
-    <Compile Include="Devices\OccupancySensors\CresnetOccupancySensorControl.cs" />
+    <Compile Include="Devices\OccupancySensors\CenOdtCPoeAdapterSettings.cs" />
     <Compile Include="Devices\OccupancySensors\GlsOdtCCnAdapter.cs" />
     <Compile Include="Devices\OccupancySensors\GlsOdtCCnAdapterSettings.cs" />
     <Compile Include="Devices\OccupancySensors\GlsOirCCnAdapter.cs" />
     <Compile Include="Devices\OccupancySensors\GlsOirCCnAdapterSettings.cs" />
     <Compile Include="Devices\OccupancySensors\GlsOirLclCCnAdapter.cs" />
     <Compile Include="Devices\OccupancySensors\GlsOirLclCCnAdapterSettings.cs" />
-    <Compile Include="Devices\OccupancySensors\ICresnetOccupancySensorAdapter.cs" />
     <Compile Include="Devices\Partitioning\GlsPartCnAdapter.cs" />
     <Compile Include="Devices\Partitioning\GlsPartCnAdapterSettings.cs" />
     <Compile Include="Extensions\ComSpecExtensions.cs" />

@@ -8,6 +8,7 @@ using ICD.Connect.Devices;
 using ICD.Connect.Devices.Controls;
 using ICD.Connect.Misc.CrestronPro.Cresnet;
 using ICD.Connect.Partitioning.Commercial.Controls.Occupancy;
+using ICD.Connect.Partitioning.Commercial.Devices.Occupancy;
 using ICD.Connect.Settings;
 #if SIMPLSHARP
 using Crestron.SimplSharpPro;
@@ -19,11 +20,11 @@ using ICD.Connect.Misc.CrestronPro.Utils;
 namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 {
 #if SIMPLSHARP
-	public abstract class AbstractCresnetOccupancySensorAdapter<TSettings, TSensor> : AbstractDevice<TSettings>, ICresnetOccupancySensorAdapter, ICresnetDevice
+	public abstract class AbstractCresnetOccupancySensorAdapter<TSettings, TSensor> : AbstractDevice<TSettings>, IOccupancySensorDevice, ICresnetDevice
 		where TSensor : GlsOccupancySensorBase
 		where TSettings : AbstractCresnetOccupancySensorAdapterSettings, new()
 #else
-		public abstract class AbstractCresnetOccupancySensorAdapter<TSettings> : AbstractDevice<TSettings>, ICresnetOccupancySensorAdapter
+		public abstract class AbstractCresnetOccupancySensorAdapter<TSettings> : AbstractDevice<TSettings>, IOccupancySensorDevice
 		where TSettings : AbstractCresnetOccupancySensorAdapterSettings, new()
 #endif
 	{
@@ -269,7 +270,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 		{
 			base.AddControls(settings, factory, addControl);
 
-			addControl(new CresnetOccupancySensorControl(this, 0));
+			addControl(new OccupancySensorControl(this, 0));
 		}
 
 		#endregion
