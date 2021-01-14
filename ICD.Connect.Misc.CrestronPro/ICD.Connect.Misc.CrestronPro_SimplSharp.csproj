@@ -98,6 +98,10 @@
     <Compile Include="Cresnet\CresnetInfo.cs" />
     <Compile Include="Cresnet\CresnetSettings.cs" />
     <Compile Include="Cresnet\ICresnetDevice.cs" />
+    <Compile Include="Devices\Ethernet\CrestronEthernetDeviceAdapterNetworkInfo.cs" />
+    <Compile Include="Devices\Ethernet\CrestronEthernetDeviceAdapterVersionInfo.cs" />
+    <Compile Include="Devices\Ethernet\ICrestronEthernetDeviceAdapter.cs" />
+    <Compile Include="Devices\Ethernet\ICrestronEthernetDeviceAdapterSettings.cs" />
     <Compile Include="Extensions\DeviceExtenderExtensions.cs" />
     <Compile Include="ObfuscationSettings.cs" />
     <Compile Include="Devices\CresnetBridge\CsaPws10sHubEnetAdapter.cs" />
@@ -213,6 +217,7 @@
     <Compile Include="Sigs\DeviceSigCollectionAdapters.cs" />
     <Compile Include="Sigs\SigAdapters.cs" />
     <Compile Include="Utils\CresnetUtils.cs" />
+    <Compile Include="Utils\CrestronEthernetDeviceUtils.cs" />
     <Compile Include="Utils\DmUtils.cs" />
     <Compile Include="Extensions\DmOutputExtensions.cs" />
     <Compile Include="Extensions\GenericBaseExtensions.cs" />
@@ -249,6 +254,10 @@
     <ProjectReference Include="..\..\ICD.Connect.Partitioning\ICD.Connect.Partitioning\ICD.Connect.Partitioning_SimplSharp.csproj">
       <Project>{42FB8CF0-6AE6-4C70-AFDD-DF95F07E077F}</Project>
       <Name>ICD.Connect.Partitioning_SimplSharp</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ICD.Connect.Protocol\ICD.Connect.Protocol.Network\ICD.Connect.Protocol.Network_SimplSharp.csproj">
+      <Project>{5ED52F05-EA6C-4FC5-8AA0-9B9727F6AECD}</Project>
+      <Name>ICD.Connect.Protocol.Network_SimplSharp</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\ICD.Connect.Protocol\ICD.Connect.Protocol\ICD.Connect.Protocol_SimplSharp.csproj">
       <Project>{2E4E01B8-D4EA-4FB1-9FCE-0A0DC8D83C8A}</Project>
