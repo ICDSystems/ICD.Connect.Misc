@@ -7,7 +7,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Ethernet
 	{
 		#region Fields
 
-		private readonly string m_Dhcp;
+		private readonly bool m_Dhcp;
 		private readonly string m_MacAddress;
 		private readonly string m_IpAddress;
 		private readonly string m_SubnetMask;
@@ -18,7 +18,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Ethernet
 
 		#region Properties
 
-		public string Dhcp { get { return m_Dhcp; } }
+		public bool Dhcp { get { return m_Dhcp; } }
 
 		public string MacAddress { get { return m_MacAddress; } }
 
@@ -43,7 +43,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Ethernet
 		/// <param name="subnetMask"></param>
 		/// <param name="defaultGateway"></param>
 		/// <param name="dnsServer"></param>
-		public CrestronEthernetDeviceAdapterNetworkInfo(string dhcp, string macAddress, string ipAddress, string subnetMask,
+		public CrestronEthernetDeviceAdapterNetworkInfo(bool dhcp, string macAddress, string ipAddress, string subnetMask,
 		                                                string defaultGateway, string dnsServer)
 		{
 			m_Dhcp = dhcp;
@@ -64,7 +64,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Ethernet
 			if (!match.Success)
 				throw new InvalidOperationException("Unable to find a matching pattern in IP Config data");
 
-			string dhcp = match.Groups["DHCP"].Value;
+			bool dhcp = match.Groups["DHCP"].Value.Equals("ON", StringComparison.OrdinalIgnoreCase);
 			string mac = match.Groups["MACAddress"].Value;
 			string ip = match.Groups["IPV4"].Value;
 			string mask = match.Groups["SubnetMask"].Value;

@@ -99,6 +99,7 @@
     <Compile Include="Cresnet\CresnetSettings.cs" />
     <Compile Include="Cresnet\ICresnetDevice.cs" />
     <Compile Include="Devices\Ethernet\CrestronEthernetDeviceAdapterNetworkInfo.cs" />
+    <Compile Include="Devices\Ethernet\CrestronEthernetDeviceAdapterProjectInfo.cs" />
     <Compile Include="Devices\Ethernet\CrestronEthernetDeviceAdapterVersionInfo.cs" />
     <Compile Include="Devices\Ethernet\ICrestronEthernetDeviceAdapter.cs" />
     <Compile Include="Devices\Ethernet\ICrestronEthernetDeviceAdapterSettings.cs" />

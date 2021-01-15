@@ -59,8 +59,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Ethernet
 				// TODO log errors
 				m_SerialNumber = null;
 			}
-#endif
-#if STANDARD
+#else
 			m_SerialNumber = null;
 #endif
 		}
