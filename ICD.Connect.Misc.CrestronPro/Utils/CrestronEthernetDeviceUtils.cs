@@ -211,7 +211,7 @@ namespace ICD.Connect.Misc.CrestronPro.Utils
 			// Safely update the value.
 			ThreadingUtils.SafeInvoke(() =>
 			{
-				if (TryRequestSsh(adapter, APP_MODE_COMMAND, APP_MODE_REGEX, m => m.Groups["AppMode"].Value, out appMode) &&
+				if (TryRequestSsh(adapter, APP_MODE_COMMAND, APP_MODE_REGEX, m => m.Groups["AppMode"].Value.TrimEnd('\r', '\n'), out appMode) &&
 				    InsertCachedValue(s_AppModeCache, adapter, appMode))
 				{
 					updateAction(appMode);
