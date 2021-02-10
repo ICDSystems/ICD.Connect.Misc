@@ -33,4 +33,11 @@
     <ProjectReference Include="..\..\ICD.Common.Utils\ICD.Common.Utils\ICD.Common.Utils_NetStandard.csproj" />
     <ProjectReference Include="..\..\ICD.Connect.Protocol\ICD.Connect.Protocol.Network\ICD.Connect.Protocol.Network_NetStandard.csproj" />
   </ItemGroup>
+  <Target Name="ArchivePlugin" AfterTargets="AfterBuild">
+    <ZipDirectory DestinationFile="$(OutputPath)\..\$(AssemblyName).kpz"
+                  SourceDirectory="$(OutputPath)"
+                  Overwrite="true"/>
+    <Move SourceFiles="$(OutputPath)\..\$(AssemblyName).kpz"
+          DestinationFolder="$(OutputPath)"/>
+  </Target>
 </Project>

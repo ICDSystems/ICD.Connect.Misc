@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <Import Condition=" '$(EAZFUSCATOR_NET_HOME)' != '' and Exists('$(EAZFUSCATOR_NET_HOME)\Integration\MSBuild\Eazfuscator.NET.targets') " Project="$(EAZFUSCATOR_NET_HOME)\Integration\MSBuild\Eazfuscator.NET.targets" />
   <PropertyGroup>
@@ -20,8 +20,11 @@
     <DefineConstants>TRACE;STANDARD</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="binNetCoreApp\**" />
     <Compile Remove="SIMPLSharpLogs\**" />
+    <EmbeddedResource Remove="binNetCoreApp\**" />
     <EmbeddedResource Remove="SIMPLSharpLogs\**" />
+    <None Remove="binNetCoreApp\**" />
     <None Remove="SIMPLSharpLogs\**" />
   </ItemGroup>
   <ItemGroup>
@@ -43,4 +46,11 @@
     <ProjectReference Include="..\ICD.Connect.Misc\ICD.Connect.Misc_NetStandard.csproj" />
   </ItemGroup>
 
+  <Target Name="ArchivePlugin" AfterTargets="AfterBuild">
+    <ZipDirectory DestinationFile="$(OutputPath)\..\$(AssemblyName).kpz"
+                  SourceDirectory="$(OutputPath)"
+                  Overwrite="true"/>
+    <Move SourceFiles="$(OutputPath)\..\$(AssemblyName).kpz"
+          DestinationFolder="$(OutputPath)"/>
+  </Target>
 </Project>
