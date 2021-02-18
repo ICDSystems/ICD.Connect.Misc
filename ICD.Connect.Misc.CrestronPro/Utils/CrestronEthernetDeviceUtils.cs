@@ -38,7 +38,7 @@ namespace ICD.Connect.Misc.CrestronPro.Utils
 		/// Regex for matching the result of the 'ipconfig' command on Crestron ethernet devices.
 		/// </summary>
 		private const string IP_CONFIG_REGEX =
-			@"(?:Link Status.+:\s+(?'LinkStatus'\S+))\s*(?:DHCP\s+.+:\s+(?'DHCP'\S+))\s*(?:MAC Address\s+.+:\s+(?'MACAddress'\S+))\s*(?:IP Address\s+.+:\s+(?'IPV4'\S+))\s*(?:Subnet Mask\s+.+:\s+(?'SubnetMask'\S+))\s*(?:IPV6 Address\s+.+:\s+(?'IPV6'\S+))\s*(?:Default Gateway\s+.+:\s+(?'DefaultGateway'\S+))\s*(?:DNS Servers\s+.+:\s+(?'DNS'\S+))";
+			@"(?:Link Status.+:\s+(?'LinkStatus'\S+))\s*(?:DHCP\s+.+:\s+(?'DHCP'\S+))\s*(?:MAC Address(?:\(es\))*\s*.+:\s+(?'MACAddress'\S+))\s*(?:IP Address\s+.+:\s+(?'IPV4'\S+))\s*(?:Subnet Mask\s+.+:\s+(?'SubnetMask'\S+))\s*(?:(?:IPv6|IPV6) Address\s*.+:\s+(?'IPV6'\S+))\s*(?:Default Gateway\s+.+:\s+(?'DefaultGateway'\S+))\s*(?:DNS Servers\s*.+:\s+(?'DNS'\S+))";
 
 		/// <summary>
 		/// Regex for matching the result of the 'ver' command on Crestron ethernet devices.

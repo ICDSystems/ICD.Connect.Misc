@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
-using ICD.Common.Logging;
 using ICD.Common.Properties;
 using ICD.Common.Utils;
-using ICD.Common.Utils.Services.Logging;
 using ICD.Common.Utils.TimeZoneInfo;
 #if SIMPLSHARP
 using Crestron.SimplSharp;
@@ -15,15 +13,23 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Ethernet
 {
 	public struct CrestronEthernetDeviceAdapterVersionInfo : IEquatable<CrestronEthernetDeviceAdapterVersionInfo>
 	{
-		#region Fields
+		#region Static Members
 
-		private readonly string m_Model;
-		private readonly string m_FirmwareVersion;
-		private readonly DateTime? m_FirmwareDate;
-		private readonly string m_Tsid;
-		private readonly string m_SerialNumber;
+		private static readonly string[] s_DateFormats =
+		{
+			@"ddd MMM d HH:mm:ss yyyy",
+			@"ddd MMM  d HH:mm:ss yyyy",
+			@"MMMM d yyyy",
+			@"MMM d yyyy"
+		};
 
-		private static Dictionary<string, string> s_TimeZoneAbbreviationsToNames = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+		private static readonly string[] s_DatePatterns =
+		{
+			@"(?:\S+\s+)(?:\S+\s+)(?:\d+\s+)(?:\d+:\d+:\d+\s+)(?'target'\S+)(?:\s+\d+)",
+			@"(?:\S+\s+)(?:\d+\s+)(?:\d+)"
+		};
+
+		private static readonly Dictionary<string, string> s_TimeZoneAbbreviationsToNames = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
 		{
 			{"ADT","Atlantic Daylight Time"},
 			{"AKDT","Alaska Daylight Time"},
@@ -53,6 +59,16 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Ethernet
 			{"WGST","Western Greenland Summer Time"},
 			{"WGT","West Greenland Time"}
 		};
+
+		#endregion
+
+		#region Fields
+
+		private readonly string m_Model;
+		private readonly string m_FirmwareVersion;
+		private readonly DateTime? m_FirmwareDate;
+		private readonly string m_Tsid;
+		private readonly string m_SerialNumber;
 
 		#endregion
 
@@ -121,47 +137,47 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Ethernet
 			string tsid = match.Groups["tsid"].Value;
 
 			// Attempt to parse DateTime from string.
-			DateTime? date;
-			TryParseCrestronFirmwareDateTimeString(dateString, out date);
+			DateTime date;
+			DateTime? nullable = TryParseCrestronFirmwareDateTimeString(dateString, out date) ? date : (DateTime?)null;
 
-			return new CrestronEthernetDeviceAdapterVersionInfo(model, version, date, tsid);
+			return new CrestronEthernetDeviceAdapterVersionInfo(model, version, nullable, tsid);
 		}
 
-		private static void TryParseCrestronFirmwareDateTimeString([NotNull] string dateTimeString, out DateTime? result)
+		private static bool TryParseCrestronFirmwareDateTimeString([NotNull] string dateTimeString, out DateTime result)
 		{
 			if (string.IsNullOrEmpty(dateTimeString))
-				throw new ArgumentNullException("dateTimeString", "Failed to parse - dateTimeString null");
+				throw new FormatException("String must not be null or empty");
+
+			result = default(DateTime);
+
+			Match match = RegexUtils.MatchAny(dateTimeString, s_DatePatterns);
+			if (!match.Success)
+				return false;
+
+			string timeZoneAbbr = match.Groups["target"].Value;
+			string timeZoneId =
+				timeZoneAbbr != null && s_TimeZoneAbbreviationsToNames.ContainsKey(timeZoneAbbr)
+					? s_TimeZoneAbbreviationsToNames[timeZoneAbbr]
+					: IcdEnvironment.GetLocalTimeZoneName();
+
+			IcdTimeZoneInfo timezone;
+			if (!IcdTimeZoneInfo.TryFindSystemTimeZoneById(timeZoneId, out timezone))
+				timezone = IcdTimeZoneInfo.FindSystemTimeZoneById(IcdEnvironment.GetLocalTimeZoneName());
+
+			// Strip the timezone abbreviation
+			string word = string.Format(" {0} ", timeZoneAbbr);
+			string rawDateTimeString = dateTimeString.Replace(word, " ");
 
 			try
 			{
-				// Regex matches the time zone ID of the Crestron firmware date string.
-				// EX: Thu Feb  6 15:56:17 EST 2020
-				// The Regex will match EST & we can look up the name for that timezone in the static dictionary
-				// Then the UTC offset for that time zone.
-				Regex r = new Regex(@"(?:\S+\s+)(?:\S+\s+)(?:\d+\s+)(?:\d+:\d+:\d+\s+)(?'target'\S+)(?:\s+\d+)");
-				Match m = r.Match(dateTimeString);
-				string timeZoneAbbr = m.Groups["target"].Value;
-				string timeZoneId = s_TimeZoneAbbreviationsToNames.ContainsKey(timeZoneAbbr)
-					                    ? s_TimeZoneAbbreviationsToNames[timeZoneAbbr]
-										: null;
-
-				// Bail if there was no key for the abbreviation.
-				if (timeZoneId == null)
-					throw new ArgumentOutOfRangeException("dateTimeString",
-					                                      "Specified date time string contains no matching time zone abbreviation");
-
-				const string dateTimeFormatter = @"ddd MMM  d HH:mm:ss  yyyy";
-				string rawDateTimeString = dateTimeString.Replace(timeZoneAbbr, "");
-				DateTime parsed = DateTime.ParseExact(rawDateTimeString, dateTimeFormatter, null, DateTimeStyles.None);
-				result = IcdTimeZoneInfo.FindSystemTimeZoneById(timeZoneId).ConvertToUtc(parsed);
+				DateTime parsed = DateTime.ParseExact(rawDateTimeString, s_DateFormats, null, DateTimeStyles.None);
+				result = timezone.ConvertToUtc(parsed);
+				return true;
 			}
-			catch (Exception e)
+			catch (FormatException e)
 			{
-				IcdErrorLog.Error("Error parsing Crestron firmware date from string: {0} - {1}\n{2}",
-				                  dateTimeString,
-				                  e.Message,
-				                  e.StackTrace);
-				result = null;
+				IcdErrorLog.Error("Error parsing Crestron firmware date from string - {0}", e.Message);
+				return false;
 			}
 		}
 
