@@ -1,7 +1,7 @@
 ﻿using ICD.Connect.Devices;
 using ICD.Connect.Protocol.Network.Settings;
 
-namespace ICD.Connect.Misc.CrestronPro.Devices.Ethernet
+namespace ICD.Connect.Misc.Ethernet
 {
 	public interface ICrestronEthernetDeviceAdapter : IDevice
 	{

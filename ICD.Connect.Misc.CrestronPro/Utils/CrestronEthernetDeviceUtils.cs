@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using ICD.Common.Utils;
 using ICD.Common.Utils.Collections;
 using ICD.Common.Utils.Services.Logging;
+using ICD.Connect.Misc.Ethernet;
 using ICD.Connect.Misc.CrestronPro.Devices.Ethernet;
 #if SIMPLSHARP
 using Crestron.SimplSharp;
