@@ -70,6 +70,12 @@
     <Compile Include="Bluetooth\MockBluetoothDevice\MockBluetoothDeviceSettings.cs" />
     <Compile Include="Ethernet\ICrestronEthernetDeviceAdapter.cs" />
     <Compile Include="Ethernet\ICrestronEthernetDeviceAdapterSettings.cs" />
+    <Compile Include="ControlSystems\AbstractControlSystemDevice.cs" />
+    <Compile Include="ControlSystems\AbstractControlSystemDeviceSettings.cs" />
+    <Compile Include="ControlSystems\ControlSystemExternalTelemetryNames.cs" />
+    <Compile Include="ControlSystems\ControlSystemExternalTelemetryProvider.cs" />
+    <Compile Include="ControlSystems\IControlSystemDevice.cs" />
+    <Compile Include="ControlSystems\IControlSystemDeviceSettings.cs" />
     <Compile Include="ObfuscationSettings.cs" />
     <Compile Include="Keypads\AbstractKeypadDevice.cs" />
     <Compile Include="Keypads\AbstractKeypadDeviceSettings.cs" />
