@@ -72,6 +72,7 @@
     <Compile Include="Ethernet\ICrestronEthernetDeviceAdapterSettings.cs" />
     <Compile Include="ControlSystems\AbstractControlSystemDevice.cs" />
     <Compile Include="ControlSystems\AbstractControlSystemDeviceSettings.cs" />
+    <Compile Include="ControlSystems\ControlSystemDeviceConsole.cs" />
     <Compile Include="ControlSystems\ControlSystemExternalTelemetryNames.cs" />
     <Compile Include="ControlSystems\ControlSystemExternalTelemetryProvider.cs" />
     <Compile Include="ControlSystems\IControlSystemDevice.cs" />

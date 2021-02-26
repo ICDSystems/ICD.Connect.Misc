@@ -1,4 +1,5 @@
 ﻿using System;
+using ICD.Common.Utils;
 using Microsoft.Win32;
 
 namespace ICD.Connect.Misc.Windows.Utils
@@ -13,6 +14,7 @@ namespace ICD.Connect.Misc.Windows.Utils
 		public static void SwitchUser(string username, string password)
 		{
 			SetDefaultLogon(username, password);
+			ProcessorUtils.Reboot();
 		}
 
 		/// <summary>
