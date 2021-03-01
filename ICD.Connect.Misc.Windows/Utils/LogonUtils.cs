@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !SIMPLSHARP
+using System;
 using ICD.Common.Utils;
 using Microsoft.Win32;
 
@@ -35,3 +36,4 @@ namespace ICD.Connect.Misc.Windows.Utils
 		}
 	}
 }
+#endif
