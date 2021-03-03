@@ -10,6 +10,14 @@ namespace ICD.Connect.Misc.Windows.Devices.ControlSystems
 	public sealed class WindowsControlSystem : AbstractControlSystemDevice<WindowsControlSystemSettings>
 	{
 		/// <summary>
+		/// Constructor.
+		/// </summary>
+		public WindowsControlSystem()
+		{
+			MonitoredDeviceInfo.Make = "Microsoft";
+		}
+
+		/// <summary>
 		/// Gets the current online status of the device.
 		/// </summary>
 		/// <returns></returns>
