@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 ### Added
  - Utils for extracting project, network, & version info from CrestronEthernetDeviceAdapters
+ - PeripheralDevice for USB devices on WindowsControlSystems
+ - USB Device Whitelist for WindowsControlSystem, automatically adds matching USB devices to the program as PeripheralDevices
 
 ## [9.1.0] - 2021-01-14
 ### Changed

@@ -3,21 +3,29 @@ using System.Collections.Generic;
 using ICD.Connect.API.Commands;
 using ICD.Connect.Devices.Controls;
 using ICD.Connect.Misc.ControlSystems;
+using ICD.Connect.Settings;
+using ICD.Connect.Misc.Windows.WindowsPeripheral;
 #if !SIMPLSHARP
 using ICD.Connect.Misc.Windows.Utils;
 #endif
-using ICD.Connect.Settings;
 
 namespace ICD.Connect.Misc.Windows.Devices.ControlSystems
 {
 	public sealed class WindowsControlSystem : AbstractControlSystemDevice<WindowsControlSystemSettings>
 	{
+		private readonly WindowsPeripheralComponent m_PeripheralComponent;
+
+		public string PeripheralWhitelistConfig { get; private set; }
+
+		public WindowsPeripheralComponent PeripheralComponent { get { return m_PeripheralComponent; } }
+
 		/// <summary>
 		/// Constructor.
 		/// </summary>
 		public WindowsControlSystem()
 		{
 			MonitoredDeviceInfo.Make = "Microsoft";
+			m_PeripheralComponent = new WindowsPeripheralComponent(this);
 		}
 
 		/// <summary>
@@ -42,6 +50,59 @@ namespace ICD.Connect.Misc.Windows.Devices.ControlSystems
 
 			addControl(new WindowsControlSystemRoutingControl(this, 0));
 		}
+
+		#region Settings
+
+		/// <summary>
+		/// Override to clear the instance settings.
+		/// </summary>
+		protected override void ClearSettingsFinal()
+		{
+			base.ClearSettingsFinal();
+
+			PeripheralWhitelistConfig = null;
+
+			PeripheralComponent.Clear();
+		}
+
+		/// <summary>
+		/// Override to apply properties to the settings instance.
+		/// </summary>
+		/// <param name="settings"></param>
+		protected override void CopySettingsFinal(WindowsControlSystemSettings settings)
+		{
+			base.CopySettingsFinal(settings);
+
+			settings.PeripheralWhitelist = PeripheralWhitelistConfig;
+		}
+
+		/// <summary>
+		/// Override to apply settings to the instance.
+		/// </summary>
+		/// <param name="settings"></param>
+		/// <param name="factory"></param>
+		protected override void ApplySettingsFinal(WindowsControlSystemSettings settings, IDeviceFactory factory)
+		{
+			base.ApplySettingsFinal(settings, factory);
+
+			PeripheralWhitelistConfig = settings.PeripheralWhitelist;
+
+			if (!string.IsNullOrEmpty(PeripheralWhitelistConfig))
+				PeripheralComponent.LoadPeripheralConfig(PeripheralWhitelistConfig);
+		}
+
+		/// <summary>
+		/// Override to add actions on StartSettings
+		/// This should be used to start communications with devices and perform initial actions
+		/// </summary>
+		protected override void StartSettingsFinal()
+		{
+			base.StartSettingsFinal();
+
+			PeripheralComponent.UpdatePeripherals();
+		}
+
+		#endregion
 
 		#region Console
 
@@ -68,7 +129,6 @@ namespace ICD.Connect.Misc.Windows.Devices.ControlSystems
 		{
 			return base.GetConsoleCommands();
 		}
-
 		#endregion
 	}
 }
