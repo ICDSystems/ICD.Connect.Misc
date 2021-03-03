@@ -9,6 +9,16 @@ namespace ICD.Connect.Misc.ControlSystems
 	public abstract class AbstractControlSystemDevice<TSettings> : AbstractDevice<TSettings>, IControlSystemDevice
 		where TSettings : IControlSystemDeviceSettings, new()
 	{
+		private readonly ControlSystemDeviceTelemetryComponent m_TelemetryComponent;
+
+		/// <summary>
+		/// Constructor.
+		/// </summary>
+		protected AbstractControlSystemDevice()
+		{
+			m_TelemetryComponent = new ControlSystemDeviceTelemetryComponent(this);
+		}
+
 		/// <summary>
 		/// Reboots the device.
 		/// </summary>
