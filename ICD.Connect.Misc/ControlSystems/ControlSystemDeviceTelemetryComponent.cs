@@ -43,7 +43,7 @@ namespace ICD.Connect.Misc.ControlSystems
 			
 			// We currently only get DHCP status for the first adapter
 			// todo: Have IcdEnvironment return a collection of adapters with all relevant info
-			m_ControlSystem.MonitoredDeviceInfo.NetworkInfo.GetOrAddAdapter(1).Dhcp = IcdEnvironment.DhcpStatus;
+			m_ControlSystem.MonitoredDeviceInfo.NetworkInfo.Adapters.GetOrAddAdapter(1).Dhcp = IcdEnvironment.DhcpStatus;
 			
 			
 			// Set IPv4 Address per adapter
@@ -51,7 +51,7 @@ namespace ICD.Connect.Misc.ControlSystems
 			int i = 1;
 			foreach (var ipv4Address in IcdEnvironment.NetworkAddresses)
 			{
-				m_ControlSystem.MonitoredDeviceInfo.NetworkInfo.GetOrAddAdapter(i).Ipv4Address = ipv4Address;
+				m_ControlSystem.MonitoredDeviceInfo.NetworkInfo.Adapters.GetOrAddAdapter(i).Ipv4Address = ipv4Address;
 				i++;
 			}
 
@@ -59,7 +59,7 @@ namespace ICD.Connect.Misc.ControlSystems
 			i = 1;
 			foreach (var macAddress in IcdEnvironment.MacAddresses)
 			{
-				m_ControlSystem.MonitoredDeviceInfo.NetworkInfo.GetOrAddAdapter(i).MacAddress = macAddress;
+				m_ControlSystem.MonitoredDeviceInfo.NetworkInfo.Adapters.GetOrAddAdapter(i).MacAddress = macAddress;
 				i++;
 			}
 		}
