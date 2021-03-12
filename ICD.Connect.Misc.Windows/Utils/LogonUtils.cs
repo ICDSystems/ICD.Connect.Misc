@@ -25,6 +25,9 @@ namespace ICD.Connect.Misc.Windows.Utils
 		/// <param name="password"></param>
 		private static void SetDefaultLogon(string username, string password)
 		{
+			username = username ?? string.Empty;
+			password = password ?? string.Empty;
+
 			const string key = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon";
 			RegistryKey registryKey = Registry.LocalMachine.OpenSubKey(key, true) ?? Registry.LocalMachine.CreateSubKey(key);
 			if (registryKey == null)
