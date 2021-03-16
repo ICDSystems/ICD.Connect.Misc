@@ -1,5 +1,8 @@
 ﻿#if !SIMPLSHARP
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Management;
 using ICD.Common.Utils;
 using Microsoft.Win32;
 
@@ -36,6 +39,28 @@ namespace ICD.Connect.Misc.Windows.Utils
 			registryKey.SetValue("DefaultUsername", username, RegistryValueKind.String);
 			registryKey.SetValue("DefaultPassword", password, RegistryValueKind.String);
 			registryKey.SetValue("AutoAdminLogon", "1", RegistryValueKind.String);
+		}
+
+		/// <summary>
+		/// Gets the username for the user that is currently logged in.
+		/// </summary>
+		/// <returns></returns>
+		public static string GetCurrentUsername()
+		{
+			ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT UserName FROM Win32_ComputerSystem");
+			string domainAndUsername = (string)searcher.Get().Cast<ManagementBaseObject>().First()["UserName"];
+			return domainAndUsername.Split('\\').LastOrDefault();
+		}
+
+		/// <summary>
+		/// Gets the usernames recognized by the system.
+		/// </summary>
+		/// <returns></returns>
+		public static IEnumerable<string> GetUsernames()
+		{
+			SelectQuery query = new SelectQuery("Win32_UserAccount");
+			ManagementObjectSearcher searcher = new ManagementObjectSearcher(query);
+			return searcher.Get().Cast<ManagementObject>().Select(m => (string)m["Name"]);
 		}
 	}
 }
