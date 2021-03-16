@@ -34,6 +34,7 @@
     <ProjectReference Include="..\..\ICD.Connect.Protocol\ICD.Connect.Protocol.Network\ICD.Connect.Protocol.Network_NetStandard.csproj" />
   </ItemGroup>
   <Target Name="ArchivePlugin" AfterTargets="AfterBuild">
+    <Delete Files="$(OutputPath)\$(AssemblyName).kpz" />
     <ZipDirectory DestinationFile="$(OutputPath)\..\$(AssemblyName).kpz"
                   SourceDirectory="$(OutputPath)"
                   Overwrite="true"/>
