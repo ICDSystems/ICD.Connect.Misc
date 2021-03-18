@@ -49,11 +49,11 @@
   </ItemGroup>
 
   <Target Name="ArchivePlugin" AfterTargets="AfterBuild">
-    <Delete Files="$(OutputPath)\$(AssemblyName).kpz" />
-    <ZipDirectory DestinationFile="$(OutputPath)\..\$(AssemblyName).kpz"
+    <Delete Files="$(OutputPath)$(AssemblyName).kpz" />
+    <ZipDirectory DestinationFile="$(OutputPath)..\$(AssemblyName).kpz"
                   SourceDirectory="$(OutputPath)"
                   Overwrite="true"/>
-    <Move SourceFiles="$(OutputPath)\..\$(AssemblyName).kpz"
+    <Move SourceFiles="$(OutputPath)..\$(AssemblyName).kpz"
           DestinationFolder="$(OutputPath)"/>
   </Target>
 </Project>
