@@ -2,6 +2,7 @@
 using System.Linq;
 using ICD.Common.Properties;
 using ICD.Common.Utils;
+using ICD.Connect.Devices.Telemetry.DeviceInfo;
 
 namespace ICD.Connect.Misc.ControlSystems
 {
@@ -59,7 +60,10 @@ namespace ICD.Connect.Misc.ControlSystems
 			i = 1;
 			foreach (var macAddress in IcdEnvironment.MacAddresses)
 			{
-				m_ControlSystem.MonitoredDeviceInfo.NetworkInfo.Adapters.GetOrAddAdapter(i).MacAddress = macAddress;
+				IcdPhysicalAddress mac;
+				IcdPhysicalAddress.TryParse(macAddress, out mac);
+
+				m_ControlSystem.MonitoredDeviceInfo.NetworkInfo.Adapters.GetOrAddAdapter(i).MacAddress = mac;
 				i++;
 			}
 		}

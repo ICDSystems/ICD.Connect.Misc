@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.RegularExpressions;
+using ICD.Connect.Devices.Telemetry.DeviceInfo;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.Ethernet
 {
@@ -8,7 +9,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Ethernet
 		#region Fields
 
 		private readonly bool m_Dhcp;
-		private readonly string m_MacAddress;
+		private readonly IcdPhysicalAddress m_MacAddress;
 		private readonly string m_IpAddress;
 		private readonly string m_SubnetMask;
 		private readonly string m_DefaultGateway;
@@ -20,7 +21,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Ethernet
 
 		public bool Dhcp { get { return m_Dhcp; } }
 
-		public string MacAddress { get { return m_MacAddress; } }
+		public IcdPhysicalAddress MacAddress { get { return m_MacAddress; } }
 
 		public string IpAddress { get { return m_IpAddress; } }
 
@@ -43,11 +44,11 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Ethernet
 		/// <param name="subnetMask"></param>
 		/// <param name="defaultGateway"></param>
 		/// <param name="dnsServer"></param>
-		public CrestronEthernetDeviceAdapterNetworkInfo(bool dhcp, string macAddress, string ipAddress, string subnetMask,
+		public CrestronEthernetDeviceAdapterNetworkInfo(bool dhcp, IcdPhysicalAddress macAddress, string ipAddress, string subnetMask,
 		                                                string defaultGateway, string dnsServer)
 		{
 			m_Dhcp = dhcp;
-			m_MacAddress = macAddress;
+			m_MacAddress = macAddress == null ? null : macAddress.Clone();
 			m_IpAddress = ipAddress;
 			m_SubnetMask = subnetMask;
 			m_DefaultGateway = defaultGateway;
@@ -71,7 +72,10 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Ethernet
 			string gateway = match.Groups["DefaultGateway"].Value;
 			string dns = match.Groups["DNS"].Value;
 
-			return new CrestronEthernetDeviceAdapterNetworkInfo(dhcp, mac, ip, mask, gateway, dns);
+			IcdPhysicalAddress macAddress;
+			IcdPhysicalAddress.TryParse(mac, out macAddress);
+
+			return new CrestronEthernetDeviceAdapterNetworkInfo(dhcp, macAddress, ip, mask, gateway, dns);
 		}
 
 		#endregion
@@ -131,7 +135,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Ethernet
 			unchecked
 			{
 				int hash = 17;
-				hash = hash * 23 + (m_Dhcp == null ? 0 : m_Dhcp.GetHashCode());
+				hash = hash * 23 + (m_Dhcp.GetHashCode());
 				hash = hash * 23 + (m_MacAddress == null ? 0 : m_MacAddress.GetHashCode());
 				hash = hash * 23 + (m_IpAddress == null ? 0 : m_IpAddress.GetHashCode());
 				hash = hash * 23 + (m_SubnetMask == null ? 0 : m_SubnetMask.GetHashCode());
