@@ -2,7 +2,7 @@ using ICD.Connect.Misc.Unsplash.Responses;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
-namespace ICD.Connect.Misc.Unsplash.Tests.converters
+namespace ICD.Connect.Misc.Unsplash.Tests.Converters
 {
 	[TestFixture]
 	public sealed class UnsplashPhotoResponseConverterTest
