@@ -85,7 +85,7 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 
 		public override IEnumerable<IConsoleCommand> GetConsoleCommands()
 		{
-			foreach (var command in base.GetConsoleCommands())
+			foreach (var command in GetBaseConsoleCommands())
 				yield return command;
 
 			yield return new GenericConsoleCommand<string, string>("StartActivity",
@@ -94,6 +94,11 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 
 			yield return new ConsoleCommand("StartScreenSwitcher", "Launches the screen switcher",
 				() => StartScreenSwitcher());
+		}
+
+		private IEnumerable<IConsoleCommand> GetBaseConsoleCommands()
+		{
+			return base.GetConsoleCommands();
 		}
 
 		#endregion

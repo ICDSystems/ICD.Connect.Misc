@@ -70,11 +70,16 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 
 		public override IEnumerable<IConsoleCommand> GetConsoleCommands()
 		{
-			foreach (var command in base.GetConsoleCommands())
+			foreach (var command in GetBaseConsoleCommands())
 				yield return command;
 
 			yield return new ParamsConsoleCommand("SetOTAHosts", "Sets the OTA servers",
 				hosts => UpdateOTAHosts(hosts));
+		}
+
+		private IEnumerable<IConsoleCommand> GetBaseConsoleCommands()
+		{
+			return base.GetConsoleCommands();
 		}
 
 		#endregion

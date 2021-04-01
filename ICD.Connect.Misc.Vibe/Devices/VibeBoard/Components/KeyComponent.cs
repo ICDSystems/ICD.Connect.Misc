@@ -71,11 +71,16 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 
 		public override IEnumerable<IConsoleCommand> GetConsoleCommands()
 		{
-			foreach (var command in base.GetConsoleCommands())
+			foreach (var command in GetBaseConsoleCommands())
 				yield return command;
 
 			yield return new GenericConsoleCommand<eVibeKey>("Press", "Press <Back, Home, Task, Up, Down, Left, Right>",
 				key => KeyPress(key));
+		}
+
+		private IEnumerable<IConsoleCommand> GetBaseConsoleCommands()
+		{
+			return base.GetConsoleCommands();
 		}
 
 		#endregion

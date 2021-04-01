@@ -145,12 +145,17 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 
 		public override IEnumerable<IConsoleCommand> GetConsoleCommands()
 		{
-			foreach (var command in base.GetConsoleCommands())
+			foreach (var command in GetBaseConsoleCommands())
 				yield return command;
 
 			yield return new ConsoleCommand("ListTasks", "Gets the list of running tasks", () => ListTasks());
 			yield return new ConsoleCommand("TopTask", "Gets the foreground task", () => TopTask());
 			yield return new GenericConsoleCommand<string>("SwitchTask", "Switches to the given task", t => SwitchTask(t));
+		}
+
+		private IEnumerable<IConsoleCommand> GetBaseConsoleCommands()
+		{
+			return base.GetConsoleCommands();
 		}
 
 		public override void BuildConsoleStatus(AddStatusRowDelegate addRow)

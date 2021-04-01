@@ -144,12 +144,17 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Components
 
 		public override IEnumerable<IConsoleCommand> GetConsoleCommands()
 		{
-			foreach (var command in base.GetConsoleCommands())
+			foreach (var command in GetBaseConsoleCommands())
 				yield return command;
 
 			yield return new ConsoleCommand("GetScreen", "Gets the current screen state", () => GetScreenState());
 			yield return new ConsoleCommand("ScreenOn", "Turns the screen on", () => ScreenOn());
 			yield return new ConsoleCommand("ScreenOff", "Turns the screen off", () => ScreenOff());
+		}
+
+		private IEnumerable<IConsoleCommand> GetBaseConsoleCommands()
+		{
+			return base.GetConsoleCommands();
 		}
 
 		#endregion

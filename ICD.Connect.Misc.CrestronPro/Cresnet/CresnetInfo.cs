@@ -28,17 +28,6 @@ namespace ICD.Connect.Misc.CrestronPro.Cresnet
 
 		#endregion
 
-		#region Constructors
-
-		/// <summary>
-		/// Constructor.
-		/// </summary>
-		public CresnetInfo()
-		{
-		}
-
-		#endregion
-
 		#region Methods
 
 		public void ApplySettings([NotNull] ICresnetDeviceSettings settings)
