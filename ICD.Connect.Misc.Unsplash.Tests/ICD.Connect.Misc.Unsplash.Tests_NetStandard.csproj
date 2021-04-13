@@ -3,7 +3,7 @@
 
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
 	<RootNamespace>ICD.Connect.Misc.Unsplash.Tests</RootNamespace>
 	<AssemblyName>ICD.Connect.Misc.Unsplash.Tests</AssemblyName>
   </PropertyGroup>
