@@ -52,7 +52,8 @@ namespace ICD.Connect.Misc.Windows.Devices.WindowsPeripheralDevice
 		{
 			base.ClearSettingsFinal();
 
-			ControlSystem.PeripheralComponent.DeregisterPeripheral(this);
+			if (ControlSystem != null)
+				ControlSystem.PeripheralComponent.DeregisterPeripheral(this);
 
 			DeviceId = null;
 			ControlSystem = null;
