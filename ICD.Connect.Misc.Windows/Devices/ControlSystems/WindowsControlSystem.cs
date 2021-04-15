@@ -49,6 +49,7 @@ namespace ICD.Connect.Misc.Windows.Devices.ControlSystems
 			base.AddControls(settings, factory, addControl);
 
 			addControl(new WindowsControlSystemRoutingControl(this, 0));
+			addControl(new WindowsControlSystemMasterVolumeControl(this, 1));
 		}
 
 		#region Settings
