@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using ICD.Common.Properties;
-using ICD.Common.Utils;
-using ICD.Common.Utils.EventArguments;
 using ICD.Common.Utils.Extensions;
 using ICD.Connect.Misc.Windows.Devices.WindowsPeripheralDevice;
 using ICD.Connect.Misc.Windows.WindowsPeripheral.Factories;
@@ -23,15 +20,6 @@ namespace ICD.Connect.Misc.Windows.WindowsPeripheral.FactoryCollections
 			: base(peripheralComponent)
 		{
 			m_UsbDevicesWhitelistLookup = new Dictionary<UsbProductInfo, UsbWindowsPeripheralFactory>();
-
-			IcdEnvironment.OnSystemDeviceAddedRemoved += IcdEnvironmentOnSystemDeviceAddedRemoved;
-		}
-
-		protected override void Dispose(bool disposing)
-		{
-			base.Dispose(disposing);
-
-			IcdEnvironment.OnSystemDeviceAddedRemoved -= IcdEnvironmentOnSystemDeviceAddedRemoved;
 		}
 
 		public override void AddFactoryFromXml(string xml)
@@ -48,48 +36,37 @@ namespace ICD.Connect.Misc.Windows.WindowsPeripheral.FactoryCollections
 			m_UsbDevicesWhitelistLookup.AddRange(factory.GetProductInfos(), i => factory);
 		}
 
-		private void IcdEnvironmentOnSystemDeviceAddedRemoved(object sender, BoolEventArgs e)
-		{
-			ThreadingUtils.SafeInvoke(UpdatePeripherals);
-		}
-
 		/// <summary>
 		/// When called, tells the peripheral factory collection to update its peripherals
 		/// Typically called on StartSettings to add connected peripherals from the whitelist
 		/// </summary>
-		public override void UpdatePeripherals()
+		public override bool UpdatePeripherals()
 		{
+			bool output = false;
+
 			// null instead of localhost which would otherwise require certain MMI services running
 			using (CimSession session = CimSession.Create(null))
 			{
 				IEnumerable<CimInstance> instances = session.QueryInstances(@"root\cimv2", "WQL", @"Select * From Win32_USBHub");
-				CheckUsbDeviceWhitelist(instances);
+
+				foreach (CimInstance instance in instances)
+					output |= InstantiateDiscoveredDevice(instance);
 			}
-		}
 
-		private void CheckUsbDeviceWhitelist(IEnumerable<CimInstance> usbDevices)
-		{
-			IEnumerable<IWindowsPeripheralDevice> devices = LazyLoadDevices(usbDevices);
-			PeripheralComponent.RegisterPeripherals(devices);
-		}
-
-		private IEnumerable<IWindowsPeripheralDevice> LazyLoadDevices(IEnumerable<CimInstance> usbDevices)
-		{
-			return usbDevices.Select(LazyLoadDevice)
-			                 .Where(device => device != null);
+			return output;
 		}
 
 		[CanBeNull]
-		private IWindowsPeripheralDevice LazyLoadDevice(CimInstance usbDevice)
+		private bool InstantiateDiscoveredDevice(CimInstance usbDevice)
 		{
 			string deviceId = usbDevice.CimInstanceProperties["DeviceID"]?.Value?.ToString();
 			if (string.IsNullOrEmpty(deviceId))
-				return null;
+				return false;
 
 			// Check if device is already added
 			IWindowsPeripheralDevice device;
 			if (PeripheralComponent.TryGetPeripheral(deviceId, out device))
-				return device;
+				return false;
 
 			// Convert to a UsbProductInfo
 			UsbProductInfo usbProductInfo;
@@ -101,16 +78,17 @@ namespace ICD.Connect.Misc.Windows.WindowsPeripheral.FactoryCollections
 			// Just ignore those devices
 			catch (ArgumentException)
 			{
-				return null;
+				return false;
 			}
 
 			// Check for a match from the whitelist
 			UsbWindowsPeripheralFactory usbWindowsPeripheralFactory;
 			if (!m_UsbDevicesWhitelistLookup.TryGetValue(usbProductInfo, out usbWindowsPeripheralFactory))
-				return null;
+				return false;
 
 			// Create the device and add it
-			return usbWindowsPeripheralFactory.InstantiateDevice(deviceId, PeripheralComponent.ControlSystem);
+			usbWindowsPeripheralFactory.InstantiateDevice(deviceId, PeripheralComponent.ControlSystem);
+			return true;
 		}
 	}
 }

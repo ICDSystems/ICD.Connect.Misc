@@ -7,12 +7,13 @@ using ICD.Common.Utils.IO;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Common.Utils.Xml;
 using ICD.Common.Logging.LoggingContexts;
-using ICD.Common.Utils.Extensions;
+using ICD.Common.Utils.EventArguments;
 using ICD.Connect.Misc.Windows.Devices.ControlSystems;
 using ICD.Connect.Misc.Windows.Devices.WindowsPeripheralDevice;
 using ICD.Connect.Misc.Windows.WindowsPeripheral.FactoryCollections;
 using ICD.Connect.Settings;
 using ICD.Connect.Settings.Cores;
+using ICD.Connect.Settings.Originators;
 
 namespace ICD.Connect.Misc.Windows.WindowsPeripheral
 {
@@ -50,6 +51,8 @@ namespace ICD.Connect.Misc.Windows.WindowsPeripheral
 			m_ControlSystem = controlSystem;
 			m_FactoryCollections = new Dictionary<string, IWindowsPeripheralFactoryCollection>();
 			m_PeripheralDevicesById = new Dictionary<string, IWindowsPeripheralDevice>();
+
+			IcdEnvironment.OnSystemDeviceAddedRemoved += IcdEnvironmentOnSystemDeviceAddedRemoved;
 		}
 
 		/// <summary>
@@ -57,6 +60,8 @@ namespace ICD.Connect.Misc.Windows.WindowsPeripheral
 		/// </summary>
 		public void Dispose()
 		{
+			IcdEnvironment.OnSystemDeviceAddedRemoved -= IcdEnvironmentOnSystemDeviceAddedRemoved;
+
 			Clear();
 		}
 
@@ -67,10 +72,7 @@ namespace ICD.Connect.Misc.Windows.WindowsPeripheral
 		/// </summary>
 		public void Clear()
 		{
-			foreach (IWindowsPeripheralFactoryCollection factoryCollection in m_FactoryCollections.Values)
-				factoryCollection.Dispose();
 			m_FactoryCollections.Clear();
-
 			m_PeripheralDevicesById.Clear();
 		}
 
@@ -78,56 +80,24 @@ namespace ICD.Connect.Misc.Windows.WindowsPeripheral
 		/// Adds the device to the peripheral collection.
 		/// </summary>
 		/// <param name="device"></param>
-		public void RegisterPeripheral(IWindowsPeripheralDevice device)
+		public void RegisterPeripheral([NotNull] IWindowsPeripheralDevice device)
 		{
-			RegisterPeripherals(device.Yield());
-		}
+			if (device == null)
+				throw new ArgumentNullException("device");
 
-		/// <summary>
-		/// Adds the devices to the peripheral collection.
-		/// </summary>
-		/// <param name="devices"></param>
-		public void RegisterPeripherals(IEnumerable<IWindowsPeripheralDevice> devices)
-		{
-			bool change = false;
-
-			foreach (IWindowsPeripheralDevice device in devices)
-			{
-				if (m_PeripheralDevicesById.ContainsKey(device.DeviceId))
-					continue;
-
-				m_PeripheralDevicesById.Add(device.DeviceId, device);
-				change = true;
-			}
-
-			if (!change)
-				return;
-
-			// Save settings with new devices
-			ICoreSettings settings = ControlSystem.Core.CopySettings();
-			FileOperations.SaveSettings(settings, true);
+			m_PeripheralDevicesById.Add(device.DeviceId, device);
 		}
 
 		/// <summary>
 		/// Removes the device from the peripheral collection.
 		/// </summary>
 		/// <param name="device"></param>
-		public void DeregisterPeripheral(IWindowsPeripheralDevice device)
+		public void DeregisterPeripheral([NotNull] IWindowsPeripheralDevice device)
 		{
+			if (device == null)
+				throw new ArgumentNullException("device");
+
 			m_PeripheralDevicesById.Remove(device.DeviceId);
-		}
-
-		/// <summary>
-		/// Checks to see if a peripheral with the given DeviceID is registered
-		/// </summary>
-		/// <param name="deviceId"></param>
-		/// <returns></returns>
-		public bool ContainsPeripheral([NotNull] string deviceId)
-		{
-			if (deviceId == null)
-				throw new ArgumentNullException("deviceId");
-
-			return m_PeripheralDevicesById.ContainsKey(deviceId);
 		}
 
 		/// <summary>
@@ -136,8 +106,11 @@ namespace ICD.Connect.Misc.Windows.WindowsPeripheral
 		/// <param name="deviceId"></param>
 		/// <param name="device"></param>
 		/// <returns></returns>
-		public bool TryGetPeripheral(string deviceId, out IWindowsPeripheralDevice device)
+		public bool TryGetPeripheral([NotNull] string deviceId, out IWindowsPeripheralDevice device)
 		{
+			if (deviceId == null)
+				throw new ArgumentNullException("deviceId");
+
 			return m_PeripheralDevicesById.TryGetValue(deviceId, out device);
 		}
 
@@ -147,8 +120,7 @@ namespace ICD.Connect.Misc.Windows.WindowsPeripheral
 		/// </summary>
 		public void UpdatePeripherals()
 		{
-			foreach (IWindowsPeripheralFactoryCollection factoryCollection in m_FactoryCollections.Values)
-				factoryCollection.UpdatePeripherals();
+			ThreadingUtils.SafeInvoke(UpdatePeripheralsSynchronous);
 		}
 
 		public void LoadPeripheralConfig([NotNull] string path)
@@ -204,7 +176,6 @@ namespace ICD.Connect.Misc.Windows.WindowsPeripheral
 			string type = XmlUtils.GetAttributeAsString(xml, TYPE_ATTRIBUTE);
 
 			IWindowsPeripheralFactoryCollection factoryCollection = GetOrCreateFactoryCollection(type);
-
 			factoryCollection.AddFactoryFromXml(xml);
 		}
 
@@ -227,6 +198,30 @@ namespace ICD.Connect.Misc.Windows.WindowsPeripheral
 			}
 
 			return factoryCollection;
+		}
+
+		private void UpdatePeripheralsSynchronous()
+		{
+			bool change = false;
+			foreach (IWindowsPeripheralFactoryCollection factoryCollection in m_FactoryCollections.Values)
+				change |= factoryCollection.UpdatePeripherals();
+
+			if (!change)
+				return;
+
+			// Save settings with new devices
+			ICoreSettings settings = ControlSystem.Core.CopySettings();
+			FileOperations.SaveSettings(settings, true);
+		}
+
+		#endregion
+
+		#region Environment Callbacks
+
+		private void IcdEnvironmentOnSystemDeviceAddedRemoved(object sender, BoolEventArgs e)
+		{
+			if (ControlSystem.Core.LifecycleState == eLifecycleState.Started)
+				UpdatePeripherals();
 		}
 
 		#endregion

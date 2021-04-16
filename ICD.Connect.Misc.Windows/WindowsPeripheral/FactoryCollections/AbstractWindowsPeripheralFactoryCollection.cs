@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using ICD.Common.Utils.Collections;
 using ICD.Connect.Misc.Windows.WindowsPeripheral.Factories;
@@ -27,19 +26,6 @@ namespace ICD.Connect.Misc.Windows.WindowsPeripheral.FactoryCollections
 			m_Factories = new IcdHashSet<TFactory>();
 		}
 
-		protected virtual void Dispose(bool disposing)
-		{
-		}
-
-		/// <summary>
-		/// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-		/// </summary>
-		public void Dispose()
-		{
-			Dispose(true);
-			GC.SuppressFinalize(this);
-		}
-
 		public abstract void AddFactoryFromXml(string xml);
 
 		public virtual void AddFactory(TFactory factory)
@@ -56,6 +42,6 @@ namespace ICD.Connect.Misc.Windows.WindowsPeripheral.FactoryCollections
 		/// When called, tells the peripheral factory collection to update its peripherals
 		/// Typically called on StartSettings to add connected peripherals from the whitelist
 		/// </summary>
-		public abstract void UpdatePeripherals();
+		public abstract bool UpdatePeripherals();
 	}
 }

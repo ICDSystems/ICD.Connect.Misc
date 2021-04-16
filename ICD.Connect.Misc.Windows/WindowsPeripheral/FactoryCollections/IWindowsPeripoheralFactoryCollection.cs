@@ -1,9 +1,8 @@
-﻿using System;
-using ICD.Connect.Misc.Windows.WindowsPeripheral.Factories;
+﻿using ICD.Connect.Misc.Windows.WindowsPeripheral.Factories;
 
 namespace ICD.Connect.Misc.Windows.WindowsPeripheral.FactoryCollections
 {
-	interface IWindowsPeripheralFactoryCollection : IDisposable
+	interface IWindowsPeripheralFactoryCollection
 	{
 		void AddFactoryFromXml(string xml);
 
@@ -13,7 +12,8 @@ namespace ICD.Connect.Misc.Windows.WindowsPeripheral.FactoryCollections
 		/// When called, tells the peripheral factory collection to update its peripherals
 		/// Typically called on StartSettings to add connected peripherals from the whitelist
 		/// </summary>
-		void UpdatePeripherals();
+		/// <returns>True if a device was added to the core</returns>
+		bool UpdatePeripherals();
 	}
 
 	interface IWindowsPeripheralFactoryCollection<TFactory> : IWindowsPeripheralFactoryCollection
