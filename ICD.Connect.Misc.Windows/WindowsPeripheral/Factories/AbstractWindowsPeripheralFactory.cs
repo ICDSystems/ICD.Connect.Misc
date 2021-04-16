@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Linq;
 using ICD.Common.Utils;
 using ICD.Common.Utils.Extensions;
 using ICD.Common.Utils.Xml;
 using ICD.Connect.Misc.Windows.Devices.ControlSystems;
 using ICD.Connect.Misc.Windows.Devices.WindowsPeripheralDevice;
+using ICD.Connect.Partitioning;
+using ICD.Connect.Partitioning.Rooms;
 using ICD.Connect.Settings.Utils;
 
 namespace ICD.Connect.Misc.Windows.WindowsPeripheral.Factories
@@ -77,6 +80,11 @@ namespace ICD.Connect.Misc.Windows.WindowsPeripheral.Factories
 			InstantiateDeviceFinal(device);
 
 			controlSystem.Core.Originators.AddChild(device);
+
+			// If there's only 1 room add the device to it
+			IRoom room = controlSystem.Core.Originators.GetChildren<IRoom>().SingleOrDefault();
+			if (room != null)
+				room.Originators.Add(device.Id, eCombineMode.Always);
 
 			return device;
 		}
