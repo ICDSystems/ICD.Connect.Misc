@@ -100,6 +100,12 @@ namespace ICD.Connect.Misc.GlobalCache.Ports.ComPort
 		/// </summary>
 		public override bool ReportCtsChanges { get { return false; } }
 
+		public IGcITachDevice Device { get { return m_Device; } }
+
+		public int Module { get { return m_Module; } }
+
+		public int Address { get { return m_Address; } }
+
 		#endregion
 
 		/// <summary>
@@ -148,7 +154,7 @@ namespace ICD.Connect.Misc.GlobalCache.Ports.ComPort
 				throw new InvalidOperationException(string.Format("{0} unable to connect - device is null", this));
 
 			// First make sure the device is in the correct configuration
-			SetModuleType(Module.eId.FlcSerial, Module.eClass.Serial, Module.eType.Rs232);
+			SetModuleType(FlexApi.RestApi.Module.eId.FlcSerial, FlexApi.RestApi.Module.eClass.Serial, FlexApi.RestApi.Module.eType.Rs232);
 
 			HostInfo host = new HostInfo(m_Device.Address, PORT);
 			m_Client.Connect(host);
@@ -249,27 +255,7 @@ namespace ICD.Connect.Misc.GlobalCache.Ports.ComPort
 		/// <param name="type"></param>
 		private void SetModuleType(Module.eId id, Module.eClass @class, Module.eType type)
 		{
-			GcITachFlexDevice flexDevice = m_Device as GcITachFlexDevice;
-			if (flexDevice == null)
-				return;
-
-			Module module = new Module
-			{
-				Id = id,
-				Class = @class,
-				Type = type
-			};
-
-			string localUrl = string.Format("api/host/modules/{0}", m_Module);
-
-			try
-			{
-				flexDevice.Post(localUrl, module.Serialize());
-			}
-			catch (Exception e)
-			{
-				Logger.Log(eSeverity.Error, e, "Failed to set module type");
-			}
+			GcITachPortHelper.SetModuleType(this, id, @class, type);
 		}
 
 		protected override bool GetIsConnectedState()
@@ -399,9 +385,7 @@ namespace ICD.Connect.Misc.GlobalCache.Ports.ComPort
 		{
 			base.BuildConsoleStatus(addRow);
 
-			addRow("Device", m_Device);
-			addRow("Module", m_Module);
-			addRow("Address", m_Address);
+			GcITachPortHelper.BuildConsoleStatus(this, addRow);
 		}
 
 		#endregion
