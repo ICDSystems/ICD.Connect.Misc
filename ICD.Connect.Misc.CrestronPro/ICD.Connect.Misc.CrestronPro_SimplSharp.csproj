@@ -206,7 +206,6 @@
     <Compile Include="Ports\IoPort\IoPortAdapterSettings.cs" />
     <Compile Include="Ports\IrPort\IrPortAdapter.cs" />
     <Compile Include="Ports\IrPort\IrPortAdapterSettings.cs" />
-    <Compile Include="Ports\IrPort\IrPulse.cs" />
     <Compile Include="Ports\RelayPort\RelayPortAdapter.cs" />
     <Compile Include="Ports\RelayPort\RelayPortAdapterSettings.cs" />
     <Compile Include="ProgramInfo.cs" />

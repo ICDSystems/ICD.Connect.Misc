@@ -12,10 +12,11 @@ using ICD.Connect.Protocol.Ports.IrPort;
 using ICD.Connect.Protocol.Settings;
 using ICD.Connect.Protocol.Utils;
 using ICD.Connect.Settings;
+using IrCommand = ICD.Connect.Protocol.Data.IrCommand;
 
 namespace ICD.Connect.Misc.GlobalCache.Ports.IrPort
 {
-	public class GcITachIrPort : AbstractIrPort<GcITachIrPortSettings>, IGcITachPort
+	public sealed class GcITachIrPort : AbstractIrPort<GcITachIrPortSettings>, IGcITachPort
 	{
 		#region Private Members
 
@@ -23,7 +24,7 @@ namespace ICD.Connect.Misc.GlobalCache.Ports.IrPort
 
 		private readonly IrDriverProperties m_LoadedDriverProperties;
 
-		private KrangIrDriver m_LoadedDriver;
+		private IrDriver m_LoadedDriver;
 
 		#endregion
 
@@ -72,37 +73,26 @@ namespace ICD.Connect.Misc.GlobalCache.Ports.IrPort
 			}
 		}
 
-		public override void Press(string command)
+		protected override void PressFinal(string command)
 		{
 			if (m_LoadedDriver == null)
 				return;
 
-			KrangIrCommand krangIrCommand = m_LoadedDriver.GetCommands().FirstOrDefault(irc => irc.Name == command);
+			IrCommand krangIrCommand = m_LoadedDriver.GetCommands()
+			                                         .FirstOrDefault(irc => string.Equals(irc.Name, command, StringComparison.CurrentCultureIgnoreCase));
 
 			if (krangIrCommand == null)
+			{
+				Logger.Log(eSeverity.Error, "Cannot find command data for command - {0}", command);
 				return;
+			}
 
 			Device.SendCommand(SerializeIrCommand(krangIrCommand));
 		}
 
-		public override void Release()
+		protected override void ReleaseFinal()
 		{
-			throw new System.NotImplementedException();
-		}
-
-		public override void PressAndRelease(string command)
-		{
-			throw new System.NotImplementedException();
-		}
-
-		public override void PressAndRelease(string command, ushort pulseTime)
-		{
-			throw new System.NotImplementedException();
-		}
-
-		public override void PressAndRelease(string command, ushort pulseTime, ushort betweenTime)
-		{
-			throw new System.NotImplementedException();
+			Device.SendCommand(GetStopIrCommand());
 		}
 
 		#endregion
@@ -147,10 +137,20 @@ namespace ICD.Connect.Misc.GlobalCache.Ports.IrPort
 		/// </summary>
 		/// <param name="command"></param>
 		/// <returns></returns>
-		private string SerializeIrCommand(KrangIrCommand command)
+		private string SerializeIrCommand(IrCommand command)
 		{
-			return string.Format("sendir,{0}:{1},{2},{3},{4},{5}\r", Module, 1, 1, command.Frequency, command.RepeatCount,
+			return string.Format("sendir,{0}:{1},{2},{3},{4},{5}{6}\r", Module, Address, 1, command.Frequency,
+			                     command.RepeatCount, command.Offset ? "1," : "",
 			                     string.Join(",", command.Data.Select(i => i.ToString()).ToArray()));
+		}
+
+		/// <summary>
+		/// Serializes a GC stop IR transmission command string for the current module and address.
+		/// </summary>
+		/// <returns></returns>
+		private string GetStopIrCommand()
+		{
+			return string.Format("stopir,{0}:{1}\r", Module, Address);
 		}
 
 		#endregion

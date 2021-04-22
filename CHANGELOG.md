@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 ### Added
+ - GlobalCache Flex Device now polls for device info
+ - GlobalCache IR Port
  - Utils for extracting project, network, & version info from CrestronEthernetDeviceAdapters
  - PeripheralDevice for USB devices on WindowsControlSystems
  - USB Device Whitelist for WindowsControlSystem, automatically adds matching USB devices to the program as PeripheralDevices

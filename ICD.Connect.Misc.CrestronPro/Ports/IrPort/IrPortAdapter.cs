@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using ICD.Common.Properties;
 using ICD.Common.Utils;
-using ICD.Common.Utils.Timers;
 using ICD.Connect.Misc.CrestronPro.Devices;
 using ICD.Connect.Misc.CrestronPro.Utils;
 using ICD.Connect.Protocol.Ports.IrPort;
@@ -11,7 +10,6 @@ using ICD.Connect.Protocol.Settings;
 using ICD.Connect.Settings;
 #if SIMPLSHARP
 using Crestron.SimplSharp.CrestronIO;
-using ICD.Common.Utils.Extensions;
 using ICD.Common.Utils.Services.Logging;
 using Crestron.SimplSharpPro;
 using ICD.Connect.Misc.CrestronPro.Extensions;
@@ -30,9 +28,6 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 #if SIMPLSHARP
 		private IROutputPort m_Port;
 #endif
-		private readonly Queue<IrPulse> m_Queue;
-		private readonly SafeTimer m_PulseTimer;
-
 		private readonly IrDriverProperties m_IrDriverProperties;
 
 		private readonly SafeCriticalSection m_PressSection;
@@ -76,28 +71,15 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		{
 			m_IrDriverProperties = new IrDriverProperties();
 
-			m_Queue = new Queue<IrPulse>();
 			m_PressSection = new SafeCriticalSection();
 
 			PulseTime = DEFAULT_PULSE_TIME;
 			BetweenTime = DEFAULT_BETWEEN_TIME;
-
-			m_PulseTimer = SafeTimer.Stopped(PulseElapseCallback);
 		}
 
 		#endregion
 
 		#region Methods
-
-		/// <summary>
-		/// Release resources.
-		/// </summary>
-		protected override void DisposeFinal(bool disposing)
-		{
-			m_PulseTimer.Dispose();
-
-			base.DisposeFinal(disposing);
-		}
 
 #if SIMPLSHARP
 		/// <summary>
@@ -108,11 +90,12 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		[PublicAPI]
 		public void SetIrPort(IROutputPort port, int address)
 		{
+			Release();
+
 			m_Address = address;
 
 			Unsubscribe(m_Port);
 			Unregister(m_Port);
-			Clear();
 
 			m_Port = port;
 			Register(m_Port);
@@ -196,10 +179,10 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		}
 
 		/// <summary>
-		/// Begin sending the command.
+		/// Override to implement the press logic.
 		/// </summary>
 		/// <param name="command"></param>
-		public override void Press(string command)
+		protected override void PressFinal(string command)
 		{
 #if SIMPLSHARP
 			if (m_Port == null)
@@ -212,8 +195,6 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 
 			try
 			{
-				Clear();
-
 				if (!m_Port.IsIRCommandAvailable(command))
 				{
 					Logger.Log(eSeverity.Error, "Unable to send command - No command {0}", StringUtils.ToRepresentation(command));
@@ -233,55 +214,14 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		}
 
 		/// <summary>
-		/// Stop sending the current command.
+		/// Override to implement the release logic.
 		/// </summary>
-		public override void Release()
+		protected override void ReleaseFinal()
 		{
-			Clear();
-		}
-
-		/// <summary>
-		/// Sends the command for the default pulse time.
-		/// </summary>
-		/// <param name="command"></param>
-		public override void PressAndRelease(string command)
-		{
-			PressAndRelease(command, PulseTime);
-		}
-
-		/// <summary>
-		/// Send the command for the given number of milliseconds.
-		/// </summary>
-		/// <param name="command"></param>
-		/// <param name="pulseTime"></param>
-		public override void PressAndRelease(string command, ushort pulseTime)
-		{
-			PressAndRelease(command, pulseTime, BetweenTime);
-		}
-
-		/// <summary>
-		/// Sends the command for the given number of milliseconds.
-		/// </summary>
-		/// <param name="command"></param>
-		/// <param name="pulseTime"></param>
-		/// <param name="betweenTime"></param>
-		public override void PressAndRelease(string command, ushort pulseTime, ushort betweenTime)
-		{
-			IrPulse pulse = new IrPulse(command, pulseTime, betweenTime);
-
-			m_PressSection.Enter();
-
-			try
-			{
-				m_Queue.Enqueue(pulse);
-
-				if (m_Queue.Count == 1)
-					SendNext();
-			}
-			finally
-			{
-				m_PressSection.Leave();
-			}
+#if SIMPLSHARP
+			if (m_Port != null)
+				m_Port.Release();
+#endif
 		}
 
 		#endregion
@@ -337,100 +277,6 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 			return m_Port != null && m_Port.GetParentOnline();
 #else
             return false;
-#endif
-		}
-
-		/// <summary>
-		/// Releases the current command and clears the queued commands.
-		/// </summary>
-		private void Clear()
-		{
-#if SIMPLSHARP
-			m_PressSection.Enter();
-
-			try
-			{
-				m_PulseTimer.Stop();
-				m_Queue.Clear();
-
-				if (m_Port != null)
-					m_Port.Release();
-			}
-			finally
-			{
-				m_PressSection.Leave();
-			}
-#else
-            throw new NotSupportedException();
-#endif
-		}
-
-		/// <summary>
-		/// Sends the next pulse in the queue.
-		/// </summary>
-		private void SendNext()
-		{
-#if SIMPLSHARP
-			m_PressSection.Enter();
-
-			try
-			{
-				IrPulse pulse;
-				if (!m_Queue.Peek(out pulse))
-					return;
-
-				if (m_Port == null)
-				{
-					Logger.Log(eSeverity.Error, "Unable to send command - internal port is null");
-					Clear();
-					return;
-				}
-
-				if (!m_Port.IsIRCommandAvailable(pulse.Command))
-				{
-					m_Queue.Dequeue();
-					Logger.Log(eSeverity.Error, "Unable to send command - No command {0}", StringUtils.ToRepresentation(pulse.Command));
-					SendNext();
-					return;
-				}
-
-				PrintTx(pulse.Command);
-				m_Port.PressAndRelease(pulse.Command, pulse.PulseTime);
-
-				m_PulseTimer.Reset(pulse.Duration);
-			}
-			finally
-			{
-				m_PressSection.Leave();
-			}
-#else
-            throw new NotSupportedException();
-#endif
-		}
-
-		/// <summary>
-		/// Called when the pulse timer elapses.
-		/// </summary>
-		private void PulseElapseCallback()
-		{
-#if SIMPLSHARP
-			m_PressSection.Enter();
-
-			try
-			{
-
-				if (m_Queue.Count == 0)
-					return;
-
-				m_Queue.Dequeue();
-				SendNext();
-			}
-			finally
-			{
-				m_PressSection.Leave();
-			}
-#else
-            throw new NotSupportedException();
 #endif
 		}
 
@@ -528,6 +374,6 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 #endif
 		}
 
-		#endregion
+#endregion
 	}
 }

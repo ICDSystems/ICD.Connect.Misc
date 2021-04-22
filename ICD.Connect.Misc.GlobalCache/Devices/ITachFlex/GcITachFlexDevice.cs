@@ -148,6 +148,7 @@ namespace ICD.Connect.Misc.GlobalCache.Devices.ITachFlex
 			MonitoredDeviceInfo.NetworkInfo.Adapters.GetOrAddAdapter(1).Ipv4Gateway = networkResponse.Gateway;
 			MonitoredDeviceInfo.NetworkInfo.Adapters.GetOrAddAdapter(1).Ipv4Address = networkResponse.IpAddress;
 			MonitoredDeviceInfo.NetworkInfo.Adapters.GetOrAddAdapter(1).Ipv4SubnetMask = networkResponse.SubnetMask;
+			MonitoredDeviceInfo.NetworkInfo.Hostname = networkResponse.IpAddress;
 			MonitoredDeviceInfo.NetworkInfo.Dns = networkResponse.PrimaryDnsServer;
 		}
 

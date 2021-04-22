@@ -36,7 +36,7 @@ namespace ICD.Connect.Misc.GlobalCache.FlexApi.RestApi
 		{
 			base.WriteProperties(writer, value, serializer);
 
-			writer.WriteProperty(ATTR_DHCP, value.Dhcp);
+			writer.WriteProperty(ATTR_DHCP, value.Dhcp.ToString().ToLower());
 			writer.WriteProperty(ATTR_GATEWAY, value.Gateway);
 			writer.WriteProperty(ATTR_IP_ADDRESS, value.IpAddress);
 			writer.WriteProperty(ATTR_SUBNET_MASK, value.SubnetMask);
@@ -57,7 +57,7 @@ namespace ICD.Connect.Misc.GlobalCache.FlexApi.RestApi
 			switch (property)
 			{
 				case ATTR_DHCP:
-					instance.Dhcp = reader.GetValueAsBool();
+					instance.Dhcp = reader.GetValueAsString() == "true";
 					break;
 				case ATTR_GATEWAY:
 					instance.Gateway = reader.GetValueAsString();
