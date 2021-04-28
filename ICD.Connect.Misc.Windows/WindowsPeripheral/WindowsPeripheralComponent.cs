@@ -52,7 +52,9 @@ namespace ICD.Connect.Misc.Windows.WindowsPeripheral
 			m_FactoryCollections = new Dictionary<string, IWindowsPeripheralFactoryCollection>();
 			m_PeripheralDevicesById = new Dictionary<string, IWindowsPeripheralDevice>();
 
+#if !SIMPLSHARP
 			IcdEnvironment.OnSystemDeviceAddedRemoved += IcdEnvironmentOnSystemDeviceAddedRemoved;
+#endif
 		}
 
 		/// <summary>
@@ -60,7 +62,9 @@ namespace ICD.Connect.Misc.Windows.WindowsPeripheral
 		/// </summary>
 		public void Dispose()
 		{
+#if !SIMPLSHARP
 			IcdEnvironment.OnSystemDeviceAddedRemoved -= IcdEnvironmentOnSystemDeviceAddedRemoved;
+#endif
 
 			Clear();
 		}
