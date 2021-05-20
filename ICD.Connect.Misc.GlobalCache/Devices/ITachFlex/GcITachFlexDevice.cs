@@ -36,7 +36,7 @@ namespace ICD.Connect.Misc.GlobalCache.Devices.ITachFlex
 				Name = GetType().Name
 			};
 
-			m_TelemetryPollingTimer = SafeTimer.Stopped(() => PollTelemetry());
+			m_TelemetryPollingTimer = SafeTimer.Stopped(PollTelemetry);
 		}
 
 		#endregion

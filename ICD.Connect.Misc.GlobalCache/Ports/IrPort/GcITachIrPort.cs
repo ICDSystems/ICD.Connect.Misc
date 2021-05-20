@@ -111,9 +111,6 @@ namespace ICD.Connect.Misc.GlobalCache.Ports.IrPort
 		[PublicAPI]
 		public void SetDevice(IGcITachDevice device)
 		{
-			if (device == Device)
-				return;
-
 			Device = device;
 		}
 

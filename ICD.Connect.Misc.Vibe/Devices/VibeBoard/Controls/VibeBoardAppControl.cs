@@ -12,7 +12,7 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Controls
 		public event EventHandler OnAppLaunchFailed;
 		public event EventHandler OnAppLaunched;
 
-		private static readonly Dictionary<eVibeApp, string> s_AppPackageNames = new Dictionary<eVibeApp, string>()
+		private static readonly Dictionary<eVibeApp, string> s_AppPackageNames = new Dictionary<eVibeApp, string>
 		{
 			{eVibeApp.TouchCue, "com.profound.touchcue"},
 			{eVibeApp.Chrome, "com.android.chrome"},
@@ -23,7 +23,7 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Controls
 			{eVibeApp.WebEx, "com.cisco.webex.meetings"}
 		};
 
-		private static readonly Dictionary<eVibeApp, string> s_AppActivityNames = new Dictionary<eVibeApp, string>()
+		private static readonly Dictionary<eVibeApp, string> s_AppActivityNames = new Dictionary<eVibeApp, string>
 		{
 			{eVibeApp.TouchCue, ".ui.MainActivity" },
 			{eVibeApp.Chrome, "com.google.android.apps.chrome.Main"},

@@ -32,7 +32,7 @@ namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Responses
 			}
 		}
 
-		private class CallbackPair
+		private sealed class CallbackPair
 		{
 			public VibeResponseCallback WrappedCallback { get; set; }
 			public object ActualCallback { get; set; }

@@ -15,7 +15,7 @@ using ICD.Connect.Routing.Utils;
 
 namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Controls
 {
-	public class VibeBoardRoutingControl : AbstractRouteDestinationControl<VibeBoard>, IRouteSourceControl
+	public sealed class VibeBoardRoutingControl : AbstractRouteDestinationControl<VibeBoard>, IRouteSourceControl
 	{
 		/// <summary>
 		/// Called when an input source status changes.

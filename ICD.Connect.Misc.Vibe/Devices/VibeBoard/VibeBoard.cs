@@ -25,7 +25,7 @@ using ICD.Connect.Settings;
 
 namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard
 {
-	public class VibeBoard : AbstractPanelServerDevice<IcdTcpServer, VibeBoardSettings>
+	public sealed class VibeBoard : AbstractPanelServerDevice<IcdTcpServer, VibeBoardSettings>
 	{
 		public event EventHandler<BoolEventArgs> OnConnectedStateChanged;
 		public event EventHandler<BoolEventArgs> OnInitializedChanged;

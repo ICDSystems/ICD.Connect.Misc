@@ -5,7 +5,7 @@ using System;
 
 namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Responses.Converters
 {
-	public class SuccessDataConverter : AbstractGenericJsonConverter<SuccessData>
+	public sealed class SuccessDataConverter : AbstractGenericJsonConverter<SuccessData>
 	{
 		private const string PROP_RESULT = "result";
 		private const string VALUE_SUCCESS = "success";

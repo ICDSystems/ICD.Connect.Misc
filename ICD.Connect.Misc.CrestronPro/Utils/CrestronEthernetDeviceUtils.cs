@@ -115,6 +115,7 @@ namespace ICD.Connect.Misc.CrestronPro.Utils
 		/// Connects to the adapter over SSH and returns network info about the adapter.
 		/// </summary>
 		/// <param name="adapter"></param>
+		/// <param name="updateAction"></param>
 		/// <returns></returns>
 		public static void UpdateNetworkInfo(ICrestronEthernetDeviceAdapter adapter, Action<CrestronEthernetDeviceAdapterNetworkInfo> updateAction)
 		{
@@ -142,6 +143,7 @@ namespace ICD.Connect.Misc.CrestronPro.Utils
 		/// Connects to the adapter over SSH and returns version info about the adapter.
 		/// </summary>
 		/// <param name="adapter"></param>
+		/// <param name="updateAction"></param>
 		/// <returns></returns>
 		public static void UpdateVersionInfo(ICrestronEthernetDeviceAdapter adapter, Action<CrestronEthernetDeviceAdapterVersionInfo> updateAction)
 		{

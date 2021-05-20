@@ -9,7 +9,7 @@ using ICD.Connect.Settings.Attributes.SettingsProperties;
 namespace ICD.Connect.Misc.Vibe.Settings
 {
 	[KrangSettings("VibeBoard", typeof(VibeBoard))]
-	public class VibeBoardSettings : AbstractPanelServerDeviceSettings, INetworkProperties
+	public sealed class VibeBoardSettings : AbstractPanelServerDeviceSettings, INetworkProperties
 	{
 		private const string KRANG_PORT_ELEMENT = "KrangPort";
 
