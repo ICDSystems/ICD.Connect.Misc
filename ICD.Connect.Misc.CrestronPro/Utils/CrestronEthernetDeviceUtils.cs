@@ -46,7 +46,7 @@ namespace ICD.Connect.Misc.CrestronPro.Utils
 		/// Regex for matching the result of the 'ver' command on Crestron ethernet devices.
 		/// </summary>
 		private const string VER_REGEX =
-			@"Console*\s*(?'prompt'\S+>)?(?'model'\S+)\s+((?'type'\S+)\s+)?((?'lang'\S+)\s+)?\[v(?'version'\d+(\.\d+)+)\s+\((?'date'[^)]+)\),\s+#(?'tsid'[A-F0-9]+)\]\s*?(@E-(?'mac'[a-z0-9]+))?";
+			@">\s*(?'model'\S+)\s+((?'type'\S+)\s+)?((?'lang'\S+)\s+)?\[v(?'version'\d+(\.\d+)+)\s+\((?'date'[^)]+)\),\s+[#%](?'tsid'[a-zA-Z0-9]+)\]\s+(@E-(?'mac'[a-z0-9]+))?";
 
 		/// <summary>
 		/// Regex for matching the result of the 'projectinfo' command on Crestron ethernet devices.
