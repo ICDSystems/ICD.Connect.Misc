@@ -29,6 +29,7 @@ namespace ICD.Connect.Misc.CrestronPro.Utils
 		private const string VER_COMMAND = "ver";
 		private const string PROJECT_INFO_COMMAND = "projectinfo";
 		private const string APP_MODE_COMMAND = "appmode";
+		private const string HOST_NAME_COMMAND = "hostname";
 
 
 		#endregion
@@ -59,6 +60,12 @@ namespace ICD.Connect.Misc.CrestronPro.Utils
 		private const string APP_MODE_REGEX =
 			@"(?:App mode:\s*(?'AppMode'.*))";
 
+		/// <summary>
+		/// Regex for matching the result of the 'hostname' command on Crestron ethernet devices.
+		/// </summary>
+		private const string HOST_NAME_REGEX =
+			@"(?:Host Name:\s*(?'HostName'\S+))";
+
 		#endregion
 
 		#region Cache
@@ -80,6 +87,10 @@ namespace ICD.Connect.Misc.CrestronPro.Utils
 		private static readonly
 			WeakKeyDictionary<ICrestronEthernetDeviceAdapter, KeyValuePair<string, DateTime>>
 			s_AppModeCache;
+
+		private static readonly
+			WeakKeyDictionary<ICrestronEthernetDeviceAdapter, KeyValuePair<string, DateTime>>
+			s_HostNameCache;
 
 		#endregion
 
@@ -103,6 +114,9 @@ namespace ICD.Connect.Misc.CrestronPro.Utils
 				new WeakKeyDictionary
 					<ICrestronEthernetDeviceAdapter, KeyValuePair<CrestronEthernetDeviceAdapterProjectInfo, DateTime>>();
 			s_AppModeCache =
+				new WeakKeyDictionary
+					<ICrestronEthernetDeviceAdapter, KeyValuePair<string, DateTime>>();
+			s_HostNameCache =
 				new WeakKeyDictionary
 					<ICrestronEthernetDeviceAdapter, KeyValuePair<string, DateTime>>();
 		}
@@ -218,6 +232,27 @@ namespace ICD.Connect.Misc.CrestronPro.Utils
 				    InsertCachedValue(s_AppModeCache, adapter, appMode))
 				{
 					updateAction(appMode);
+				}
+			});
+		}
+
+		public static void UpdateHostName(ICrestronEthernetDeviceAdapter adapter, Action<string> updateAction)
+		{
+			// Already cached?
+			string hostName;
+			if (TryGetCachedValue(s_HostNameCache, adapter, out hostName))
+			{
+				updateAction(hostName);
+				return;
+			}
+
+			// Safely update the value.
+			ThreadingUtils.SafeInvoke(() =>
+			{
+				if (TryRequestSsh(adapter, HOST_NAME_COMMAND, HOST_NAME_REGEX, m => m.Groups["HostName"].Value.TrimEnd('\r', '\n'), out hostName) &&
+					InsertCachedValue(s_HostNameCache, adapter, hostName))
+				{
+					updateAction(hostName);
 				}
 			});
 		}
