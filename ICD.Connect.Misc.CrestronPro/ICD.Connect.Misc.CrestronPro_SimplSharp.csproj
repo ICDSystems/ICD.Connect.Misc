@@ -101,7 +101,16 @@
     <Compile Include="Devices\Ethernet\CrestronEthernetDeviceAdapterNetworkInfo.cs" />
     <Compile Include="Devices\Ethernet\CrestronEthernetDeviceAdapterProjectInfo.cs" />
     <Compile Include="Devices\Ethernet\CrestronEthernetDeviceAdapterVersionInfo.cs" />
+    <Compile Include="Devices\InfinetExGateway\IInfinetExGatewayAdapter.cs" />
+    <Compile Include="Devices\OccupancySensors\GlsOirCsmExBattAdapter.cs" />
+    <Compile Include="Devices\OccupancySensors\GlsOirCsmExBattAdapterSettings.cs" />
     <Compile Include="Extensions\DeviceExtenderExtensions.cs" />
+    <Compile Include="InfinetEx\IInfinetExDevice.cs" />
+    <Compile Include="InfinetEx\IInfinetExDeviceSettings.cs" />
+    <Compile Include="InfinetEx\InfinetExDeviceConsole.cs" />
+    <Compile Include="InfinetEx\InfinetExInfo.cs" />
+    <Compile Include="InfinetEx\InfinetExSettings.cs" />
+    <Compile Include="InfinetEx\InfinetExUtils.cs" />
     <Compile Include="ObfuscationSettings.cs" />
     <Compile Include="Devices\CresnetBridge\CsaPws10sHubEnetAdapter.cs" />
     <Compile Include="Devices\CresnetBridge\CsaPws10sHubEnetAdapterSettings.cs" />
