@@ -53,6 +53,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\ProgramData\Crestron\SDK\SSPDevices\Crestron.SimplSharpPro.DeviceSupport.dll</HintPath>
     </Reference>
+    <Reference Include="Crestron.SimplSharpPro.Gateways, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1099c178b3b54c3b, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\..\ProgramData\Crestron\SDK\SSPDevices\Crestron.SimplSharpPro.Gateways.dll</HintPath>
+    </Reference>
     <Reference Include="Crestron.SimplSharpPro.GeneralIO, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1099c178b3b54c3b, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\ProgramData\Crestron\SDK\SSPDevices\Crestron.SimplSharpPro.GeneralIO.dll</HintPath>
@@ -101,10 +105,18 @@
     <Compile Include="Devices\Ethernet\CrestronEthernetDeviceAdapterNetworkInfo.cs" />
     <Compile Include="Devices\Ethernet\CrestronEthernetDeviceAdapterProjectInfo.cs" />
     <Compile Include="Devices\Ethernet\CrestronEthernetDeviceAdapterVersionInfo.cs" />
+    <Compile Include="Devices\InfinetExGateway\CenRfgwExAdapter.cs" />
+    <Compile Include="Devices\InfinetExGateway\CenRfgwExAdapterSettings.cs" />
     <Compile Include="Devices\InfinetExGateway\IInfinetExGatewayAdapter.cs" />
+    <Compile Include="Devices\Io\InetIoex\InetIoexIrcomAdapter.cs" />
+    <Compile Include="Devices\Io\InetIoex\InetIoexIrcomAdatperSettings.cs" />
+    <Compile Include="Devices\Io\InetIoex\InetIoexRyioAdapter.cs" />
+    <Compile Include="Devices\Io\InetIoex\InetIoexRyioAdapterSettings.cs" />
     <Compile Include="Devices\OccupancySensors\GlsOirCsmExBattAdapter.cs" />
     <Compile Include="Devices\OccupancySensors\GlsOirCsmExBattAdapterSettings.cs" />
     <Compile Include="Extensions\DeviceExtenderExtensions.cs" />
+    <Compile Include="InfinetEx\AbstractInfinetExAdapter.cs" />
+    <Compile Include="InfinetEx\AbstractInfinetExAdapterSettings.cs" />
     <Compile Include="InfinetEx\IInfinetExDevice.cs" />
     <Compile Include="InfinetEx\IInfinetExDeviceSettings.cs" />
     <Compile Include="InfinetEx\InfinetExDeviceConsole.cs" />
