@@ -141,16 +141,12 @@ namespace ICD.Connect.Misc.CrestronPro.Utils
 				return;
 			}
 
-			// Safely update the value.
-			ThreadingUtils.SafeInvoke(() =>
+			if (TryRequestSsh(adapter, IP_CONFIG_COMMAND, IP_CONFIG_REGEX,
+			                  CrestronEthernetDeviceAdapterNetworkInfo.Parse, out networkInfo) &&
+			    InsertCachedValue(s_IpConfigCache, adapter, networkInfo))
 			{
-				if (TryRequestSsh(adapter, IP_CONFIG_COMMAND, IP_CONFIG_REGEX,
-				                  CrestronEthernetDeviceAdapterNetworkInfo.Parse, out networkInfo) &&
-				    InsertCachedValue(s_IpConfigCache, adapter, networkInfo))
-				{
-					updateAction(networkInfo);
-				}
-			});
+				updateAction(networkInfo);
+			}
 		}
 
 		/// <summary>
@@ -169,16 +165,13 @@ namespace ICD.Connect.Misc.CrestronPro.Utils
 				return;
 			}
 
-			// Safely update the value.
-			ThreadingUtils.SafeInvoke(() =>
+			if (TryRequestSsh(adapter, VER_COMMAND, VER_REGEX,
+			                  CrestronEthernetDeviceAdapterVersionInfo.Parse, out versionInfo) &&
+			    InsertCachedValue(s_VersionCache, adapter, versionInfo))
 			{
-				if (TryRequestSsh(adapter, VER_COMMAND, VER_REGEX,
-				                  CrestronEthernetDeviceAdapterVersionInfo.Parse, out versionInfo) &&
-				    InsertCachedValue(s_VersionCache, adapter, versionInfo))
-				{
-					updateAction(versionInfo);
-				}
-			});
+				updateAction(versionInfo);
+			}
+
 		}
 
 		/// <summary>
@@ -197,16 +190,12 @@ namespace ICD.Connect.Misc.CrestronPro.Utils
 				return;
 			}
 
-			// Safely update the value.
-			ThreadingUtils.SafeInvoke(() =>
+			if (TryRequestSsh(adapter, PROJECT_INFO_COMMAND, PROJECT_INFO_REGEX,
+			                  CrestronEthernetDeviceAdapterProjectInfo.Parse, out projectInfo) &&
+			    InsertCachedValue(s_ProjectInfoCache, adapter, projectInfo))
 			{
-				if (TryRequestSsh(adapter, PROJECT_INFO_COMMAND, PROJECT_INFO_REGEX,
-				                  CrestronEthernetDeviceAdapterProjectInfo.Parse, out projectInfo) &&
-				    InsertCachedValue(s_ProjectInfoCache, adapter, projectInfo))
-				{
-					updateAction(projectInfo);
-				}
-			});
+				updateAction(projectInfo);
+			}
 		}
 
 		/// <summary>
@@ -225,15 +214,11 @@ namespace ICD.Connect.Misc.CrestronPro.Utils
 				return;
 			}
 
-			// Safely update the value.
-			ThreadingUtils.SafeInvoke(() =>
+			if (TryRequestSsh(adapter, APP_MODE_COMMAND, APP_MODE_REGEX, m => m.Groups["AppMode"].Value.TrimEnd('\r', '\n'), out appMode) &&
+				InsertCachedValue(s_AppModeCache, adapter, appMode))
 			{
-				if (TryRequestSsh(adapter, APP_MODE_COMMAND, APP_MODE_REGEX, m => m.Groups["AppMode"].Value.TrimEnd('\r', '\n'), out appMode) &&
-				    InsertCachedValue(s_AppModeCache, adapter, appMode))
-				{
-					updateAction(appMode);
-				}
-			});
+				updateAction(appMode);
+			}
 		}
 
 		public static void UpdateHostName(ICrestronEthernetDeviceAdapter adapter, Action<string> updateAction)
@@ -246,15 +231,11 @@ namespace ICD.Connect.Misc.CrestronPro.Utils
 				return;
 			}
 
-			// Safely update the value.
-			ThreadingUtils.SafeInvoke(() =>
+			if (TryRequestSsh(adapter, HOST_NAME_COMMAND, HOST_NAME_REGEX, m => m.Groups["HostName"].Value.TrimEnd('\r', '\n'), out hostName) &&
+				InsertCachedValue(s_HostNameCache, adapter, hostName))
 			{
-				if (TryRequestSsh(adapter, HOST_NAME_COMMAND, HOST_NAME_REGEX, m => m.Groups["HostName"].Value.TrimEnd('\r', '\n'), out hostName) &&
-					InsertCachedValue(s_HostNameCache, adapter, hostName))
-				{
-					updateAction(hostName);
-				}
-			});
+				updateAction(hostName);
+			}
 		}
 
 		#endregion
