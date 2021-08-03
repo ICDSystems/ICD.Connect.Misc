@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [10.0.1] - 2021-08-03
+### Changed
+ - CrestronEthernetDeviceUtils - don't start threads for SSH requests
+
 ## [10.0.0] - 2021-05-14
 ### Added
  - GlobalCache Flex Device now polls for device info
