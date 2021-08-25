@@ -3,7 +3,7 @@
   <Import Condition=" '$(EAZFUSCATOR_NET_HOME)' != '' and Exists('$(EAZFUSCATOR_NET_HOME)\Integration\MSBuild\Eazfuscator.NET.targets') " Project="$(EAZFUSCATOR_NET_HOME)\Integration\MSBuild\Eazfuscator.NET.targets" />
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;net472</TargetFrameworks>
     <RootNamespace>ICD.Connect.Misc.Yepkit</RootNamespace>
     <AssemblyName>ICD.Connect.Misc.Yepkit</AssemblyName>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -43,10 +43,7 @@
 
   <Target Name="ArchivePlugin" AfterTargets="AfterBuild" Condition="'$(Configuration)|$(OS)' == 'Release|Windows_NT'">
     <Delete Files="$(TargetDir)$(AssemblyName).kpz" />
-    <ZipDirectory DestinationFile="$(TargetDir)..\$(AssemblyName).kpz"
-                  SourceDirectory="$(TargetDir)"
-                  Overwrite="true"/>
-    <Move SourceFiles="$(TargetDir)..\$(AssemblyName).kpz"
-          DestinationFolder="$(TargetDir)"/>
+    <ZipDirectory DestinationFile="$(TargetDir)..\$(AssemblyName).kpz" SourceDirectory="$(TargetDir)" Overwrite="true" />
+    <Move SourceFiles="$(TargetDir)..\$(AssemblyName).kpz" DestinationFolder="$(TargetDir)" />
   </Target>
 </Project>

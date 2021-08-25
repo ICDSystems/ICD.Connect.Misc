@@ -1,5 +1,10 @@
-using ICD.Connect.Misc.Unsplash.Responses;
+#if NETFRAMEWORK
+extern alias RealNewtonsoft;
+using RealNewtonsoft.Newtonsoft.Json;
+#else
 using Newtonsoft.Json;
+#endif
+using ICD.Connect.Misc.Unsplash.Responses;
 using NUnit.Framework;
 
 namespace ICD.Connect.Misc.Unsplash.Tests.Converters

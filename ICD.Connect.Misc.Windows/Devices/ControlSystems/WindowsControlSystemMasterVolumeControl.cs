@@ -1,6 +1,6 @@
 ﻿using System;
 using ICD.Connect.Audio.Controls.Volume;
-#if NETSTANDARD
+#if !SIMPLSHARP
 using ICD.Common.Properties;
 using ICD.Common.Utils;
 using NAudio.CoreAudioApi;
@@ -10,7 +10,7 @@ namespace ICD.Connect.Misc.Windows.Devices.ControlSystems
 {
 	public sealed class WindowsControlSystemMasterVolumeControl : AbstractVolumeDeviceControl<WindowsControlSystem>
 	{
-#if NETSTANDARD
+#if !SIMPLSHARP
 		[CanBeNull]
 		private MMDevice m_MasterVolumeEndpoint;
 #endif
@@ -37,7 +37,7 @@ namespace ICD.Connect.Misc.Windows.Devices.ControlSystems
 		public WindowsControlSystemMasterVolumeControl(WindowsControlSystem parent, int id)
 			: base(parent, id)
 		{
-#if NETSTANDARD
+#if !SIMPLSHARP
 			SupportedVolumeFeatures = eVolumeFeatures.Mute |
 			                          eVolumeFeatures.MuteAssignment |
 			                          eVolumeFeatures.MuteFeedback |
@@ -53,7 +53,7 @@ namespace ICD.Connect.Misc.Windows.Devices.ControlSystems
 #endif
 		}
 
-#if NETSTANDARD
+#if !SIMPLSHARP
 		/// <summary>
 		/// Override to release resources.
 		/// </summary>
@@ -176,7 +176,7 @@ namespace ICD.Connect.Misc.Windows.Devices.ControlSystems
 
 		#endregion
 
-#if NETSTANDARD
+#if !SIMPLSHARP
 
 		#region Private Methods
 

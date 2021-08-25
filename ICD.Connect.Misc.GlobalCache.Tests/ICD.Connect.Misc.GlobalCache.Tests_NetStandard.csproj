@@ -3,7 +3,7 @@
 
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFrameworks>netcoreapp3.1;net472</TargetFrameworks>
 	<RootNamespace>ICD.Connect.Misc.GlobalCache.Tests</RootNamespace>
 	<AssemblyName>ICD.Connect.Misc.GlobalCache.Tests</AssemblyName>
   </PropertyGroup>

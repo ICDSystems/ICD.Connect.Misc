@@ -1,5 +1,10 @@
-﻿using ICD.Common.Utils.Json;
+﻿#if NETFRAMEWORK
+extern alias RealNewtonsoft;
+using RealNewtonsoft.Newtonsoft.Json;
+#else
 using Newtonsoft.Json;
+#endif
+using ICD.Common.Utils.Json;
 
 namespace ICD.Connect.Misc.GlobalCache.FlexApi.RestApi
 {
@@ -14,6 +19,5 @@ namespace ICD.Connect.Misc.GlobalCache.FlexApi.RestApi
 
 	public sealed class IrCommandConverter : AbstractGenericJsonConverter<IrCommand>
 	{
-
 	}
 }

@@ -1,6 +1,11 @@
-﻿using ICD.Common.Utils.Extensions;
-using ICD.Common.Utils.Json;
+﻿#if NETFRAMEWORK
+extern alias RealNewtonsoft;
+using RealNewtonsoft.Newtonsoft.Json;
+#else
 using Newtonsoft.Json;
+#endif
+using ICD.Common.Utils.Extensions;
+using ICD.Common.Utils.Json;
 using System;
 
 namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Responses.Converters
