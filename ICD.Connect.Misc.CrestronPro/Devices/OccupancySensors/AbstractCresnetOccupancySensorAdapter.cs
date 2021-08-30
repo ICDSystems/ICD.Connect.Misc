@@ -10,7 +10,7 @@ using ICD.Connect.Misc.CrestronPro.Cresnet;
 using ICD.Connect.Partitioning.Commercial.Controls.Occupancy;
 using ICD.Connect.Partitioning.Commercial.Devices.Occupancy;
 using ICD.Connect.Settings;
-#if SIMPLSHARP
+#if !NETSTANDARD
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.DeviceSupport;
 using Crestron.SimplSharpPro.GeneralIO;
@@ -19,12 +19,12 @@ using ICD.Connect.Misc.CrestronPro.Utils;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 {
-#if SIMPLSHARP
+#if !NETSTANDARD
 	public abstract class AbstractCresnetOccupancySensorAdapter<TSettings, TSensor> : AbstractDevice<TSettings>, IOccupancySensorDevice, ICresnetDevice
 		where TSensor : GlsOccupancySensorBase
 		where TSettings : AbstractCresnetOccupancySensorAdapterSettings, new()
 #else
-		public abstract class AbstractCresnetOccupancySensorAdapter<TSettings> : AbstractDevice<TSettings>, IOccupancySensorDevice
+	public abstract class AbstractCresnetOccupancySensorAdapter<TSettings> : AbstractDevice<TSettings>, IOccupancySensorDevice
 		where TSettings : AbstractCresnetOccupancySensorAdapterSettings, new()
 #endif
 	{
@@ -36,7 +36,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 
 		#region Fields
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 		private TSensor m_Sensor;
 #endif
 		private eOccupancyState m_OccupancyState;
@@ -76,14 +76,14 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 		/// <returns></returns>
 		protected override bool GetIsOnlineStatus()
 		{
-#if SIMPLSHARP
+#if !NETSTANDARD
 			return m_Sensor != null && m_Sensor.IsOnline;
 #else
 			return false;
 #endif
 		}
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 		/// <summary>
 		/// Sets the wrapped device.
 		/// </summary>
@@ -113,7 +113,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 
 		private void UpdateStatus()
 		{
-#if SIMPLSHARP
+#if !NETSTANDARD
 
 			if (m_Sensor == null)
 			{
@@ -134,7 +134,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 
 		#region Instantiation
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 
 		protected abstract TSensor InstantiateControlSystem(byte cresnetId, CrestronControlSystem controlSystem);
 
@@ -146,7 +146,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 
 		#region Sensor Callbacks
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 		private void Subscribe(TSensor sensor)
 		{
 			if (sensor == null)
@@ -198,7 +198,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 
 			CresnetInfo.ApplySettings(settings);
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 			if (m_CresnetInfo.CresnetId == null || !CresnetUtils.IsValidId(m_CresnetInfo.CresnetId.Value))
 			{
 				Logger.Log(eSeverity.Error, "Failed to instantiate {0} - CresnetId {1} is out of range",
@@ -231,7 +231,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 
 			SetDevice(device);
 #else
-            throw new NotSupportedException();
+			throw new NotSupportedException();
 #endif
 		}
 
@@ -255,7 +255,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 
 			CresnetInfo.ClearSettings();
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 			SetDevice(null);
 #endif
 		}
@@ -285,7 +285,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 		{
 			base.BuildConsoleStatus(addRow);
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 			CresnetDeviceConsole.BuildConsoleStatus(this, addRow);
 			addRow("Occupancy State", OccupancyState);
 #endif

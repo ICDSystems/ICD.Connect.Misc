@@ -1,5 +1,10 @@
-﻿using ICD.Connect.Misc.Unsplash.Converters;
+﻿#if NETFRAMEWORK
+extern alias RealNewtonsoft;
+using RealNewtonsoft.Newtonsoft.Json;
+#else
 using Newtonsoft.Json;
+#endif
+using ICD.Connect.Misc.Unsplash.Converters;
 
 namespace ICD.Connect.Misc.Unsplash.Responses
 {
@@ -9,7 +14,6 @@ namespace ICD.Connect.Misc.Unsplash.Responses
 		public int Total { get; set; }
 		public int TotalPages { get; set; }
 		public UnsplashCollectionResult[] Results { get; set; }
-
 	}
 
 	[JsonConverter(typeof(UnsplashCollectionResultConverter))]

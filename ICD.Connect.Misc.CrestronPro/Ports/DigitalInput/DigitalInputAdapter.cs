@@ -5,7 +5,7 @@ using ICD.Connect.Misc.CrestronPro.Extensions;
 using ICD.Connect.Misc.CrestronPro.Utils;
 using ICD.Connect.Protocol.Ports.DigitalInput;
 using ICD.Connect.Settings;
-#if SIMPLSHARP
+#if !NETSTANDARD
 using Crestron.SimplSharpPro;
 using ICD.Common.Properties;
 using ICD.Connect.Misc.CrestronPro.Devices;
@@ -15,8 +15,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.DigitalInput
 {
 	public sealed class DigitalInputAdapter : AbstractDigitalInputPort<DigitalInputAdapterSettings>
 	{
-#if SIMPLSHARP
-
+#if !NETSTANDARD
 		private Crestron.SimplSharpPro.DigitalInput m_Port;
 #endif
 
@@ -33,13 +32,13 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.DigitalInput
 		{
 			base.DisposeFinal(disposing);
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 			// Unregister.
 			SetDigitalInputPort(null, 0);
 #endif
 		}
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 		/// <summary>
 		/// Sets the wrapped port instance.
 		/// </summary>
@@ -95,7 +94,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.DigitalInput
 
 		#region Private Methods
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 		/// <summary>
 		/// Gets digital in state for the given port.
 		/// </summary>
@@ -118,7 +117,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.DigitalInput
 
 		#region Port Callbacks
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 		/// <summary>
 		/// Subscribe to the port events.
 		/// </summary>
@@ -191,7 +190,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.DigitalInput
 		{
 			base.ClearSettingsFinal();
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 			SetDigitalInputPort(null, 0);
 #endif
 		}
@@ -205,7 +204,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.DigitalInput
 		{
 			base.ApplySettingsFinal(settings, factory);
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 			m_Device = settings.Device;
 
 			Crestron.SimplSharpPro.DigitalInput port = null;
@@ -257,7 +256,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.DigitalInput
 		/// <returns></returns>
 		protected override bool GetIsOnlineStatus()
 		{
-#if SIMPLSHARP
+#if !NETSTANDARD
 			return m_Port != null && m_Port.GetParentOnline();
 #else
 			return false;

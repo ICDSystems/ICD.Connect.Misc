@@ -1,9 +1,14 @@
-﻿using System;
+﻿#if NETFRAMEWORK
+extern alias RealNewtonsoft;
+using RealNewtonsoft.Newtonsoft.Json;
+#else
+using Newtonsoft.Json;
+#endif
+using System;
 using ICD.Common.Utils;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Common.Utils.Timers;
 using ICD.Connect.Protocol.Network.Ports.Web;
-using Newtonsoft.Json;
 
 namespace ICD.Connect.Misc.GlobalCache.Devices.ITachFlex
 {

@@ -1,5 +1,5 @@
 ﻿using System;
-#if SIMPLSHARP
+#if !NETSTANDARD
 using Crestron.SimplSharpPro.DeviceSupport;
 #endif
 using eButtonState = ICD.Connect.Misc.Keypads.eButtonState;
@@ -8,7 +8,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads
 {
 	public static class ButtonStateConverter
 	{
-#if SIMPLSHARP
+#if !NETSTANDARD
 		public static eButtonState GetButtonState(Crestron.SimplSharpPro.DeviceSupport.eButtonState state)
 		{
 			switch (state)

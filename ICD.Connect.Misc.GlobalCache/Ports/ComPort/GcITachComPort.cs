@@ -1,4 +1,10 @@
-﻿using System;
+﻿#if NETFRAMEWORK
+extern alias RealNewtonsoft;
+using RealNewtonsoft.Newtonsoft.Json;
+#else
+using Newtonsoft.Json;
+#endif
+using System;
 using System.Collections.Generic;
 using ICD.Common.Logging.LoggingContexts;
 using ICD.Common.Properties;
@@ -17,7 +23,6 @@ using ICD.Connect.Protocol.Ports.ComPort;
 using ICD.Connect.Protocol.Settings;
 using ICD.Connect.Protocol.Utils;
 using ICD.Connect.Settings;
-using Newtonsoft.Json;
 
 namespace ICD.Connect.Misc.GlobalCache.Ports.ComPort
 {

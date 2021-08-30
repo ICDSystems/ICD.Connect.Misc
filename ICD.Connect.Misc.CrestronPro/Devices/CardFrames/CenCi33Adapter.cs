@@ -1,4 +1,4 @@
-﻿#if SIMPLSHARP
+﻿#if !NETSTANDARD
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.ThreeSeriesCards;
 #else
@@ -7,7 +7,7 @@ using System;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.CardFrames
 {
-#if SIMPLSHARP
+#if !NETSTANDARD
 	public sealed class CenCi33Adapter : AbstractCardFrameDevice<CenCi33, CenCi33AdapterSettings>
 	{
 		/// <summary>

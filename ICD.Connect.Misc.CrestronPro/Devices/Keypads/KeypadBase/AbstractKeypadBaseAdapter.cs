@@ -1,6 +1,6 @@
 ﻿using System;
 using ICD.Connect.Misc.CrestronPro.Utils;
-#if SIMPLSHARP
+#if !NETSTANDARD
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.DeviceSupport;
 #endif
@@ -11,7 +11,7 @@ using eButtonState = ICD.Connect.Misc.Keypads.eButtonState;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.KeypadBase
 {
-#if SIMPLSHARP
+#if !NETSTANDARD
 	public abstract class AbstractKeypadBaseAdapter<TKeypad, TSettings> : AbstractKeypadDevice<TSettings>, IKeypadBaseAdapter
 		where TKeypad : Crestron.SimplSharpPro.DeviceSupport.KeypadBase
 #else
@@ -21,11 +21,11 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.KeypadBase
 	{
 		public override event EventHandler<KeypadButtonPressedEventArgs> OnButtonStateChange;
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 		protected TKeypad Keypad { get; private set; }
 #endif
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 
 		/// <summary>
 		/// Sets the wrapped device.
@@ -58,14 +58,14 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.KeypadBase
 		/// <returns></returns>
 		protected override bool GetIsOnlineStatus()
 		{
-#if SIMPLSHARP
+#if !NETSTANDARD
 			return Keypad != null && Keypad.IsOnline;
 #else
-            return false;
+			return false;
 #endif
 		}
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 		/// <summary>
 		/// Subscribe to the device events.
 		/// </summary>

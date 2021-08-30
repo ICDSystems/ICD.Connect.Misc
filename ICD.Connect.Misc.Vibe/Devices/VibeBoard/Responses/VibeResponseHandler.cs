@@ -1,10 +1,15 @@
-﻿using System;
+﻿#if NETFRAMEWORK
+extern alias RealNewtonsoft;
+using RealNewtonsoft.Newtonsoft.Json;
+#else
+using Newtonsoft.Json;
+#endif
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using ICD.Common.Utils;
 using ICD.Common.Utils.Extensions;
-using Newtonsoft.Json;
 
 namespace ICD.Connect.Misc.Vibe.Devices.VibeBoard.Responses
 {

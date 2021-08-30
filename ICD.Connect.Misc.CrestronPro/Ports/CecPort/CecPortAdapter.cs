@@ -4,7 +4,7 @@ using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.Misc.CrestronPro.Devices;
 using ICD.Connect.Protocol.Ports;
 using ICD.Connect.Settings;
-#if SIMPLSHARP
+#if !NETSTANDARD
 using Crestron.SimplSharpPro.DM;
 #endif
 
@@ -15,7 +15,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.CecPort
 	/// </summary>
 	public sealed class CecPortAdapter : AbstractSerialPort<CecPortAdapterSettings>
 	{
-#if SIMPLSHARP
+#if !NETSTANDARD
 		private Cec m_Port;
 #endif
 		// Used with settings
@@ -47,7 +47,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.CecPort
 		/// <returns></returns>
 		protected override bool GetIsConnectedState()
 		{
-#if SIMPLSHARP
+#if !NETSTANDARD
 			return m_Port != null;
 #else
 			return false;
@@ -59,7 +59,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.CecPort
 		/// </summary>
 		protected override bool SendFinal(string data)
 		{
-#if SIMPLSHARP
+#if !NETSTANDARD
 			if (m_Port == null)
 			{
 				Logger.Log(eSeverity.Error, "Unable to send data - internal port is null");
@@ -71,11 +71,11 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.CecPort
 
 			return true;
 #else
-            throw new NotSupportedException();
+			throw new NotSupportedException();
 #endif
 		}
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 		private void ReceiveMessage()
 		{
 			string data = m_Port.Received.StringValue;
@@ -94,12 +94,12 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.CecPort
 		protected override void DisposeFinal(bool disposing)
 		{
 			base.DisposeFinal(disposing);
-#if SIMPLSHARP
+#if !NETSTANDARD
 			SetPort(null);
 #endif
 		}
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 
 		private void SetPort(Cec port)
 		{
@@ -168,7 +168,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.CecPort
 			m_Io = eInputOuptut.Output;
 			m_Address = 1;
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 			SetPort(null);
 #endif
 		}
@@ -182,7 +182,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.CecPort
 		{
 			base.ApplySettingsFinal(settings, factory);
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 			m_Device = settings.Device;
 
 			Cec port = null;

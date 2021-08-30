@@ -12,8 +12,7 @@ using Crestron.SimplSharp;
 using Crestron.SimplSharp.Ssh;
 using Crestron.SimplSharpPro.CrestronThread;
 using IAsyncResult = Crestron.SimplSharp.CrestronIO.IAsyncResult;
-#endif
-#if STANDARD
+#else
 using System.Diagnostics;
 using System.Threading;
 using Renci.SshNet;

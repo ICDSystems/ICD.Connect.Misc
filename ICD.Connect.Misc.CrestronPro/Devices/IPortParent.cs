@@ -1,4 +1,4 @@
-﻿#if SIMPLSHARP
+﻿#if !NETSTANDARD
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.DM;
 #endif
@@ -18,7 +18,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices
 	[PublicAPI]
 	public interface IPortParent
 	{
-#if SIMPLSHARP
+#if !NETSTANDARD
 		/// <summary>
 		/// Gets the port at the given address.
 		/// </summary>

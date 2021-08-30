@@ -1,4 +1,4 @@
-﻿#if SIMPLSHARP
+﻿#if !NETSTANDARD
 using Crestron.SimplSharpPro;
 using ICD.Common.Utils.Collections;
 using ICD.Connect.Protocol.Ports.ComPort;
@@ -8,7 +8,7 @@ namespace ICD.Connect.Misc.CrestronPro.Extensions
 {
 	public static class ComSpecExtensions
 	{
-#if SIMPLSHARP
+#if !NETSTANDARD
 		private static readonly BiDictionary<eComBaudRates, ComPort.eComBaudRates> s_BaudRateMap =
 			new BiDictionary<eComBaudRates, ComPort.eComBaudRates>
 			{

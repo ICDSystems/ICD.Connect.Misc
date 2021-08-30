@@ -3,7 +3,7 @@ using ICD.Common.Logging.LoggingContexts;
 using ICD.Connect.API.Nodes;
 using ICD.Connect.Misc.CrestronPro.Cresnet;
 using ICD.Connect.Settings;
-#if SIMPLSHARP
+#if !NETSTANDARD
 using Crestron.SimplSharpPro.DeviceSupport;
 using ICD.Connect.Misc.CrestronPro.Utils;
 #endif
@@ -12,7 +12,7 @@ using ICD.Connect.Misc.CrestronPro.Devices.Keypads.InetCbdex;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.C2nCbd.C2nCbdBase
 {
-#if SIMPLSHARP
+#if !NETSTANDARD
 	public abstract class AbstractC2nCbdBaseAdapter<TKeypad, TSettings> : AbstractInetCbdexAdapter<TKeypad, TSettings>, ICresnetDevice
 		where TKeypad : Crestron.SimplSharpPro.Keypads.C2nCbdBase
 #else
@@ -20,7 +20,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.C2nCbd.C2nCbdBase
 #endif
 		where TSettings : IC2nCbdBaseAdapterSettings, new()
 	{
-#if SIMPLSHARP
+#if !NETSTANDARD
 		protected abstract TKeypad InstantiateKeypad(byte cresnetId);
 		protected abstract TKeypad InstantiateKeypad(byte cresnetId, CresnetBranch branch);
 #endif
@@ -47,7 +47,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.C2nCbd.C2nCbdBase
 
 			CresnetInfo.ApplySettings(settings);
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 			if (m_CresnetInfo.CresnetId == null || !CresnetUtils.IsValidId(m_CresnetInfo.CresnetId.Value))
 			{
 				Logger.Log(eSeverity.Error, "Failed to instantiate {0} - CresnetId {1} is out of range",
@@ -85,7 +85,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.C2nCbd.C2nCbdBase
 
 			CresnetInfo.ClearSettings();
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 			SetKeypad(null);
 #endif
 		}
@@ -112,7 +112,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.C2nCbd.C2nCbdBase
 		public override void BuildConsoleStatus(AddStatusRowDelegate addRow)
 		{
 			base.BuildConsoleStatus(addRow);
-#if SIMPLSHARP
+#if !NETSTANDARD
 			CresnetDeviceConsole.BuildConsoleStatus(this, addRow);
 #endif
 		}

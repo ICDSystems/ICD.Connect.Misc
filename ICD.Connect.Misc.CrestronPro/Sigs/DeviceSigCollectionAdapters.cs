@@ -1,4 +1,4 @@
-﻿#if SIMPLSHARP
+﻿#if !NETSTANDARD
 using Crestron.SimplSharpPro;
 using ICD.Connect.Panels.SigCollections;
 using ICD.Connect.Protocol.Sigs;

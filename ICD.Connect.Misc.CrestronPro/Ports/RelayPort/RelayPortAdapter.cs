@@ -7,7 +7,7 @@ using ICD.Connect.Misc.CrestronPro.Extensions;
 using ICD.Connect.Misc.CrestronPro.Utils;
 using ICD.Connect.Protocol.Ports.RelayPort;
 using ICD.Connect.Settings;
-#if SIMPLSHARP
+#if !NETSTANDARD
 using Crestron.SimplSharpPro;
 #endif
 
@@ -15,7 +15,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 {
 	public sealed class RelayPortAdapter : AbstractRelayPort<RelayPortAdapterSettings>
 	{
-#if SIMPLSHARP
+#if !NETSTANDARD
 		private Relay m_Port;
 #endif
 
@@ -30,7 +30,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 		/// </summary>
 		protected override void DisposeFinal(bool disposing)
 		{
-#if SIMPLSHARP
+#if !NETSTANDARD
 			// Unregister.
 			SetRelayPort(null, 0);
 #endif
@@ -38,7 +38,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 			base.DisposeFinal(disposing);
 		}
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 		/// <summary>
 		/// Sets the wrapped port instance.
 		/// </summary>
@@ -93,7 +93,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 		/// </summary>
 		public override void Open()
 		{
-#if SIMPLSHARP
+#if !NETSTANDARD
 			if (m_Port == null)
 			{
 				Logger.Log(eSeverity.Error, "Unable to open relay - internal port is null");
@@ -104,7 +104,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 
 			m_Port.Open();
 #else
-            throw new NotSupportedException();
+			throw new NotSupportedException();
 #endif
 		}
 
@@ -113,7 +113,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 		/// </summary>
 		public override void Close()
 		{
-#if SIMPLSHARP
+#if !NETSTANDARD
 			if (m_Port == null)
 			{
 				Logger.Log(eSeverity.Error, "Unable to close relay - internal port is null");
@@ -124,7 +124,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 
 			m_Port.Close();
 #else
-            throw new NotSupportedException();
+			throw new NotSupportedException();
 #endif
 		}
 
@@ -132,7 +132,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 
 		#region Port Callbacks
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 		/// <summary>
 		/// Subscribe to the relay events.
 		/// </summary>
@@ -207,7 +207,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 
 			m_Device = 0;
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 			SetRelayPort(null, 0);
 #endif
 		}
@@ -221,7 +221,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 		{
 			base.ApplySettingsFinal(settings, factory);
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 			m_Device = settings.Device;
 
 			Relay port = null;
@@ -271,10 +271,10 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 		/// <returns></returns>
 		protected override bool GetIsOnlineStatus()
 		{
-#if SIMPLSHARP
+#if !NETSTANDARD
 			return m_Port != null && m_Port.GetParentOnline();
 #else
-            return false;
+			return false;
 #endif
 		}
 

@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 using ICD.Common.Properties;
 using ICD.Common.Utils;
 using ICD.Common.Utils.TimeZoneInfo;
-#if SIMPLSHARP
+#if !NETSTANDARD
 using Crestron.SimplSharp;
 #endif
 
@@ -102,7 +102,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Ethernet
 			m_FirmwareVersion = firmwareVersion;
 			m_FirmwareDate = firmwareDate;
 			m_Tsid = tsid;
-#if SIMPLSHARP
+#if !NETSTANDARD
 			// Attempt to convert TSID to a serial number.
 			try
 			{

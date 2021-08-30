@@ -1,7 +1,7 @@
 using System;
 using ICD.Connect.Misc.CrestronPro.Utils;
 using ICD.Connect.Settings;
-#if SIMPLSHARP
+#if !NETSTANDARD
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.DM;
 #endif
@@ -10,7 +10,7 @@ using ICD.Connect.Devices;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.Io.CenIo
 {
-#if SIMPLSHARP
+#if !NETSTANDARD
 	public abstract class AbstractCenIoAdapter<TDevice, TSettings> : AbstractDevice<TSettings>, ICenIoAdapter
 		where TDevice : GenericDevice
 #else
@@ -18,13 +18,13 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Io.CenIo
 #endif
 		where TSettings : ICenIoAdapterSettings, new()
 	{
-#if SIMPLSHARP
+#if !NETSTANDARD
 		public TDevice Device { get; private set; }
 #endif
 
-#region Methods
+		#region Methods
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 		/// <summary>
 		/// Sets the wrapped device.
 		/// </summary>
@@ -56,14 +56,14 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Io.CenIo
 		/// <returns></returns>
 		protected override bool GetIsOnlineStatus()
 		{
-#if SIMPLSHARP
+#if !NETSTANDARD
 			return Device != null && Device.IsOnline;
 #else
 			return false;
 #endif
 		}
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 		/// <summary>
 		/// Gets the port at the given address.
 		/// </summary>
@@ -132,9 +132,9 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Io.CenIo
 		}
 #endif
 
-#endregion
+		#endregion
 
-#region Settings
+		#region Settings
 
 		/// <summary>
 		/// Override to apply properties to the settings instance.
@@ -144,7 +144,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Io.CenIo
 		{
 			base.CopySettingsFinal(settings);
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 			settings.Ipid = Device == null ? (byte)0 : (byte)Device.ID;
 #else
 			settings.Ipid = 0;
@@ -158,7 +158,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Io.CenIo
 		{
 			base.ClearSettingsFinal();
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 			SetDevice(null);
 #endif
 		}
@@ -172,13 +172,13 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Io.CenIo
 		{
 			base.ApplySettingsFinal(settings, factory);
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 			TDevice device = InstantiateDevice(settings);
 			SetDevice(device);
 #endif
 		}
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 		/// <summary>
 		/// Creates a new instance of the wrapped internal device.
 		/// </summary>
@@ -187,11 +187,11 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Io.CenIo
 		protected abstract TDevice InstantiateDevice(TSettings settings);
 #endif
 
-#endregion
+		#endregion
 
-#region Device Callbacks
+		#region Device Callbacks
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 		/// <summary>
 		/// Subscribe to the device events.
 		/// </summary>
@@ -227,6 +227,6 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Io.CenIo
 		}
 #endif
 
-#endregion
+		#endregion
 	}
 }

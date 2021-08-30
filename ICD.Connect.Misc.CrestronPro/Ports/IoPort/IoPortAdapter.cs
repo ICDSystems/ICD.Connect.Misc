@@ -9,7 +9,7 @@ using ICD.Connect.Misc.CrestronPro.Extensions;
 using ICD.Connect.Misc.CrestronPro.Utils;
 using ICD.Connect.Protocol.Ports.IoPort;
 using ICD.Connect.Settings;
-#if SIMPLSHARP
+#if !NETSTANDARD
 using Crestron.SimplSharpPro;
 using ICD.Common.Properties;
 using ICD.Common.Utils.Extensions;
@@ -20,7 +20,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 {
 	public sealed class IoPortAdapter : AbstractIoPort<IoPortAdapterSettings>
 	{
-#if SIMPLSHARP
+#if !NETSTANDARD
 
 		private const int PORT_RECHECK_TIME = 250;
 
@@ -51,7 +51,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 		public IoPortAdapter()
 		{
 			m_SetDigitalSection = new SafeCriticalSection();
-#if SIMPLSHARP
+#if !NETSTANDARD
 			m_PortRecheckTimer = SafeTimer.Stopped(PortRecheck);
 #endif
 		}
@@ -65,13 +65,13 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 		{
 			base.DisposeFinal(disposing);
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 			// Unregister.
 			SetIoPort(null, 0);
 #endif
 		}
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 		/// <summary>
 		/// Sets the wrapped port instance.
 		/// </summary>
@@ -134,7 +134,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 			if (configuration == eIoPortConfiguration.None)
 				throw new InvalidOperationException(string.Format("Unable to set configuration to {0}", configuration));
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 			if (m_Port == null)
 			{
 				Logger.Log(eSeverity.Error, "Failed to set configuration - no internal port");
@@ -166,7 +166,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 		/// <param name="digitalOut"></param>
 		public override void SetDigitalOut(bool digitalOut)
 		{
-#if SIMPLSHARP
+#if !NETSTANDARD
 
 			m_RequestedState = digitalOut;
 
@@ -222,7 +222,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 
 		#region Private Methods
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 
 		/// <summary>
 		/// This abominiation is to fix versiports not updating
@@ -314,7 +314,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 
 		#region Port Callbacks
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 		/// <summary>
 		/// Subscribe to the port events.
 		/// </summary>
@@ -408,7 +408,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 		{
 			base.ClearSettingsFinal();
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 			SetIoPort(null, 0);
 #endif
 		}
@@ -422,7 +422,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 		{
 			base.ApplySettingsFinal(settings, factory);
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 			m_Device = settings.Device;
 
 			Versiport port = null;
@@ -474,7 +474,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 		/// <returns></returns>
 		protected override bool GetIsOnlineStatus()
 		{
-#if SIMPLSHARP
+#if !NETSTANDARD
 			return m_Port != null && m_Port.GetParentOnline();
 #else
 			return false;
@@ -494,7 +494,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 			base.BuildConsoleStatus(addRow);
 			addRow("Address", m_Address);
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 			addRow("Port Registration", m_Port != null && m_Port.Registered);
 #endif
 		}
@@ -508,7 +508,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 			foreach (IConsoleCommand command in GetBaseConsoleCommands())
 				yield return command;
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 			yield return new ConsoleCommand("Register", "Register the port", () => Register(m_Port));
 			yield return new ConsoleCommand("Unregister", "Unregister the port", () => Unregister(m_Port));
 #endif

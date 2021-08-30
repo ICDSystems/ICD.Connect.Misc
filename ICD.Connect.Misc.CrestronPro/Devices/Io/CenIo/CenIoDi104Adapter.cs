@@ -1,18 +1,18 @@
 ﻿using System;
-#if SIMPLSHARP
+#if !NETSTANDARD
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.GeneralIO;
 #endif
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.Io.CenIo
 {
-#if SIMPLSHARP
+#if !NETSTANDARD
 	public sealed class CenIoDi104Adapter : AbstractCenIoDiAdapter<CenIoDi104, CenIoDi104AdapterSettings>
 #else
 	public sealed class CenIoDi104Adapter : AbstractCenIoDiAdapter<CenIoDi104AdapterSettings>
 #endif
 	{
-#if SIMPLSHARP
+#if !NETSTANDARD
 		/// <summary>
 		/// Creates a new instance of the wrapped internal device.
 		/// </summary>
@@ -27,7 +27,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Io.CenIo
 #endif
 	}
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 	public abstract class AbstractCenIoDiAdapter<TDevice, TSettings> : AbstractCenIoAdapter<TDevice, TSettings>, ICenIoDiAdapter
 		where TDevice : CenIoDi
 #else
@@ -35,7 +35,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Io.CenIo
 #endif
 		where TSettings : ICenIoDiAdapterSettings, new()
 	{
-#if SIMPLSHARP
+#if !NETSTANDARD
 		/// <summary>
 		/// Gets the port at the given address.
 		/// </summary>

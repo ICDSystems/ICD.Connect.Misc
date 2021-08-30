@@ -1,6 +1,6 @@
 ﻿using System.Text;
 using ICD.Connect.Misc.CrestronPro.Extensions;
-#if SIMPLSHARP
+#if !NETSTANDARD
 using System;
 using System.Collections.Generic;
 using Crestron.SimplSharpPro;
@@ -11,7 +11,7 @@ namespace ICD.Connect.Misc.CrestronPro.Utils
 {
 	public static class GenericBaseUtils
 	{
-#if SIMPLSHARP
+#if !NETSTANDARD
 		private static readonly Dictionary<eDeviceRegistrationUnRegistrationResponse, bool>
 			s_RegistrationSuccess = new Dictionary<eDeviceRegistrationUnRegistrationResponse, bool>
 			{

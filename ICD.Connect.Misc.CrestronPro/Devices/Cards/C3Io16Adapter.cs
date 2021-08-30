@@ -1,5 +1,5 @@
 ﻿using System;
-#if SIMPLSHARP
+#if !NETSTANDARD
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.ThreeSeriesCards;
 using Crestron.SimplSharpProInternal;
@@ -7,7 +7,7 @@ using Crestron.SimplSharpProInternal;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 {
-#if SIMPLSHARP
+#if !NETSTANDARD
 	public sealed class C3Io16Adapter : AbstractC3CardAdapter<C3io16, C3Io16AdapterSettings>
 	{
 		/// <summary>

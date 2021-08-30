@@ -2,7 +2,7 @@
 using ICD.Common.Logging.LoggingContexts;
 using ICD.Connect.API.Nodes;
 using ICD.Connect.Misc.CrestronPro.Cresnet;
-#if SIMPLSHARP
+#if !NETSTANDARD
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.DM;
 using Crestron.SimplSharpPro.GeneralIO;
@@ -11,23 +11,20 @@ using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.Devices;
 using ICD.Connect.Misc.CrestronPro.Utils;
 using ICD.Connect.Settings;
-#if SIMPLSHARP
-
-#endif
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.Io.DinIo
 {
-#if SIMPLSHARP
+#if !NETSTANDARD
 	public sealed class DinIo8Adapter : AbstractDevice<DinIo8AdapterSettings>, IPortParent, ICresnetDevice
 #else
-    public sealed class DinIo8Adapter : AbstractDevice<DinIo8AdapterSettings>
+	public sealed class DinIo8Adapter : AbstractDevice<DinIo8AdapterSettings>
 #endif
 	{
 		private readonly CresnetInfo m_CresnetInfo;
 
 		public CresnetInfo CresnetInfo { get { return m_CresnetInfo; } }
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 		private DinIo8 m_PortsDevice;
 #endif
 
@@ -36,9 +33,9 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Io.DinIo
 			m_CresnetInfo = new CresnetInfo();
 		}
 
-#region Methods
+		#region Methods
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 		/// <summary>
 		/// Sets the wrapped device.
 		/// </summary>
@@ -70,14 +67,14 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Io.DinIo
 		/// <returns></returns>
 		protected override bool GetIsOnlineStatus()
 		{
-#if SIMPLSHARP
+#if !NETSTANDARD
 			return m_PortsDevice != null && m_PortsDevice.IsOnline;
 #else
-            return false;
+			return false;
 #endif
 		}
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 		/// <summary>
 		/// Gets the port at the given address.
 		/// </summary>
@@ -152,9 +149,9 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Io.DinIo
 		}
 #endif
 
-#endregion
+		#endregion
 
-#region Settings
+		#region Settings
 
 		/// <summary>
 		/// Override to apply properties to the settings instance.
@@ -176,7 +173,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Io.DinIo
 
 			CresnetInfo.ClearSettings();
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 			SetDevice(null);
 #endif
 		}
@@ -192,7 +189,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Io.DinIo
 
 			CresnetInfo.ApplySettings(settings);
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 			DinIo8 device = null;
 
 			if (m_CresnetInfo.CresnetId == null || !CresnetUtils.IsValidId(m_CresnetInfo.CresnetId.Value))
@@ -222,11 +219,11 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Io.DinIo
 #endif
 		}
 
-#endregion
+		#endregion
 
-#region Device Callbacks
+		#region Device Callbacks
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 		/// <summary>
 		/// Subscribe to the device events.
 		/// </summary>
@@ -262,7 +259,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Io.DinIo
 		}
 #endif
 
-#endregion
+		#endregion
 
 		#region Console
 
@@ -273,7 +270,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Io.DinIo
 		public override void BuildConsoleStatus(AddStatusRowDelegate addRow)
 		{
 			base.BuildConsoleStatus(addRow);
-#if SIMPLSHARP
+#if !NETSTANDARD
 			CresnetDeviceConsole.BuildConsoleStatus(this, addRow);
 #endif
 		}

@@ -1,6 +1,6 @@
 ﻿using System;
 using ICD.Common.Utils;
-#if SIMPLSHARP
+#if !NETSTANDARD
 using Crestron.SimplSharpPro.DM;
 using ICD.Connect.Routing.Connections;
 

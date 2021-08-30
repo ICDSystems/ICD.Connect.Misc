@@ -1,4 +1,4 @@
-﻿#if SIMPLSHARP
+﻿#if !NETSTANDARD
 using System;
 using Crestron.SimplSharpPro.DM;
 using ICD.Common.Properties;

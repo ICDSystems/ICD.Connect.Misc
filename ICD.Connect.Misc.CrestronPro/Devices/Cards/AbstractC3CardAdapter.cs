@@ -7,7 +7,7 @@ using ICD.Connect.Misc.CrestronPro.Devices.CardFrames;
 using ICD.Connect.Misc.CrestronPro.Utils;
 using ICD.Connect.Settings;
 using ICD.Connect.Settings.Originators;
-#if SIMPLSHARP
+#if !NETSTANDARD
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpProInternal;
 using Crestron.SimplSharpPro.DM;
@@ -15,18 +15,18 @@ using Crestron.SimplSharpPro.DM;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 {
-#if SIMPLSHARP
+#if !NETSTANDARD
 	public abstract class AbstractC3CardAdapter<TCard, TSettings> : AbstractDevice<TSettings>, IPortParent
 		where TCard : C3Card
 #else
-    public abstract class AbstractC3CardAdapter<TSettings> : AbstractDevice<TSettings>
+	public abstract class AbstractC3CardAdapter<TSettings> : AbstractDevice<TSettings>
 #endif
 		where TSettings : AbstractC3CardAdapterSettings, new()
 	{
 		// Used with settings.
 		private int? m_ParentId;
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 		/// <summary>
 		/// Gets the wrapped card.
 		/// </summary>
@@ -35,7 +35,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 
 		#region Methods
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 		/// <summary>
 		/// Sets the wrapped card device.
 		/// </summary>
@@ -140,10 +140,10 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 		{
 			base.CopySettingsFinal(settings);
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 			settings.CardId = Card == null ? null : (uint?)Card.ID;
 #else
-            settings.CardId = null;
+			settings.CardId = null;
 #endif
 			settings.CardFrame = m_ParentId;
 		}
@@ -155,7 +155,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 		{
 			base.ClearSettingsFinal();
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 			SetCard(null, null);
 #endif
 		}
@@ -169,7 +169,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 		{
 			base.ApplySettingsFinal(settings, factory);
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 			TCard card = null;
 
 			if (settings.CardFrame.HasValue)
@@ -181,7 +181,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 #endif
 		}
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 		/// <summary>
 		/// Instantiates the internal card based on provided parameters
 		/// </summary>
@@ -245,7 +245,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 
 		#region Card Callbacks
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 		/// <summary>
 		/// Subscribe to the card events.
 		/// </summary>
@@ -287,10 +287,10 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 		/// <returns></returns>
 		protected override bool GetIsOnlineStatus()
 		{
-#if SIMPLSHARP
+#if !NETSTANDARD
 			return Card != null && Card.IsOnline;
 #else
-            return false;
+			return false;
 #endif
 		}
 

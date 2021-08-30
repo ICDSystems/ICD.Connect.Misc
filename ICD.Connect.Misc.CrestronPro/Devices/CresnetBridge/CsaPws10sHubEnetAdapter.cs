@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ICD.Common.Logging.LoggingContexts;
 using ICD.Connect.Settings;
-#if SIMPLSHARP
+#if !NETSTANDARD
 using Crestron.SimplSharpPro.DeviceSupport;
 using Crestron.SimplSharpPro.GeneralIO;
 #endif
@@ -14,11 +14,11 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 {
 	public sealed class CsaPws10sHubEnetAdapter : AbstractDevice<CsaPws10sHubEnetAdapterSettings>, ICsaPws10sHubEnetAdapter, ICresnetBridgeAdapter
 	{
-#if SIMPLSHARP
+#if !NETSTANDARD
 		private CsaPws10sHubEnet m_Device;
 #endif
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 		public IEnumerable<CresnetBranch> Branches
 		{
 			get
@@ -53,7 +53,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 		protected override void ClearSettingsFinal()
 		{
 			base.ClearSettingsFinal();
-#if SIMPLSHARP
+#if !NETSTANDARD
 			m_Device = null;
 #endif
 		}
@@ -65,7 +65,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 		protected override void CopySettingsFinal(CsaPws10sHubEnetAdapterSettings settings)
 		{
 			base.CopySettingsFinal(settings);
-#if SIMPLSHARP
+#if !NETSTANDARD
 			settings.Ipid = m_Device == null ? (byte?)null : (byte)m_Device.ID;
 #endif
 		}
@@ -78,7 +78,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 		protected override void ApplySettingsFinal(CsaPws10sHubEnetAdapterSettings settings, IDeviceFactory factory)
 		{
 			base.ApplySettingsFinal(settings, factory);
-#if SIMPLSHARP
+#if !NETSTANDARD
 			CsaPws10sHubEnet device = null;
 			try
 			{
@@ -107,7 +107,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 		/// <returns></returns>
 		protected override bool GetIsOnlineStatus()
 		{
-#if SIMPLSHARP
+#if !NETSTANDARD
 			return m_Device.IsOnline;
 #else
 			return false;

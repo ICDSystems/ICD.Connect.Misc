@@ -3,7 +3,7 @@
   <Import Condition=" '$(EAZFUSCATOR_NET_HOME)' != '' and Exists('$(EAZFUSCATOR_NET_HOME)\Integration\MSBuild\Eazfuscator.NET.targets') " Project="$(EAZFUSCATOR_NET_HOME)\Integration\MSBuild\Eazfuscator.NET.targets" />
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <TargetFrameworks>netstandard2.1</TargetFrameworks>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <RootNamespace>ICD.Connect.Misc.RaspberryPi</RootNamespace>
     <AssemblyName>ICD.Connect.Misc.RaspberryPi</AssemblyName>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -13,11 +13,11 @@
     <EazfuscatorCompatibilityVersion>2018.2</EazfuscatorCompatibilityVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DefineConstants>TRACE;DEBUG;STANDARD</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
   </PropertyGroup>
   <PropertyGroup>
     <OutputPath>binNetCoreApp\$(Configuration)\</OutputPath>
-    <DefineConstants>TRACE;STANDARD</DefineConstants>
+    <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="binNetCoreApp\**" />
@@ -26,8 +26,6 @@
     <EmbeddedResource Remove="SIMPLSharpLogs\**" />
     <None Remove="binNetCoreApp\**" />
     <None Remove="SIMPLSharpLogs\**" />
-  </ItemGroup>
-  <ItemGroup>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="RaspberrySharp" Version="1.4.0" />

@@ -8,7 +8,7 @@ using ICD.Connect.Misc.CrestronPro.Utils;
 using ICD.Connect.Protocol.Ports.IrPort;
 using ICD.Connect.Protocol.Settings;
 using ICD.Connect.Settings;
-#if SIMPLSHARP
+#if !NETSTANDARD
 using Crestron.SimplSharp.CrestronIO;
 using ICD.Common.Utils.Services.Logging;
 using Crestron.SimplSharpPro;
@@ -25,7 +25,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		private const ushort DEFAULT_PULSE_TIME = 100;
 		private const ushort DEFAULT_BETWEEN_TIME = 750;
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 		private IROutputPort m_Port;
 #endif
 		private readonly IrDriverProperties m_IrDriverProperties;
@@ -81,7 +81,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 
 		#region Methods
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 		/// <summary>
 		/// Sets the wrapped port instance.
 		/// </summary>
@@ -138,7 +138,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		/// <param name="path"></param>
 		public override void LoadDriver(string path)
 		{
-#if SIMPLSHARP
+#if !NETSTANDARD
 			if (m_Port == null)
 			{
 				Logger.Log(eSeverity.Error, "Unable to load driver - internal port is null");
@@ -161,7 +161,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 				Logger.Log(eSeverity.Error, "Unable to load driver - file does not exist: {0}", fullPath);
 			}
 #else
-            throw new NotSupportedException();
+			throw new NotSupportedException();
 #endif
 		}
 
@@ -171,7 +171,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		/// <returns></returns>
 		public override IEnumerable<string> GetCommands()
 		{
-#if SIMPLSHARP
+#if !NETSTANDARD
 			return m_Port == null ? Enumerable.Empty<string>() : m_Port.AvailableIRCmds();
 #else
 			throw new NotSupportedException();
@@ -184,7 +184,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		/// <param name="command"></param>
 		protected override void PressFinal(string command)
 		{
-#if SIMPLSHARP
+#if !NETSTANDARD
 			if (m_Port == null)
 			{
 				Logger.Log(eSeverity.Error, "Unable to send command - internal port is null");
@@ -209,7 +209,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 				m_PressSection.Leave();
 			}
 #else
-            throw new NotSupportedException();
+			throw new NotSupportedException();
 #endif
 		}
 
@@ -218,7 +218,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		/// </summary>
 		protected override void ReleaseFinal()
 		{
-#if SIMPLSHARP
+#if !NETSTANDARD
 			if (m_Port != null)
 				m_Port.Release();
 #endif
@@ -228,7 +228,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 
 		#region Port Callbacks
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 		/// <summary>
 		/// Subscribe to the port events.
 		/// </summary>
@@ -273,10 +273,10 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		/// <returns></returns>
 		protected override bool GetIsOnlineStatus()
 		{
-#if SIMPLSHARP
+#if !NETSTANDARD
 			return m_Port != null && m_Port.GetParentOnline();
 #else
-            return false;
+			return false;
 #endif
 		}
 
@@ -316,7 +316,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 
 			m_Device = 0;
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 			SetIrPort(null, 0);
 #endif
 			PulseTime = DEFAULT_PULSE_TIME;
@@ -334,7 +334,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 
 			m_Device = settings.Device;
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 			IROutputPort port = null;
 			IPortParent provider = null;
 
@@ -374,6 +374,6 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 #endif
 		}
 
-#endregion
+		#endregion
 	}
 }

@@ -1,12 +1,12 @@
 using System;
-#if SIMPLSHARP
+#if !NETSTANDARD
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.ThreeSeriesCards;
 #endif
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 {
-#if SIMPLSHARP
+#if !NETSTANDARD
 	public abstract class AbstractC3RyAdapter<TCard, TSettings> : AbstractC3CardAdapter<TCard, TSettings>
 		where TCard : C3ry
 		where TSettings : AbstractC3RyAdapterSettings, new()

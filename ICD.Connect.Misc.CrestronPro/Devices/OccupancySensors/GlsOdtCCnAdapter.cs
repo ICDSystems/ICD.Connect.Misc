@@ -1,4 +1,4 @@
-﻿#if SIMPLSHARP
+﻿#if !NETSTANDARD
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.DeviceSupport;
 using Crestron.SimplSharpPro.GeneralIO;
@@ -6,13 +6,13 @@ using Crestron.SimplSharpPro.GeneralIO;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 {
-#if SIMPLSHARP
+#if !NETSTANDARD
 	public sealed class GlsOdtCCnAdapter : AbstractCresnetOccupancySensorAdapter<GlsOdtCCnAdapterSettings,GlsOdtCCn>
 #else
 	public sealed class GlsOdtCCnAdapter : AbstractCresnetOccupancySensorAdapter<GlsOdtCCnAdapterSettings>
 #endif
 	{
-#if SIMPLSHARP
+#if !NETSTANDARD
 		protected override GlsOdtCCn InstantiateControlSystem(byte cresnetId, CrestronControlSystem controlSystem)
 		{
 			return new GlsOdtCCn(cresnetId, controlSystem);

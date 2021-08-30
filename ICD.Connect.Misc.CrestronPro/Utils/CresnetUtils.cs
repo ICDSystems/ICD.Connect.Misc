@@ -1,5 +1,5 @@
-﻿using ICD.Connect.Settings;
-#if SIMPLSHARP
+﻿#if !NETSTANDARD
+using ICD.Connect.Settings;
 using System;
 using System.Linq;
 using Crestron.SimplSharpPro.DeviceSupport;

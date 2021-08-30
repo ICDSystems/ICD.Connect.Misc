@@ -1,4 +1,4 @@
-﻿#if SIMPLSHARP
+﻿#if !NETSTANDARD
 using System;
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpProInternal;
@@ -8,7 +8,7 @@ namespace ICD.Connect.Misc.CrestronPro.Extensions
 {
 	public static class PortDeviceExtensions
 	{
-#if SIMPLSHARP
+#if !NETSTANDARD
 		/// <summary>
 		/// PortDevice.IsOnline property is worthless, so this method provides a more reliable
 		/// check to determine if the port is currently available for communication.

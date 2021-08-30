@@ -1,5 +1,5 @@
 ﻿using System;
-#if SIMPLSHARP
+#if !NETSTANDARD
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.DM;
 #endif
@@ -7,7 +7,7 @@ using ICD.Connect.Misc.CrestronPro.Devices.Keypads.C2nCbd.C2nCbdPBase;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.C2nCbd.C2nCbdPBaseWithVersiport
 {
-#if SIMPLSHARP
+#if !NETSTANDARD
 	public abstract class AbstractC2nCbdPBaseWithVersiportAdapter<TKeypad, TSettings> : AbstractC2nCbdPBaseAdapter<TKeypad, TSettings>, IC2nCbdPBaseWithVersiportAdapter
 		where TKeypad : Crestron.SimplSharpPro.Keypads.C2nCbdPBaseWithVersiport
 #else
@@ -17,7 +17,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.C2nCbd.C2nCbdPBaseWithVer
 	{
 		#region IO
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 		/// <summary>
 		/// Gets the port at the given addres.
 		/// </summary>

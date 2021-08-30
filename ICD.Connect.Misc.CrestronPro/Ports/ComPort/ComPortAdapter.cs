@@ -9,7 +9,7 @@ using ICD.Connect.Misc.CrestronPro.Utils;
 using ICD.Connect.Protocol.Ports.ComPort;
 using ICD.Connect.Protocol.Settings;
 using ICD.Connect.Settings;
-#if SIMPLSHARP
+#if !NETSTANDARD
 using Crestron.SimplSharpPro;
 #endif
 
@@ -31,7 +31,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 
 		private readonly ComSpecProperties m_ComSpecProperties;
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 		private Crestron.SimplSharpPro.ComPort m_Port;
 #endif
 
@@ -53,7 +53,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 		{
 			get
 			{
-#if SIMPLSHARP
+#if !NETSTANDARD
 				return m_Port == null ? DEFAULT_BAUD_RATE : m_Port.BaudRate.FromCrestron();
 #else
 				return DEFAULT_BAUD_RATE;
@@ -68,7 +68,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 		{
 			get
 			{
-#if SIMPLSHARP
+#if !NETSTANDARD
 				return m_Port == null ? DEFAULT_DATA_BITS : m_Port.DataBits.FromCrestron();
 #else
 				return DEFAULT_DATA_BITS;
@@ -83,7 +83,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 		{
 			get
 			{
-#if SIMPLSHARP
+#if !NETSTANDARD
 				return m_Port == null ? DEFAULT_PARITY_TYPE : m_Port.Parity.FromCrestron();
 #else
 				return DEFAULT_PARITY_TYPE;
@@ -98,7 +98,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 		{
 			get
 			{
-#if SIMPLSHARP
+#if !NETSTANDARD
 				return m_Port == null ? DEFAULT_STOP_BITS : m_Port.StopBits.FromCrestron();
 #else
 				return DEFAULT_STOP_BITS;
@@ -113,7 +113,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 		{
 			get
 			{
-#if SIMPLSHARP
+#if !NETSTANDARD
 				return m_Port == null ? DEFAULT_PROTOCOL_TYPE : m_Port.Protocol.FromCrestron();
 #else
 				return DEFAULT_PROTOCOL_TYPE;
@@ -128,7 +128,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 		{
 			get
 			{
-#if SIMPLSHARP
+#if !NETSTANDARD
 				return m_Port == null ? DEFAULT_HARDWARE_HANDSHAKE_TYPE : m_Port.HwHandShake.FromCrestron();
 #else
 				return DEFAULT_HARDWARE_HANDSHAKE_TYPE;
@@ -143,7 +143,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 		{
 			get
 			{
-#if SIMPLSHARP
+#if !NETSTANDARD
 				return m_Port == null ? DEFAULT_SOFTWARE_HANDSHAKE_TYPE : m_Port.SwHandShake.FromCrestron();
 #else
 				return DEFAULT_SOFTWARE_HANDSHAKE_TYPE;
@@ -158,7 +158,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 		{
 			get
 			{
-#if SIMPLSHARP
+#if !NETSTANDARD
 				return m_Port == null ? DEFAULT_REPORT_CTS_CHANGES : m_Port.ReportCTSChanges;
 #else
 				return DEFAULT_REPORT_CTS_CHANGES;
@@ -185,13 +185,13 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 		{
 			base.DisposeFinal(disposing);
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 			// Unsbscribe and unregister
 			SetComPort(null, 0);
 #endif
 		}
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 		/// <summary>
 		/// Sets the com port.
 		/// </summary>
@@ -261,7 +261,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 		/// </summary>
 		protected override bool SendFinal(string data)
 		{
-#if SIMPLSHARP
+#if !NETSTANDARD
 			if (m_Port == null)
 			{
 				Logger.Log(eSeverity.Error, "Unable to send data - internal port is null");
@@ -273,7 +273,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 
 			return true;
 #else
-            throw new NotSupportedException();
+			throw new NotSupportedException();
 #endif
 		}
 
@@ -288,7 +288,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 		[PublicAPI]
 		public override void SetComPortSpec(ComSpec comSpec)
 		{
-#if SIMPLSHARP
+#if !NETSTANDARD
 			if (m_Port == null)
 			{
 				Logger.Log(eSeverity.Error, "Unable to set ComSpec - internal port is null");
@@ -305,7 +305,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 			                      comSpec.ReportCtsChanges);
 
 #else
-            throw new NotSupportedException();
+			throw new NotSupportedException();
 #endif
 		}
 
@@ -319,10 +319,10 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 		/// <returns></returns>
 		protected override bool GetIsOnlineStatus()
 		{
-#if SIMPLSHARP
+#if !NETSTANDARD
 			return m_Port != null && m_Port.GetIsRegisteredAndParentOnline();
 #else
-            return false;
+			return false;
 #endif
 		}
 
@@ -339,7 +339,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 
 		#region Port Callbacks
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 		/// <summary>
 		/// Subscribe to the port events.
 		/// </summary>
@@ -414,7 +414,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 
 			m_Device = 0;
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 			SetComPort(null, 0);
 #endif
 		}
@@ -428,7 +428,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 		{
 			base.ApplySettingsFinal(settings, factory);
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 			m_Device = settings.Device;
 
 			Crestron.SimplSharpPro.ComPort port = null;

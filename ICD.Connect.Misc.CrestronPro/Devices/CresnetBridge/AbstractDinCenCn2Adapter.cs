@@ -1,6 +1,6 @@
 ﻿using ICD.Connect.Misc.CrestronPro.Utils;
 using ICD.Connect.Settings;
-#if SIMPLSHARP
+#if !NETSTANDARD
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.DeviceSupport;
 using Crestron.SimplSharpPro.GeneralIO;
@@ -11,7 +11,7 @@ using ICD.Connect.Devices;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 {
-#if SIMPLSHARP
+#if !NETSTANDARD
 	public abstract class AbstractDinCenCn2Adapter<TBridge, TSettings> :
 		AbstractDevice<TSettings>, ICresnetBridgeAdapter
 		where TSettings : ICresnetBridgeAdapterSettings, new()
@@ -23,7 +23,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 #endif
 	{
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 		private byte m_Ipid;
 
 		protected abstract TBridge InstantiateBridge(byte ipid);
@@ -88,10 +88,10 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 		/// <returns></returns>
 		protected override bool GetIsOnlineStatus()
 		{
-#if SIMPLSHARP
+#if !NETSTANDARD
 			return Bridge != null && Bridge.IsOnline;
 #else
-            return false;
+			return false;
 #endif
 		}
 
@@ -106,7 +106,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 		protected override void ApplySettingsFinal(TSettings settings, IDeviceFactory factory)
 		{
 			base.ApplySettingsFinal(settings, factory);
-#if SIMPLSHARP
+#if !NETSTANDARD
 			if (settings.Ipid == null)
 				return;
 			m_Ipid = settings.Ipid.Value;
@@ -122,7 +122,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 		protected override void CopySettingsFinal(TSettings settings)
 		{
 			base.CopySettingsFinal(settings);
-#if SIMPLSHARP
+#if !NETSTANDARD
 			settings.Ipid = m_Ipid;
 #endif
 		}
@@ -133,7 +133,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 		protected override void ClearSettingsFinal()
 		{
 			base.ClearSettingsFinal();
-#if SIMPLSHARP
+#if !NETSTANDARD
 			SetBridge(null);
 #endif
 		}

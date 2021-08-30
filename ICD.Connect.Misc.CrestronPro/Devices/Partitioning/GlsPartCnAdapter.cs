@@ -10,7 +10,7 @@ using ICD.Connect.Partitioning.Controls;
 using ICD.Connect.Partitioning.Devices;
 using ICD.Connect.Protocol.FeedbackDebounce;
 using ICD.Connect.Settings;
-#if SIMPLSHARP
+#if !NETSTANDARD
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.GeneralIO;
 using ICD.Connect.Misc.CrestronPro.Extensions;
@@ -21,7 +21,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 {
 	public sealed class GlsPartCnAdapter : AbstractPartitionDevice<GlsPartCnAdapterSettings>, ICresnetDevice
 	{
-#if SIMPLSHARP
+#if !NETSTANDARD
 		private GlsPartCn m_PartitionDevice;
 #endif
 
@@ -50,7 +50,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 
 		#region Methods
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 
 		/// <summary>
 		/// Sets the wrapped device.
@@ -105,7 +105,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 		/// <param name="sensitivity"></param>
 		public void SetSensitivity(ushort sensitivity)
 		{
-#if SIMPLSHARP
+#if !NETSTANDARD
 			if (m_PartitionDevice != null)
 				m_PartitionDevice.Sensitivity.UShortValue = sensitivity;
 #endif
@@ -117,10 +117,10 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 		/// <returns></returns>
 		protected override bool GetIsOnlineStatus()
 		{
-#if SIMPLSHARP
+#if !NETSTANDARD
 			return m_PartitionDevice != null && m_PartitionDevice.IsOnline;
 #else
-            return false;
+			return false;
 #endif
 		}
 
@@ -138,7 +138,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 
 			CresnetInfo.CopySettings(settings);
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 			settings.Sensitivity = m_PartitionDevice == null
 									   ? (ushort?)null
 									   : m_PartitionDevice.SensitivityFeedback.GetUShortValueOrDefault();
@@ -156,7 +156,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 
 			CresnetInfo.ClearSettings();
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 			SetDevice(null);
 #endif
 		}
@@ -172,7 +172,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 
 			CresnetInfo.ApplySettings(settings);
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 			if (m_CresnetInfo.CresnetId == null || !CresnetUtils.IsValidId(m_CresnetInfo.CresnetId.Value))
 			{
 				Logger.Log(eSeverity.Error, "Failed to instantiate {0} - CresnetId {1} is out of range",
@@ -203,7 +203,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 			if (settings.Sensitivity.HasValue)
 				SetSensitivity(settings.Sensitivity.Value);
 #else
-            throw new NotSupportedException();
+			throw new NotSupportedException();
 #endif
 		}
 
@@ -211,7 +211,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 
 		#region Device Callbacks
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 		/// <summary>
 		/// Subscribe to the device events.
 		/// </summary>
@@ -296,7 +296,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.Partitioning
 		{
 			base.BuildConsoleStatus(addRow);
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 			CresnetDeviceConsole.BuildConsoleStatus(this, addRow);
 			addRow("Sensitivity", m_PartitionDevice == null ? (ushort?)null : m_PartitionDevice.SensitivityFeedback.GetUShortValueOrDefault());
 #endif

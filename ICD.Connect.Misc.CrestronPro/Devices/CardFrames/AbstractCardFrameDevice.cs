@@ -2,13 +2,13 @@
 using ICD.Connect.Devices;
 using ICD.Connect.Misc.CrestronPro.Utils;
 using ICD.Connect.Settings;
-#if SIMPLSHARP
+#if !NETSTANDARD
 using Crestron.SimplSharpPro;
 #endif
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.CardFrames
 {
-#if SIMPLSHARP
+#if !NETSTANDARD
 	public abstract class AbstractCardFrameDevice<TCardFrame, TSettings> : AbstractDevice<TSettings>, ICardFrameDevice
 		where TCardFrame : GenericDevice
 #else
@@ -16,13 +16,13 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CardFrames
 #endif
 		where TSettings : ICardFrameDeviceSettings, new()
 	{
-#if SIMPLSHARP
+#if !NETSTANDARD
 		public TCardFrame CardFrame { get; private set; }
 #endif
 
 		#region Methods
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 		/// <summary>
 		/// Sets the wrapped device.
 		/// </summary>
@@ -54,10 +54,10 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CardFrames
 		/// <returns></returns>
 		protected override bool GetIsOnlineStatus()
 		{
-#if SIMPLSHARP
+#if !NETSTANDARD
 			return CardFrame != null && CardFrame.IsOnline;
 #else
-            return false;
+			return false;
 #endif
 		}
 
@@ -73,10 +73,10 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CardFrames
 		{
 			base.CopySettingsFinal(settings);
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 			settings.Ipid = CardFrame == null ? (byte)0 : (byte)CardFrame.ID;
 #else
-            settings.Ipid = 0;
+			settings.Ipid = 0;
 #endif
 		}
 
@@ -87,7 +87,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CardFrames
 		{
 			base.ClearSettingsFinal();
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 			SetCardCage(null);
 #endif
 		}
@@ -101,7 +101,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CardFrames
 		{
 			base.ApplySettingsFinal(settings, factory);
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 			TCardFrame device = settings.Ipid == null
 								? null 
 								: Instantiate(settings.Ipid.Value, ProgramInfo.ControlSystem);
@@ -112,7 +112,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CardFrames
 #endif
 		}
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 		/// <summary>
 		/// Creates a new card frame with the given parameters.
 		/// </summary>
@@ -126,7 +126,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CardFrames
 
 		#region Device Callbacks
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 		/// <summary>
 		/// Subscribe to the device events.
 		/// </summary>

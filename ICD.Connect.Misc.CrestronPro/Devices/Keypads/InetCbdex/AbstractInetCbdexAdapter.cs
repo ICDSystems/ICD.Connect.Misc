@@ -2,7 +2,7 @@
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.Keypads.InetCbdex
 {
-#if SIMPLSHARP
+#if !NETSTANDARD
 	public abstract class AbstractInetCbdexAdapter<TKeypad, TSettings> : AbstractKeypadBaseAdapter<TKeypad, TSettings>
 		where TKeypad : Crestron.SimplSharpPro.Keypads.InetCbdex
 #else

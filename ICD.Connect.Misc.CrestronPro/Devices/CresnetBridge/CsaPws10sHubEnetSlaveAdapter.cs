@@ -3,7 +3,7 @@ using ICD.Common.Logging.LoggingContexts;
 using ICD.Connect.API.Nodes;
 using ICD.Connect.Misc.CrestronPro.Cresnet;
 using ICD.Connect.Settings;
-#if SIMPLSHARP
+#if !NETSTANDARD
 using Crestron.SimplSharpPro.GeneralIO;
 #endif
 using ICD.Common.Utils.Services.Logging;
@@ -14,13 +14,13 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 {
 	public sealed class CsaPws10sHubEnetSlaveAdapter : AbstractDevice<CsaPws10sHubEnetSlaveAdapterSettings>, ICsaPws10sHubEnetAdapter, ICresnetDevice
 	{
-#if SIMPLSHARP
+#if !NETSTANDARD
 		private CsaPws10sHubEnetSlave m_Device;
 #endif
 		private readonly CresnetInfo m_CresnetInfo;
 
 		public CresnetInfo CresnetInfo { get { return m_CresnetInfo; } }
-#if SIMPLSHARP
+#if !NETSTANDARD
 
 		private void SetDevice(CsaPws10sHubEnetSlave device, int? parentId, int? branchId)
 		{
@@ -39,7 +39,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 		/// <returns></returns>
 		protected override bool GetIsOnlineStatus()
 		{
-#if SIMPLSHARP
+#if !NETSTANDARD
 			return m_Device.IsOnline;
 #else
 			return false;
@@ -62,7 +62,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 
 			CresnetInfo.ClearSettings();
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 			m_Device = null;
 #endif
 		}
@@ -89,7 +89,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.CresnetBridge
 
 			CresnetInfo.ApplySettings(settings);
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 			CsaPws10sHubEnetSlave device = null;
 			try
 			{

@@ -8,7 +8,7 @@ using ICD.Connect.Devices.Controls;
 using ICD.Connect.Partitioning.Commercial.Controls.Occupancy;
 using ICD.Connect.Partitioning.Commercial.Devices.Occupancy;
 using ICD.Connect.Settings;
-#if SIMPLSHARP
+#if !NETSTANDARD
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.GeneralIO;
 using ICD.Connect.Misc.CrestronPro.Utils;
@@ -16,7 +16,7 @@ using ICD.Connect.Misc.CrestronPro.Utils;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 {
-#if SIMPLSHARP
+#if !NETSTANDARD
 	public sealed class CenOdtCPoeAdapter : AbstractDevice<CenOdtCPoeAdapterSettings>, IOccupancySensorDevice
 #else
 	public sealed class CenOdtCPoeAdapter : AbstractDevice<CenOdtCPoeAdapterSettings>, IOccupancySensorDevice
@@ -30,7 +30,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 
 		#region Fields
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 		private CenOdtCPoe m_Sensor;
 #endif
 
@@ -62,14 +62,14 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 		/// <returns></returns>
 		protected override bool GetIsOnlineStatus()
 		{
-#if SIMPLSHARP
+#if !NETSTANDARD
 			return m_Sensor != null && m_Sensor.IsOnline;
 #else
 			return false;
 #endif
 		}
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 		/// <summary>
 		/// Sets the wrapped device.
 		/// </summary>
@@ -99,7 +99,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 
 		private void UpdateStatus()
 		{
-#if SIMPLSHARP
+#if !NETSTANDARD
 
 			if (m_Sensor == null)
 			{
@@ -120,7 +120,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 
 		#region Sensor Callbacks
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 		private void Subscribe(CenOdtCPoe sensor)
 		{
 			if (sensor == null)
@@ -170,7 +170,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 		{
 			base.ApplySettingsFinal(settings, factory);
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 			if (settings.Ipid == null || !CresnetUtils.IsValidId(settings.Ipid.Value))
 			{
 				Logger.Log(eSeverity.Error, "Failed to instantiate {0} - Ipid {1} is out of range",
@@ -193,7 +193,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 
 			SetDevice(device);
 #else
-            throw new NotSupportedException();
+			throw new NotSupportedException();
 #endif
 		}
 
@@ -204,7 +204,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 		protected override void CopySettingsFinal(CenOdtCPoeAdapterSettings settings)
 		{
 			base.CopySettingsFinal(settings);
-#if SIMPLSHARP
+#if !NETSTANDARD
 			settings.Ipid = m_Sensor == null ? null : (byte?)m_Sensor.ID;
 #else
 			throw new NotSupportedException();
@@ -217,7 +217,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 		protected override void ClearSettingsFinal()
 		{
 			base.ClearSettingsFinal();
-#if SIMPLSHARP
+#if !NETSTANDARD
 			SetDevice(null);
 #else
 			throw new NotSupportedException();
@@ -249,7 +249,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 		{
 			base.BuildConsoleStatus(addRow);
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 			addRow("IPID", m_Sensor == null ? (uint?)null : m_Sensor.ID);
 			addRow("Occupancy State", OccupancyState);
 #endif

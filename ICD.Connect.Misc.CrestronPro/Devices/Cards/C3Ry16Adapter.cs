@@ -1,11 +1,11 @@
-#if SIMPLSHARP
+#if !NETSTANDARD
 using Crestron.SimplSharpPro.ThreeSeriesCards;
 using Crestron.SimplSharpProInternal;
 #endif
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.Cards
 {
-#if SIMPLSHARP
+#if !NETSTANDARD
 	public sealed class C3Ry16Adapter : AbstractC3RyAdapter<C3ry16, C3Ry16AdapterSettings>
 	{
 		/// <summary>
