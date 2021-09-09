@@ -5,14 +5,14 @@ using ICD.Connect.Misc.CrestronPro.InfinetEx;
 using ICD.Connect.Partitioning.Commercial.Controls.Occupancy;
 using ICD.Connect.Partitioning.Commercial.Devices.Occupancy;
 using ICD.Connect.Settings;
-#if SIMPLSHARP
+#if !NETSTANDARD
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.GeneralIO;
 #endif
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 {
-#if SIMPLSHARP
+#if !NETSTANDARD
 	public sealed class GlsOirCsmExBattAdapter : AbstractInfinetExAdapter<GlsOirCsmExBatt, GlsOirCsmExBattAdapterSettings>,
 	                                             IOccupancySensorDevice
 #else
@@ -32,10 +32,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 
 		#endregion
 
-
 		#region Properties
-
-
 
 		public eOccupancyState OccupancyState
 		{
@@ -55,7 +52,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 
 		private void UpdateOccupancyStatus()
 		{
-#if SIMPLSHARP
+#if !NETSTANDARD
 			OccupancyState = Device == null
 				                 ? eOccupancyState.Unknown
 				                 : Device.OccupancyDetectedFeedback.BoolValue
@@ -66,7 +63,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 
 		#region Sensor Callbacks
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 
 		protected override GlsOirCsmExBatt InstantiateDevice(byte rfid, GatewayBase gateway)
 		{

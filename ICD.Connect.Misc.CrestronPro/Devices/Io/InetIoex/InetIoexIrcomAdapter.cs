@@ -1,6 +1,6 @@
 ﻿using System;
 using ICD.Connect.Misc.CrestronPro.InfinetEx;
-#if SIMPLSHARP
+#if !NETSTANDARD
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.DM;
 using Crestron.SimplSharpPro.GeneralIO;
@@ -8,14 +8,14 @@ using Crestron.SimplSharpPro.GeneralIO;
 
 namespace ICD.Connect.Misc.CrestronPro.Devices.Io.InetIoex
 {
-#if SIMPLSHARP
+#if !NETSTANDARD
 	public sealed class InetIoexIrcomAdapter : AbstractInfinetExAdapter<InetIoexIrcom, InetIoexIrcomAdatperSettings>, IPortParent
 #else
 	public sealed class InetIoexIrcomAdapter : AbstractInfinetExAdapter<InetIoexIrcomAdatperSettings>, IPortParent
 #endif
 	{
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 		protected override InetIoexIrcom InstantiateDevice(byte rfid, GatewayBase gateway)
 		{
 			return new InetIoexIrcom(rfid, gateway);

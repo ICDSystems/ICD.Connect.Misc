@@ -2,7 +2,7 @@
 using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.Devices;
 using ICD.Connect.Settings;
-#if SIMPLSHARP
+#if !NETSTANDARD
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.Gateways;
 #endif
@@ -12,7 +12,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.InfinetExGateway
 	public sealed class CenRfgwExAdapter : AbstractDevice<CenRfgwExAdapterSettings>, IInfinetExGatewayAdapter
 	{
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 		private CenRfgwExEthernetSharable m_Gateway;
 
 		public GatewayBase InfinetExGateway { get { return m_Gateway; } }
@@ -24,14 +24,14 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.InfinetExGateway
 		/// <returns></returns>
 		protected override bool GetIsOnlineStatus()
 		{
-#if SIMPLSHARP
+#if !NETSTANDARD
 			return m_Gateway != null && m_Gateway.IsOnline;
 #else
 			return false;
 #endif
 		}
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 		protected override void CopySettingsFinal(CenRfgwExAdapterSettings settings)
 		{
 			base.CopySettingsFinal(settings);
@@ -51,7 +51,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.InfinetExGateway
 		{
 			base.ApplySettingsFinal(settings, factory);
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 			CenRfgwExEthernetSharable gateway = null;
 
 			try
@@ -72,7 +72,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.InfinetExGateway
 
 		#region Gateway Callbacks
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 
 		/// <summary>
 		/// Override to control how the switcher is assigned from settings.
@@ -110,7 +110,5 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.InfinetExGateway
 #endif
 
 		#endregion
-
-
 	}
 }

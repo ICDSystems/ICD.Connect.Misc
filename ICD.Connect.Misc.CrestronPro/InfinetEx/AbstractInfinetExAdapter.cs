@@ -4,13 +4,13 @@ using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.API.Nodes;
 using ICD.Connect.Devices;
 using ICD.Connect.Settings;
-#if SIMPLSHARP
+#if !NETSTANDARD
 using Crestron.SimplSharpPro;
 #endif
 
 namespace ICD.Connect.Misc.CrestronPro.InfinetEx
 {
-#if SIMPLSHARP
+#if !NETSTANDARD
 	public abstract class AbstractInfinetExAdapter<TDevice, TSettings> : AbstractDevice<TSettings>, IInfinetExDevice
 		where TSettings : IInfinetExDeviceSettings, new()
 		where TDevice : GenericDevice
@@ -22,7 +22,7 @@ namespace ICD.Connect.Misc.CrestronPro.InfinetEx
 
 		private readonly InfinetExInfo m_InfinetExInfo;
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 		private TDevice m_Device;
 
 		public TDevice Device { get { return m_Device; } }
@@ -37,7 +37,7 @@ namespace ICD.Connect.Misc.CrestronPro.InfinetEx
 
 		protected override bool GetIsOnlineStatus()
 		{
-#if SIMPLSHARP
+#if !NETSTANDARD
 			return Device != null && Device.IsOnline;
 #else
 			return false;
@@ -46,7 +46,7 @@ namespace ICD.Connect.Misc.CrestronPro.InfinetEx
 
 		#region Device Callbacks
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 
 		private void SetDevice(TDevice device)
 		{
@@ -92,11 +92,9 @@ namespace ICD.Connect.Misc.CrestronPro.InfinetEx
 
 		#endregion
 
-
-
 		#region Settings
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 		protected abstract TDevice InstantiateDevice(byte rfid, GatewayBase gateway);
 #endif
 
@@ -111,7 +109,7 @@ namespace ICD.Connect.Misc.CrestronPro.InfinetEx
 
 			InfinetExInfo.ApplySettings(settings);
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 
 			if (!InfinetExInfo.RfId.HasValue || !InfinetExUtils.IsValidId(InfinetExInfo.RfId.Value))
 			{

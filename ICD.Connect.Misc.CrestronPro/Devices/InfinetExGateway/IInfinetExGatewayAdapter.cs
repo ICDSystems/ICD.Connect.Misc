@@ -1,6 +1,6 @@
 ﻿using ICD.Common.Properties;
 using ICD.Connect.Devices;
-#if SIMPLSHARP
+#if !NETSTANDARD
 using Crestron.SimplSharpPro;
 #endif
 
@@ -8,7 +8,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.InfinetExGateway
 {
 	public interface IInfinetExGatewayAdapter : IDevice
 	{
-#if SIMPLSHARP
+#if !NETSTANDARD
 		[CanBeNull]
 		GatewayBase InfinetExGateway { get; }
 #endif

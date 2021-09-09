@@ -1,7 +1,7 @@
 ﻿using System;
 using ICD.Connect.Misc.CrestronPro.Devices.InfinetExGateway;
 using ICD.Connect.Settings;
-#if SIMPLSHARP
+#if !NETSTANDARD
 using Crestron.SimplSharpPro;
 #endif
 
@@ -22,7 +22,7 @@ namespace ICD.Connect.Misc.CrestronPro.InfinetEx
 			return id >= MIN_ID && id <= MAX_ID;
 		}
 
-#if SIMPLSHARP
+#if !NETSTANDARD
 		/// <summary>
 		/// Determines the correct way to instantiate a cresnet device.
 		/// Instantiates on a branch if one is provided, else instantiates on the controlsystem
