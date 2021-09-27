@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
  - Occupancy sensors implement new IOccupancySensorControl SupportedFeatures and PeopleCount
+ - Adding debugging to Crestron and GlobalCache IR ports
 
 ## [10.0.1] - 2021-08-03
 ### Changed
