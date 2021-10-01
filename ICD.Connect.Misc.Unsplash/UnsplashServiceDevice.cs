@@ -119,7 +119,7 @@ namespace ICD.Connect.Misc.Unsplash
 
 			WebPortResponse response = m_Port.Get(url);
 
-			if (response.Success)
+			if (response.IsSuccessCode)
 				return JsonConvert.DeserializeObject<UnsplashPhotoListViewResponse>(response.DataAsString).Results;
 
 			throw new Exception(string.Format("Failed to get picture list - {0}", response.DataAsString));
@@ -131,7 +131,7 @@ namespace ICD.Connect.Misc.Unsplash
 
 			WebPortResponse response = m_Port.Get(url);
 
-			if (!response.Success)
+			if (!response.IsSuccessCode)
 				throw new Exception(string.Format("Failed to find picture - {0}", response.DataAsString));
 
 			return JsonConvert.DeserializeObject<UnsplashPhotoResult>(response.DataAsString);
@@ -153,7 +153,7 @@ namespace ICD.Connect.Misc.Unsplash
 
 			WebPortResponse response = m_Port.Get(url);
 
-			if (response.Success)
+			if (response.IsSuccessCode)
 				return JsonConvert.DeserializeObject<UnsplashCollectionListViewResponse>(response.DataAsString).Results;
 
 			throw new Exception(string.Format("Failed to get Collection list - {0}", response.DataAsString));
@@ -168,7 +168,7 @@ namespace ICD.Connect.Misc.Unsplash
 
 			WebPortResponse response = m_Port.Get(url);
 
-			if (response.Success)
+			if (response.IsSuccessCode)
 				return JsonConvert.DeserializeObject<UnsplashPhotoResult[]>(response.DataAsString);
 
 			throw new Exception(string.Format("Failed to get pictures from Collection - {0}", response.DataAsString));
@@ -203,7 +203,7 @@ namespace ICD.Connect.Misc.Unsplash
 
 			// Get the byte array for the photo
 			WebPortResponse response = m_Port.Get(url);
-			if (!response.Success)
+			if (!response.IsSuccessCode)
 				throw new Exception(string.Format("Failed to download picture - {0}", response.DataAsString));
 			
 			byte[] photo = response.Data;
