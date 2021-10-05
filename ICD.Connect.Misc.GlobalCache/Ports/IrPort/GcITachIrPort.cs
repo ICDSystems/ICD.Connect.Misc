@@ -87,11 +87,13 @@ namespace ICD.Connect.Misc.GlobalCache.Ports.IrPort
 				return;
 			}
 
+			PrintTx(command);
 			Device.SendCommand(SerializeIrCommand(krangIrCommand));
 		}
 
 		protected override void ReleaseFinal()
 		{
+			PrintTx("Release");
 			Device.SendCommand(GetStopIrCommand());
 		}
 

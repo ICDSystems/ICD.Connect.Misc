@@ -38,6 +38,11 @@ namespace ICD.Connect.Misc.Occupancy
 			OccupancyState = state;
 		}
 
+		public void SetPeopleCount(int count)
+		{
+			PeopleCount = count;
+		}
+
 		#endregion
 
 		#region Console
@@ -51,9 +56,12 @@ namespace ICD.Connect.Misc.Occupancy
 			foreach (IConsoleCommand c in GetBaseConsoleCommands())
 				yield return c;
 
+			yield return new GenericConsoleCommand<bool>("SetOccupancySupported","Sets occupancy support on the sensor", b => SetOccupancySupported(b));
+			yield return new GenericConsoleCommand<bool>("SetPeopleCountSupported", "Sets people count support on the sensor", b => SetPeopleCountSupported(b));
 			yield return new ConsoleCommand("SetOccupied", "Sets Sensor to Occupied", () => SetOccupied());
 			yield return new ConsoleCommand("SetUnoccupied", "Sets the Sensor to Unoccupied", () => SetUnoccupied());
 			yield return new ConsoleCommand("SetUnknown", "Sets the Sensor to Unknown", () => SetUnknown());
+			yield return new GenericConsoleCommand<int>("SetPeopleCount", "Sets the people counted", i => SetPeopleCount(i));
 		}
 
 		/// <summary>

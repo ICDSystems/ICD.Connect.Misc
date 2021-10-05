@@ -220,7 +220,10 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 		{
 #if !NETSTANDARD
 			if (m_Port != null)
+			{
+				PrintTx("Release");
 				m_Port.Release();
+			}
 #endif
 		}
 

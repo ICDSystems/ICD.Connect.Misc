@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
  - GlsOirCsmExBatt Adapter
  - INetIoexIrCom and InetIoexRyio Adapters
 
+## [10.1.0] - 2021-10-04
+### Changed
+ - Occupancy sensors implement new IOccupancySensorControl SupportedFeatures and PeopleCount
+ - Adding debugging to Crestron and GlobalCache IR ports
+
 ## [10.0.1] - 2021-08-03
 ### Changed
  - CrestronEthernetDeviceUtils - don't start threads for SSH requests
