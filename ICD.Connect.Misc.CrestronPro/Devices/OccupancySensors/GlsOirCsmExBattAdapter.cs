@@ -28,11 +28,15 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 
 		#region Events
 
+		public event EventHandler<GenericEventArgs<eOccupancyFeatures>> OnSupportedFeaturesChanged;
 		public event EventHandler<GenericEventArgs<eOccupancyState>> OnOccupancyStateChanged;
+		public event EventHandler<IntEventArgs> OnPeopleCountChanged;
 
 		#endregion
 
 		#region Properties
+
+		public eOccupancyFeatures SupportedFeatures { get { return eOccupancyFeatures.Occupancy; } }
 
 		public eOccupancyState OccupancyState
 		{
@@ -47,6 +51,8 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.OccupancySensors
 				OnOccupancyStateChanged.Raise(this, value);
 			}
 		}
+
+		public int PeopleCount { get { return 0; } }
 
 		#endregion
 
