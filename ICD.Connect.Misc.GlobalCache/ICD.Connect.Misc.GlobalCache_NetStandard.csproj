@@ -40,7 +40,7 @@
     <PackageReference Condition="'$(TargetFramework)' == 'net472'" Include="Newtonsoft.Json" Version="13.0.1" Aliases="RealNewtonsoft"/>
   </ItemGroup>
 
-  <Target Name="ArchivePlugin" AfterTargets="AfterBuild" Condition="'$(Configuration)|$(OS)' == 'Release|Windows_NT'">
+  <Target Name="ArchivePlugin" AfterTargets="AfterBuild" Condition="'$(Configuration)|$(OS)|$(TargetFramework)' == 'Release|Windows_NT|netstandard2.0'">
     <Delete Files="$(TargetDir)$(AssemblyName).kpz" />
     <ZipDirectory DestinationFile="$(TargetDir)..\$(AssemblyName).kpz" SourceDirectory="$(TargetDir)" Overwrite="true" />
     <Move SourceFiles="$(TargetDir)..\$(AssemblyName).kpz" DestinationFolder="$(TargetDir)" />

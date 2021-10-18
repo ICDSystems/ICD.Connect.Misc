@@ -47,7 +47,7 @@
     <ProjectReference Include="..\..\ICD.Connect.Settings\ICD.Connect.Settings\ICD.Connect.Settings_NetStandard.csproj" />
   </ItemGroup>
 
-  <Target Name="ArchivePlugin" AfterTargets="AfterBuild" Condition="'$(Configuration)|$(OS)' == 'Release|Windows_NT'">
+  <Target Name="ArchivePlugin" AfterTargets="AfterBuild" Condition="'$(Configuration)|$(OS)|$(TargetFramework)' == 'Release|Windows_NT|netstandard2.0'">
     <Delete Files="$(TargetDir)$(AssemblyName).kpz" />
     <ZipDirectory DestinationFile="$(TargetDir)..\$(AssemblyName).kpz" SourceDirectory="$(TargetDir)" Overwrite="true" />
     <Move SourceFiles="$(TargetDir)..\$(AssemblyName).kpz" DestinationFolder="$(TargetDir)" />
