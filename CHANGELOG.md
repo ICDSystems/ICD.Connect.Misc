@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [10.1.1] - 2021-10-21
 ### Changed
  - Re-initializing the Windows audio device if there is a COMException
 
