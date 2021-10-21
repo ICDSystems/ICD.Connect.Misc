@@ -1,6 +1,7 @@
 ﻿using System;
 using ICD.Connect.Audio.Controls.Volume;
 #if NETSTANDARD
+using System.Runtime.InteropServices;
 using ICD.Common.Properties;
 using ICD.Common.Utils;
 using NAudio.CoreAudioApi;
@@ -16,6 +17,28 @@ namespace ICD.Connect.Misc.Windows.Devices.ControlSystems
 #endif
 
 		#region Properties
+
+#if NETSTANDARD
+		[CanBeNull]
+		private MMDevice MasterVolumeEndpoint
+		{
+			get { return m_MasterVolumeEndpoint; }
+			set
+			{
+				if (value == m_MasterVolumeEndpoint)
+					return;
+
+				if (m_MasterVolumeEndpoint != null)
+					m_MasterVolumeEndpoint.Dispose();
+
+				Unsubscribe(m_MasterVolumeEndpoint);
+				m_MasterVolumeEndpoint = value;
+				Subscribe(m_MasterVolumeEndpoint);
+
+				UpdateAudioFeedback();
+			}
+		}
+#endif
 
 		/// <summary>
 		/// Gets the minimum supported volume level.
@@ -45,11 +68,7 @@ namespace ICD.Connect.Misc.Windows.Devices.ControlSystems
 			                          eVolumeFeatures.VolumeAssignment |
 			                          eVolumeFeatures.VolumeFeedback;
 
-			using (MMDeviceEnumerator devices = new MMDeviceEnumerator())
-				m_MasterVolumeEndpoint = devices.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
-			Subscribe(m_MasterVolumeEndpoint);
-
-			UpdateAudioFeedback();
+			InitializeDevice();
 #endif
 		}
 
@@ -62,11 +81,7 @@ namespace ICD.Connect.Misc.Windows.Devices.ControlSystems
 		{
 			base.DisposeFinal(disposing);
 
-			Unsubscribe(m_MasterVolumeEndpoint);
-
-			if (m_MasterVolumeEndpoint != null)
-				m_MasterVolumeEndpoint.Dispose();
-			m_MasterVolumeEndpoint = null;
+			MasterVolumeEndpoint = null;
 		}
 #endif
 
@@ -81,10 +96,7 @@ namespace ICD.Connect.Misc.Windows.Devices.ControlSystems
 #if SIMPLSHARP
 			throw new NotSupportedException();
 #else
-			if (m_MasterVolumeEndpoint == null)
-				throw new InvalidOperationException("No internal audio endpoint");
-
-			m_MasterVolumeEndpoint.AudioEndpointVolume.Mute = mute;
+			AttemptCom(d => d.AudioEndpointVolume.Mute = mute);
 #endif
 		}
 
@@ -96,11 +108,7 @@ namespace ICD.Connect.Misc.Windows.Devices.ControlSystems
 #if SIMPLSHARP
 			throw new NotSupportedException();
 #else
-			if (m_MasterVolumeEndpoint == null)
-				throw new InvalidOperationException("No internal audio endpoint");
-
-			m_MasterVolumeEndpoint.AudioEndpointVolume.Mute =
-				!m_MasterVolumeEndpoint.AudioEndpointVolume.Mute;
+			AttemptCom(d => d.AudioEndpointVolume.Mute = !d.AudioEndpointVolume.Mute);
 #endif
 		}
 
@@ -113,11 +121,8 @@ namespace ICD.Connect.Misc.Windows.Devices.ControlSystems
 #if SIMPLSHARP
 			throw new NotSupportedException();
 #else
-			if (m_MasterVolumeEndpoint == null)
-				throw new InvalidOperationException("No internal audio endpoint");
-
 			// Scalar handles logarithmic db for us
-			m_MasterVolumeEndpoint.AudioEndpointVolume.MasterVolumeLevelScalar = MathUtils.Clamp(level, 0, 1);
+			AttemptCom(d => d.AudioEndpointVolume.MasterVolumeLevelScalar = MathUtils.Clamp(level, 0, 1));
 #endif
 		}
 
@@ -130,11 +135,8 @@ namespace ICD.Connect.Misc.Windows.Devices.ControlSystems
 #if SIMPLSHARP
 			throw new NotSupportedException();
 #else
-			if (m_MasterVolumeEndpoint == null)
-				throw new InvalidOperationException("No internal audio endpoint");
-
-			m_MasterVolumeEndpoint.AudioEndpointVolume.MasterVolumeLevelScalar =
-				(float)MathUtils.Clamp(Math.Round(VolumeLevel, 2) + 0.01f, 0, 1);
+			AttemptCom(d => d.AudioEndpointVolume.MasterVolumeLevelScalar =
+				           (float)MathUtils.Clamp(Math.Round(VolumeLevel, 2) + 0.01f, 0, 1));
 #endif
 		}
 
@@ -147,11 +149,8 @@ namespace ICD.Connect.Misc.Windows.Devices.ControlSystems
 #if SIMPLSHARP
 			throw new NotSupportedException();
 #else
-			if (m_MasterVolumeEndpoint == null)
-				throw new InvalidOperationException("No internal audio endpoint");
-
-			m_MasterVolumeEndpoint.AudioEndpointVolume.MasterVolumeLevelScalar =
-				(float)MathUtils.Clamp(Math.Round(VolumeLevel, 2) - 0.01f, 0, 1);
+			AttemptCom(d => d.AudioEndpointVolume.MasterVolumeLevelScalar =
+				           (float)MathUtils.Clamp(Math.Round(VolumeLevel, 2) - 0.01f, 0, 1));
 #endif
 		}
 
@@ -181,15 +180,60 @@ namespace ICD.Connect.Misc.Windows.Devices.ControlSystems
 		#region Private Methods
 
 		/// <summary>
+		/// Attempts to perform the given action for the audio device.
+		/// If the action fails with a COMException, attempts to reinitialize the device.
+		/// </summary>
+		/// <param name="action"></param>
+		private void AttemptCom(Action<MMDevice> action)
+		{
+			if (MasterVolumeEndpoint == null)
+				InitializeDevice();
+
+			// First attempt
+			try
+			{
+				action(MasterVolumeEndpoint);
+				return;
+			}
+			catch (COMException)
+			{
+			}
+
+			// Second attempt
+			try
+			{
+				InitializeDevice();
+				action(MasterVolumeEndpoint);
+			}
+			catch (COMException)
+			{
+				MasterVolumeEndpoint = null;
+				throw;
+			}
+		}
+
+		/// <summary>
+		/// Updates the wrapped volume endpoint.
+		/// </summary>
+		private void InitializeDevice()
+		{
+			using (MMDeviceEnumerator devices = new MMDeviceEnumerator())
+				MasterVolumeEndpoint = devices.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
+		}
+
+		/// <summary>
 		/// Updates the volume and mute feedback properties.
 		/// </summary>
 		private void UpdateAudioFeedback()
 		{
-			if (m_MasterVolumeEndpoint == null)
-				throw new InvalidOperationException("No internal audio endpoint");
-
-			VolumeLevel = m_MasterVolumeEndpoint.AudioEndpointVolume.MasterVolumeLevelScalar;
-			IsMuted = m_MasterVolumeEndpoint.AudioEndpointVolume.Mute;
+			try
+			{
+				VolumeLevel = MasterVolumeEndpoint?.AudioEndpointVolume.MasterVolumeLevelScalar ?? 0;
+				IsMuted = MasterVolumeEndpoint?.AudioEndpointVolume.Mute ?? false;
+			}
+			catch (COMException)
+			{
+			}
 		}
 
 		#endregion
