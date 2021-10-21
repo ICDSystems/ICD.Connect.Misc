@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
  - GlsOirCsmExBatt Adapter
  - INetIoexIrCom and InetIoexRyio Adapters
 
+## [10.1.1] - 2021-10-21
+### Changed
+ - Re-initializing the Windows audio device if there is a COMException
+
 ## [10.1.0] - 2021-10-04
 ### Changed
  - Occupancy sensors implement new IOccupancySensorControl SupportedFeatures and PeopleCount
