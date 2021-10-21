@@ -1,6 +1,6 @@
 ﻿using ICD.Connect.Devices;
 using ICD.Common.Utils.Xml;
-﻿using ICD.Connect.Protocol.Network.Ports.Tcp;
+using ICD.Connect.Protocol.Network.Ports.Tcp;
 using ICD.Connect.Protocol.Network.Settings;
 using ICD.Connect.Settings.Attributes.SettingsProperties;
 
