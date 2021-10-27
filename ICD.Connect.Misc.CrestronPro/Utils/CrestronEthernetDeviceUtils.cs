@@ -39,7 +39,7 @@ namespace ICD.Connect.Misc.CrestronPro.Utils
 		/// Regex for matching the result of the 'ipconfig' command on Crestron ethernet devices.
 		/// </summary>
 		private const string IP_CONFIG_REGEX =
-			@"(?:Link Status.+:\s+(?'LinkStatus'\S+))\s*(?:DHCP\s+.+:\s+(?'DHCP'\S+))\s*(?:MAC Address(?:\(es\))*\s*.+:\s+(?'MACAddress'\S+))\s*(?:IP Address\s+.+:\s+(?'IPV4'\S+))\s*(?:Subnet Mask\s+.+:\s+(?'SubnetMask'\S+))\s*(?:(?:IPv6|IPV6) Address\s*.+:\s+(?'IPV6'\S+))\s*(?:Default Gateway\s+.+:\s+(?'DefaultGateway'\S+))\s*(?:DNS Servers\s*.+:\s+(?'DNS'\S+))";
+			@"(?'adapter'Ethernet Adapter \[(?'AdapterName'\S+)\]:\s+(?:Link Status.+:\s+(?'LinkStatus'\S+))\s*(?:DHCP\s+.+:\s+(?'DHCP'\S+))\s*(?:MAC Address(?:\(es\))*\s*.+:\s+(?'MACAddress'\S+))\s*(?:IP Address\s+.+:\s+(?'IPV4'\S+))\s*(?:Subnet Mask\s+.+:\s+(?'SubnetMask'\S+))\s*(?:(?:IPv6|IPV6) Address\s*.+:\s+(?'IPV6'\S+)?)\s*(?:Default Gateway\s+.+:\s+(?'DefaultGateway'\S+))\s*(?:DNS Servers\s*.+:\s+(?'DNS'\S+))[^E]*)+";
 
 		/// <summary>
 		/// Regex for matching the result of the 'ver' command on Crestron ethernet devices.
@@ -72,7 +72,7 @@ namespace ICD.Connect.Misc.CrestronPro.Utils
 		private static readonly SafeCriticalSection s_CacheSection;
 
 		private static readonly
-			WeakKeyDictionary<ICrestronEthernetDeviceAdapter, KeyValuePair<CrestronEthernetDeviceAdapterNetworkInfo, DateTime>>
+			WeakKeyDictionary<ICrestronEthernetDeviceAdapter, KeyValuePair<CrestronEthernetDeviceAdapterNetworkInfo[], DateTime>>
 			s_IpConfigCache;
 
 		private static readonly
@@ -105,7 +105,7 @@ namespace ICD.Connect.Misc.CrestronPro.Utils
 			// Initialize caches
 			s_IpConfigCache =
 				new WeakKeyDictionary
-					<ICrestronEthernetDeviceAdapter, KeyValuePair<CrestronEthernetDeviceAdapterNetworkInfo, DateTime>>();
+					<ICrestronEthernetDeviceAdapter, KeyValuePair<CrestronEthernetDeviceAdapterNetworkInfo[], DateTime>>();
 			s_VersionCache =
 				new WeakKeyDictionary
 					<ICrestronEthernetDeviceAdapter, KeyValuePair<CrestronEthernetDeviceAdapterVersionInfo, DateTime>>();
@@ -130,10 +130,10 @@ namespace ICD.Connect.Misc.CrestronPro.Utils
 		/// <param name="adapter"></param>
 		/// <param name="updateAction"></param>
 		/// <returns></returns>
-		public static void UpdateNetworkInfo(ICrestronEthernetDeviceAdapter adapter, Action<CrestronEthernetDeviceAdapterNetworkInfo> updateAction)
+		public static void UpdateNetworkInfo(ICrestronEthernetDeviceAdapter adapter, Action<CrestronEthernetDeviceAdapterNetworkInfo[]> updateAction)
 		{
 			// Already cached?
-			CrestronEthernetDeviceAdapterNetworkInfo networkInfo;
+			CrestronEthernetDeviceAdapterNetworkInfo[] networkInfo;
 			if (TryGetCachedValue(s_IpConfigCache, adapter, out networkInfo))
 			{
 				updateAction(networkInfo);

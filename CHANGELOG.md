@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 ## Added
+ - Update CrestronEthernetDeviceAdapters NetworkInfo regex to match against multiple network adapters
  - InfinetEx info, console, utils, and interfaces for devices and settings
  - CenRfgwEx Adapter
  - GlsOirCsmExBatt Adapter
