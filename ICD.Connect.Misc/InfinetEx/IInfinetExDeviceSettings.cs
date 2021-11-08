@@ -1,6 +1,6 @@
 ﻿using ICD.Connect.Devices;
 
-namespace ICD.Connect.Misc.CrestronPro.InfinetEx
+namespace ICD.Connect.Misc.InfinetEx
 {
 	public interface IInfinetExDeviceSettings : IDeviceSettings
 	{

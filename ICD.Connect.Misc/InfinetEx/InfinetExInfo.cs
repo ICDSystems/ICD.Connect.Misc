@@ -1,7 +1,7 @@
 ﻿using System;
 using ICD.Common.Properties;
 
-namespace ICD.Connect.Misc.CrestronPro.InfinetEx
+namespace ICD.Connect.Misc.InfinetEx
 {
 	/// <summary>
 	/// Used in InfinetEx devices to hold InfinetEx information, and apply/copy/clear to settings

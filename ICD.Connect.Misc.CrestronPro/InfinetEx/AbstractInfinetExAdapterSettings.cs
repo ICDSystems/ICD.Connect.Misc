@@ -1,5 +1,6 @@
 ﻿using ICD.Common.Utils.Xml;
 using ICD.Connect.Devices;
+using ICD.Connect.Misc.InfinetEx;
 
 namespace ICD.Connect.Misc.CrestronPro.InfinetEx
 {

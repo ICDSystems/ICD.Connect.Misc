@@ -117,11 +117,6 @@
     <Compile Include="Extensions\DeviceExtenderExtensions.cs" />
     <Compile Include="InfinetEx\AbstractInfinetExAdapter.cs" />
     <Compile Include="InfinetEx\AbstractInfinetExAdapterSettings.cs" />
-    <Compile Include="InfinetEx\IInfinetExDevice.cs" />
-    <Compile Include="InfinetEx\IInfinetExDeviceSettings.cs" />
-    <Compile Include="InfinetEx\InfinetExDeviceConsole.cs" />
-    <Compile Include="InfinetEx\InfinetExInfo.cs" />
-    <Compile Include="InfinetEx\InfinetExSettings.cs" />
     <Compile Include="InfinetEx\InfinetExUtils.cs" />
     <Compile Include="ObfuscationSettings.cs" />
     <Compile Include="Devices\CresnetBridge\CsaPws10sHubEnetAdapter.cs" />

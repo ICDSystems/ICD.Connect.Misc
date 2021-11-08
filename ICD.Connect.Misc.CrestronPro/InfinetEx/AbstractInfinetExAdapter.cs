@@ -3,6 +3,8 @@ using ICD.Common.Utils;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.API.Nodes;
 using ICD.Connect.Devices;
+using ICD.Connect.Misc.CrestronPro.Utils;
+using ICD.Connect.Misc.InfinetEx;
 using ICD.Connect.Settings;
 #if !NETSTANDARD
 using Crestron.SimplSharpPro;
@@ -52,9 +54,16 @@ namespace ICD.Connect.Misc.CrestronPro.InfinetEx
 		{
 			Unsubscribe(m_Device);
 
+			if (m_Device != null)
+				GenericBaseUtils.TearDown(m_Device);
+
 			m_Device = device;
 
 			Subscribe(m_Device);
+
+			eDeviceRegistrationUnRegistrationResponse result;
+			if(m_Device != null && !GenericBaseUtils.SetUp(m_Device, this, out result))
+				Logger.Log(eSeverity.Error, "Unable to register {0} - {1}", m_Device.GetType().Name, result);
 
 			UpdateDevice();
 		}

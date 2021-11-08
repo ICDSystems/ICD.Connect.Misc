@@ -33,7 +33,7 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.InfinetExGateway
 		{
 			base.ParseXml(xml);
 
-			Ipid = XmlUtils.TryReadChildElementContentAsByte(xml, IPID_ELEMENT) ?? 0;
+			Ipid = XmlUtils.TryReadChildElementContentAsByte(xml, IPID_ELEMENT);
 		}
 	}
 }

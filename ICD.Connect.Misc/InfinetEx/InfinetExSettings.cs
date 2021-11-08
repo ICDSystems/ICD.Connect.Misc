@@ -1,10 +1,9 @@
-﻿
-using System;
+﻿using System;
 using ICD.Common.Utils;
 using ICD.Common.Utils.Xml;
 using ICD.Connect.Settings.Attributes.SettingsProperties;
 
-namespace ICD.Connect.Misc.CrestronPro.InfinetEx
+namespace ICD.Connect.Misc.InfinetEx
 {
 	public sealed class InfinetExSettings
 	{

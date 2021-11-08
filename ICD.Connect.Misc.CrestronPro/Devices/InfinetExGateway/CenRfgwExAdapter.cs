@@ -1,6 +1,7 @@
 ﻿using System;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.Devices;
+using ICD.Connect.Misc.CrestronPro.Utils;
 using ICD.Connect.Settings;
 #if !NETSTANDARD
 using Crestron.SimplSharpPro;
@@ -57,7 +58,13 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.InfinetExGateway
 			try
 			{
 				if (settings.Ipid.HasValue)
+				{
 					gateway = new CenRfgwExEthernetSharable(settings.Ipid.Value, ProgramInfo.ControlSystem);
+				}
+				else
+					Logger.Log(eSeverity.Error, "Failed to instantiate {0} - No IPID configured", typeof(CenRfgwExEthernetSharable));
+
+
 			}
 			catch (Exception e)
 			{
@@ -80,8 +87,17 @@ namespace ICD.Connect.Misc.CrestronPro.Devices.InfinetExGateway
 		private void SetGateway(CenRfgwExEthernetSharable gateway)
 		{
 			Unsubscribe(m_Gateway);
+
+			if (m_Gateway != null)
+				GenericBaseUtils.TearDown(m_Gateway);
+
 			m_Gateway = gateway;
+
 			Subscribe(m_Gateway);
+
+			eDeviceRegistrationUnRegistrationResponse result;
+			if (m_Gateway != null && !GenericBaseUtils.SetUp(m_Gateway, this, out result))
+				Logger.Log(eSeverity.Error, "Unable to register {0} - {1}", m_Gateway.GetType().Name, result);
 
 			UpdateCachedOnlineStatus();
 		}

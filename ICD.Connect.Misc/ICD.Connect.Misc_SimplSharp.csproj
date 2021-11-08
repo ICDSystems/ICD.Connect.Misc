@@ -78,6 +78,11 @@
     <Compile Include="ControlSystems\ControlSystemExternalTelemetryProvider.cs" />
     <Compile Include="ControlSystems\IControlSystemDevice.cs" />
     <Compile Include="ControlSystems\IControlSystemDeviceSettings.cs" />
+    <Compile Include="InfinetEx\IInfinetExDevice.cs" />
+    <Compile Include="InfinetEx\IInfinetExDeviceSettings.cs" />
+    <Compile Include="InfinetEx\InfinetExDeviceConsole.cs" />
+    <Compile Include="InfinetEx\InfinetExInfo.cs" />
+    <Compile Include="InfinetEx\InfinetExSettings.cs" />
     <Compile Include="ObfuscationSettings.cs" />
     <Compile Include="Keypads\AbstractKeypadDevice.cs" />
     <Compile Include="Keypads\AbstractKeypadDeviceSettings.cs" />
