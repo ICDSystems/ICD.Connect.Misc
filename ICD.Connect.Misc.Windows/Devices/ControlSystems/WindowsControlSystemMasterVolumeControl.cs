@@ -1,4 +1,5 @@
 ﻿using System;
+using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.Audio.Controls.Volume;
 #if !SIMPLSHARP
 using System.Runtime.InteropServices;
@@ -68,7 +69,8 @@ namespace ICD.Connect.Misc.Windows.Devices.ControlSystems
 			                          eVolumeFeatures.VolumeAssignment |
 			                          eVolumeFeatures.VolumeFeedback;
 
-			InitializeDevice();
+			// Initialize the audio endpoint
+			AttemptCom(a => { });
 #endif
 		}
 
@@ -186,12 +188,12 @@ namespace ICD.Connect.Misc.Windows.Devices.ControlSystems
 		/// <param name="action"></param>
 		private void AttemptCom(Action<MMDevice> action)
 		{
-			if (MasterVolumeEndpoint == null)
-				InitializeDevice();
-
 			// First attempt
 			try
 			{
+				if (MasterVolumeEndpoint == null)
+					InitializeDevice();
+
 				action(MasterVolumeEndpoint);
 				return;
 			}
@@ -205,10 +207,10 @@ namespace ICD.Connect.Misc.Windows.Devices.ControlSystems
 				InitializeDevice();
 				action(MasterVolumeEndpoint);
 			}
-			catch (COMException)
+			catch (COMException e)
 			{
 				MasterVolumeEndpoint = null;
-				throw;
+				Logger.Log(eSeverity.Error, "Failed to communicate with master volume endpoint - {0}:{1}", e.GetType().Name, e.Message);
 			}
 		}
 
@@ -231,8 +233,9 @@ namespace ICD.Connect.Misc.Windows.Devices.ControlSystems
 				VolumeLevel = MasterVolumeEndpoint?.AudioEndpointVolume.MasterVolumeLevelScalar ?? 0;
 				IsMuted = MasterVolumeEndpoint?.AudioEndpointVolume.Mute ?? false;
 			}
-			catch (COMException)
+			catch (COMException e)
 			{
+				Logger.Log(eSeverity.Error, "Failed to communicate with master volume endpoint - {0}:{1}", e.GetType().Name, e.Message);
 			}
 		}
 

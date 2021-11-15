@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
  - GlsOirCsmExBatt Adapter
  - INetIoexIrCom and InetIoexRyio Adapters
 
+## [10.1.2] - 2021-11-15
+### Changed
+ - Fixed a bug where failing to initialize the windows volume control would break startup
+
 ## [10.1.1] - 2021-10-21
 ### Changed
  - Re-initializing the Windows audio device if there is a COMException
