@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [10.1.2] - 2021-11-15
 ### Changed
  - Fixed a bug where failing to initialize the windows volume control would break startup
 
