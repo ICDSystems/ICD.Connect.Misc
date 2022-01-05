@@ -117,7 +117,7 @@ namespace ICD.Connect.Misc.Unsplash
 
 			string url = "https://api.unsplash.com/search/photos" + builder;
 
-			WebPortResponse response = m_Port.Get(url);
+			WebPortResponse response = m_Port.Get(url, null);
 
 			if (response.IsSuccessCode)
 				return JsonConvert.DeserializeObject<UnsplashPhotoListViewResponse>(response.DataAsString).Results;
@@ -129,7 +129,7 @@ namespace ICD.Connect.Misc.Unsplash
 		{
 			string url = string.Format("https://api.unsplash.com/photos/{0}?client_id={1}", id, ClientId);
 
-			WebPortResponse response = m_Port.Get(url);
+			WebPortResponse response = m_Port.Get(url, null);
 
 			if (!response.IsSuccessCode)
 				throw new Exception(string.Format("Failed to find picture - {0}", response.DataAsString));
@@ -151,7 +151,7 @@ namespace ICD.Connect.Misc.Unsplash
 
 			string url = "https://api.unsplash.com/search/collections" + builder;
 
-			WebPortResponse response = m_Port.Get(url);
+			WebPortResponse response = m_Port.Get(url, null);
 
 			if (response.IsSuccessCode)
 				return JsonConvert.DeserializeObject<UnsplashCollectionListViewResponse>(response.DataAsString).Results;
@@ -166,7 +166,7 @@ namespace ICD.Connect.Misc.Unsplash
 
 			string url = string.Format("https://api.unsplash.com/collections/{0}/photos?client_id={1}&page={2}&per_page={3}", id, ClientId, page, perPage);
 
-			WebPortResponse response = m_Port.Get(url);
+			WebPortResponse response = m_Port.Get(url, null);
 
 			if (response.IsSuccessCode)
 				return JsonConvert.DeserializeObject<UnsplashPhotoResult[]>(response.DataAsString);
@@ -202,7 +202,7 @@ namespace ICD.Connect.Misc.Unsplash
 			url += builder;
 
 			// Get the byte array for the photo
-			WebPortResponse response = m_Port.Get(url);
+			WebPortResponse response = m_Port.Get(url, null);
 			if (!response.IsSuccessCode)
 				throw new Exception(string.Format("Failed to download picture - {0}", response.DataAsString));
 			

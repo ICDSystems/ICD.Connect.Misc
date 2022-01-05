@@ -98,7 +98,7 @@ namespace ICD.Connect.Misc.GlobalCache.Devices.ITachFlex
 		public string Get(string localUrl)
 		{
 			m_HttpClient.Uri = new Uri(Address, UriKind.RelativeOrAbsolute);
-			WebPortResponse response = m_HttpClient.Get(localUrl);
+			WebPortResponse response = m_HttpClient.Get(localUrl, null);
 			return response.DataAsString;
 		}
 
