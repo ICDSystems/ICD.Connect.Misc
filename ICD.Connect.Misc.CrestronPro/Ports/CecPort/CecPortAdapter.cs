@@ -66,7 +66,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.CecPort
 				return false;
 			}
 
-			PrintTx(data);
+			PrintTx(() => data);
 			m_Port.Send.StringValue = data;
 
 			return true;
@@ -83,7 +83,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.CecPort
 			if (string.IsNullOrEmpty(data))
 				return;
 
-			PrintRx(data);      
+			PrintRx(() => data);      
 			Receive(data);
 		}
 #endif

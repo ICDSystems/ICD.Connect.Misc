@@ -157,7 +157,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.DigitalInput
 		/// <param name="args"></param>
 		private void PortOnStateChange(Crestron.SimplSharpPro.DigitalInput port, DigitalInputEventArgs args)
 		{
-			PrintRx("Digital Input state changed to " + args.State);
+			PrintRx(() => "Digital Input state changed to " + args.State);
 			State = args.State;
 		}
 

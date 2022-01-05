@@ -201,7 +201,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 					return;
 				}
 
-				PrintTx(command);
+				PrintTx(() => command);
 				m_Port.Press(command);
 			}
 			finally
@@ -221,7 +221,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 #if !NETSTANDARD
 			if (m_Port != null)
 			{
-				PrintTx("Release");
+				PrintTx(() => "Release");
 				m_Port.Release();
 			}
 #endif

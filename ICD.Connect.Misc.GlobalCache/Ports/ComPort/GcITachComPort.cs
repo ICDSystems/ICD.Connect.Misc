@@ -146,7 +146,7 @@ namespace ICD.Connect.Misc.GlobalCache.Ports.ComPort
 		protected override bool SendFinal(string data)
 		{
 			bool output = m_Client.Send(data);
-			PrintTx(data);
+			PrintTx(() => data);
 			return output;
 		}
 
@@ -306,7 +306,7 @@ namespace ICD.Connect.Misc.GlobalCache.Ports.ComPort
 		/// <param name="stringEventArgs"></param>
 		private void ClientOnOnSerialDataReceived(object sender, StringEventArgs stringEventArgs)
 		{
-			PrintRx(stringEventArgs.Data);
+			PrintRx(() => stringEventArgs.Data);
 			Receive(stringEventArgs.Data);
 		}
 

@@ -100,7 +100,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 				return;
 			}
 
-			PrintTx("Opening Relay");
+			PrintTx(() => "Opening Relay");
 
 			m_Port.Open();
 #else
@@ -120,7 +120,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 				return;
 			}
 
-			PrintTx("Closing Relay");
+			PrintTx(() => "Closing Relay");
 
 			m_Port.Close();
 #else
@@ -172,7 +172,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.RelayPort
 		/// <param name="args"></param>
 		private void PortOnStateChange(Relay relay, RelayEventArgs args)
 		{
-			PrintRx("Relay state changed to " + args.State);
+			PrintRx(() => "Relay state changed to " + args.State);
 			Closed = args.State == Relay.Relay_State.Closed;
 		}
 

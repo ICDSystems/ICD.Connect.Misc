@@ -268,7 +268,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 				return false;
 			}
 
-			PrintTx(data);
+			PrintTx(() => data);
 			m_Port.Send(data);
 
 			return true;
@@ -378,7 +378,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.ComPort
 		/// <param name="args"></param>
 		private void PortSerialDataReceived(Crestron.SimplSharpPro.ComPort receivingComPort, ComPortSerialDataEventArgs args)
 		{
-			PrintRx(args.SerialData);
+			PrintRx(() => args.SerialData);
 			Receive(args.SerialData);
 		}
 

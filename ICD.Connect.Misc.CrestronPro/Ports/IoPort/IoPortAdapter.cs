@@ -154,7 +154,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 
 			Configuration = GetConfiguration(m_Port);
 
-			PrintTx("Configuration - " + Configuration);
+			PrintTx(() => "Configuration - " + Configuration);
 #else
 			throw new NotSupportedException();
 #endif
@@ -205,7 +205,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 					Logger.Log(eSeverity.Error, "Failed to set digital out - {0}", e.Message);
 				}
 
-				PrintTx("Digital Out - " + DigitalOut);
+				PrintTx(() => "Digital Out - " + DigitalOut);
 
 				m_PortRecheckTimer.Reset(PORT_RECHECK_TIME);
 			}
@@ -358,22 +358,22 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IoPort
 			{
 				case eVersiportEvent.DigitalInChange:
 					DigitalIn = GetDigitalIn(m_Port);
-					PrintRx("Digital In - " + DigitalIn);
+					PrintRx(() => "Digital In - " + DigitalIn);
 					break;
 
 				case eVersiportEvent.DigitalOutChange:
-					PrintRx("Digital Out - " + DigitalIn);
+					PrintRx(() => "Digital Out - " + DigitalIn);
 					DigitalOut = GetDigitalOut(m_Port);
 					break;
 
 				case eVersiportEvent.AnalogInChange:
 					AnalogIn = GetAnalogIn(m_Port);
-					PrintRx("Analog In - " + AnalogIn);
+					PrintRx(() => "Analog In - " + AnalogIn);
 					break;
 
 				case eVersiportEvent.VersiportConfigurationChange:
 					var config = GetConfiguration(m_Port);
-					PrintRx("Configuration - " + config);
+					PrintRx(() => "Configuration - " + config);
 					Configuration = config;
 					break;
 			}
