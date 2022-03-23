@@ -12,6 +12,7 @@ using Crestron.SimplSharp;
 using Crestron.SimplSharp.Ssh;
 using Crestron.SimplSharpPro.CrestronThread;
 using IAsyncResult = Crestron.SimplSharp.CrestronIO.IAsyncResult;
+using Crestron.SimplSharp.Ssh.Common;
 #else
 using System.Diagnostics;
 using System.Threading;
@@ -327,6 +328,13 @@ namespace ICD.Connect.Misc.CrestronPro.Utils
 				output = RequestSsh(adapter, command, TimeSpan.FromSeconds(5), out timedOut,
 				                    new GenericExpectAction<TValue>(new Regex(regex), parse));
 			}
+#if SIMPLSHARP
+			catch (SshConnectionException e)
+			{
+				adapter.Logger.Log(eSeverity.Error, "Error requesting {0} {1} over SSH - Connection Exception - {2}", adapter, typeof(TValue).Name, e.Message);
+				return false;
+			}
+#endif
 			catch (Exception e)
 			{
 				adapter.Logger.Log(eSeverity.Error, "Error requesting {0} {1} over SSH - {2}\n{3}", adapter, typeof(TValue).Name,
