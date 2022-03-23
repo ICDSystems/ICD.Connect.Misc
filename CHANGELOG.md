@@ -5,12 +5,17 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [10.1.3] - 2022-03-23
 ## Added
  - Update CrestronEthernetDeviceAdapters NetworkInfo regex to match against multiple network adapters
  - InfinetEx info, console, utils, and interfaces for devices and settings
  - CenRfgwEx Adapter
  - GlsOirCsmExBatt Adapter
  - INetIoexIrCom and InetIoexRyio Adapters
+ 
+## Changed
+ - Supressed stack trace for Crestron TP SSH Connect errors
 
 ## [10.1.2] - 2021-11-15
 ### Changed
