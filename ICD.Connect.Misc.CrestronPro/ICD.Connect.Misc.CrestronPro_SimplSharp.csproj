@@ -53,6 +53,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\ProgramData\Crestron\SDK\SSPDevices\Crestron.SimplSharpPro.DeviceSupport.dll</HintPath>
     </Reference>
+    <Reference Include="Crestron.SimplSharpPro.EthernetCommunications, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1099c178b3b54c3b, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\ProgramData\Crestron\SDK\SSPDevices\Crestron.SimplSharpPro.EthernetCommunications.dll</HintPath>
+    </Reference>
     <Reference Include="Crestron.SimplSharpPro.Gateways, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1099c178b3b54c3b, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\..\..\ProgramData\Crestron\SDK\SSPDevices\Crestron.SimplSharpPro.Gateways.dll</HintPath>
@@ -114,6 +118,8 @@
     <Compile Include="Devices\Io\InetIoex\InetIoexRyioAdapterSettings.cs" />
     <Compile Include="Devices\OccupancySensors\GlsOirCsmExBattAdapter.cs" />
     <Compile Include="Devices\OccupancySensors\GlsOirCsmExBattAdapterSettings.cs" />
+    <Compile Include="Eisc\EiscAdapter.cs" />
+    <Compile Include="Eisc\EiscAdapterSettings.cs" />
     <Compile Include="Extensions\DeviceExtenderExtensions.cs" />
     <Compile Include="InfinetEx\AbstractInfinetExAdapter.cs" />
     <Compile Include="InfinetEx\AbstractInfinetExAdapterSettings.cs" />
