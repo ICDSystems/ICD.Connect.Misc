@@ -226,6 +226,8 @@
     <Compile Include="Ports\ComPort\ComPortAdapterSettings.cs" />
     <Compile Include="Ports\IoPort\IoPortAdapter.cs" />
     <Compile Include="Ports\IoPort\IoPortAdapterSettings.cs" />
+    <Compile Include="Ports\IrOneWayComPort\IrOneWayComPortAdapter.cs" />
+    <Compile Include="Ports\IrOneWayComPort\IrOneWayComPortAdapterSettings.cs" />
     <Compile Include="Ports\IrPort\IrPortAdapter.cs" />
     <Compile Include="Ports\IrPort\IrPortAdapterSettings.cs" />
     <Compile Include="Ports\RelayPort\RelayPortAdapter.cs" />

@@ -30,12 +30,37 @@ namespace ICD.Connect.Misc.CrestronPro.Extensions
 				{eComBaudRates.BaudRate115200, ComPort.eComBaudRates.ComspecBaudRate115200}
 			};
 
+		private static readonly BiDictionary<eComBaudRates, eIRSerialBaudRates> s_IrBaudRateMap = 
+			new BiDictionary<eComBaudRates, eIRSerialBaudRates>
+			{
+				{default(eComBaudRates), default(eIRSerialBaudRates)},
+				{eComBaudRates.BaudRate300, eIRSerialBaudRates.ComspecBaudRate300},
+				{eComBaudRates.BaudRate600, eIRSerialBaudRates.ComspecBaudRate600},
+				{eComBaudRates.BaudRate1200, eIRSerialBaudRates.ComspecBaudRate1200},
+				{eComBaudRates.BaudRate2400, eIRSerialBaudRates.ComspecBaudRate2400},
+				{eComBaudRates.BaudRate4800, eIRSerialBaudRates.ComspecBaudRate4800},
+				{eComBaudRates.BaudRate9600, eIRSerialBaudRates.ComspecBaudRate9600},
+				{eComBaudRates.BaudRate14400, eIRSerialBaudRates.ComspecBaudRate14400},
+				{eComBaudRates.BaudRate19200, eIRSerialBaudRates.ComspecBaudRate19200},
+				{eComBaudRates.BaudRate38400, eIRSerialBaudRates.ComspecBaudRate38400},
+				{eComBaudRates.BaudRate57600, eIRSerialBaudRates.ComspecBaudRate57600},
+				{eComBaudRates.BaudRate115200, eIRSerialBaudRates.ComspecBaudRate115200}
+			};
+
 		private static readonly BiDictionary<eComDataBits, ComPort.eComDataBits> s_DataBitsMap =
 			new BiDictionary<eComDataBits, ComPort.eComDataBits>
 			{
 				{default(eComDataBits), default(ComPort.eComDataBits)},
 				{eComDataBits.DataBits7, ComPort.eComDataBits.ComspecDataBits7},
 				{eComDataBits.DataBits8, ComPort.eComDataBits.ComspecDataBits8}
+			};
+
+		private static readonly BiDictionary<eComDataBits, eIRSerialDataBits> s_IrDataBitsMap =
+			new BiDictionary<eComDataBits, eIRSerialDataBits>
+			{
+				{default(eComDataBits), default(eIRSerialDataBits)},
+				{eComDataBits.DataBits7, eIRSerialDataBits.ComspecDataBits7},
+				{eComDataBits.DataBits8, eIRSerialDataBits.ComspecDataBits8}
 			};
 
 		private static readonly BiDictionary<eComParityType, ComPort.eComParityType> s_ParityTypeMap =
@@ -47,12 +72,28 @@ namespace ICD.Connect.Misc.CrestronPro.Extensions
 				{eComParityType.Mark, ComPort.eComParityType.ComspecParityMark},
 			};
 
+		private static readonly BiDictionary<eComParityType, eIRSerialParityType> s_IrParityTypeMap =
+			new BiDictionary<eComParityType, eIRSerialParityType>
+			{
+				{eComParityType.None, eIRSerialParityType.ComspecParityNone},
+				{eComParityType.Even, eIRSerialParityType.ComspecParityEven},
+				{eComParityType.Odd, eIRSerialParityType.ComspecParityOdd},
+			};
+
 		private static readonly BiDictionary<eComStopBits, ComPort.eComStopBits> s_StopBitsMap =
 			new BiDictionary<eComStopBits, ComPort.eComStopBits>
 			{
 				{default(eComStopBits), default(ComPort.eComStopBits)},
 				{eComStopBits.StopBits1, ComPort.eComStopBits.ComspecStopBits1},
 				{eComStopBits.StopBits2, ComPort.eComStopBits.ComspecStopBits2}
+			};
+
+		private static readonly BiDictionary<eComStopBits, eIRSerialStopBits> s_IrStopBitsMap =
+			new BiDictionary<eComStopBits, eIRSerialStopBits>
+			{
+				{default(eComStopBits), default(eIRSerialStopBits)},
+				{eComStopBits.StopBits1, eIRSerialStopBits.ComspecStopBits1},
+				{eComStopBits.StopBits2, eIRSerialStopBits.ComspecStopBits2}
 			};
 
 		private static readonly BiDictionary<eComProtocolType, ComPort.eComProtocolType> s_ProtocolTypeMap =
@@ -88,9 +129,19 @@ namespace ICD.Connect.Misc.CrestronPro.Extensions
 			return s_BaudRateMap.GetKey(extends);
 		}
 
+		public static eComBaudRates FromCrestron(this eIRSerialBaudRates extends)
+		{
+			return s_IrBaudRateMap.GetKey(extends);
+		}
+
 		public static eComDataBits FromCrestron(this ComPort.eComDataBits extends)
 		{
 			return s_DataBitsMap.GetKey(extends);
+		}
+
+		public static eComDataBits FromCrestron(this eIRSerialDataBits extends)
+		{
+			return s_IrDataBitsMap.GetKey(extends);
 		}
 
 		public static eComParityType FromCrestron(this ComPort.eComParityType extends)
@@ -98,9 +149,19 @@ namespace ICD.Connect.Misc.CrestronPro.Extensions
 			return s_ParityTypeMap.GetKey(extends);
 		}
 
+		public static eComParityType FromCrestron(this eIRSerialParityType extends)
+		{
+			return s_IrParityTypeMap.GetKey(extends);
+		}
+
 		public static eComStopBits FromCrestron(this ComPort.eComStopBits extends)
 		{
 			return s_StopBitsMap.GetKey(extends);
+		}
+
+		public static eComStopBits FromCrestron(this eIRSerialStopBits extends)
+		{
+			return s_IrStopBitsMap.GetKey(extends);
 		}
 
 		public static eComProtocolType FromCrestron(this ComPort.eComProtocolType extends)
@@ -123,9 +184,19 @@ namespace ICD.Connect.Misc.CrestronPro.Extensions
 			return s_BaudRateMap.GetValue(extends);
 		}
 
+		public static eIRSerialBaudRates ToCrestronIr(this eComBaudRates extends)
+		{
+			return s_IrBaudRateMap.GetValue(extends);
+		}
+
 		public static ComPort.eComDataBits ToCrestron(this eComDataBits extends)
 		{
 			return s_DataBitsMap.GetValue(extends);
+		}
+
+		public static eIRSerialDataBits ToCrestronIr(this eComDataBits extends)
+		{
+			return s_IrDataBitsMap.GetValue(extends);
 		}
 
 		public static ComPort.eComParityType ToCrestron(this eComParityType extends)
@@ -133,9 +204,19 @@ namespace ICD.Connect.Misc.CrestronPro.Extensions
 			return s_ParityTypeMap.GetValue(extends);
 		}
 
+		public static eIRSerialParityType ToCrestronIr(this eComParityType extends)
+		{
+			return s_IrParityTypeMap.GetValue(extends);
+		}
+
 		public static ComPort.eComStopBits ToCrestron(this eComStopBits extends)
 		{
 			return s_StopBitsMap.GetValue(extends);
+		}
+
+		public static eIRSerialStopBits ToCrestronIr(this eComStopBits extends)
+		{
+			return s_IrStopBitsMap.GetValue(extends);
 		}
 
 		public static ComPort.eComProtocolType ToCrestron(this eComProtocolType extends)

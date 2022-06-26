@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 ## Added
  - Added EiscAdapter
+ - Added IrOneWayComPortAdapter
 
 ## [10.1.3] - 2022-03-23
 ## Added
