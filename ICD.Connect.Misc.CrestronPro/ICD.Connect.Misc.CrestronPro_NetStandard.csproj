@@ -53,4 +53,9 @@
     <ZipDirectory DestinationFile="$(TargetDir)..\$(AssemblyName).kpz" SourceDirectory="$(TargetDir)" Overwrite="true" />
     <Move SourceFiles="$(TargetDir)..\$(AssemblyName).kpz" DestinationFolder="$(TargetDir)" />
   </Target>
+  <Target Name="ArchivePlugin" AfterTargets="AfterBuild" Condition="'$(TargetFramework)' == 'net472'">
+    <Delete Files="$(TargetDir)$(AssemblyName).cplz" />
+    <ZipDirectory DestinationFile="$(TargetDir)..\$(AssemblyName).cplz" SourceDirectory="$(TargetDir)" Overwrite="true" />
+    <Move SourceFiles="$(TargetDir)..\$(AssemblyName).cplz" DestinationFolder="$(TargetDir)" />
+  </Target>
 </Project>
