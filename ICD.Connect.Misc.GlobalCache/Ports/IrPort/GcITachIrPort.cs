@@ -59,7 +59,23 @@ namespace ICD.Connect.Misc.GlobalCache.Ports.IrPort
 
 		public override void LoadDriver(string path)
 		{
-			m_LoadedDriver = IrFormatUtils.ImportDriverFromPath(path);
+			string fullPath = PathUtils.GetDefaultConfigPath("IRDrivers", path);
+
+			try
+			{
+				m_LoadedDriver = IrFormatUtils.ImportDriverFromPath(fullPath);
+			}
+			catch (FileNotFoundException)
+			{
+				m_LoadedDriver = null;
+				Logger.Log(eSeverity.Error, "Unable to load driver - file does not exist: {0}", fullPath);
+			}
+			catch (FormatException ex)
+			{
+				m_LoadedDriver = null;
+				Logger.Log(eSeverity.Error, "Unable to load driver - Format exception: {0}", ex.Message);
+			}
+
 		}
 
 		public override IEnumerable<string> GetCommands()
@@ -138,9 +154,19 @@ namespace ICD.Connect.Misc.GlobalCache.Ports.IrPort
 		/// <returns></returns>
 		private string SerializeIrCommand(IrCommand command)
 		{
-			return string.Format("sendir,{0}:{1},{2},{3},{4},{5}{6}\r", Module, Address, 1, command.Frequency,
-			                     command.RepeatCount, command.Offset ? "1," : "",
+			return string.Format("sendir,{0}:{1},{2},{3},{4},{5},{6}\r", Module, Address, 1, RoundFrequency(command),
+			                     command.RepeatCount, command.Offset,
 			                     string.Join(",", command.Data.Select(i => i.ToString()).ToArray()));
+		}
+
+		/// <summary>
+		/// Round the frequency to the nearest 1,000
+		/// </summary>
+		/// <param name="command"></param>
+		/// <returns></returns>
+		private static int RoundFrequency(IrCommand command)
+		{
+			return (command.Frequency + 500) / 1000 * 1000;
 		}
 
 		/// <summary>

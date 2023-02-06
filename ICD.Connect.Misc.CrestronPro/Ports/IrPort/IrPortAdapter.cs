@@ -145,7 +145,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 				return;
 			}
 
-			string fullPath = GetIrDriversPath(path);
+			string fullPath = PathUtils.GetDefaultConfigPath("IRDrivers", path);
 
 			try
 			{
@@ -283,16 +283,7 @@ namespace ICD.Connect.Misc.CrestronPro.Ports.IrPort
 #endif
 		}
 
-		/// <summary>
-		/// Searches the application path, program config path and common config path to
-		/// find the first IR driver that exists with the given local path.
-		/// </summary>
-		/// <param name="localPath"></param>
-		/// <returns></returns>
-		private static string GetIrDriversPath(string localPath)
-		{
-			return PathUtils.GetDefaultConfigPath(new[] {"IRDrivers", localPath});
-		}
+
 
 		#endregion
 
