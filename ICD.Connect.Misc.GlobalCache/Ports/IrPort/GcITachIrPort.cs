@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using ICD.Common.Properties;
+using ICD.Common.Utils;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.API.Nodes;
+using ICD.Connect.Devices.EventArguments;
 using ICD.Connect.Devices.Extensions;
 using ICD.Connect.Misc.GlobalCache.Devices;
 using ICD.Connect.Misc.GlobalCache.FlexApi.RestApi;
@@ -26,6 +29,8 @@ namespace ICD.Connect.Misc.GlobalCache.Ports.IrPort
 
 		private IrDriver m_LoadedDriver;
 
+		private IGcITachDevice m_Device;
+
 		#endregion
 
 		#region Properties
@@ -36,7 +41,22 @@ namespace ICD.Connect.Misc.GlobalCache.Ports.IrPort
 		public override ushort PulseTime { get; set; }
 		public override ushort BetweenTime { get; set; }
 
-		public IGcITachDevice Device { get; private set; }
+		public IGcITachDevice Device
+		{
+			get { return m_Device; }
+			private set
+			{
+				if (m_Device == value)
+					return;
+
+				Unsubscribe(m_Device);
+				m_Device = value;
+				Subscribe(m_Device);
+				
+				UpdateCachedOnlineStatus();
+			}
+		}
+
 		public int Module { get; private set; }
 		public int Address { get; private set; }
 		public Module.eType IrModuleType { get; private set; }
@@ -178,6 +198,31 @@ namespace ICD.Connect.Misc.GlobalCache.Ports.IrPort
 			return string.Format("stopir,{0}:{1}\r", Module, Address);
 		}
 
+		#endregion
+		
+		#region Device Callback
+
+		private void Subscribe(IGcITachDevice device)
+		{
+			if (device == null)
+				return;
+			
+			device.OnIsOnlineStateChanged += DeviceOnOnIsOnlineStateChanged;
+		}
+
+		private void Unsubscribe(IGcITachDevice device)
+		{
+			if (device == null)
+				return;
+			
+			device.OnIsOnlineStateChanged -= DeviceOnOnIsOnlineStateChanged;
+		}
+		
+		private void DeviceOnOnIsOnlineStateChanged(object sender, DeviceBaseOnlineStateApiEventArgs e)
+		{
+			UpdateCachedOnlineStatus();
+		}
+		
 		#endregion
 
 		#region Settings
