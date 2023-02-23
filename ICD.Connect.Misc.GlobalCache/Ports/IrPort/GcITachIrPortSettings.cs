@@ -17,6 +17,7 @@ namespace ICD.Connect.Misc.GlobalCache.Ports.IrPort
 
 		#region Properties
 
+		[ControlPortParentSettingsProperty]
 		[OriginatorIdSettingsProperty(typeof(IGcITachDevice))]
 		public int? Device { get; set; }
 		public int Module { get; set; }
