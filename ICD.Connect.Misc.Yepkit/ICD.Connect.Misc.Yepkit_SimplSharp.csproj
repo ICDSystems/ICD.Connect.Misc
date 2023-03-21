@@ -64,7 +64,6 @@
     <Compile Include="Devices\YkupSwitcher\YkupSwitcherDevice.cs" />
     <Compile Include="Devices\YkupSwitcher\YkupSwitcherDeviceSettings.cs" />
     <Compile Include="KrangPlugin.cs" />
-    <Compile Include="ObfuscationSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="Properties\ControlSystem.cfg" />
   </ItemGroup>
@@ -103,9 +102,6 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>rem S# Pro preparation will execute after these operations</PostBuildEvent>
-  </PropertyGroup>
   <Target Name="PlatformVerificationTask">
   </Target>
 </Project>

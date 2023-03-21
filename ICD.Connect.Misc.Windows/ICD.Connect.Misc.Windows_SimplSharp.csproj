@@ -77,7 +77,6 @@
     <Compile Include="Devices\WindowsPeripheralDevice\IWindowsPeripheralDevice.cs" />
     <Compile Include="Devices\WindowsPeripheralDevice\IWindowsPeripheralDeviceSettings.cs" />
     <Compile Include="KrangPlugin.cs" />
-    <Compile Include="ObfuscationSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\LogonUtils.cs" />
     <Compile Include="WindowsPeripheral\Factories\IWindowsPeripheralFactory.cs" />
@@ -124,9 +123,12 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
+<<<<<<< HEAD
   <PropertyGroup>
     <PostBuildEvent>rem S# Pro preparation will execute after these operations</PostBuildEvent>
   </PropertyGroup>
+=======
+>>>>>>> 0db3c54 (chore:Remove Obfuscation)
   <Target Name="PlatformVerificationTask">
   </Target>
 </Project>

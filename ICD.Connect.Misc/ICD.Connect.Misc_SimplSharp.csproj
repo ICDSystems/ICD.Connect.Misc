@@ -83,7 +83,6 @@
     <Compile Include="InfinetEx\InfinetExDeviceConsole.cs" />
     <Compile Include="InfinetEx\InfinetExInfo.cs" />
     <Compile Include="InfinetEx\InfinetExSettings.cs" />
-    <Compile Include="ObfuscationSettings.cs" />
     <Compile Include="Keypads\AbstractKeypadDevice.cs" />
     <Compile Include="Keypads\AbstractKeypadDeviceSettings.cs" />
     <Compile Include="Keypads\eButtonState.cs" />

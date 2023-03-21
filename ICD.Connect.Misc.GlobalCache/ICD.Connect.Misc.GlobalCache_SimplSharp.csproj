@@ -83,7 +83,6 @@
     <Compile Include="FlexApi\RestApi\SerialConfiguration.cs" />
     <Compile Include="FlexApi\RestApi\Version.cs" />
     <Compile Include="KrangPlugin.cs" />
-    <Compile Include="ObfuscationSettings.cs" />
     <Compile Include="Ports\ComPort\GcITachComPort.cs" />
     <Compile Include="Ports\ComPort\GcITachComPortSettings.cs" />
     <Compile Include="Ports\GcITachPortHelper.cs" />
@@ -129,9 +128,6 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>rem S# Pro preparation will execute after these operations</PostBuildEvent>
-  </PropertyGroup>
   <Target Name="PlatformVerificationTask">
   </Target>
 </Project>

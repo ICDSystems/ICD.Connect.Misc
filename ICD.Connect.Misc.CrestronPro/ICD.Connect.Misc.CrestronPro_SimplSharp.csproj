@@ -124,7 +124,6 @@
     <Compile Include="InfinetEx\AbstractInfinetExAdapter.cs" />
     <Compile Include="InfinetEx\AbstractInfinetExAdapterSettings.cs" />
     <Compile Include="InfinetEx\InfinetExUtils.cs" />
-    <Compile Include="ObfuscationSettings.cs" />
     <Compile Include="Devices\CresnetBridge\CsaPws10sHubEnetAdapter.cs" />
     <Compile Include="Devices\CresnetBridge\CsaPws10sHubEnetAdapterSettings.cs" />
     <Compile Include="Devices\CresnetBridge\AbstractDinCenCn2Adapter.cs" />
@@ -303,9 +302,6 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>rem S# Pro preparation will execute after these operations</PostBuildEvent>
-  </PropertyGroup>
   <Target Name="PlatformVerificationTask">
   </Target>
 </Project>
